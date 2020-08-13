@@ -1,15 +1,10 @@
-import Menu from './scenes/Menu/Menu'
 import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Router from "./components/Router/Router";
 
 function App() {
     return (
-        <BrowserRouter>
-            <Switch>
-                <Route path='/' exact><Menu/></Route>
-            </Switch>
-        </BrowserRouter>
+        <Router/>
     );
-  }
-  
-  export default App;
+}
+
+export default App;
