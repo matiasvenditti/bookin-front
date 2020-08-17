@@ -3,7 +3,10 @@ import Router from "./components/Router/Router";
 
 function App() {
     return (
-        <Router/>
+        <div>
+            Hello World from App.jsx
+            <Router/>
+        </div>
     );
 }
 

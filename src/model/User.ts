@@ -1,7 +1,5 @@
 // Modeling of our backend data.
-export interface User{
-    id: number,
-    firstName: string,
-    lastName: string,
-    username: string,
+export class User{
+
+    constructor(public id: number, public firstName: string, public lastName: string, public username: string) {}
 }

@@ -9,7 +9,7 @@ class Router extends React.Component<{}, {}> {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route path='/' exact><Menu/></Route>
+                    <Route path='/books/:id' component={Menu} exact/>
                 </Switch>
             </BrowserRouter>
         );
