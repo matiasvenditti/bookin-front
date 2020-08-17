@@ -1,0 +1,13 @@
+.search-input-container {
+    flex-grow: 1;
+    > {
+        flex-grow: 1;
+
+    }
+}
+.search-input-container div {
+    width: 100%;
+}
+.search-input-container div input {
+    width: 100%;
+}

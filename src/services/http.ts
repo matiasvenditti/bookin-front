@@ -1,10 +1,10 @@
-import { REQUEST_TYPES } from "../utils/enums";
+import { REQUEST_TYPES } from "../model/RequestType";
 
 
 /**
  * 
  */
-const request = (type: String, body:) => {
+const request = (type: String, body: Object) => {
     let header = {
 
     };

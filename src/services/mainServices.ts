@@ -14,7 +14,7 @@ const register = () => {
 
 // refrescar token, para cuando se actualize la pagina
 // el usuario no tenga que volver a ingresar
-const refreshToken = () => {
+const refreshToken = (token: string) => {
 
 };
 
