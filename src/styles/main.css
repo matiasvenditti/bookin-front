@@ -2,6 +2,10 @@ root, body {
 
 }
 
-app-container {
+.app-container {
   
+}
+
+.card-container {
+    max-width: 600px;
 }

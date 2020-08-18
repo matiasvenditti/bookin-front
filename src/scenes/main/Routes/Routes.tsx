@@ -15,25 +15,11 @@ interface RoutesProps {
 export default class Routes extends Component<RoutesProps, RoutesState> {
     render() {
         const { isLoggedIn } = this.props;
-        if (isLoggedIn) {
-            return (
-                <Switch>
-                    <div className='routes-container'>
-                        <Route exact path='/' component={Home}/>
-                        
-                    </div>
-                </Switch>
-            );
-        } else {
-            return (
-                <Switch>
-                    <div className='routes-container'>
-                        <Route exact path='/' component={Home}/>
-                        <Route path='/login' component={Login}/>
-                        {/* <Route path='/register' component={Home}/> */}
-                    </div>
-                </Switch>
-            );
-        }
+        return (
+            <Switch>
+                <Route exact path='/' component={() => <Home/>}/>
+                <Route path='/login' component={() => <Login/>}/>
+            </Switch>
+        );
     }
 }

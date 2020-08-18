@@ -3,7 +3,6 @@ import Navbar from '../Navbar/Navbar';
 import Routes from '../Routes/Routes';
 import { refreshToken } from '../../../services/mainServices';
 import RequestStatus from '../../../model/RequestStatus';
-import { Button } from '@material-ui/core';
 
 interface AppState {
     token: string | null,
