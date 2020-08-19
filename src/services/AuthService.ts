@@ -9,7 +9,10 @@ const isLoggedIn = function(): boolean {
 /**
  * @return { boolean }
  */
-const isAuthorized = function(userRoles: string[], requiredRoles: string[]) {
+const isAuthorized = function(requiredRoles: string[]) {
+    const token = localStorage.getItem('token');
+    const userRoles: string[] = []; // get from token
+    requiredRoles.every(role => userRoles.includes(role));
     return true;
 };
 

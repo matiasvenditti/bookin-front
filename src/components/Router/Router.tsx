@@ -5,12 +5,13 @@ import PrivateRoute from './PrivateRoute';
 
 // Router component responsible for routing specific logic
 class Router extends React.Component<{}, {}> {
-
     render() {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route path='/' exact component={() => <Menu />} />
+                    <Route exact path='/' component={Menu} />
+                    {/* PrivateRoute example */}
+                    {/* <PrivateRoute path='/profile' requiredRoles={['user']} component={Profile} /> */}
                 </Switch>
             </BrowserRouter>
         );

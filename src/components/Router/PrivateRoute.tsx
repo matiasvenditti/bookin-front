@@ -1,33 +1,28 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
-import { getUserRoles } from "../../model/Roles";
 import { isLoggedIn, isAuthorized } from "../../services/AuthService";
 
 interface PrivateRouteProps {
-    // isLoggedIn: boolean,
-    // isRoleValid: boolean,
-    exact: boolean,
+    exact?: boolean,
     path: string,
     component: typeof Component,
-    redirectTo?: string,
+    requiredRoles: string[]
 }
 
 const PrivateRoute = (props: PrivateRouteProps) => {
     const {
-        // isLoggedIn,
         exact,
         path,
         component,
-        redirectTo,
+        requiredRoles,
     } = props;
 
     if (!isLoggedIn()) {
-        return <Redirect to={redirectTo || '/'} />
+        return <Redirect to={'/login'} />
     }
 
-    const userRoles: string[] = getUserRoles();
-    if (!isAuthorized(userRoles, [])) {
-        return <Redirect to={redirectTo || '/'} />
+    if (!isAuthorized(requiredRoles)) {
+        return <Redirect exact to={'/'} />
     }
 
     return <Route exact={exact} path={path} component={component} />
