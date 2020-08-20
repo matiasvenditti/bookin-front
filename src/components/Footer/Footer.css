@@ -1,8 +1,9 @@
 .main-footer{
-    color: secondary;
-    background-color: secondary;
+    color: whitesmoke;
+    background-color: #5d566b;
     position: fixed;
-    bottom: 0;    
+    bottom: 0;
+    width: 100%;    
 }
 
 div.a {
