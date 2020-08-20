@@ -10,8 +10,6 @@ class Router extends React.Component<{}, {}> {
             <BrowserRouter>
                 <Switch>
                     <Route exact path='/' component={Menu} />
-                    {/* PrivateRoute example */}
-                    {/* <PrivateRoute path='/profile' requiredRoles={['user']} component={Profile} /> */}
                 </Switch>
             </BrowserRouter>
         );

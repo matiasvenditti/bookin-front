@@ -23,7 +23,6 @@ const theme = createMuiTheme({
 function App() {
     return (
         <MuiThemeProvider theme={theme}>
-            {/* <Navbar/> <-- navbar component here */}
             <Router />
         </MuiThemeProvider>
     );
