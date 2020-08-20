@@ -1,0 +1,28 @@
+.search {
+    position: 'relative';
+    border-radius: 0%;
+    background-color: secondary;
+    margin-left: 0;
+    width: '100%';
+    padding-right: 10%;
+    padding-left: 10%;
+}
+.searchIcon {
+    padding: 0%;
+    height: '100%';
+    position: fixed;
+    pointer-events: 'none';
+    display: 'flex';
+    align-items: 'center'; 
+    justify-content: 'center';
+}
+.inputRoot {
+    color: 'inherit';
+}
+.inputInput {
+    padding: 0%;
+    padding-left: 0%;
+    transition: 0ms;
+    width: '100%';
+}
+ 

@@ -1,0 +1,10 @@
+.main-footer{
+    color: secondary;
+    background-color: secondary;
+    position: fixed;
+    bottom: 0;    
+}
+
+div.a {
+  text-align: center;
+}
