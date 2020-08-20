@@ -34,7 +34,7 @@ export class Header extends React.Component<{}, State>{
                 <h2 >Book in</h2>
               <div className='search'>
                 <div className='searchIcon'>
-                  <SearchIcon />
+                  <SearchIcon className='iconLogo'/>
                 </div>
                   <InputBase
                     placeholder="Search…"
