@@ -1,11 +1,10 @@
-import {BrowserRouter, Route, Switch} from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Menu from "../../scenes/Menu/Menu";
 import React from "react";
 import Signup from "../../scenes/Signup/Signup";
 
 // Router component responsible for routing specific logic
 class Router extends React.Component<{}, {}> {
-
     render() {
         return (
             <BrowserRouter>
@@ -16,8 +15,6 @@ class Router extends React.Component<{}, {}> {
             </BrowserRouter>
         );
     }
-
 }
 
 export default Router;
-
