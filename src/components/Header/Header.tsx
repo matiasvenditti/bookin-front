@@ -1,7 +1,7 @@
 import React from "react";
 import UserStatus from "../UserStatus/UserStatus";
 import AppBar from '@material-ui/core/AppBar'
-import { InputBase, fade, Theme, makeStyles, createStyles, Toolbar, IconButton, Menu, MenuItem } from "@material-ui/core";
+import { InputBase, fade, Theme, makeStyles, createStyles, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import "./Header.css";
@@ -14,8 +14,61 @@ type State = {
   anchorEl: Element | null
 }
 
+const styles = (theme: Theme) => ({
+  root: {
+      flexGrow: 1,
+  },
+  title: {
+    display: 'none',
+    [theme.breakpoints.up('sm')]: {
+      display: 'block',
+    },
+  },
+  menuButton: {
+      marginRight: theme.spacing(2),
+  },
+  search: {
+      position: 'relative',
+      borderRadius: theme.shape.borderRadius,
+      backgroundColor: fade(theme.palette.common.white, 0.15),
+      '&:hover': {
+          backgroundColor: fade(theme.palette.common.white, 0.25),
+      },
+      marginLeft: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+          marginLeft: theme.spacing(1),
+          width: 'auto',
+      },
+  },
+  searchIcon: {
+      padding: theme.spacing(0, 2),
+      height: '100%',
+      position: 'absolute',
+      pointerEvents: 'none',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+  },
+  inputRoot: {
+      color: 'inherit',
+  },
+  inputInput: {
+      padding: theme.spacing(1, 1, 1, 0),
+      // vertical padding + font size from searchIcon
+      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+      transition: theme.transitions.create('width'),
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+          width: '12ch',
+          '&:focus': {
+              width: '20ch',
+          },
+      },
+  },
+});
 
-export class Header extends React.Component<{}, State>{
+export class Header extends React.Component<any, State>{
 
 
   constructor(props: any) {
@@ -47,12 +100,14 @@ export class Header extends React.Component<{}, State>{
 
     
     render(){
+
+            const { classes } = this.props;
       
             const button = (
               <div className='button'> 
                 <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
-                  <Button>Log In</Button>
-                  <Button href='/signup'>Sign Up</Button>
+                  <Button>Iniciar Sesión</Button>
+                  <Button href='/signup'>Registrarte</Button>
                 </ButtonGroup>         
               </div>
             )
@@ -60,7 +115,7 @@ export class Header extends React.Component<{}, State>{
             const menu = (
               <div className="button">
                   <IconButton onClick={this.handleMenu}>
-                      <AccountCircle/>
+                      <AccountCircle fontSize='large'/>
                   </IconButton>
                   <Menu
                       id="menu-appbar"
@@ -76,8 +131,11 @@ export class Header extends React.Component<{}, State>{
                           horizontal: 'right',
                       }}
                       open={Boolean(this.state.anchorEl)}>
-                      <MenuItem onClick={this.handleClose}>Perfil</MenuItem>
-                      <MenuItem onClick={this.handleClose}>Autores</MenuItem>
+                      <MenuItem onClick={this.handleClose}>Ver Perfil</MenuItem>
+                      <MenuItem onClick={this.handleClose}>Ver Riseñas</MenuItem>
+                      <MenuItem onClick={this.handleClose}>Crear Autor</MenuItem>
+                      <MenuItem onClick={this.handleClose}>Cerrar Sesión</MenuItem>
+
                   </Menu>
               </div>
           )
@@ -86,18 +144,20 @@ export class Header extends React.Component<{}, State>{
             const navData = this.state.isLoggedIn ? menu : button
 
         return(
-            <AppBar position='static' color='primary' className='header'>
+            <AppBar position='static' color='primary' className={classes.title}>
               <Toolbar>
-                <h2 >Book in</h2>
-              <div className='search'>
-                <div className='searchIcon'>
-                  <SearchIcon className='iconLogo'/>
+                <Typography variant='h6'>
+                    Book in
+                </Typography>
+              <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                  <SearchIcon/>
                 </div>
                   <InputBase
-                    placeholder="Search…"
+                    placeholder="Buscar"
                     classes={{
-                      root: 'inputRoot',
-                      input: 'inputInput',
+                      root: classes.inputRoot,
+                      input: classes.inputInput,
                     }}
                   inputProps={{ 'aria-label': 'search' }}
                 />
@@ -110,4 +170,5 @@ export class Header extends React.Component<{}, State>{
 
 }
 
-export default Header
+// @ts-ignore
+export default withStyles(styles)(Header);
