@@ -132,7 +132,7 @@ export class Header extends React.Component<any, State>{
                       }}
                       open={Boolean(this.state.anchorEl)}>
                       <MenuItem onClick={this.handleClose}>Ver Perfil</MenuItem>
-                      <MenuItem onClick={this.handleClose}>Ver Riseñas</MenuItem>
+                      <MenuItem onClick={this.handleClose}>Ver Reseñas</MenuItem>
                       <MenuItem onClick={this.handleClose}>Crear Autor</MenuItem>
                       <MenuItem onClick={this.handleClose}>Cerrar Sesión</MenuItem>
 
@@ -146,9 +146,11 @@ export class Header extends React.Component<any, State>{
         return(
             <AppBar position='static' color='primary' className={classes.title}>
               <Toolbar>
+                <div className='right'>
                 <Typography variant='h6'>
                     Book in
                 </Typography>
+                </div>
               <div className={classes.search}>
                 <div className={classes.searchIcon}>
                   <SearchIcon/>
