@@ -1,0 +1,12 @@
+.route-container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-items: center;
+}
+
+.route-container .card-container {
+    border-radius: 10px;
+    max-width: 350px;
+    padding: 20px 65px 15px;
+}

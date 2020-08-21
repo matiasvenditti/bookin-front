@@ -1,0 +1,41 @@
+import React, { Component } from 'react'
+import { FormControl, FormLabel, RadioGroup as MaterialRadioGroup, FormControlLabel, Radio } from '@material-ui/core'
+import './RadioGroup.css';
+
+interface RadioGroupProps {
+    title: string,
+    id: string,
+    type: string,
+    value: string,
+    options: string[],
+    error: boolean,
+    errorText: string,
+    onChange(e: any): void,
+}
+
+interface RadioGroupState {
+
+}
+
+export default class RadioGroup extends Component<RadioGroupProps, RadioGroupState> {
+    render() {
+        const { title, id, type, value, options, error, errorText } = this.props;
+        return (
+            <FormControl component='fieldset' className='radio-group-form-control-container'>
+                <FormLabel component='legend' color='secondary'>{title}</FormLabel>
+                <MaterialRadioGroup
+                    className='radio-group-container'
+                    aria-label="gender"
+                    name={id}
+                    id={id}
+                    value={value}
+                    onChange={(e) => this.props.onChange(e)}
+                >
+                    {options.map(option => (
+                        <FormControlLabel value={option} control={<Radio />} label={option} />
+                    ))}
+                </MaterialRadioGroup>
+            </FormControl>
+        )
+    }
+}

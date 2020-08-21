@@ -1,0 +1,9 @@
+.radio-group-form-control-container {
+    width: 100%;
+}
+
+.radio-group-form-control-container .radio-group-container {
+    width: 100%;
+    flex-direction: row !important;
+    justify-content: space-between;
+}
