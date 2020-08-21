@@ -1,5 +1,4 @@
 export default function(type: string, value: any) {
-    console.log(type, value);
     let regex = /$a/; // initialize with always false regex
     switch (type) {
         case 'text': 
@@ -19,8 +18,14 @@ export default function(type: string, value: any) {
             // example -> asd@asd.asd
             regex = /^[a-zA-Z0-9]+@([a-z]+[.])+[a-z]+$/;
             break;
+        case 'radio-group': 
+            // initial state is null until user selects something
+            return value !== null;
+        case 'accept-terms': 
+            return value === true;
         default: break;
     }
-        
+    
+    console.log('type: ', type, ', value: ', value, ', res:', regex.test(value));
     return regex.test(value);
 }

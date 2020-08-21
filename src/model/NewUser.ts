@@ -2,6 +2,6 @@ export interface NewUser {
     name: string,
     surname: string,
     email: string,
-    sex: string,
+    genre: string,
     password: string,
 }

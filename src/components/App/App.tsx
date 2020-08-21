@@ -39,8 +39,8 @@ const theme = createMuiTheme({
 function App() {
     return (
         <MuiThemeProvider theme={theme}>
-            <Register />
             {/* <Router /> */}
+            <Register />
         </MuiThemeProvider>
     );
 }
