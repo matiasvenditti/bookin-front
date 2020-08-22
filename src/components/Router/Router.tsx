@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Menu from "../../scenes/Menu/Menu";
 import React from "react";
-import PrivateRoute from './PrivateRoute';
+import Signup from "../../scenes/Signup/Signup";
 
 // Router component responsible for routing specific logic
 class Router extends React.Component<{}, {}> {
@@ -9,7 +9,8 @@ class Router extends React.Component<{}, {}> {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route exact path='/' component={Menu} />
+                    <Route path='/' exact><Menu/></Route>
+                    <Route path='/signup' exact><Signup/></Route>
                 </Switch>
             </BrowserRouter>
         );
