@@ -7,6 +7,7 @@ import Signin from '../../scenes/session/Signin/Signin';
 import Profile from '../../scenes/main/Profile/Profile';
 import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
+import AuthorForm from "../../scenes/main/Author/AuthorForm";
 
 // Router component responsible for routing specific logic
 class Router extends React.Component<{}, {}> {
@@ -19,6 +20,7 @@ class Router extends React.Component<{}, {}> {
                     <Route path='/signup' ><Signup /></Route>
                     <Route path='/signin' ><Signin /></Route>
                     <PrivateRoute path='/profile' roles={[]} ><Profile /></PrivateRoute>
+                    <Route path='/create-author'><AuthorForm /></Route>
                 </Switch>
                 <Footer />
             </BrowserRouter>

@@ -3,9 +3,11 @@ const requiredString: Validator = (value: string) => value !== '' && value !== n
 const requiredNumber: Validator = (value: number) => value !== null;
 const requiredTrue: Validator = (value: boolean) => value;
 const requiredFalse: Validator = (value: boolean) => !value;
+const required: Validator = (value: any) => value !== null;
 export {
     requiredString,
     requiredNumber,
     requiredFalse,
     requiredTrue,
+    required,
 }

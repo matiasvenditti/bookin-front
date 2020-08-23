@@ -3,6 +3,7 @@ import axios, {AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import { LoginUser } from "../model/LoginUser";
 import translateGender from "../utils/translateGender";
+import { NewAuthor } from "../model/NewAuthor";
 
 export interface ResponseRegister {
     id: number,
@@ -22,4 +23,8 @@ export function login(values: LoginUser): Promise<LoginUser> {
 
 export function logout() {
     localStorage.clear();
+}
+
+export function createAuthor(values: NewAuthor){
+    
 }
