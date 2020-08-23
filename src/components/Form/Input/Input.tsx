@@ -39,7 +39,7 @@ export default class Input extends Component<InputProps, InputState> {
                     <IconButton
                         aria-label="toggle password visibility"
                         onClick={() => this.handleShowPassword(true)}
-                        onMouseDown={() => this.handleShowPassword(true)}
+                        onMouseDown={() => this.handleShowPassword(false)}
                     >
                         {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
@@ -58,7 +58,14 @@ export default class Input extends Component<InputProps, InputState> {
                     fullWidth
                     // autoComplete="name"
                     label={label}
-                    type={type}
+                    type={type === 'password' ?
+                        this.state.showPassword ?
+                            'text'
+                            :
+                            'password'
+                        :
+                        type
+                    }
                     value={value}
                     error={error}
                     helperText={errorText}

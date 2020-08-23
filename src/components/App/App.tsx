@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Router from "../Router/Router";
 import { MuiThemeProvider } from "@material-ui/core";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import Register from '../../scenes/session/Register/Register';
+import { validateToken } from '../../services/AuthService';
+
 
 const theme = createMuiTheme({
     palette: {
@@ -36,13 +37,34 @@ const theme = createMuiTheme({
     }
 });
 
-function App() {
-    return (
-        <MuiThemeProvider theme={theme}>
-            {/* <Router /> */}
-            <Register />
-        </MuiThemeProvider>
-    );
+interface AppProps {
+
+}
+
+interface AppState {
+
+}
+
+class App extends Component<AppProps, AppState> {
+    constructor(props: AppProps) {
+        super(props);
+        this.state = {
+
+        }
+    }
+
+    componentDidMount() {
+        const token = localStorage.getItem('token');
+        if (token !== null) validateToken();
+    }
+
+    render() {
+        return (
+            <MuiThemeProvider theme={theme}>
+                <Router />
+            </MuiThemeProvider>
+        );
+    }
 }
 
 export default App;

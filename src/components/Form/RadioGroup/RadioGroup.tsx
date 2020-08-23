@@ -21,7 +21,6 @@ interface RadioGroupState {
 export default class RadioGroup extends Component<RadioGroupProps, RadioGroupState> {
     render() {
         const { title, id, type, value, options, error, errorText } = this.props;
-        console.log("asdasdasd", value);
         return (
             <FormControl component='fieldset' className='radio-group-form-control-container'>
                 <FormLabel component='legend' color='secondary'>{title}</FormLabel>

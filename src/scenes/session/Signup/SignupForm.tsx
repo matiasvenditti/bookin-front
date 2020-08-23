@@ -16,13 +16,12 @@ interface RegisterFormState {
 export default class RegisterForm extends Component<RegisterFormProps, RegisterFormState> {
     constructor(props: RegisterFormProps) {
         super(props);
-
         this.state = {
             values: {
-                name: { value: '', type: 'text', error: false },
-                surname: { value: '', type: 'text', error: false },
+                firstName: { value: '', type: 'text', error: false },
+                lastName: { value: '', type: 'text', error: false },
                 email: { value: '', type: 'email', error: false },
-                genre: { value: null, type: 'radio-group', error: false },
+                gender: { value: null, type: 'radio-group', error: false },
                 password: { value: '', type: 'password', error: false },
                 acceptTerms: { value: false, type: 'accept-terms', error: false },
             },
@@ -43,10 +42,10 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
             this.setState({ ...this.state, values: newValuesWithErrors });
         } else {
             let values: NewUser = {
-                name: this.state.values.name.value,
-                surname: this.state.values.surname.value,
+                firstName: this.state.values.firstName.value,
+                lastName: this.state.values.lastName.value,
                 email: this.state.values.email.value,
-                genre: this.state.values.genre.value,
+                gender: this.state.values.gender.value,
                 password: this.state.values.password.value,
             }
             this.props.onSubmit(values);
@@ -55,7 +54,6 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
 
     handleInput = (id: keyof Form, type: string, value: any) => {
         const error: boolean = !validateInput(type, value);
-        if (type === 'radio-group') console.log(value, type, error);
         this.setState({
             values: {
                 ...this.state.values,
@@ -70,23 +68,23 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
             <form>
                 <Input
                     label='Nombre'
-                    id='name'
+                    id='firstName'
                     type='text'
                     onChange={this.handleInput}
-                    value={this.state.values.name.value}
-                    error={this.state.values.name.error}
-                    errorText={this.state.values.name.error ? 'Nombre inválido' : ''}
+                    value={this.state.values.firstName.value}
+                    error={this.state.values.firstName.error}
+                    errorText={this.state.values.firstName.error ? 'Nombre inválido' : ''}
                     required
                     autoFocus
                 />
                 <Input
                     label='Apellido'
-                    id='surname'
+                    id='lastName'
                     type='text'
                     onChange={this.handleInput}
-                    value={this.state.values.surname.value}
-                    error={this.state.values.surname.error}
-                    errorText={this.state.values.surname.error ? 'Apellido inválido' : ''}
+                    value={this.state.values.lastName.value}
+                    error={this.state.values.lastName.error}
+                    errorText={this.state.values.lastName.error ? 'Apellido inválido' : ''}
                     required
                 />
                 <Input
@@ -101,12 +99,12 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                 />
                 <RadioGroup
                     title='Género'
-                    id='genre'
+                    id='gender'
                     type='radio-group'
                     onChange={this.handleInput}
-                    value={this.state.values.genre.value}
+                    value={this.state.values.gender.value}
                     options={['Hombre', 'Mujer', 'Anónimo']}
-                    error={this.state.values.genre.error}
+                    error={this.state.values.gender.error}
                     errorText={'Elige un género'}
                 />
                 <Input

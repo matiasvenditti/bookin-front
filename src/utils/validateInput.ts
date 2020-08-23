@@ -25,7 +25,5 @@ export default function(type: string, value: any) {
             return value === true;
         default: break;
     }
-    
-    console.log('type: ', type, ', value: ', value, ', res:', regex.test(value));
     return regex.test(value);
 }

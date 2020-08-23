@@ -1,7 +1,7 @@
 export interface NewUser {
-    name: string,
-    surname: string,
+    firstName: string,
+    lastName: string,
     email: string,
-    genre: string,
+    gender: string,
     password: string,
 }
