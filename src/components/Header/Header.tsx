@@ -10,6 +10,7 @@ import { withRouter } from "react-router-dom";
 import { logout } from "../../services/SessionService";
 import { isLoggedIn } from "../../services/AuthService";
 
+
 type State = {
 	username: string,
 	anchorEl: Element | null

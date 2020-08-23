@@ -1,16 +1,20 @@
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
-import SigninForm from './SigninForm';
-import './Signin.css';
+import './Login.css';
+import LoginForm from './LoginForm';
+import { LoginUser } from '../../../model/LoginUser';
+import { login } from '../../../services/SessionService';
 
 
 export default class Signin extends Component {
+    handleSubmit = (values: LoginUser) => login(values);
+
     render() {
         return (
             <div className='route-container'>
                 <div className='card-container'>
                     <Typography align='center' variant='h4'>Ingresar</Typography>
-                    <SigninForm />
+                    <LoginForm onSubmit={this.handleSubmit} />
                 </div>
             </div>
         )

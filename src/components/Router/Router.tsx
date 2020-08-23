@@ -3,7 +3,7 @@ import React from "react";
 import PrivateRoute from './PrivateRoute';
 import Home from "../../scenes/main/Home/Home";
 import Signup from '../../scenes/session/Signup/Signup';
-import Signin from '../../scenes/session/Signin/Signin';
+import Signin from '../../scenes/session/Login/Login';
 import Profile from '../../scenes/main/Profile/Profile';
 import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
