@@ -1,19 +1,15 @@
 import React from "react";
 import "./Footer.css"
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-
 
 
 export class Footer extends React.Component<{}, {}>{
-
-    render(){               
-
-        return(
-           <div color='secondary' className='main-footer'>
-               <div className='a'> 
+    render() {
+        return (
+            <div color='secondary' className='main-footer'>
+                <div className='a'>
                     <p>Copyright ©  Book In. All rights reserved</p>
-               </div>
-           </div>
+                </div>
+            </div>
         )
     }
 

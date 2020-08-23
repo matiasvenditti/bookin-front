@@ -1,8 +1,5 @@
 import React from "react";
-import UserTable from "../../components/UserTable/UserTable";
-import Signup from "../Signup/Signup";
-import Header from "../../components/Header/Header";
-import Footer from "../../components/Footer/Footer"
+import Header from "../Header/Header";
 import "./Menu.css"
 
 // Our component state structure, only containing a user array.
@@ -13,8 +10,7 @@ export class Menu extends React.Component<{}, {}> {
     render() {
         return (
             <div>
-                <Header/>
-                <Footer/>        
+                <Header />
             </div>
         )
     }
