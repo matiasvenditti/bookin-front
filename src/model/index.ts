@@ -1,11 +1,11 @@
 import { User } from './User';
 import { NewUser } from './NewUser';
-import { Form } from './Form/Form';
-import { FormValue } from './Form/FormValue';
+import { RegisterFormModel } from './Form/RegisterFormModel';
+import { LoginFormModel } from './Form/LoginFormModel';
 
 export type {
     User,
     NewUser,
-    Form,
-    FormValue,
+    RegisterFormModel,
+    LoginFormModel,
 }

@@ -1,16 +1,15 @@
 import React, { Component } from 'react'
 import { FormControlLabel, Checkbox as MaterialCheckbox, FormLabel } from '@material-ui/core';
 import './Checkbox.css';
-import { Form } from '../../../model';
 
 interface CheckboxProps {
-    id: keyof Form,
+    id: string,
     label: string,
     checked: boolean,
     type: string,
     error: boolean,
     errorText: string,
-    onChange(id: keyof Form, type: string, value: any): void,
+    onChange(id: string, type: string, value: any): void,
 }
 
 export default class Checkbox extends Component<CheckboxProps> {

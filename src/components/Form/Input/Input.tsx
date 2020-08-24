@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import { TextField, IconButton, InputAdornment } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import './Input.css';
-import { Form } from '../../../model';
 
 interface InputProps {
-    id: keyof Form,
+    id: string,
     label: string,
     type: string,
     value: any,
@@ -13,7 +12,7 @@ interface InputProps {
     errorText: string,
     required?: boolean,
     autoFocus?: boolean,
-    onChange(id: keyof Form, type: string, value: any): void,
+    onChange(id: string, type: string, value: any): void,
 }
 
 interface InputState {

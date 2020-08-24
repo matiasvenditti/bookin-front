@@ -1,17 +1,16 @@
 import React, { Component } from 'react'
 import { FormControl, FormLabel, RadioGroup as MaterialRadioGroup, FormControlLabel, Radio } from '@material-ui/core'
 import './RadioGroup.css';
-import { Form } from '../../../model';
 
 interface RadioGroupProps {
     title: string,
-    id: keyof Form,
+    id: string,
     type: string,
     value: string,
     options: string[],
     error: boolean,
     errorText: string,
-    onChange(id: keyof Form, type: string, value: any): void,
+    onChange(id: string, type: string, value: any): void,
 }
 
 interface RadioGroupState {

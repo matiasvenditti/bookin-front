@@ -1,65 +1,54 @@
 import React, { Component } from 'react';
 import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
+import { NewUser } from '../../../model';
+import { RegisterFormModel } from '../../../model';
 import validateInput from '../../../utils/validateInput';
-import { NewUser } from '../../../model/NewUser';
-import { Form } from '../../../model';
 
 interface RegisterFormProps {
     onSubmit(values: NewUser): void,
 }
 
 interface RegisterFormState {
-    values: Form,
-    anyErrors: boolean,
+    values: RegisterFormModel,
+    formValid: boolean,
 }
 
-export default class RegisterForm extends Component<RegisterFormProps, RegisterFormState> {
+export default class SignupForm extends Component<RegisterFormProps, RegisterFormState> {
     constructor(props: RegisterFormProps) {
         super(props);
         this.state = {
             values: {
-                firstName: { value: '', type: 'text', error: false },
-                lastName: { value: '', type: 'text', error: false },
-                email: { value: '', type: 'email', error: false },
-                gender: { value: null, type: 'radio-group', error: false },
-                password: { value: '', type: 'password', error: false },
-                acceptTerms: { value: false, type: 'accept-terms', error: false },
+                firstName: { value: '', type: 'text', error: true, touched: false },
+                lastName: { value: '', type: 'text', error: true, touched: false },
+                email: { value: '', type: 'email', error: true, touched: false },
+                gender: { value: null, type: 'radio-group', error: true, touched: false },
+                password: { value: '', type: 'password', error: true, touched: false },
+                acceptTerms: { value: false, type: 'accept-terms', error: true, touched: false },
             },
-            anyErrors: true,
+            formValid: false,
         }
     }
 
-    handleSubmit = () => {
-        const newValuesWithErrors: Form = this.state.values;
-        let anyErrors: boolean = false;
-        const values = this.state.values;
-        Object.keys(this.state.values).map((key: string) => {
-            const isInputValid = !validateInput(values[key].type, values[key].value);
-            if (isInputValid) anyErrors = true;
-            newValuesWithErrors[key].error = isInputValid;
-        })
-        if (anyErrors) {
-            this.setState({ ...this.state, values: newValuesWithErrors });
-        } else {
-            let values: NewUser = {
-                firstName: this.state.values.firstName.value,
-                lastName: this.state.values.lastName.value,
-                email: this.state.values.email.value,
-                gender: this.state.values.gender.value,
-                password: this.state.values.password.value,
-            }
-            this.props.onSubmit(values);
-        };
-    }
-
-    handleInput = (id: keyof Form, type: string, value: any) => {
-        const error: boolean = !validateInput(type, value);
+    handleInput = (id: keyof RegisterFormModel, type: string, value: any) => {
+        const error = !validateInput(type, value);
+        const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched === true);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error === true);
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: { value, type, error }
+                [id]: { value, type, error, touched: true },
             },
-            anyErrors: this.state.anyErrors && false
+            formValid: allTouched && !anyErrors,
+        });
+    }
+
+    handleSubmit = () => {
+        this.props.onSubmit({
+            firstName: this.state.values.firstName.value,
+            lastName: this.state.values.lastName.value,
+            email: this.state.values.email.value,
+            gender: this.state.values.gender.value,
+            password: this.state.values.password.value,
         });
     }
 
@@ -72,8 +61,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     type='text'
                     onChange={this.handleInput}
                     value={this.state.values.firstName.value}
-                    error={this.state.values.firstName.error}
-                    errorText={this.state.values.firstName.error ? 'Nombre inválido' : ''}
+                    error={this.state.values.firstName.touched && this.state.values.firstName.error}
+                    errorText={this.state.values.firstName.touched && this.state.values.firstName.error ? 'Nombre inválido' : ''}
                     required
                     autoFocus
                 />
@@ -83,8 +72,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     type='text'
                     onChange={this.handleInput}
                     value={this.state.values.lastName.value}
-                    error={this.state.values.lastName.error}
-                    errorText={this.state.values.lastName.error ? 'Apellido inválido' : ''}
+                    error={this.state.values.lastName.touched && this.state.values.lastName.error}
+                    errorText={this.state.values.lastName.touched && this.state.values.lastName.error ? 'Apellido inválido' : ''}
                     required
                 />
                 <Input
@@ -93,8 +82,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     type='email'
                     onChange={this.handleInput}
                     value={this.state.values.email.value}
-                    error={this.state.values.email.error}
-                    errorText={this.state.values.email.error ? 'Mail inválido' : ''}
+                    error={this.state.values.email.touched && this.state.values.email.error}
+                    errorText={this.state.values.email.touched && this.state.values.email.error ? 'Mail inválido' : ''}
                     required
                 />
                 <RadioGroup
@@ -104,7 +93,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     onChange={this.handleInput}
                     value={this.state.values.gender.value}
                     options={['Hombre', 'Mujer', 'Anónimo']}
-                    error={this.state.values.gender.error}
+                    error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}
                 />
                 <Input
@@ -113,8 +102,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     type='password'
                     onChange={this.handleInput}
                     value={this.state.values.password.value}
-                    error={this.state.values.password.error}
-                    errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                    error={this.state.values.password.touched && this.state.values.password.error}
+                    errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
                     required
                 />
                 <Checkbox
@@ -122,13 +111,13 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     type='accept-terms'
                     label='Acepto los términos y condiciones'
                     checked={this.state.values.acceptTerms.value}
-                    error={this.state.values.acceptTerms.error}
+                    error={this.state.values.acceptTerms.touched && this.state.values.acceptTerms.error}
                     errorText='Debe aceptar los términos'
                     onChange={this.handleInput}
                 />
                 <Button
                     title='Crear'
-                    disabled={this.state.anyErrors}
+                    disabled={!this.state.formValid}
                     onClick={this.handleSubmit}
                 />
             </form>
