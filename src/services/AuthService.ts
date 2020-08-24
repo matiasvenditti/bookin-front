@@ -24,6 +24,7 @@ const getDecodedToken = (): DecodedToken => {
  */
 const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
     const token = response.headers["authorization"].split(' ')[1];
+    console.log('saveloginresponse', token)
     localStorage.setItem('token', token);
 }
  
@@ -35,11 +36,13 @@ const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
  */
 const isLoggedIn = () => {
     const decodedToken: DecodedToken = getDecodedToken();
-    if (new Date().getTime() > decodedToken.exp) {
+    if (new Date().getTime() > decodedToken.exp * 1000) {
+        console.log('isLoggedIn', decodedToken, 'expired')
         // my token expired
         logout(); 
         return false;
     } else {
+        console.log('isLoggedIn', decodedToken, 'nice')
         return true;
     }
 };

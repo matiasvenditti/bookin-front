@@ -4,10 +4,14 @@ import './Login.css';
 import LoginForm from './LoginForm';
 import { LoginUser } from '../../../model/LoginUser';
 import { login } from '../../../services/SessionService';
+import { withRouter } from 'react-router-dom';
 
 
-export default class Signin extends Component {
-    handleSubmit = (values: LoginUser) => login(values);
+class Login extends Component<any, {}> {
+    handleSubmit = (values: LoginUser) => {
+        login(values, this.props.history);
+        this.props.loginCallback();
+    }
 
     render() {
         return (
@@ -20,3 +24,5 @@ export default class Signin extends Component {
         )
     }
 }
+
+export default withRouter(Login)

@@ -3,21 +3,32 @@ import React from "react";
 import PrivateRoute from './PrivateRoute';
 import Home from "../../scenes/main/Home/Home";
 import Signup from '../../scenes/session/Signup/Signup';
-import Signin from '../../scenes/session/Login/Login';
+import Login from '../../scenes/session/Login/Login';
 import Profile from '../../scenes/main/Profile/Profile';
 import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
 
-// Router component responsible for routing specific logic
-class Router extends React.Component<{}, {}> {
+interface RouterProps {
+
+}
+
+interface RouterState {
+    reload: boolean
+}
+
+class Router extends React.Component<RouterProps, RouterState> {
+    constructor(props: RouterProps) {
+        super(props);
+        this.state = { reload: false };
+    }
     render() {
         return (
             <BrowserRouter>
-                <Menu />
+                <Menu logoutCallback={() => this.setState({ reload: true })} />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
-                    <Route path='/signup' ><Signup /></Route>
-                    <Route path='/signin' ><Signin /></Route>
+                    <Route path='/signup' ><Signup registerCallback={() => this.setState({ reload: true })} /></Route>
+                    <Route path='/signin' ><Login loginCallback={() => this.setState({ reload: true })} /></Route>
                     <PrivateRoute path='/profile' roles={[]} ><Profile /></PrivateRoute>
                 </Switch>
                 <Footer />

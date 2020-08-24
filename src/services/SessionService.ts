@@ -14,9 +14,11 @@ export interface ResponseRegister {
     lastName: string,
     email: string,
 }
-export function register(values: NewUser): void {
+export function register(values: NewUser, history: any): void {
     values.gender = translateGender(values.gender);
-    axios.post<ResponseRegister>(`${baseURL}/signup`, values);
+    axios.post<ResponseRegister>(`${baseURL}/signup`, values)
+        .then(() => history.push('/'))
+        .catch((error) => console.error(error));
 }
 
 
@@ -24,10 +26,11 @@ export function register(values: NewUser): void {
 export interface ResponseLogin {
     
 }
-export function login(values: LoginUser): void {
+export function login(values: LoginUser, history: any): any {
     axios.post<ResponseLogin>(`${baseURL}/login`, values)
         .then((response: AxiosResponse<ResponseLogin>) => {
             saveLoginResponse(response);
+            history.push('/');
         })
         .catch((error) => console.error(error));
 }

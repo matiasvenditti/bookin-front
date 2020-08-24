@@ -4,9 +4,14 @@ import { Typography } from '@material-ui/core';
 import SignupForm from './SignupForm';
 import { NewUser } from '../../../model/NewUser';
 import { register } from '../../../services/SessionService';
+import { withRouter } from 'react-router-dom';
 
-export default class Register extends Component {
-    handleSubmit = (values: NewUser) => register(values);
+
+class Register extends Component<any, {}> {
+    handleSubmit = (values: NewUser) => {
+        register(values, this.props.history);
+        this.props.registerCallback()
+    }
 
     render() {
         return (
@@ -19,3 +24,5 @@ export default class Register extends Component {
         )
     }
 }
+
+export default withRouter(Register);
