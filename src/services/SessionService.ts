@@ -1,5 +1,5 @@
 import {NewUser} from "../model/NewUser";
-import axios, {AxiosResponse} from 'axios';
+import axios, {AxiosResponse, AxiosPromise} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import { LoginUser } from "../model/LoginUser";
 import translateGender from "../utils/translateGender";
@@ -14,11 +14,9 @@ export interface ResponseRegister {
     lastName: string,
     email: string,
 }
-export function register(values: NewUser, history: any): void {
+export function register(values: NewUser): Promise<AxiosResponse> {
     values.gender = translateGender(values.gender);
-    axios.post<ResponseRegister>(`${baseURL}/signup`, values)
-        .then(() => history.push('/'))
-        .catch((error) => console.error(error));
+    return axios.post<ResponseRegister>(`${baseURL}/signup`, values)
 }
 
 
@@ -26,13 +24,9 @@ export function register(values: NewUser, history: any): void {
 export interface ResponseLogin {
     
 }
-export function login(values: LoginUser, history: any): any {
-    axios.post<ResponseLogin>(`${baseURL}/login`, values)
-        .then((response: AxiosResponse<ResponseLogin>) => {
-            saveLoginResponse(response);
-            history.push('/');
-        })
-        .catch((error) => console.error(error));
+
+export function login(values: LoginUser): Promise<AxiosResponse> {
+    return axios.post<ResponseLogin>(`${baseURL}/login`, values);
 }
 
 

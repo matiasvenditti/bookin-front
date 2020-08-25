@@ -12,6 +12,7 @@ interface InputProps {
     errorText: string,
     required?: boolean,
     autoFocus?: boolean,
+    disabled?: boolean,
     onChange(id: string, type: string, value: any): void,
 }
 
@@ -48,14 +49,13 @@ export default class Input extends Component<InputProps, InputState> {
     }
 
     render() {
-        const { label, id, type, value, error, errorText, required, autoFocus } = this.props;
+        const { label, id, type, value, error, errorText, required, disabled, autoFocus } = this.props;
         return (
             <div className='form-input-container'>
                 <TextField
                     variant='outlined'
                     color='secondary'
                     fullWidth
-                    // autoComplete="name"
                     label={label}
                     type={type === 'password' ?
                         this.state.showPassword ?
@@ -70,6 +70,7 @@ export default class Input extends Component<InputProps, InputState> {
                     helperText={errorText}
                     required={required}
                     autoFocus={autoFocus}
+                    disabled={disabled}
                     onChange={(e) => this.props.onChange(id, type, e.target.value)}
                     InputProps={{ endAdornment: this.getPasswordEndAdornment() }}
                 />

@@ -1,0 +1,15 @@
+form {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-items: center;
+}
+
+form > fieldset {
+    margin-top: 15px !important;
+}
+
+form > button > span > div {
+    margin-top: 8px;
+}

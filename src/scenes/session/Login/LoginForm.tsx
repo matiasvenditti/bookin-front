@@ -5,6 +5,7 @@ import { Input, Button } from '../../../components/Form';
 import validateInput from '../../../utils/validateInput';
 
 interface LoginFormProps {
+    loading: boolean,
     onSubmit(values: LoginUser): void,
 }
 
@@ -46,6 +47,7 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
     }
 
     render() {
+        const { loading } = this.props;
         return (
             <form>
                 <Input
@@ -57,6 +59,7 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
                     error={this.state.values.email.touched && this.state.values.email.error}
                     errorText={this.state.values.email.touched && this.state.values.email.error ? 'Mail inválido' : ''}
                     required
+                    disabled={loading}
                 />
 
                 <Input
@@ -68,10 +71,12 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
                     error={this.state.values.password.touched && this.state.values.password.error}
                     errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
                     required
+                    disabled={loading}
                 />
                 <Button
                     title='Ingresar'
                     disabled={!this.state.formValid}
+                    loading={loading}
                     onClick={this.handleSubmit}
                 />
             </form>
