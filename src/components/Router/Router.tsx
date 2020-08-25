@@ -8,6 +8,7 @@ import Profile from '../../scenes/main/Profile/Profile';
 import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
 import AuthorForm from "../../scenes/main/Author/AuthorForm";
+import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
 
 // Router component responsible for routing specific logic
 class Router extends React.Component<{}, {}> {

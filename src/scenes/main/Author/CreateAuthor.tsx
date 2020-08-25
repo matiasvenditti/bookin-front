@@ -12,17 +12,17 @@ import RegisterForm from "../../session/Signup/SignupForm";
         createAuthor(values)
             .then((response: AxiosResponse<ResponseRegister>) => console.log(response))
             .catch((error) => console.error(error));
-    }
+    }**/
 
     render() {
         return (
             <div className='route-container'>
                 <div className='card-container'>
-                    <Typography align='center' variant='h5'>Registra un autor</Typography>
-                    <AuthorForm onSubmit={this.handleSubmit} />
+                    <Typography align='center' variant='h5'>Creá un autor</Typography>
+                    <CreateAuthor />
                 </div>
             </div>
         )
-    }**/
+    }
 
  }

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, ChangeEvent } from 'react';
 import { Checkbox, Input, RadioGroup, Button} from '../../../components/Form';
 import {Form, FormValue} from '../../../model';
 import {requiredString,required, requiredTrue, Validator} from "../../../utils/Validators/RequiredValidator";
@@ -11,7 +11,7 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { Select, MenuItem, TextField, makeStyles, Theme, createStyles, withStyles } from '@material-ui/core';
+import { Select, MenuItem, TextField, makeStyles, Theme, createStyles, withStyles, Typography, InputLabel, Button as Buttons } from '@material-ui/core';
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import { SystemUpdate } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
@@ -23,6 +23,7 @@ import { withRouter } from 'react-router-dom';
         values: Form;
     }
 
+
 export default class AuthorForm extends Component<{}, RegisterFormState>{
 
     constructor(props: any){
@@ -31,7 +32,7 @@ export default class AuthorForm extends Component<{}, RegisterFormState>{
             values:{
                 name: {value: '', type: 'text', error: true, touched: false, validators: [requiredString, textValidator]},
                 surname: {value: '', type: 'text', error: true, touched: false, validators: [requiredString, textValidator]},
-                nationality: {value: null, type: 'select', error: true, touched: false, validators: [requiredString]},
+                nationality: {value: '', type: 'select', error: true, touched: false, validators: [requiredString]},
                 dob: {value: new Date, type:'date', error: true, touched: false, validators: [requiredString]},
                 photo: {value: null, type: 'File', error: true, touched: false, validators: [required]},
             }
@@ -60,7 +61,7 @@ export default class AuthorForm extends Component<{}, RegisterFormState>{
                 dob: this.state.values.dob.value,
                 photo: this.state.values.photo.value,
             }
-            //  this.props.onSubmit(values);
+            //this.props.onSubmit(values);
         };
     }
 
@@ -79,17 +80,43 @@ export default class AuthorForm extends Component<{}, RegisterFormState>{
         return Object.values(this.state.values).some((value: FormValue) => value.error);
     }
 
-    handleDateChange = (pickerDate: MaterialUiPickersDate) => {
-        const date = pickerDate ? new Date(pickerDate.getDate()) : new Date();
+    handleDateChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+        console.log(event.target.value)
+        const date = event.target.value as string;//pickerDate ? new Date(pickerDate.getDate()) : new Date();
         this.setState((prevState: RegisterFormState) => ({
             ...prevState,
-            date: date
+            dob: date
         }));
+        console.log(this.state)
     }
 
-    handleInputDate = (object: Object) => {
-        var miObjeto: Object = object;
-        console.log(miObjeto.target.value);
+    handleInputSelect = (object: any) => {
+        const nacionalidad =  object.target.value as string;
+        this.setState((prevState: RegisterFormState) => ({
+            ...prevState,
+            nationality : nacionalidad
+        }));    
+        this.state.values.nationality.value = nacionalidad;
+        console.log(this.state)
+        console.log(nacionalidad)
+    }
+
+    handleChange = (event: any) => {
+        const file: File = event.target.files[0];
+        this.setState((prevState: RegisterFormState) => ({
+            ...prevState,
+            photo: file
+        }))
+        this.state.values.photo.value = file;
+        console.log(this.state);
+    }
+
+    readFile = (file: File) => {
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = event => {
+            console.log(event/** .target.result*/);
+        }
     }
 
     render(){
@@ -115,28 +142,42 @@ export default class AuthorForm extends Component<{}, RegisterFormState>{
                     errorText={this.state.values.surname.touched && this.state.values.surname.error ? 'Apellido inválido' : ''}
                     required
                 />
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="nationality"
-                    value={this.state.values.nationality.value}
-                    onChange={this.handleInputDate}
-                    >
-                    <MenuItem value='Argentina'>Argentina</MenuItem>
-                    <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
-                    <MenuItem value='España'>España</MenuItem>
-                </Select>
+                <div>
+                    <InputLabel id="demo-simple-select-label">Nacionalidad</InputLabel>                    
+                    <Select
+                        autoWidth={false}
+                        labelId="demo-simple-select-label"
+                        id="nationality"
+                        type="select"
+                        defaultValue='Seleccionar...'
+                        value={this.state.values.nationality.value}
+                        onChange={this.handleInputSelect}
+                        >
+                        <MenuItem value='Argentina'>Argentina</MenuItem>
+                        <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
+                        <MenuItem value='España'>España</MenuItem>
+                    </Select>   
+                </div>
                 <TextField
                     id='dob'
                     label='Fecha de nacimiento'
                     type='date'
                     defaultValue={this.state.values.dob.value}
-                    //onChange={this.handleInput} 
+                    onChange={this.handleDateChange} 
                     className='textField'
                     InputLabelProps={{
                         shrink: true,
                       }}  
                 />
-               
+                <Buttons variant="contained" component="label" onChange={this.handleChange}
+ >
+                    Upload File
+                    <input
+                        accept="image/*"
+                        type="file"
+                        style={{ display: "none" }}
+                    />
+                </Buttons>
                 <Button
                     title='Crear Autor'
                     disabled={this.isFormValid()}                    
@@ -146,19 +187,3 @@ export default class AuthorForm extends Component<{}, RegisterFormState>{
         )
     }
 }
-/**const useStyles = (theme: Theme) =>
-  createStyles({
-    container: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
-    textField: {
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
-      width: 200,
-    },
-  }),
-;
-
-export default withStyles(useStyles)(withRouter(AuthorForm));
-**/
