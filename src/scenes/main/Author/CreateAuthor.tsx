@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import {Container, Typography } from "@material-ui/core";
-import AuthorForm from './CreateAuthor'
 import { NewAuthor } from "../../../model/NewAuthor";
-import { register, ResponseRegister, createAuthor } from "../../../services/SessionService";
+import { register, ResponseRegister } from "../../../services/SessionService";
 import { AxiosResponse } from 'axios';
+import AuthorForm from "./AuthorForm";
+import { createAuthor } from "../../../services/AuthorService";
 
  export default class CreateAuthor extends Component { 
      
     handleSubmit = (values: NewAuthor, photo: File) => {
         createAuthor(values, photo)
-            .then((response: AxiosResponse<ResponseRegister>) => console.log(response))
-            .catch((error) => console.error(error));
     }
 
     render() {
@@ -18,7 +17,7 @@ import { AxiosResponse } from 'axios';
             <div /**className='route-container'*/ >
                 <div /**className='card-container'*/ >
                     <Typography align='center' variant='h5'>Creá un autor</Typography>
-                    <AuthorForm />
+                    <AuthorForm onSubmit={this.handleSubmit} />
                 </div>
             </div>
         )
