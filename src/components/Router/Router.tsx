@@ -21,7 +21,7 @@ class Router extends React.Component<{}, {}> {
                     <Route path='/signup' ><Signup /></Route>
                     <Route path='/signin' ><Signin /></Route>
                     <PrivateRoute path='/profile' roles={[]} ><Profile /></PrivateRoute>
-                    <Route path='/create-author'><AuthorForm /></Route>
+                    <Route path='/create-author'><CreateAuthor /></Route>
                 </Switch>
                 <Footer />
             </BrowserRouter>

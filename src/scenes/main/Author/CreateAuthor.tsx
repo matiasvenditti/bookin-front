@@ -4,22 +4,21 @@ import AuthorForm from './CreateAuthor'
 import { NewAuthor } from "../../../model/NewAuthor";
 import { register, ResponseRegister, createAuthor } from "../../../services/SessionService";
 import { AxiosResponse } from 'axios';
-import RegisterForm from "../../session/Signup/SignupForm";
 
  export default class CreateAuthor extends Component { 
-    /** 
-    handleSubmit = (values: NewAuthor) => {
-        createAuthor(values)
+     
+    handleSubmit = (values: NewAuthor, photo: File) => {
+        createAuthor(values, photo)
             .then((response: AxiosResponse<ResponseRegister>) => console.log(response))
             .catch((error) => console.error(error));
-    }**/
+    }
 
     render() {
         return (
-            <div className='route-container'>
-                <div className='card-container'>
+            <div /**className='route-container'*/ >
+                <div /**className='card-container'*/ >
                     <Typography align='center' variant='h5'>Creá un autor</Typography>
-                    <CreateAuthor />
+                    <AuthorForm />
                 </div>
             </div>
         )

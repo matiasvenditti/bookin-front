@@ -3,5 +3,4 @@ export interface NewAuthor{
     surname: string
     nationality: string,
     dob: string,
-    photo: any
 }

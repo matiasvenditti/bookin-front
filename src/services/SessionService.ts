@@ -25,6 +25,6 @@ export function logout() {
     localStorage.clear();
 }
 
-export function createAuthor(values: NewAuthor){
-    
+export function createAuthor(values: NewAuthor, photo: File){
+    return axios.post<ResponseRegister>(`${baseURL}/create-author`, values);
 }
