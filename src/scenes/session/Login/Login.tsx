@@ -7,7 +7,7 @@ import { login, ResponseLogin } from '../../../services/SessionService';
 import { withRouter } from 'react-router-dom';
 import { AxiosResponse } from 'axios';
 import { saveLoginResponse } from '../../../services/AuthService';
-import RequestStatus from '../../../model/consts/RequestStatus';
+import { RequestStatus } from '../../../model/consts/RequestStatus';
 
 
 export interface LoginState {

@@ -9,7 +9,7 @@ import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
-import RequestStatus from "../../model/consts/RequestStatus";
+import { RequestStatus } from "../../model/consts/RequestStatus";
 
 
 interface RouterProps {
@@ -18,8 +18,8 @@ interface RouterProps {
 
 interface RouterState {
     reload: boolean,
-    registerStatus: string,
-    loginStatus: string,
+    registerStatus: RequestStatus,
+    loginStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -39,11 +39,11 @@ class Router extends React.Component<RouterProps, RouterState> {
                 <Switch>
                     <Route exact path='/'><Home /></Route>
                     <Route path='/register' >
-                        <Register registerCallback={(registerStatus: string, loginStatus: string) =>
+                        <Register registerCallback={(registerStatus: RequestStatus, loginStatus: RequestStatus) =>
                             this.setState({ ...this.state, registerStatus, loginStatus })}
                         />
                     </Route>
-                    <Route path='/login' ><Login loginCallback={(loginStatus: string) => this.setState({ ...this.state, loginStatus })} /></Route>
+                    <Route path='/login' ><Login loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })} /></Route>
                     <PrivateRoute path='/profile' roles={[]} ><Profile /></PrivateRoute>
                 </Switch>
                 <Footer />
