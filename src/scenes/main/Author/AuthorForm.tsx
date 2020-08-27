@@ -1,6 +1,6 @@
 import React, { Component, ChangeEvent } from 'react';
 import { Checkbox, Input, RadioGroup, Button} from '../../../components/Form';
-import { AuthorFormModel} from '../../../model';
+import {Form, FormValue} from '../../../model';
 import {requiredString,required, requiredTrue, Validator} from "../../../utils/Validators/RequiredValidator";
 import {emailValidator, passwordValidator, textValidator} from "../../../utils/Validators/validateInput";
 import { NewAuthor } from '../../../model/NewAuthor';
@@ -11,14 +11,15 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { Select, MenuItem, TextField, makeStyles, Theme, createStyles, withStyles, Typography, InputLabel, Button as Buttons } from '@material-ui/core';
+import { Select, MenuItem, TextField, makeStyles, Theme, createStyles, withStyles, Typography, InputLabel, Button as Buttons, FormControl } from '@material-ui/core';
 import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
 import { SystemUpdate } from '@material-ui/icons';
 import { withRouter } from 'react-router-dom';
+import "./AuthorForm.css"
 
 
     interface RegisterFormState {
-        values: AuthorFormModel;
+        values: Form;
         bytearray: any;
     }
 
@@ -128,64 +129,85 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
 
         return(
             <form>
-                <Input
-                    label='Nombre'
-                    id='name'
-                    type='text'
-                    onChange={this.handleInput}
-                    value={this.state.values.name.value}
-                    error={this.state.values.name.touched && this.state.values.name.error}
-                    errorText={this.state.values.name.touched && this.state.values.name.error ? 'Nombre inválido' : ''}
-                    required
-                />
-                <Input
-                    label='Apellido'
-                    id='surname'
-                    type='text'
-                    onChange={this.handleInput}
-                    value={this.state.values.surname.value}
-                    error={this.state.values.surname.touched && this.state.values.surname.error}
-                    errorText={this.state.values.surname.touched && this.state.values.surname.error ? 'Apellido inválido' : ''}
-                    required
-                />
-                <div>
-                    <InputLabel id="demo-simple-select-label">Nacionalidad</InputLabel>                    
-                    <Select
-                        autoWidth={false}
-                        labelId="demo-simple-select-label"
-                        id="nationality"
-                        type="select"
-                        defaultValue='Seleccionar...'
-                        name='nationality'
-                        value={this.state.values.nationality.value}
-                        onChange={this.handleInputSelect}
-                        >
-                        <MenuItem value='Argentina'>Argentina</MenuItem>
-                        <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
-                        <MenuItem value='España'>España</MenuItem>
-                    </Select>   
-                </div>
-                <TextField
-                    id='dob'
-                    label='Fecha de nacimiento'
-                    type='date'
-                    defaultValue={this.state.values.dob.value}
-                    onChange={this.handleDateChange} 
-                    className='textField'
-                    InputLabelProps={{
-                        shrink: true,
-                      }}  
-                />
-                <Buttons variant="contained" component="label" onChange={this.handleChange}
- >
-                    Upload File
-                    <input
-                        accept="image/*"
-                        type="file"
-                        style={{ display: "none" }}
-                    />
-                </Buttons>
+                <Grid container spacing={2}>               
+                    <Grid item >
+                        <Input
+                            label='Nombre'
+                            id='name'
+                            type='text'
+                            onChange={this.handleInput}
+                            value={this.state.values.name.value}
+                            error={this.state.values.name.touched && this.state.values.name.error}
+                            errorText={this.state.values.name.touched && this.state.values.name.error ? 'Nombre inválido' : ''}
+                            required
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Input
+                            label='Apellido'
+                            id='surname'
+                            type='text'
+                            onChange={this.handleInput}
+                            value={this.state.values.surname.value}
+                            error={this.state.values.surname.touched && this.state.values.surname.error}
+                            errorText={this.state.values.surname.touched && this.state.values.surname.error ? 'Apellido inválido' : ''}
+                            required
+                        />
+                    </Grid>
+                </Grid>
+                <div className="form-input-container">
 
+                <FormControl>
+                    <Grid container spacing={2}>                
+                        <Grid item>
+                            <div>
+                                <InputLabel id="demo-simple-select-label">Nacionalidad</InputLabel>                    
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="nationality"
+                                    type="select"
+                                    defaultValue='Seleccionar...'
+                                    name='nationality'
+                                    value={this.state.values.nationality.value}
+                                    onChange={this.handleInputSelect}
+                                    variant='outlined'
+                                    color='secondary'
+                                    fullWidth
+                                    >
+                                    <MenuItem value='Argentina'>Argentina</MenuItem>
+                                    <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
+                                    <MenuItem value='España'>España</MenuItem>
+                                </Select>   
+                            </div>
+                        </Grid>
+                        
+                        <Grid item>
+                            <TextField
+                                id='dob'
+                                label='Fecha de nacimiento'
+                                type='date'
+                                defaultValue={this.state.values.dob.value}
+                                onChange={this.handleDateChange} 
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}  
+                                variant='outlined'
+                                color='secondary'
+                                fullWidth
+                            />
+                        </Grid>
+                    </Grid>
+                </FormControl>                
+            </div>
+
+                        <Buttons variant="contained" component="label" onChange={this.handleChange} color='secondary' >
+                            Agrega una foto
+                            <input
+                                accept="image/*"
+                                type="file"
+                                style={{ display: "none" }}
+                            />
+                        </Buttons>
                 
                 {image}
                 
