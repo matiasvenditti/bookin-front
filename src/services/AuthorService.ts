@@ -14,10 +14,13 @@ export interface Author {
 
 const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Author>> => {
     const createAuthorForm = new FormData();
-    createAuthorForm.append("author", JSON.stringify(author)); 
+    createAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
     createAuthorForm.append("photo", photo);
     const config: AxiosRequestConfig = {
-        headers: {'Content-Type': 'multipart/form-data'}
+        headers: {
+            'Content-Type': undefined,
+            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXRpYXN2ZW5kaXR0aUBnbWFpbC5jb20iLCJleHAiOjE1OTkyNzc1NzAsImF1dGhvcml0aWVzIjpbIlJPTEVfQURNSU4iXX0.I6iIYCxDHwNUeyO_5sNd0yxQSInujulW9BSz_o8HmWSOVgfZKH3ohUws9g00DdGG-42J2dYUuTDw3Shdh35eBA'
+        }
     }
     return axios.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
 }

@@ -1,6 +1,6 @@
 export interface NewAuthor{
-    name: string,
-    surname: string
+    firstName: string,
+    lastName: string
     nationality: string,
-    dob: string,
+    birthday: string,
 }

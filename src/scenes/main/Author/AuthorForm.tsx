@@ -46,10 +46,10 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
 
     handleSubmit = () => {
         let values: NewAuthor = {
-            name: this.state.values.name.value,
-            surname: this.state.values.surname.value,
+            firstName: this.state.values.name.value,
+            lastName: this.state.values.surname.value,
             nationality: this.state.values.nationality.value,
-            dob: this.state.values.dob.value,
+            birthday: this.state.values.dob.value,
             }
         this.props.onSubmit(values, this.state.values.photo.value);
     }
