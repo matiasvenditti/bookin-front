@@ -14,8 +14,8 @@ import { createAuthor } from "../../../services/AuthorService";
 
     render() {
         return (
-            <div /**className='route-container'*/ >
-                <div /**className='card-container'*/ >
+            <div className='route-container' >
+                <div className='card-container' >
                     <Typography align='center' variant='h5'>Creá un autor</Typography>
                     <AuthorForm onSubmit={this.handleSubmit} />
                 </div>

@@ -1,6 +1,6 @@
 import React, { Component, ChangeEvent } from 'react';
 import { Checkbox, Input, RadioGroup, Button} from '../../../components/Form';
-import {Form, FormValue} from '../../../model';
+import { AuthorFormModel} from '../../../model';
 import {requiredString,required, requiredTrue, Validator} from "../../../utils/Validators/RequiredValidator";
 import {emailValidator, passwordValidator, textValidator} from "../../../utils/Validators/validateInput";
 import { NewAuthor } from '../../../model/NewAuthor';
@@ -18,7 +18,7 @@ import { withRouter } from 'react-router-dom';
 
 
     interface RegisterFormState {
-        values: Form;
+        values: AuthorFormModel;
         bytearray: any;
     }
 
