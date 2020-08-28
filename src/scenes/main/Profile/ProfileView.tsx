@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { List, ListItem, ListItemAvatar, ListItemText, Divider } from '@material-ui/core'
+import { List, ListItem, ListItemText, Divider } from '@material-ui/core'
 
 interface ProfileViewProps {
     data: {

@@ -1,9 +1,7 @@
-import React, { Component } from 'react';
-import { Typography, AppBar, Tabs, Tab } from '@material-ui/core';
-import { Image } from '@material-ui/icons';
-import { Skeleton, TabPanel } from '@material-ui/lab';
-import { User } from '../../../model';
-import { RequestStatus } from '../../../model/consts/RequestStatus';
+import React, {Component} from 'react';
+import {Image} from '@material-ui/icons';
+import {EditVar} from '../../../model/consts/EditVar';
+import {RequestStatus} from '../../../model/consts/RequestStatus';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
 
@@ -17,17 +15,19 @@ interface ProfileState {
     tabs: string[],
     editProfileMode: boolean,
     getUserDataStatus: RequestStatus,
+    editVariable: EditVar,
+    updateStatus: any,
     data: any,
     error: any,
 }
 
-export default class Profile extends Component<ProfileProps, ProfileState> {
-    constructor(props: ProfileProps) {
+export default class Profile extends Component<any, ProfileState> {
+    constructor(props: any) {
         super(props);
         this.state = {
             currentTab: 'Mi perfil',
             tabs: ['Mi perfil', 'Mis reseñas'],
-            editProfileMode: false,
+            editProfileMode: true,
             getUserDataStatus: RequestStatus.NONE,
             data: {
                 firstName: 'Juan Gabriel',
@@ -36,6 +36,8 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
                 gender: 'M',
                 photo: null,
             },
+            updateStatus: RequestStatus.NONE,
+            editVariable: EditVar.PASSWORD,
             error: null,
         }
     }
@@ -50,6 +52,10 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
         this.setState({ ...this.state, currentTab: e.target.value });
     }
 
+    handleCancel = () => {
+        this.setState({editProfileMode : false})
+    };
+
     render() {
         // const { getUserDataStatus } = this.state;
         const { firstName, lastName, email, gender, photo } = this.state.data;
@@ -58,7 +64,7 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
                 <div className='card-container'>
                     <div className='image-name-container'>
                         <Image />
-                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName}</Typography>
+                        {/*     <Typography align='center' variant='h4'>{firstName + ' ' + lastName}</Typography> */ }
                     </div>
                     {/* TODO AppBar Juanga */}
                     {/* <AppBar position="static">
@@ -112,7 +118,7 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
      */
     renderProfile() {
         const { editProfileMode } = this.state;
-        if (editProfileMode) return <ProfileEdit />
-        else return <ProfileView />
+        if (editProfileMode) return <ProfileEdit data={this.state.data} editVariable={this.state.editVariable} onCancel={this.handleCancel}  />
+        else return <ProfileView  data={this.state.data}/>
     }
 }

@@ -28,8 +28,8 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
 
     handleInput = (id: keyof LoginFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
-        const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched === true);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error === true);
+        const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,

@@ -2,6 +2,7 @@ import jwt_decode from 'jwt-decode';
 import { AxiosResponse } from 'axios';
 import { ResponseLogin, logout } from './SessionService';
 import { DecodedToken } from '../model/DecodedToken';
+import {ACCESS_TOKEN} from "./EnvironmentService";
 
 /**
  * @description auxiliary function
@@ -16,6 +17,13 @@ const getDecodedToken = (): DecodedToken => {
     } else return {authorities: [], exp: -1, sub: ''};
 }
 
+const getEncodedToken = (): string => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (token !== null) {
+        return token;
+    } else return '';
+}
+
 /**
  * @description saves token in localStorage, this method is called
  * when login request is successful.
@@ -25,7 +33,7 @@ const getDecodedToken = (): DecodedToken => {
 const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
     const token = response.headers["authorization"].split(' ')[1];
     console.log('saveloginresponse', token)
-    localStorage.setItem('token', token);
+    localStorage.setItem(ACCESS_TOKEN, token);
 }
  
 /**
@@ -62,6 +70,7 @@ const isAuthorized = function(requiredRoles: string[]) {
 
 export {
     getDecodedToken,
+    getEncodedToken,
     saveLoginResponse,
     isLoggedIn,
     isAuthorized,

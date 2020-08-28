@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './Register.css';
 import { Typography, Snackbar } from '@material-ui/core';
 import RegisterForm from './RegisterForm';
-import { NewUser } from '../../../model/NewUser';
+import { NewUser } from '../../../model';
 import { register, login } from '../../../services/SessionService';
 import { withRouter } from 'react-router-dom';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
@@ -49,7 +49,7 @@ class Register extends Component<any, RegisterState> {
     }
 
     render() {
-        const { registerStatus, error } = this.state;
+        const { registerStatus} = this.state;
         console.log('render reigsre', this.state);
         return (
             <div className='route-container'>
