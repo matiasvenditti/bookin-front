@@ -1,34 +1,68 @@
 import jwt_decode from 'jwt-decode';
+import { AxiosResponse } from 'axios';
+import { ResponseLogin, logout } from './SessionService';
+import { DecodedToken } from '../model/DecodedToken';
 
 /**
- * @return { boolean }
+ * @description auxiliary function
+ * @return { DecodedToken } data included in the token
  */
-// TODO unify isLoggedIn y validateToken
-const isLoggedIn = function(): boolean {
+const getDecodedToken = (): DecodedToken => {
     const token = localStorage.getItem('token');
-    const decoded: any = token !== null && jwt_decode(token);
-    return token !== null;
+    if (token !== null) {
+        const decoded: DecodedToken = jwt_decode(token);
+        console.log(decoded);
+        return decoded;
+    } else return {authorities: [], exp: -1, sub: ''};
+}
+
+/**
+ * @description saves token in localStorage, this method is called
+ * when login request is successful.
+ * @param { AxiosResponse<ResponseLogin> } response from back which has
+ * token inside
+ */
+const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
+    const token = response.headers["authorization"].split(' ')[1];
+    console.log('saveloginresponse', token)
+    localStorage.setItem('token', token);
+}
+ 
+/**
+ * @return { boolean } checks validity of token
+ *  - token is null -> not logged in
+ *  - token not null but expired -> logout -> not logged in
+ *  - token not null and not expired -> logged in
+ */
+const isLoggedIn = () => {
+    const decodedToken: DecodedToken = getDecodedToken();
+    if (new Date().getTime() > decodedToken.exp * 1000) {
+        console.log('isLoggedIn', decodedToken, 'expired')
+        // my token expired
+        logout(); 
+        return false;
+    } else {
+        console.log('isLoggedIn', decodedToken, 'nice')
+        return true;
+    }
 };
 
 /**
- * @return { boolean }
+ * @description gets user role (stored in token in localStorage) and
+ * tells whether the user has the requiredRoles
+ * @param { string[] } requiredRoles roles that the user needs to have,
+ * @return { boolean } whether any of the requiredRoles are not present
+ * in the user data 
  */
 const isAuthorized = function(requiredRoles: string[]) {
-    const token = localStorage.getItem('token');
-    const userRoles: string[] = []; // get from token
+    const userRoles: string[] = getDecodedToken().authorities;
     return requiredRoles.every(role => userRoles.includes(role));
-};
-
-const validateToken = () => {
-    const token = localStorage.getItem('token');
-    const decoded: any = token !== null && jwt_decode(token);
-    // const token = response.headers["authorization"].split(' ')[1];
-    console.log('validateToken', decoded);
 };
 
 
 export {
+    getDecodedToken,
+    saveLoginResponse,
     isLoggedIn,
     isAuthorized,
-    validateToken
 }

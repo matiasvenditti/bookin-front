@@ -10,6 +10,7 @@ import { withRouter } from "react-router-dom";
 import { logout } from "../../services/SessionService";
 import { isLoggedIn } from "../../services/AuthService";
 
+
 type State = {
 	username: string,
 	anchorEl: Element | null
@@ -39,49 +40,13 @@ export class Header extends React.Component<any, State>{
 	handleLogout = () => {
 		logout();
 		this.props.history.push('/signin');
+		this.props.logoutCallback();
+		this.handleClose();
 	}
 
 	render() {
+		console.log('render headerrrr');
 		const { classes } = this.props;
-
-		const SessionButtons = (
-			<div className='button'>
-				<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
-					<Button onClick={() => this.props.history.push('/signin')}>Iniciar Sesión</Button>
-					<Button onClick={() => this.props.history.push('/signup')}>Registrarte</Button>
-				</ButtonGroup>
-			</div>
-		)
-
-		const Menus = (
-			<div className="button">
-				<IconButton onClick={this.handleMenu}>
-					<AccountCircle fontSize='large' />
-				</IconButton>
-				<Menu
-					id="menu-appbar"
-					anchorEl={this.state.anchorEl}
-					onClose={this.handleClose}
-					anchorOrigin={{
-						vertical: 'top',
-						horizontal: 'right',
-					}}
-					keepMounted
-					transformOrigin={{
-						vertical: 'top',
-						horizontal: 'right',
-					}}
-					open={Boolean(this.state.anchorEl)}>
-					<MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
-					<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
-					<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Crear Autor</MenuItem>
-					<MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
-				</Menu>
-			</div>
-		);
-
-		const navData = isLoggedIn() ? Menus : SessionButtons
-
 		return (
 			<div>
 				<AppBar position='static' color='primary' className={classes.title}>
@@ -102,11 +67,54 @@ export class Header extends React.Component<any, State>{
 								inputProps={{ 'aria-label': 'search' }}
 							/>
 						</div>
-						{navData}
+						{this.renderButtons()}
 					</Toolbar>
 				</AppBar>
 			</div>
 		)
+	}
+
+	renderButtons() {
+		const logged = isLoggedIn();
+		if (logged) {
+			console.log('LOGGED IN, RENDER COSITO')
+			return (
+				<div className="button">
+					<IconButton onClick={this.handleMenu}>
+						<AccountCircle fontSize='large' />
+					</IconButton>
+					<Menu
+						id="menu-appbar"
+						anchorEl={this.state.anchorEl}
+						onClose={this.handleClose}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						keepMounted
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						open={Boolean(this.state.anchorEl)}>
+						<MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
+						<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
+						<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Crear Autor</MenuItem>
+						<MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
+					</Menu>
+				</div>
+			)
+		} else {
+			console.log('NOT LOGGED IN, RENDER LOGIN/SINGUP')
+			return (
+				<div className='button'>
+					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
+						<Button onClick={() => this.props.history.push('/signin')}>Iniciar Sesión</Button>
+						<Button onClick={() => this.props.history.push('/signup')}>Registrarte</Button>
+					</ButtonGroup>
+				</div>
+			);
+		}
 	}
 }
 

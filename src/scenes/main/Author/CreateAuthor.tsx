@@ -10,6 +10,8 @@ import { createAuthor } from "../../../services/AuthorService";
      
     handleSubmit = (values: NewAuthor, photo: File) => {
         createAuthor(values, photo)
+            .then(() => console.log("Bien"))
+            .catch((e) => console.error(e))
     }
 
     render() {

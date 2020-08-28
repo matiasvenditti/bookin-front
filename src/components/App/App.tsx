@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Router from "../Router/Router";
 import { MuiThemeProvider } from "@material-ui/core";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
-import { validateToken } from '../../services/AuthService';
 
 
 const theme = createMuiTheme({
@@ -51,11 +50,6 @@ class App extends Component<AppProps, AppState> {
         this.state = {
 
         }
-    }
-
-    componentDidMount() {
-        const token = localStorage.getItem('token');
-        if (token !== null) validateToken();
     }
 
     render() {

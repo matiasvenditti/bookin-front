@@ -1,4 +1,17 @@
-import {baseURL} from "../../../src/services/EnvironmentService";
-import axios, {AxiosResponse} from 'axios';
+import {baseURL} from "../../services/EnvironmentService";
+import axios, { AxiosRequestConfig} from 'axios';
 
-const instance = axios.create({baseUrl: baseURL})
+const instance = axios.create({baseURL})
+
+instance.interceptors.request.use((req: AxiosRequestConfig) => {
+    console.log("In Request Interceptor");
+    const token = localStorage.getItem("token");
+    if (token) {
+        console.log("Tiene token");
+        req.headers.Authorization = token;
+    }
+    return req;
+});
+export {
+    instance
+}

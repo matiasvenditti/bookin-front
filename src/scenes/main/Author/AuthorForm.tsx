@@ -1,6 +1,6 @@
 import React, { Component, ChangeEvent } from 'react';
-import { Checkbox, Input, RadioGroup, Button} from '../../../components/Form';
-import {Form, FormValue} from '../../../model';
+import {  Input, Button} from '../../../components/Form';
+import {AuthorFormModel} from '../../../model/Form/AuthorFormModel';
 import {requiredString,required, requiredTrue, Validator} from "../../../utils/Validators/RequiredValidator";
 import {emailValidator, passwordValidator, textValidator} from "../../../utils/Validators/validateInput";
 import { NewAuthor } from '../../../model/NewAuthor';
@@ -11,35 +11,36 @@ import {
   KeyboardTimePicker,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import { Select, MenuItem, TextField, makeStyles, Theme, createStyles, withStyles, Typography, InputLabel, Button as Buttons, FormControl } from '@material-ui/core';
-import {MaterialUiPickersDate} from "@material-ui/pickers/typings/date";
-import { SystemUpdate } from '@material-ui/icons';
-import { withRouter } from 'react-router-dom';
+import { Select, MenuItem, TextField, InputLabel, Button as Buttons, FormControl } from '@material-ui/core';
+
 import "./AuthorForm.css"
+import validateInput from '../../../utils/validateInput';
 
 
-    interface RegisterFormState {
-        values: Form;
+    interface AuthorFormState {
+        values: AuthorFormModel;
         bytearray: any;
+        formValid: boolean
     }
 
-    interface RegisterFormProps{
+    interface AuthorFormProps{
         onSubmit(values: NewAuthor, photo: File): void;
     }
 
-export default class AuthorForm extends Component<RegisterFormProps, RegisterFormState>{
+export default class AuthorForm extends Component<AuthorFormProps, AuthorFormState>{
 
-    constructor(props: RegisterFormProps){
+    constructor(props: AuthorFormProps){
         super(props);
         this.state = {
             values:{
-                name: {value: '', type: 'text', error: true, touched: false, validators: [requiredString, textValidator]},
-                surname: {value: '', type: 'text', error: true, touched: false, validators: [requiredString, textValidator]},
-                nationality: {value: '', type: 'select', error: true, touched: false, validators: [requiredString]},
-                dob: {value: new Date, type:'date', error: true, touched: false, validators: [requiredString]},
-                photo: {value: null, type: 'File', error: true, touched: false, validators: [required]},
+                firstName: {value: '', type: 'text', error: true, touched: false},
+                lastName: {value: '', type: 'text', error: true, touched: false},
+                nationality: {value: '', type: 'select', error: true, touched: false},
+                birthday: {value: new Date, type:'date', error: true, touched: false},
+                photo: {value: null, type: 'File', error: true, touched: false},
             },
-            bytearray: null
+            bytearray: null,
+            formValid: false
         }
         
     }
@@ -47,38 +48,39 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
 
     handleSubmit = () => {
         let values: NewAuthor = {
-            firstName: this.state.values.name.value,
-            lastName: this.state.values.surname.value,
+            firstName: this.state.values.firstName.value,
+            lastName: this.state.values.lastName.value,
             nationality: this.state.values.nationality.value,
-            birthday: this.state.values.dob.value,
+            birthday: this.state.values.birthday.value,
             }
+        console.log(this.state);
         this.props.onSubmit(values, this.state.values.photo.value);
     }
 
-    handleInput = (id: keyof Form, type: string, value: any) => {
-        const formValue: FormValue = this.state.values[id];
-        const error: boolean = formValue.validators.some((validator: Validator) => !validator(value));
+    handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
+        const error = !validateInput(type, value);
+        const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched === true);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error === true);
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: { value, type, error, touched: true, validators: formValue.validators }            
+                [id]: { value, type, error, touched: true }            
             },
+            formValid: allTouched && !anyErrors,
         });
     }
 
-    isFormValid = (): boolean => {
-        return Object.values(this.state.values).some((value: FormValue) => value.error);
-    }
+
 
     handleDateChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
         console.log(event.target.value)
         const date = event.target.value as string;
-        this.setState((prevState: RegisterFormState) => ({
+        this.setState((prevState: AuthorFormState) => ({
             ...prevState,
-            dob: date
+            birthday: date
         }));
-        this.state.values.dob.error = false;
-        this.state.values.dob.touched = true;
+        this.state.values.birthday.error = false;
+        this.state.values.birthday.touched = true;
         console.log(this.state)
     }
 
@@ -87,7 +89,7 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
            this.setState({
             values: {
                 ...this.state.values,
-                nationality : {value: nacionalidad,type: this.state.values.nationality.type, error: false, touched: true, validators: this.state.values.nationality.validators}
+                nationality : {value: nacionalidad,type: this.state.values.nationality.type, error: false, touched: true}
                 },
             });
 
@@ -101,9 +103,9 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
         handleChange = (event: any) => {
             const file: File = event.target.files[0];
             const ulr = this.readFile(file);
-            this.setState((prevState: RegisterFormState) => ({
+            this.setState((prevState: AuthorFormState) => ({
                 ...prevState,
-                photo : {value: file, type: this.state.values.photo.type, error: false, touched: true, validators: this.state.values.photo.validators},
+                photo : {value: file, type: this.state.values.photo.type, error: false, touched: true},
                 //bytearray: ulr
             }))
 
@@ -133,24 +135,24 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
                     <Grid item >
                         <Input
                             label='Nombre'
-                            id='name'
+                            id='firstName'
                             type='text'
                             onChange={this.handleInput}
-                            value={this.state.values.name.value}
-                            error={this.state.values.name.touched && this.state.values.name.error}
-                            errorText={this.state.values.name.touched && this.state.values.name.error ? 'Nombre inválido' : ''}
+                            value={this.state.values.firstName.value}
+                            error={this.state.values.firstName.touched && this.state.values.firstName.error}
+                            errorText={this.state.values.firstName.touched && this.state.values.firstName.error ? 'Nombre inválido' : ''}
                             required
                         />
                     </Grid>
                     <Grid item>
                         <Input
                             label='Apellido'
-                            id='surname'
+                            id='lastName'
                             type='text'
                             onChange={this.handleInput}
-                            value={this.state.values.surname.value}
-                            error={this.state.values.surname.touched && this.state.values.surname.error}
-                            errorText={this.state.values.surname.touched && this.state.values.surname.error ? 'Apellido inválido' : ''}
+                            value={this.state.values.lastName.value}
+                            error={this.state.values.lastName.touched && this.state.values.lastName.error}
+                            errorText={this.state.values.lastName.touched && this.state.values.lastName.error ? 'Apellido inválido' : ''}
                             required
                         />
                     </Grid>
@@ -183,10 +185,10 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
                         
                         <Grid item>
                             <TextField
-                                id='dob'
+                                id='birthday'
                                 label='Fecha de nacimiento'
                                 type='date'
-                                defaultValue={this.state.values.dob.value}
+                                defaultValue={this.state.values.birthday.value}
                                 onChange={this.handleDateChange} 
                                 InputLabelProps={{
                                     shrink: true,
@@ -213,7 +215,7 @@ export default class AuthorForm extends Component<RegisterFormProps, RegisterFor
                 
                 <Button
                     title='Crear Autor'
-                    disabled={this.isFormValid()}                    
+                    disabled={!this.state.formValid}                    
                     onClick={this.handleSubmit}
                 />
             </form> 
