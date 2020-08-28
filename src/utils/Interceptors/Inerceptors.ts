@@ -8,8 +8,7 @@ instance.interceptors.request.use((req: AxiosRequestConfig) => {
     const token = localStorage.getItem("token");
     if (token) {
         console.log("Tiene token");
-        req.headers.Authorization = token;
-    }
+        req.headers.Authorization = `Bearer ${token}`;    }
     return req;
 });
 export {

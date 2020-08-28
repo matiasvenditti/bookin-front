@@ -1,6 +1,7 @@
 import {NewAuthor} from "../model/NewAuthor";
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
+import { instance } from "../utils/Interceptors/Inerceptors";
 
 
 export interface Author {
@@ -21,7 +22,7 @@ const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Aut
             'Content-Type': undefined,
         }
     }
-    return axios.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
+    return instance.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
 }
 export {
     createAuthor
