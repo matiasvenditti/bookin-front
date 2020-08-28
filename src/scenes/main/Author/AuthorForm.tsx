@@ -127,11 +127,11 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
     render(){
-        const image = this.state.bytearray ? <img src={this.state.bytearray}/> : null
+        const image = this.state.bytearray ? <img src={this.state.bytearray} width="100" height="100" /> : null
 
         return(
             <form>
-                <Grid container spacing={2}>               
+                <Grid container spacing={3}>               
                     <Grid item >
                         <Input
                             label='Nombre'
@@ -156,14 +156,18 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                             required
                         />
                     </Grid>
+                    <Grid item>
+                    <img src={this.state.bytearray} width="100" height="100" /> 
+
+                    </Grid>
                 </Grid>
                 <div className="form-input-container">
 
                 <FormControl>
-                    <Grid container spacing={2}>                
+                    <Grid container spacing={3}>                
                         <Grid item>
                             <div>
-                                <InputLabel id="demo-simple-select-label">Nacionalidad</InputLabel>                    
+                                <InputLabel id="demo-simple-select-label" className="label">Nacionalidad</InputLabel>                    
                                 <Select
                                     labelId="demo-simple-select-label"
                                     id="nationality"
@@ -175,6 +179,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                                     variant='outlined'
                                     color='secondary'
                                     fullWidth
+                                    className="select"
                                     >
                                     <MenuItem value='Argentina'>Argentina</MenuItem>
                                     <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
@@ -196,28 +201,41 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                                 variant='outlined'
                                 color='secondary'
                                 fullWidth
+                                className="date"
                             />
                         </Grid>
-                    </Grid>
-                </FormControl>                
-            </div>
-
-                        <Buttons variant="contained" component="label" onChange={this.handleChange} color='secondary' >
+                        <Grid item>
+                            <Buttons variant="contained" component="label" onChange={this.handleChange} color='secondary' >
                             Agrega una foto
                             <input
                                 accept="image/*"
                                 type="file"
-                                style={{ display: "none" }}
+                                style={{ display: "none"}}
                             />
                         </Buttons>
+                        </Grid>
+                    </Grid>
+                </FormControl>                
+            </div>
+                <Grid container spacing={3}>
+                    <Grid item>
+                        <div className="spacing">
+                            
+                        </div>
+                    </Grid>
+                    <Grid item>
+                        <div className="spacing">
                 
-                {image}
-                
-                <Button
-                    title='Crear Autor'
-                    disabled={!this.state.formValid}                    
-                    onClick={this.handleSubmit}
-                />
+                        </div>
+                    </Grid>
+                    <Grid item>
+                        <Button
+                            title='Crear Autor'
+                            disabled={!this.state.formValid}                    
+                            onClick={this.handleSubmit}
+                        />
+                    </Grid>
+                </Grid>
             </form> 
         )
     }

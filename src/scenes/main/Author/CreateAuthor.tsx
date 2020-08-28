@@ -4,6 +4,7 @@ import { NewAuthor } from "../../../model/NewAuthor";
 import { register, ResponseRegister } from "../../../services/SessionService";
 import { AxiosResponse } from 'axios';
 import AuthorForm from "./AuthorForm";
+import "./CreateAuthor.css"
 import { createAuthor } from "../../../services/AuthorService";
 
  export default class CreateAuthor extends Component { 
@@ -18,6 +19,7 @@ import { createAuthor } from "../../../services/AuthorService";
         return (
             <div className='route-container' >
                 <div /**className='card-container'*/ >
+                    <div className="spacing"></div>
                     <Typography align='center' variant='h5'>Creá un autor</Typography>
                     <AuthorForm onSubmit={this.handleSubmit} />
                 </div>

@@ -6,3 +6,19 @@
   .form-input-container {
     margin: 8px;
 }
+.select{
+  width: 226px !important;
+  margin-right: 15px;
+}
+.date{
+  width: 202px !important;
+}
+.label{
+  margin-left: 14px;
+}
+.button{
+  width: 100px;
+}
+.spacing{
+  width: 235px;
+}
