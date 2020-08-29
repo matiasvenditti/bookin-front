@@ -222,18 +222,9 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                 </FormControl>                
             </div> 
             <div className='spacingh'></div>
-            <Grid container spacing={5}>
-                <Grid item>
-            <div className='spacingw'></div></Grid>
-                <Grid item>
-            <div className='spacingw'></div></Grid>
-            <Grid item>
-            <div className='spacingw'></div></Grid>
-            <Grid item>
-            <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} /></Grid>
-            <Grid item>
-            <Button title="Cancelar" disabled={false} onClick={this.handleSubmit}/></Grid>
-            </Grid>
+            <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} />  
+            <div className='spacingh'></div>
+            <Button title="Cancelar" disabled={false} onClick={this.handleSubmit}/>
             </form> 
         )
     }
