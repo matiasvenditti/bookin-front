@@ -31,7 +31,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                     <Route path='/signup' ><Signup registerCallback={() => this.setState({ reload: true })} /></Route>
                     <Route path='/signin' ><Login loginCallback={() => this.setState({ reload: true })} /></Route>
                     <PrivateRoute path='/profile' roles={[]} ><Profile /></PrivateRoute>
-                    <Route path='/create-author'><CreateAuthor /></Route>
+                    <PrivateRoute path='/authors' roles={["ROLE_ADMIN"]}><CreateAuthor/></PrivateRoute>
                 </Switch>
                 <Footer />
             </BrowserRouter>

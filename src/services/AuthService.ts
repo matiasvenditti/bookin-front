@@ -10,9 +10,7 @@ import { DecodedToken } from '../model/DecodedToken';
 const getDecodedToken = (): DecodedToken => {
     const token = localStorage.getItem('token');
     if (token !== null) {
-        const decoded: DecodedToken = jwt_decode(token);
-        console.log(decoded);
-        return decoded;
+        return jwt_decode(token);
     } else return {authorities: [], exp: -1, sub: ''};
 }
 
@@ -24,7 +22,6 @@ const getDecodedToken = (): DecodedToken => {
  */
 const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
     const token = response.headers["authorization"].split(' ')[1];
-    console.log('saveloginresponse', token)
     localStorage.setItem('token', token);
 }
  
@@ -37,12 +34,10 @@ const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
 const isLoggedIn = () => {
     const decodedToken: DecodedToken = getDecodedToken();
     if (new Date().getTime() > decodedToken.exp * 1000) {
-        console.log('isLoggedIn', decodedToken, 'expired')
         // my token expired
         logout(); 
         return false;
     } else {
-        console.log('isLoggedIn', decodedToken, 'nice')
         return true;
     }
 };

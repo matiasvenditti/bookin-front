@@ -45,7 +45,6 @@ export class Header extends React.Component<any, State>{
 	}
 
 	render() {
-		console.log('render headerrrr');
 		const { classes } = this.props;
 		return (
 			<div>
@@ -77,7 +76,6 @@ export class Header extends React.Component<any, State>{
 	renderButtons() {
 		const logged = isLoggedIn();
 		if (logged) {
-			console.log('LOGGED IN, RENDER COSITO')
 			return (
 				<div className="button">
 					<IconButton onClick={this.handleMenu}>
@@ -99,13 +97,12 @@ export class Header extends React.Component<any, State>{
 						open={Boolean(this.state.anchorEl)}>
 						<MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
 						<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
-						<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Crear Autor</MenuItem>
+						<MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>
 						<MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
 					</Menu>
 				</div>
 			)
 		} else {
-			console.log('NOT LOGGED IN, RENDER LOGIN/SINGUP')
 			return (
 				<div className='buttons'>
 					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >

@@ -1,9 +1,9 @@
 .textField {
     margin-left: auto;
     margin-right: auto;
-    width: 200;
+    width: 200px;
   }
-  .form-input-container {
+.form-input-container {
     margin: 8px;
 }
 .select{
@@ -22,8 +22,8 @@
 .spacingw{
   width: 89px;
 }
-.spacingh{
-  height: 10px;
+.spacing {
+  margin-top: 20px;
 }
 .route-container .profile-edit-form-container > form >.profile-edit-buttons-container > button {
   margin-right: 10px;

@@ -1,13 +1,11 @@
-import React, { Component } from "react";
-import {Container, Typography } from "@material-ui/core";
-import { NewAuthor } from "../../../model/NewAuthor";
-import { register, ResponseRegister } from "../../../services/SessionService";
-import { AxiosResponse } from 'axios';
+import React, {Component} from "react";
+import {Typography} from "@material-ui/core";
+import {NewAuthor} from "../../../model/NewAuthor";
 import AuthorForm from "./AuthorForm";
 import "./CreateAuthor.css"
-import { createAuthor } from "../../../services/AuthorService";
+import {createAuthor} from "../../../services/AuthorService";
 
- export default class CreateAuthor extends Component { 
+export default class CreateAuthor extends Component {
      
     handleSubmit = (values: NewAuthor, photo: File) => {
         createAuthor(values, photo)
@@ -18,8 +16,7 @@ import { createAuthor } from "../../../services/AuthorService";
     render() {
         return (
             <div className='route-container' >
-                <div /**className='card-container'*/ >
-                    <div className="spacing"></div>
+                <div >
                     <Typography align='center' variant='h5'>Creá un autor</Typography>
                     <AuthorForm onSubmit={this.handleSubmit} />
                 </div>

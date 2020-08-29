@@ -1,7 +1,7 @@
 import {NewAuthor} from "../model/NewAuthor";
-import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
+import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
-import { instance } from "../utils/Interceptors/Inerceptors";
+import {instance} from "../utils/Interceptors/Inerceptors";
 
 
 export interface Author {
