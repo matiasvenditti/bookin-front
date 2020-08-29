@@ -67,7 +67,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
 
 
     handleDateChange = (date: Date | null) => {
-        const error: boolean = false;
+        const error: boolean = date ? date > new Date() : false;
         const birthday = this.state.values.birthday;
 
         const allTouched = Object.values(this.state.values).every(value => value.type === birthday.type ? true : value.touched);
@@ -75,7 +75,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         this.setState({
             values: {
                 ...this.state.values,
-                ["birthday"]: {value: date, type: birthday.type, error: false, touched: true}
+                birthday: {value: date, type: birthday.type, error: error, touched: true}
             },
             formValid: allTouched && !anyErrors,
         });
@@ -193,6 +193,8 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 fullWidth
+                                error={this.state.values.birthday.touched && this.state.values.birthday.error}
+                                helperText={this.state.values.birthday.touched && this.state.values.birthday.error ? 'Nacimiento mayor a fecha actual' : null}
                                 color="secondary"
                                 disableToolbar
                                 required
@@ -210,7 +212,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         </MuiPickersUtilsProvider>
                     </Grid>
                     <Grid item xs>
-                        <Buttons variant="contained" component="label" onChange={this.handleChange}
+                        <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
                                  color='secondary'>
                             Agrega una foto
                             <input
