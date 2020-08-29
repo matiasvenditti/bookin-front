@@ -7,7 +7,6 @@ import {Button, Input, RadioGroup} from "../../../components/Form";
 import {UpdateUser} from "../../../model/UpdateUser";
 import {ResponseUpdate, update} from "../../../services/SessionService";
 import {AxiosResponse} from "axios";
-import {saveLoginResponse} from "../../../services/AuthService";
 import translateGender from "../../../utils/translateGender";
 
 interface ProfileEditProps {
@@ -73,7 +72,6 @@ export default class ProfileEdit extends Component<any, ProfileEditState> {
         this.setState({ updateStatus: RequestStatus.LOADING, error: null });
         update(values)
             .then((response: AxiosResponse<ResponseUpdate>) => {
-                saveLoginResponse(response);
                 this.setState({ updateStatus: RequestStatus.SUCCESS, error: null });
                 this.props.history.push('/profile');
             })
