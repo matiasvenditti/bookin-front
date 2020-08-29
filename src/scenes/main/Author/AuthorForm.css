@@ -19,6 +19,13 @@
 .button{
   width: 100px;
 }
-.spacing{
-  width: 235px;
+.spacingw{
+  width: 89px;
+}
+.spacingh{
+  height: 10px;
+}
+.route-container .profile-edit-form-container > form >.profile-edit-buttons-container > button {
+  margin-right: 10px;
+  margin-top: 10px;
 }

@@ -107,7 +107,7 @@ export class Header extends React.Component<any, State>{
 		} else {
 			console.log('NOT LOGGED IN, RENDER LOGIN/SINGUP')
 			return (
-				<div className='button'>
+				<div className='buttons'>
 					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
 						<Button onClick={() => this.props.history.push('/signin')}>Iniciar Sesión</Button>
 						<Button onClick={() => this.props.history.push('/signup')}>Registrarte</Button>

@@ -15,6 +15,7 @@ import { Select, MenuItem, TextField, InputLabel, Button as Buttons, FormControl
 
 import "./AuthorForm.css"
 import validateInput from '../../../utils/validateInput';
+import { AccountCircle } from '@material-ui/icons';
 
 
     interface AuthorFormState {
@@ -53,7 +54,6 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
             nationality: this.state.values.nationality.value,
             birthday: this.state.values.birthday.value,
             }
-        console.log(this.state);
         this.props.onSubmit(values, this.state.values.photo.value);
     }
 
@@ -73,7 +73,6 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
 
 
     handleDateChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        console.log(event.target.value)
         const date = event.target.value as string;
         this.setState((prevState: AuthorFormState) => ({
             ...prevState,
@@ -81,7 +80,10 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         }));
         this.state.values.birthday.error = false;
         this.state.values.birthday.touched = true;
-        console.log(this.state)
+        const errors: boolean = this.state.values.firstName.error || this.state.values.lastName.error || this.state.values.birthday.error || this.state.values.nationality.error || this.state.values.photo.error;
+        this.setState({
+            formValid: !errors,
+        })
     }
 
     handleInputSelect = (object: any) => {
@@ -95,9 +97,11 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
 
         this.state.values.nationality.error = false;
         this.state.values.nationality.touched = true;
-        //this.state.values.nationality.value = nacionalidad;
-        console.log(this.state)
-        console.log(nacionalidad)
+        //this.state.values.nationality.value = nacionalidad
+        const errors: boolean = this.state.values.firstName.error || this.state.values.lastName.error || this.state.values.birthday.error || this.state.values.nationality.error || this.state.values.photo.error;
+        this.setState({
+            formValid: !errors,
+        })
     }
 
         handleChange = (event: any) => {
@@ -106,13 +110,15 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
             this.setState((prevState: AuthorFormState) => ({
                 ...prevState,
                 photo : {value: file, type: this.state.values.photo.type, error: false, touched: true},
-                //bytearray: ulr
             }))
-
-            this.state.values.photo.error = false;
+            const error = file.size < 100000 ? false : true
+            this.state.values.photo.error = error;
             this.state.values.photo.touched = true;
             this.state.values.photo.value = file;
-            console.log(this.state);
+            const errors: boolean = this.state.values.firstName.error || this.state.values.lastName.error || this.state.values.birthday.error || this.state.values.nationality.error || this.state.values.photo.error;
+            this.setState({
+                formValid: !errors,
+            })
         }
 
     readFile = (file: File) => {
@@ -122,12 +128,11 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
             this.setState({
                 bytearray: reader.result
             });
-            console.log(reader.result);
         }
     }
 
     render(){
-        const image = this.state.bytearray ? <img src={this.state.bytearray} width="100" height="100" /> : null
+        const image = this.state.bytearray ? <img src={this.state.bytearray} width="100" height="100" /> : <AccountCircle color="secondary" style={{ fontSize: 100 }}/>
 
         return(
             <form>
@@ -157,8 +162,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         />
                     </Grid>
                     <Grid item>
-                    <img src={this.state.bytearray} width="100" height="100" /> 
-
+                        {image}
                     </Grid>
                 </Grid>
                 <div className="form-input-container">
@@ -207,7 +211,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         <Grid item>
                             <Buttons variant="contained" component="label" onChange={this.handleChange} color='secondary' >
                             Agrega una foto
-                            <input
+                                <input
                                 accept="image/*"
                                 type="file"
                                 style={{ display: "none"}}
@@ -216,26 +220,20 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         </Grid>
                     </Grid>
                 </FormControl>                
-            </div>
-                <Grid container spacing={3}>
-                    <Grid item>
-                        <div className="spacing">
-                            
-                        </div>
-                    </Grid>
-                    <Grid item>
-                        <div className="spacing">
-                
-                        </div>
-                    </Grid>
-                    <Grid item>
-                        <Button
-                            title='Crear Autor'
-                            disabled={!this.state.formValid}                    
-                            onClick={this.handleSubmit}
-                        />
-                    </Grid>
-                </Grid>
+            </div> 
+            <div className='spacingh'></div>
+            <Grid container spacing={5}>
+                <Grid item>
+            <div className='spacingw'></div></Grid>
+                <Grid item>
+            <div className='spacingw'></div></Grid>
+            <Grid item>
+            <div className='spacingw'></div></Grid>
+            <Grid item>
+            <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} /></Grid>
+            <Grid item>
+            <Button title="Cancelar" disabled={false} onClick={this.handleSubmit}/></Grid>
+            </Grid>
             </form> 
         )
     }
