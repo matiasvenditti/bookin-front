@@ -8,6 +8,8 @@ import {Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField}
 import "./AuthorForm.css"
 import validateInput from '../../../utils/validateInput';
 import {AccountCircle} from '@material-ui/icons';
+import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import DateFnsUtils from "@date-io/date-fns";
 
 
 interface AuthorFormState {
@@ -64,9 +66,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
 
-    handleDateChange = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-        const date = event.target.value as string;
-        const id: string = event.target.id;
+    handleDateChange = (date: Date | null) => {
         const error: boolean = false;
         const birthday = this.state.values.birthday;
 
@@ -75,7 +75,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: {value: date, type: birthday.type, error: false, touched: true}
+                ["birthday"]: {value: date, type: birthday.type, error: false, touched: true}
             },
             formValid: allTouched && !anyErrors,
         });
@@ -91,7 +91,12 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         this.setState({
             values: {
                 ...this.state.values,
-                nationality: {value: nacionalidad, type: this.state.values.nationality.type, error: false, touched: true},
+                nationality: {
+                    value: nacionalidad,
+                    type: this.state.values.nationality.type,
+                    error: false,
+                    touched: true
+                },
             },
             formValid: allTouched && !anyErrors,
         });
@@ -126,12 +131,13 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
     render() {
-        const image = this.state.bytearray ? <img src={this.state.bytearray} width="100" height="100" alt="author-image"/> :
+        const image = this.state.bytearray ?
+            <img src={this.state.bytearray} width="100" height="100" alt="author-image"/> :
             <AccountCircle color="secondary" style={{fontSize: 100}}/>
 
         return (
             <form>
-                <Grid container spacing={3}>
+                <Grid alignItems="center" container spacing={3}>
                     <Grid item xs>
                         <Input
                             label='Nombre'
@@ -157,11 +163,13 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         />
                     </Grid>
                     <Grid item xs>
-                        {image}
+                        <div className="center">
+                            {image}
+                        </div>
                     </Grid>
                 </Grid>
 
-                <Grid container spacing={3}>
+                <Grid alignItems="center" container spacing={3}>
                     <Grid item xs>
                         <FormControl required fullWidth color="secondary" variant="outlined">
                             <InputLabel id="demo-simple-select-label">Nacionalidad</InputLabel>
@@ -182,21 +190,24 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                     </Grid>
 
                     <Grid item xs>
-                        <TextField
-                            id='birthday'
-                            label='Fecha de nacimiento'
-                            type='date'
-                            defaultValue={this.state.values.birthday.value}
-                            onChange={this.handleDateChange}
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            variant='outlined'
-                            color='secondary'
-                            fullWidth
-                            required
-                            className="date"
-                        />
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                fullWidth
+                                color="secondary"
+                                disableToolbar
+                                required
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy"
+                                margin="none"
+                                id="date-picker-inline"
+                                label="Nacimiento"
+                                value={this.state.values.birthday.value}
+                                onChange={this.handleDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                        </MuiPickersUtilsProvider>
                     </Grid>
                     <Grid item xs>
                         <Buttons variant="contained" component="label" onChange={this.handleChange}
