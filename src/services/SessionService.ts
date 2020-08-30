@@ -4,7 +4,8 @@ import {baseURL} from "./EnvironmentService";
 import { LoginUser } from "../model/LoginUser";
 import translateGender from "../utils/translateGender";
 import {getUserData} from "./UserService";
-import {UpdateUser} from "../model/UpdateUser";
+import {UpdateUser} from "../model";
+import {UserID} from "../model";
 
 
 /* Register */
@@ -37,7 +38,16 @@ export interface ResponseUpdate{
 
 export function update(values: UpdateUser): Promise<AxiosResponse>
 {
-    return axios.post<ResponseUpdate>(`${baseURL}/update`,values)
+    return axios.post<ResponseUpdate>(`${baseURL}/users/update`,values)
+}
+
+export interface ResponseDelete{
+
+
+}
+export function deleteProfile(values: UserID): Promise<AxiosResponse>
+{
+    return axios.post<ResponseDelete>(`${baseURL}/users/delete`,values)
 }
 
 

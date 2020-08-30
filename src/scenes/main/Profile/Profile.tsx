@@ -3,11 +3,18 @@ import { EditVar } from '../../../model/consts/EditVar';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
+<<<<<<< HEAD
 import { Typography, Tabs, Tab, AppBar } from '@material-ui/core';
 import { dummyAvatar } from '../../../assets';
 import './Profile.css'
 import HoverableAvatar from '../../../components/HoverableAvatar/HoverableAvatar';
 import { getUserData, changeUserData } from '../../../services/UserService';
+=======
+import SweetAlert from "react-bootstrap-sweetalert/dist";
+import {ResponseUpdate, update, deleteProfile, logout} from "../../../services/SessionService";
+import {AxiosResponse} from "axios";
+import {UserID} from "../../../model/UserID";
+>>>>>>> 1bf80e85a0363c37e81b0c86a005d83d358140ad
 
 
 interface ProfileProps {
@@ -21,6 +28,8 @@ interface ProfileState {
     getUserDataStatus: RequestStatus,
     editVariable: EditVar,
     updateStatus: any,
+    deleteStatus: any,
+    showDelete: boolean,
     data: any,
     error: any,
 }
@@ -29,6 +38,7 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
     constructor(props: ProfileProps) {
         super(props);
         this.state = {
+<<<<<<< HEAD
             currentTab: 'profile',
             editProfileMode: false,
             getUserDataStatus: RequestStatus.NONE,
@@ -37,9 +47,23 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
                 lastName: '',
                 email: '',
                 gender: '',
+=======
+            currentTab: 'Mi perfil',
+            tabs: ['Mi perfil', 'Mis reseñas'],
+            editProfileMode: false,
+            getUserDataStatus: RequestStatus.NONE,
+            data: {
+                id: 1,
+                firstName: 'Juan Gabriel',
+                lastName: 'Ricci',
+                email: 'riccijuanga@gmail.com',
+                gender: 'M',
+>>>>>>> 1bf80e85a0363c37e81b0c86a005d83d358140ad
                 photo: null,
             },
+            showDelete: false,
             updateStatus: RequestStatus.NONE,
+            deleteStatus: RequestStatus.NONE,
             editVariable: EditVar.PASSWORD,
             error: null,
         }
@@ -74,8 +98,46 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
     }
 
     handleCancel = () => {
+<<<<<<< HEAD
         this.setState({ editProfileMode: false })
+=======
+        this.setState({editProfileMode : false, showDelete : false})
+>>>>>>> 1bf80e85a0363c37e81b0c86a005d83d358140ad
     };
+
+    handleDelete = () => {
+        this.setState({
+            showDelete: !this.state.showDelete
+        });
+    }
+
+    deleteProfile = () => {
+        this.setState({
+            showDelete: false
+        });
+    }
+
+    handleSubmit = (values: UserID) => {
+        this.setState({ deleteStatus: RequestStatus.LOADING, error: null });
+        deleteProfile(values)
+            .then((response: AxiosResponse<ResponseUpdate>) => {
+                this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null });
+                logout()
+                this.props.history.push('/');
+            })
+            .catch((error) => {
+                this.setState({ deleteStatus: RequestStatus.ERROR, error });
+            });
+    }
+
+    deleteProfileTemp = () => {
+        this.handleSubmit({
+            id: this.state.data.id
+        });
+        this.handleCancel()
+
+
+    }
 
     render() {
         const { currentTab } = this.state;
@@ -92,6 +154,10 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
                         />
                         <Typography align='center' variant='h4'>{firstName + ' ' + lastName}</Typography>
                     </div>
+
+
+
+
                     {/* TODO AppBar Juanga */}
                     <AppBar position='static'>
                         <Tabs value={currentTab} onChange={this.handleChangeTab} aria-label="simple tabs example">
@@ -102,7 +168,11 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
                     {currentTab === 'profile' && this.renderProfile()}
                     {currentTab === 'reviews' && <div>TODO</div>}
                 </div>
+                <button onClick={this.handleDelete}> Delete profile</button>
+                {this.renderDelete()}
             </div>
+
+
         );
     }
 
@@ -131,4 +201,24 @@ export default class Profile extends Component<ProfileProps, ProfileState> {
             );
         }
     }
+
+    renderDelete(){
+        const {showDelete} = this.state;
+        if(showDelete) return (
+            <SweetAlert
+                danger
+                showCancel
+                confirmBtnText="Yes, delete it!"
+                confirmBtnBsStyle="danger"
+                title="Are you sure?"
+                onConfirm={this.deleteProfileTemp}
+                onCancel={this.handleCancel}
+                focusCancelBtn
+            >
+                You will not be able to login with this email!
+            </SweetAlert>
+        )
+    }
+
+
 }
