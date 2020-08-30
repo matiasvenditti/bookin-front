@@ -12,37 +12,37 @@ import { isLoggedIn } from "../../services/AuthService";
 
 
 type State = {
-	username: string,
-	anchorEl: Element | null
+    username: string,
+    anchorEl: Element | null
 }
 
 export class Header extends React.Component<any, State>{
-	constructor(props: any) {
-		super(props);
-		this.state = {
-			username: "",
-			anchorEl: null
-		};
-		this.handleMenu = this.handleMenu.bind(this);
-		this.handleClose = this.handleClose.bind(this);
-		this.setAnchorEl = this.setAnchorEl.bind(this);
-	}
+    constructor(props: any) {
+        super(props);
+        this.state = {
+            username: '',
+            anchorEl: null
+        };
+        this.handleMenu = this.handleMenu.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.setAnchorEl = this.setAnchorEl.bind(this);
+    }
 
-	handleMenu(event: React.MouseEvent<HTMLElement>) { this.setAnchorEl(event.currentTarget); }
-	handleClose() { this.setAnchorEl(null); }
-	setAnchorEl(anchorEl: Element | null) {
-		this.setState((prevState: State) => ({
-			...prevState,
-			anchorEl: anchorEl
-		}))
-	}
+    handleMenu(event: React.MouseEvent<HTMLElement>) { this.setAnchorEl(event.currentTarget); }
+    handleClose() { this.setAnchorEl(null); }
+    setAnchorEl(anchorEl: Element | null) {
+        this.setState((prevState: State) => ({
+            ...prevState,
+            anchorEl: anchorEl
+        }))
+    }
 
-	handleLogout = () => {
-		logout();
-		this.props.history.push('/signin');
-		this.props.logoutCallback();
-		this.handleClose();
-	}
+    handleLogout = () => {
+        logout();
+        this.props.history.push('/login');
+        this.props.logoutCallback();
+        this.handleClose();
+    }
 
 	handleHomeRedirect = () => {
 		this.props.history.push('/');
@@ -123,57 +123,57 @@ export class Header extends React.Component<any, State>{
 }
 
 const styles = (theme: Theme) => ({
-	root: {
-		flexGrow: 1,
-	},
-	title: {
-		display: 'none',
-		[theme.breakpoints.up('sm')]: {
-			display: 'block',
-		},
-	},
-	menuButton: {
-		marginRight: theme.spacing(2),
-	},
-	search: {
-		position: 'relative',
-		borderRadius: theme.shape.borderRadius,
-		backgroundColor: fade(theme.palette.common.white, 0.15),
-		'&:hover': {
-			backgroundColor: fade(theme.palette.common.white, 0.25),
-		},
-		marginLeft: 0,
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
-			marginLeft: theme.spacing(1),
-			width: 'auto',
-		},
-	},
-	searchIcon: {
-		padding: theme.spacing(0, 2),
-		height: '100%',
-		position: 'absolute',
-		pointerEvents: 'none',
-		display: 'flex',
-		alignItems: 'center',
-		justifyContent: 'center',
-	},
-	inputRoot: {
-		color: 'inherit',
-	},
-	inputInput: {
-		padding: theme.spacing(1, 1, 1, 0),
-		// vertical padding + font size from searchIcon
-		paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-		transition: theme.transitions.create('width'),
-		width: '100%',
-		[theme.breakpoints.up('sm')]: {
-			width: '12ch',
-			'&:focus': {
-				width: '20ch',
-			},
-		},
-	},
+    root: {
+        flexGrow: 1,
+    },
+    title: {
+        display: 'none',
+        [theme.breakpoints.up('sm')]: {
+            display: 'block',
+        },
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: '12ch',
+            '&:focus': {
+                width: '20ch',
+            },
+        },
+    },
 });
 
 // @ts-ignore
