@@ -1,5 +1,6 @@
 import React from "react";
 import "./Footer.css"
+import {Typography} from "@material-ui/core";
 
 
 export class Footer extends React.Component<{}, {}>{
@@ -7,7 +8,7 @@ export class Footer extends React.Component<{}, {}>{
         return (
             <div color='secondary' className='main-footer'>
                 <div className='a'>
-                    <p>Copyright ©  Book In. All rights reserved</p>
+                    <Typography variant="body1">Copyright ©  Book In. All rights reserved</Typography>
                 </div>
             </div>
         )
