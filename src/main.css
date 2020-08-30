@@ -6,9 +6,17 @@
 }
 
 .route-container .card-container {
-    border-radius: 10px;
+    width: 600px;
+    padding: 20px 65px 15px;
+    margin-top: 20px;
+    /* background-color: #dddddd; */
+}
+
+.route-container .card-container-narrow {
     max-width: 350px;
     padding: 20px 65px 15px;
+    margin-top: 20px;
+    /* background-color: #dddddd; */
 }
 
 html, body {

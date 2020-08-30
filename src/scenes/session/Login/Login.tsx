@@ -44,7 +44,7 @@ class Login extends Component<any, LoginState> {
         const { loginStatus, error } = this.state;
         return (
             <div className='route-container'>
-                <div className='card-container'>
+                <div className='card-container-narrow'>
                     <Typography align='center' variant='h4'>Ingresar</Typography>
                     <LoginForm
                         onSubmit={this.handleSubmit}

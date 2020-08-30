@@ -9,8 +9,8 @@ function setURL(): string {
     // Switch in case another host is wanted.
     switch(process.env.NODE_ENV) {
         case "development":
-            return 'http://192.168.3.131:8080'
+            return 'http://localhost:8080'
         default:
-            return 'http://192.168.3.131:8080'
+            return 'http://localhost:8080'
     }
 }

@@ -12,7 +12,7 @@ const getDecodedToken = (): DecodedToken => {
     const token = localStorage.getItem('token');
     if (token !== null) {
         const decoded: DecodedToken = jwt_decode(token);
-        console.log(decoded);
+        // console.log(decoded);
         return decoded;
     } else return {authorities: [], exp: -1, sub: ''};
 }
@@ -32,7 +32,6 @@ const getEncodedToken = (): string => {
  */
 const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
     const token = response.headers["authorization"].split(' ')[1];
-    console.log('saveloginresponse', token)
     localStorage.setItem(ACCESS_TOKEN, token);
 }
  
@@ -45,12 +44,10 @@ const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
 const isLoggedIn = () => {
     const decodedToken: DecodedToken = getDecodedToken();
     if (new Date().getTime() > decodedToken.exp * 1000) {
-        console.log('isLoggedIn', decodedToken, 'expired')
         // my token expired
         logout(); 
         return false;
     } else {
-        console.log('isLoggedIn', decodedToken, 'nice')
         return true;
     }
 };

@@ -49,11 +49,10 @@ class Register extends Component<any, RegisterState> {
     }
 
     render() {
-        const { registerStatus} = this.state;
-        console.log('render reigsre', this.state);
+        const { registerStatus } = this.state;
         return (
             <div className='route-container'>
-                <div className='card-container'>
+                <div className='card-container-narrow'>
                     <Typography align='center' variant='h5'>Creá tu cuenta</Typography>
                     <RegisterForm
                         onSubmit={this.handleSubmit}

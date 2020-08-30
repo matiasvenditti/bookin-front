@@ -20,6 +20,8 @@ interface RouterState {
     reload: boolean,
     registerStatus: RequestStatus,
     loginStatus: RequestStatus,
+    loadAvatarError: boolean,
+    editProfileStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -29,6 +31,8 @@ class Router extends React.Component<RouterProps, RouterState> {
             reload: false,
             registerStatus: RequestStatus.NONE,
             loginStatus: RequestStatus.NONE,
+            loadAvatarError: false,
+            editProfileStatus: RequestStatus.NONE,
         };
     }
 
@@ -43,8 +47,18 @@ class Router extends React.Component<RouterProps, RouterState> {
                             this.setState({ ...this.state, registerStatus, loginStatus })}
                         />
                     </Route>
-                    <Route path='/login' ><Login loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })} /></Route>
-                    <PrivateRoute path='/profile' roles={[]} ><Profile /></PrivateRoute>
+                    <Route path='/login' >
+                        <Login loginCallback={(loginStatus: RequestStatus) =>
+                            this.setState({ ...this.state, loginStatus })}
+                        />
+                    </Route>
+                    <PrivateRoute path='/profile' roles={[]} >
+                        <Profile
+                            loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
+                            editProfileCallback={(editProfileStatus: RequestStatus) =>
+                                this.setState({ ...this.state, editProfileStatus })}
+                        />
+                    </PrivateRoute>
                 </Switch>
                 <Footer />
                 {this.renderToasts()}
@@ -53,7 +67,7 @@ class Router extends React.Component<RouterProps, RouterState> {
     }
 
     renderToasts() {
-        const { registerStatus, loginStatus } = this.state;
+        const { registerStatus, loginStatus, loadAvatarError, editProfileStatus } = this.state;
         return ([
             <Snackbar
                 open={registerStatus === RequestStatus.SUCCESS}
@@ -68,7 +82,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                 autoHideDuration={2000}
             >
                 <Alert severity='error'>
-                    Hubo un error al registrarse, intente mas tarde.'
+                    Hubo un error al registrarse, intente mas tarde.
                 </Alert>
             </Snackbar>,
             <Snackbar
@@ -76,7 +90,31 @@ class Router extends React.Component<RouterProps, RouterState> {
                 autoHideDuration={2000}
             >
                 <Alert severity='error'>
-                    No se ha podido ingresar, intente mas tarde.'
+                    No se ha podido ingresar, intente mas tarde.
+                </Alert>
+            </Snackbar>,
+            <Snackbar
+                open={loadAvatarError}
+                autoHideDuration={2000}
+            >
+                <Alert severity='error'>
+                    No se ha podido cargar la nueva foto de perfil
+                </Alert>
+            </Snackbar>,
+            <Snackbar
+                open={editProfileStatus === RequestStatus.SUCCESS}
+                autoHideDuration={2000}
+            >
+                <Alert severity='error'>
+                    No se ha podido cargar la nueva foto de perfil
+                </Alert>
+            </Snackbar>,
+            <Snackbar
+                open={editProfileStatus === RequestStatus.ERROR}
+                autoHideDuration={2000}
+            >
+                <Alert severity='error'>
+                    No se ha podido cargar la nueva foto de perfil
                 </Alert>
             </Snackbar>,
         ]);
