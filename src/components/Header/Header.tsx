@@ -44,14 +44,18 @@ export class Header extends React.Component<any, State>{
 		this.handleClose();
 	}
 
+	handleHomeRedirect = () => {
+		this.props.history.push('/');
+	}
+
 	render() {
 		const { classes } = this.props;
 		return (
 			<div>
 				<AppBar position='static' color='primary' className={classes.title}>
 					<Toolbar>
-						<div className='right'>
-							<Typography variant='h6'>Book in</Typography>
+						<div className={'right grow title'}>
+							<Typography onClick={this.handleHomeRedirect} variant='h6'>Book in</Typography>
 						</div>
 						<div className={classes.search}>
 							<div className={classes.searchIcon}>
@@ -66,6 +70,7 @@ export class Header extends React.Component<any, State>{
 								inputProps={{ 'aria-label': 'search' }}
 							/>
 						</div>
+						<div className="grow" />
 						{this.renderButtons()}
 					</Toolbar>
 				</AppBar>
@@ -78,9 +83,11 @@ export class Header extends React.Component<any, State>{
 		if (logged) {
 			return (
 				<div className="button">
-					<IconButton onClick={this.handleMenu}>
-						<AccountCircle fontSize='large' />
-					</IconButton>
+					<div className="center">
+						<IconButton onClick={this.handleMenu}>
+							<AccountCircle fontSize='large' />
+						</IconButton>
+					</div>
 					<Menu
 						id="menu-appbar"
 						anchorEl={this.state.anchorEl}
@@ -104,7 +111,7 @@ export class Header extends React.Component<any, State>{
 			)
 		} else {
 			return (
-				<div className='buttons'>
+				<div>
 					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
 						<Button onClick={() => this.props.history.push('/signin')}>Iniciar Sesión</Button>
 						<Button onClick={() => this.props.history.push('/signup')}>Registrarte</Button>
