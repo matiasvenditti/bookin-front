@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
 import { NewUser } from '../../../model';
-import { RegisterFormModel } from '../../../model';
+import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
 import validateInput from '../../../utils/validateInput';
 
 

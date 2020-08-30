@@ -11,9 +11,7 @@ import {ACCESS_TOKEN} from "./EnvironmentService";
 const getDecodedToken = (): DecodedToken => {
     const token = localStorage.getItem('token');
     if (token !== null) {
-        const decoded: DecodedToken = jwt_decode(token);
-        // console.log(decoded);
-        return decoded;
+        return jwt_decode(token);
     } else return {authorities: [], exp: -1, sub: ''};
 }
 

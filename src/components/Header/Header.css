@@ -53,10 +53,22 @@
     display: flex;
     flex-direction: row;
 }
-div.button{
+div.buttons{
     position: absolute;
     right: 10px;    
 }
 .right{
     margin-right: 40px;
+}
+.grow {
+    flex-grow: 0.5;
+}
+.icon {
+    align-items: center;
+}
+.center {
+    text-align: center;
+}
+.title:hover {
+    cursor: pointer;
 }

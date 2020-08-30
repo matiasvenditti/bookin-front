@@ -11,6 +11,7 @@ import { Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
 
+import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
 
 interface RouterProps {
 
@@ -59,6 +60,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                                 this.setState({ ...this.state, editProfileStatus })}
                         />
                     </PrivateRoute>
+                    <PrivateRoute path='/authors' roles={["ROLE_ADMIN"]}><CreateAuthor/></PrivateRoute>
                 </Switch>
                 <Footer />
                 {this.renderToasts()}

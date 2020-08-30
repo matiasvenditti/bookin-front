@@ -44,75 +44,82 @@ export class Header extends React.Component<any, State>{
         this.handleClose();
     }
 
-    render() {
-        const { classes } = this.props;
-        return (
-            <div>
-                <AppBar position='static' color='primary' className={classes.title}>
-                    <Toolbar>
-                        <div className='right'>
-                            <Typography variant='h6'>Book in</Typography>
-                        </div>
-                        <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
-                            <InputBase
-                                placeholder="Buscar"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'search' }}
-                            />
-                        </div>
-                        {this.renderButtons()}
-                    </Toolbar>
-                </AppBar>
-            </div>
-        )
-    }
+	handleHomeRedirect = () => {
+		this.props.history.push('/');
+	}
 
-    renderButtons() {
-        const logged = isLoggedIn();
-        if (logged) {
-            return (
-                <div className="button">
-                    <IconButton onClick={this.handleMenu}>
-                        <AccountCircle fontSize='large' />
-                    </IconButton>
-                    <Menu
-                        id="menu-appbar"
-                        anchorEl={this.state.anchorEl}
-                        onClose={this.handleClose}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={Boolean(this.state.anchorEl)}>
-                        <MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
-                        <MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
-                        <MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Crear Autor</MenuItem>
-                        <MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
-                    </Menu>
-                </div>
-            )
-        } else {
-            return (
-                <div className='button'>
-                    <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
-                        <Button onClick={() => this.props.history.push('/login')}>Iniciar Sesión</Button>
-                        <Button onClick={() => this.props.history.push('/register')}>Registrarte</Button>
-                    </ButtonGroup>
-                </div>
-            );
-        }
-    }
+	render() {
+		const { classes } = this.props;
+		return (
+			<div>
+				<AppBar position='static' color='primary' className={classes.title}>
+					<Toolbar>
+						<div className={'right grow title'}>
+							<Typography onClick={this.handleHomeRedirect} variant='h6'>Book in</Typography>
+						</div>
+						<div className={classes.search}>
+							<div className={classes.searchIcon}>
+								<SearchIcon />
+							</div>
+							<InputBase
+								placeholder="Buscar"
+								classes={{
+									root: classes.inputRoot,
+									input: classes.inputInput,
+								}}
+								inputProps={{ 'aria-label': 'search' }}
+							/>
+						</div>
+						<div className="grow" />
+						{this.renderButtons()}
+					</Toolbar>
+				</AppBar>
+			</div>
+		)
+	}
+
+	renderButtons() {
+		const logged = isLoggedIn();
+		if (logged) {
+			return (
+				<div className="button">
+					<div className="center">
+						<IconButton onClick={this.handleMenu}>
+							<AccountCircle fontSize='large' />
+						</IconButton>
+					</div>
+					<Menu
+						id="menu-appbar"
+						anchorEl={this.state.anchorEl}
+						onClose={this.handleClose}
+						anchorOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						keepMounted
+						transformOrigin={{
+							vertical: 'top',
+							horizontal: 'right',
+						}}
+						open={Boolean(this.state.anchorEl)}>
+						<MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
+						<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
+						<MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>
+						<MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
+					</Menu>
+				</div>
+			)
+		} else {
+			return (
+				<div>
+					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
+						<Button onClick={() => this.props.history.push('/signin')}>Iniciar Sesión</Button>
+						<Button onClick={() => this.props.history.push('/signup')}>Registrarte</Button>
+					</ButtonGroup>
+				</div>
+			);
+		}
+	}
 }
 
 const styles = (theme: Theme) => ({
