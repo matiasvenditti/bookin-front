@@ -3,21 +3,16 @@ import axios, {AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {getEncodedToken} from "./AuthService";
 import { Gender } from "../model/Gender";
-
-function addHeaders<T1>(url:string) :Promise<AxiosResponse<T1>>{
-    axios.defaults.headers.common['Authorization'] = 'Bearer' + getEncodedToken()
-    return axios.get<T1>(url);
-}
-
+import {instance} from "../utils/Interceptors/Inerceptors";
 
 // User API calls to our server separated from component logic.
 export function getAllUsers(): Promise<AxiosResponse<User[]>> {
-    return addHeaders(`${baseURL}/users`)
+    return instance.get(`${baseURL}/users`)
 }
 
 // User API calls to our server separated from component logic.
 export function getUserData(): Promise<AxiosResponse<User[]>> {
-    return addHeaders(`${baseURL}/users/me`)
+    return instance.get(`${baseURL}/users/me`)
 }
 
 export function changeUserData(id: number, values: User): Promise<User> {
