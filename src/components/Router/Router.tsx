@@ -13,6 +13,7 @@ import { RequestStatus } from "../../model/consts/RequestStatus";
 
 import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
 import {UserRoles} from "../../model/consts/Roles";
+import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor";
 
 interface RouterProps {
 
@@ -62,6 +63,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </PrivateRoute>
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor/></PrivateRoute>
+                    <PrivateRoute path='/edit-authors' roles={[UserRoles.RoleAdmin]}><ModifyAuthor/></PrivateRoute>
                 </Switch>
                 <Footer />
                 {this.renderToasts()}
