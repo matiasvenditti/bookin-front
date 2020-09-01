@@ -10,12 +10,12 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import AuthorEdit from "./AuthorEdit";
+import {RouteComponentProps, withRouter} from 'react-router';
 
 
-interface AuthorProps {
+interface AuthorProps extends RouteComponentProps<MatchParams>{
     loadAvatarErrorCallback(): void,
     editAuthorCallback(editAuthorStatus: RequestStatus): void,
-    id: any,
 }
 
 interface AuthorState {
@@ -24,22 +24,33 @@ interface AuthorState {
     updateStatus: any,
     deleteStatus: any,
     showDelete: boolean, //Esto sirve para despues. Si se muestra o no muestra el popup de delete
-    data: any,
+    data: {
+        id: string,
+        firstName: string,
+        lastName: string,
+        nationality: string,
+        birthday: any,
+        photo: any,
+    },
     error: any,
     books: any,
 }
 
-export default class Author extends Component<AuthorProps, AuthorState> {
+interface MatchParams {
+    id: string,
+}
+
+class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
             editAuthorMode: false,
             getAuthorDataStatus: RequestStatus.NONE,
             data: {
-                id: props.id,
-                firstName: '',
-                lastName: '',
-                nationality: '',
+                id: this.props.match.params.id,
+                firstName: 'Jorge Luis',
+                lastName: 'Borges',
+                nationality: 'AR',
                 birthday: '',
                 photo: null,
             },
@@ -57,10 +68,10 @@ export default class Author extends Component<AuthorProps, AuthorState> {
     }
 
     componentDidMount() {
-        this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
-        getAuthorData(this.state.data.id)
-            .then((response: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.SUCCESS, data: response.data }))
-            .catch((error: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error }));
+        //this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
+        //getAuthorData(this.state.data.id)
+        //    .then((response: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.SUCCESS, data: response.data }))
+        //    .catch((error: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error }));
     }
 
     handleChangePhoto = (id: string, type: string, file: string) => {
@@ -136,6 +147,7 @@ export default class Author extends Component<AuthorProps, AuthorState> {
                     <AppBar position='static'>
                         {this.renderAuthor()}
                     </AppBar>
+                    {this.renderAuthor()}
 
                 </div>
                 {/* <button onClick={this.handleDelete}> Delete profile</button>
@@ -191,3 +203,4 @@ export default class Author extends Component<AuthorProps, AuthorState> {
 
 
 }
+export default withRouter(Author);

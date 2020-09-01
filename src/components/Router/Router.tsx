@@ -13,8 +13,10 @@ import { RequestStatus } from "../../model/consts/RequestStatus";
 
 import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
 import {UserRoles} from "../../model/consts/Roles";
+import Author from "../../scenes/main/Author/Author";
 
 interface RouterProps {
+
 
 }
 
@@ -24,7 +26,9 @@ interface RouterState {
     loginStatus: RequestStatus,
     loadAvatarError: boolean,
     editProfileStatus: RequestStatus,
+    editAuthorStatus: RequestStatus,
 }
+
 
 class Router extends React.Component<RouterProps, RouterState> {
     constructor(props: RouterProps) {
@@ -35,6 +39,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             loginStatus: RequestStatus.NONE,
             loadAvatarError: false,
             editProfileStatus: RequestStatus.NONE,
+            editAuthorStatus: RequestStatus.NONE,
         };
     }
 
@@ -59,8 +64,18 @@ class Router extends React.Component<RouterProps, RouterState> {
                             loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
                             editProfileCallback={(editProfileStatus: RequestStatus) =>
                                 this.setState({ ...this.state, editProfileStatus })}
+
                         />
                     </PrivateRoute>
+
+                    <Route path='/authors/:id' roles={[]} >
+                        <Author
+                            loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
+                            editAuthorCallback={(editAuthorStatus: RequestStatus) =>
+                                this.setState({ ...this.state, editAuthorStatus })}
+                          />
+                    </Route>
+
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor/></PrivateRoute>
                 </Switch>
                 <Footer />

@@ -7,10 +7,11 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 
 interface AuthorViewProps {
     data: {
+        id: string,
         firstName: string,
         lastName: string,
-        email: string,
         nationality: string,
+        birthday: any,
         photo: any,
     },
     loading: boolean,
@@ -18,15 +19,21 @@ interface AuthorViewProps {
 }
 
 interface AuthorViewState {
-    data: { key: string, value: string }[],
+    data: {
+        id: string,
+        firstName: string,
+        lastName: string,
+        nationality: string,
+        birthday: any,
+        photo: any,
+    },
 }
 
 export default class AuthorView extends Component<AuthorViewProps, AuthorViewState> {
     constructor(props: AuthorViewProps) {
         super(props);
         this.state = {
-            data: []
-
+            data: this.props.data,
         }
     }
     render() {
