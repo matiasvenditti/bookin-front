@@ -10,6 +10,7 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import AuthorEdit from "./AuthorEdit";
+import ModifyAuthorForm from "./ModifyAuthorForm";
 
 
 interface AuthorProps {
@@ -153,9 +154,9 @@ export default class Author extends Component<AuthorProps, AuthorState> {
         const { editAuthorMode, data, getAuthorDataStatus } = this.state;
         if (editAuthorMode) {
             return (
-                <AuthorEdit
-                    // data={data}
-                    // onCancel={this.handleCancel}
+                <ModifyAuthorForm
+                    data={data}
+                    onCancel={this.handleCancel}
                     // editAuthorCallback={}
                 />
             );

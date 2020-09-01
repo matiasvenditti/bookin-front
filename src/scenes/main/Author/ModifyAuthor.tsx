@@ -7,7 +7,7 @@ import {AxiosResponse} from "axios";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 export default class ModifyAuthor extends Component{
          
-    handleSubmit = (values: NewAuthor, photo: File) => {
+    /**handleSubmit = (values: NewAuthor, photo: File) => {
         createAuthor(values, photo)
             .then((response: AxiosResponse<Author>) => console.log(response.data))
             .catch((e) => console.error(e))
@@ -22,5 +22,5 @@ export default class ModifyAuthor extends Component{
                 </div>
             </div>
         )
-    }
+    }**/
 }
