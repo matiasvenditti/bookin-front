@@ -52,12 +52,12 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         super(props);
         this.state = {
             values: {
-                id: {value: '', type: 'hidden', error: false},
-                firstName: {value: '', type: 'text', error: false},
-                lastName: {value: '', type: 'text', error: false},
-                nationality: {value: '', type: 'select', error: false},
-                birthday: {value: null, type: 'date', error: false},
-                photo: {value: null, type: 'File', error: false},
+                id: {value: props.data.id, type: 'hidden', error: false},
+                firstName: {value: props.data.firstName, type: 'text', error: false},
+                lastName: {value: props.data.lastName, type: 'text', error: false},
+                nationality: {value: props.data.nationality, type: 'select', error: false},
+                birthday: {value: props.data.birthday, type: 'date', error: false},
+                photo: {value: props.data.photo, type: 'File', error: false},
             },
             bytearray: null,
             formValid: false,

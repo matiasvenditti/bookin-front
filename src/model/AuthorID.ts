@@ -1,5 +1,5 @@
 
 
 export interface AuthorID {
-    id: number,
+    id: string,
 }
