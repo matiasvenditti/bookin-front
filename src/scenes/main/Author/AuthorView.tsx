@@ -1,9 +1,10 @@
-import {EditVar} from "../../../model/consts/EditVar";
 import React, {Component} from "react";
-import translateGender from "../../../utils/translateGender";
 import Loader from "../../../components/Loader/Loader";
-import {Button, Divider, IconButton, List, ListItem, ListItemText, Typography} from "@material-ui/core";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import {
+    Card,
+    Typography
+} from "@material-ui/core";
+
 
 interface AuthorViewProps {
     data: {
@@ -19,21 +20,18 @@ interface AuthorViewProps {
 }
 
 interface AuthorViewState {
-    data: {
-        id: string,
-        firstName: string,
-        lastName: string,
-        nationality: string,
-        birthday: any,
-        photo: any,
-    },
+    data: { key: string, value: string}[],
 }
 
 export default class AuthorView extends Component<AuthorViewProps, AuthorViewState> {
     constructor(props: AuthorViewProps) {
         super(props);
         this.state = {
-            data: this.props.data,
+            data: [
+                { key: 'Name', value: props.data.firstName + ' ' + props.data.lastName},
+                { key: 'Nationality', value: props.data.nationality },
+                { key: 'Birthday', value: props.data.birthday},
+            ]
         }
     }
     render() {
@@ -54,7 +52,11 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         } else {
             return (
                 <div>
+                    <Card>
+                        {/* TODO DISPLAY BOOKS */}
+                    </Card>
                 </div>
+
             )
         }
     }
