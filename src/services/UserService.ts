@@ -1,7 +1,6 @@
 import {User} from "../model";
 import axios, {AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
-import {getEncodedToken} from "./AuthService";
 import { Gender } from "../model/Gender";
 import {instance} from "../utils/Interceptors/Inerceptors";
 
