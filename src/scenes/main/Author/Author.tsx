@@ -10,6 +10,7 @@ import SweetAlert from "react-bootstrap-sweetalert";
 import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import AuthorEdit from "./AuthorEdit";
+import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
 import {formatDateTime} from "../../../utils/formateDateTime";
 import Flag from 'react-world-flags';
@@ -154,9 +155,9 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         const { editAuthorMode, data, getAuthorDataStatus } = this.state;
         if (editAuthorMode) {
             return (
-                <AuthorEdit
-                    // data={data}
-                    // onCancel={this.handleCancel}
+                <ModifyAuthorForm
+                    data={data}
+                    onCancel={this.handleCancel}
                     // editAuthorCallback={}
                 />
             );
