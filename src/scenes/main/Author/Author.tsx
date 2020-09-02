@@ -11,6 +11,8 @@ import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/A
 import AuthorView from "./AuthorView";
 import AuthorEdit from "./AuthorEdit";
 import {RouteComponentProps, withRouter} from 'react-router';
+import {formatDateTime} from "../../../utils/formateDateTime";
+import Flag from 'react-world-flags';
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams>{
@@ -23,7 +25,7 @@ interface AuthorState {
     getAuthorDataStatus: RequestStatus,
     updateStatus: any,
     deleteStatus: any,
-    showDelete: boolean, //Esto sirve para despues. Si se muestra o no muestra el popup de delete
+    showDelete: boolean,
     data: {
         id: string,
         firstName: string,
@@ -51,14 +53,14 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 firstName: 'Jorge Luis',
                 lastName: 'Borges',
                 nationality: 'AR',
-                birthday: '',
+                birthday: '1899-08-24',
                 photo: null,
             },
             showDelete: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
             error: null,
-            books: { //BOOKTYPE etc.
+            books: { //BOOKTYPE etc. for later.
                 book1: null,
                 book2: null,
                 book3: null,
@@ -96,37 +98,22 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.setState({ editAuthorMode: false, showDelete: false })
     };
 
-    // TODO delete Author
-    handleDelete = () => {
-        this.setState({
-            showDelete: !this.state.showDelete
-        });
+    deleteAuthorTemp = () => {
+        this.handleSubmit({ id: this.state.data.id });
+        this.handleCancel();
     }
 
-    // TODO delete Author
-    deleteProfile = () => {
-        this.setState({
-            showDelete: false
-        });
-    }
 
     handleSubmit = (values: AuthorID) => {
         this.setState({ deleteStatus: RequestStatus.LOADING, error: null });
         deleteAuthor(values)
             .then((response: AxiosResponse<ResponseUpdate>) => {
                 this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null });
-                logout();
-                // this.props.history.push('/');
+                this.props.history.push("/") //Push to home?
             })
             .catch((error) => {
                 this.setState({ deleteStatus: RequestStatus.ERROR, error });
             });
-    }
-
-    // TODO delete user
-    deleteAuthorTemp = () => {
-        this.handleSubmit({ id: this.state.data.id });
-        this.handleCancel();
     }
 
     render() {
@@ -136,18 +123,20 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 <div className='card-container'>
                     <div className='image-name-container'>
                         <HoverableAvatar
-                            src={this.state.data.photo || dummyAvatar}
+                            src={photo || dummyAvatar}
                             id=''
                             onChange={this.handleChangePhoto}
                             onError={this.props.loadAvatarErrorCallback}
                         />
-                        {/*<ReactCountryFlag countryCode="this.state.nationality" />*/}
-                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName}</Typography>
+                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName} <Flag code={nationality} height="16" /></Typography>
+
+                        <Typography align='center' variant='h4'>{formatDateTime(birthday)}</Typography>
+
+
                     </div>
                     <AppBar position='static'>
                         {this.renderAuthor()}
                     </AppBar>
-                    {this.renderAuthor()}
 
                 </div>
                 {/* <button onClick={this.handleDelete}> Delete profile</button>
@@ -159,7 +148,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     /**
-     * Renders ProfileView or ProfileEdit
+     * Renders AuthorView or AuthorEdit
      */
     renderAuthor() {
         const { editAuthorMode, data, getAuthorDataStatus } = this.state;
@@ -182,7 +171,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         }
     }
 
-    // TODO delete user
+    // TODO delete Author
     renderDelete() {
         const { showDelete } = this.state;
         if (showDelete) return (
