@@ -4,10 +4,9 @@ import { EditFormModel } from "../../../model/Form/EditFormModel";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
 import { EditVar } from "../../../model/consts/EditVar";
 import { Button, Input, RadioGroup } from "../../../components/Form";
-import { UpdateUser } from "../../../model/UpdateUser";
+import { UpdateUser } from "../../../model";
 import { ResponseUpdate, update } from "../../../services/SessionService";
 import { AxiosResponse } from "axios";
-import { saveLoginResponse } from "../../../services/AuthService";
 import translateGender from "../../../utils/translateGender";
 
 interface ProfileEditProps {
