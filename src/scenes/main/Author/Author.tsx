@@ -7,7 +7,7 @@ import HoverableAvatar from "../../../components/HoverableAvatar/HoverableAvatar
 import {dummyAvatar} from "../../../assets";
 import {AppBar, Typography} from "@material-ui/core";
 import SweetAlert from "react-bootstrap-sweetalert";
-import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
+import {changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
@@ -36,7 +36,7 @@ interface AuthorState {
         photo: any,
     },
     error: any,
-    books: any,
+    books: any
 }
 
 interface MatchParams {
