@@ -7,12 +7,13 @@ import HoverableAvatar from "../../../components/HoverableAvatar/HoverableAvatar
 import {dummyAvatar} from "../../../assets";
 import {AppBar, Typography} from "@material-ui/core";
 import SweetAlert from "react-bootstrap-sweetalert";
-import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
+import {changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
 import {formatDateTime} from "../../../utils/formateDateTime";
 import Flag from 'react-world-flags';
+import { UpdateAuthor } from "../../../model/UpdateAuthor";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams>{
@@ -35,7 +36,7 @@ interface AuthorState {
         photo: any,
     },
     error: any,
-    books: any,
+    books: any
 }
 
 interface MatchParams {
@@ -116,6 +117,11 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             });
     }
 
+    modifyAuthor = (values: UpdateAuthor , photo: File) => {
+        updateAuthor(values, photo)
+        .then((response: AxiosResponse<AuthorS>) => console.log(response.data))
+        .catch((e) => console.error(e))
+    }
     render() {
         const { firstName, lastName, nationality, birthday, photo } = this.state.authorData;
         return (
@@ -157,7 +163,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 <ModifyAuthorForm
                     data={authorData}
                     onCancel={this.handleCancel}
-                    onSubmit={this.handleChangePhoto}
+                    onSubmit={this.modifyAuthor}
 
                     // editAuthorCallback={}
                 />

@@ -67,18 +67,17 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         }
     }
 
-    /**   handleSubmit = () => {
+      handleSubmit = () => {
         let values: UpdateAuthor = {
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             nationality: this.state.values.nationality.value,
             birthday: this.state.values.birthday.value,
-            photo: this.state.values.photo.value
         }
-        //this.props.onSubmit(values , this.state.values.photo.value);
-    }*/
+        this.props.onSubmit(values , this.state.values.photo.value);
+    }
 
-     handleSubmit = (values: AuthorEditInterface) => {
+    /** handleSubmit = (values: AuthorEditInterface) => {
         this.setState({ updateStatus: RequestStatus.LOADING, error: null });
         changeAuthorData(values, this.state.values.photo.value)
             .then((response: AxiosResponse<ResponseUpdate>) => {
@@ -88,7 +87,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             .catch((error) => {
                 this.setState({ updateStatus: RequestStatus.ERROR, error });
             });
-    } 
+    } */
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
@@ -163,7 +162,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         }
     }
 
-    handleSubmitTemp = () => {
+    /**handleSubmitTemp = () => {
         this.handleSubmit({
             id: this.state.values.id.value, 
             firstName: this.state.values.firstName.value,
@@ -171,7 +170,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             nationality: this.state.values.nationality.value,
             birthday: this.state.values.birthday.value,
         });
-    }
+    }*/
 
 
     handleCancel = () => {
@@ -274,7 +273,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
                 </Grid>
                 <div>
                     <div className="spacing">
-                        <Button title='Modificar Autor' disabled={!this.state.formValid} onClick={this.handleSubmitTemp}/>
+                        <Button title='Modificar Autor' disabled={!this.state.formValid} onClick={this.handleSubmit}/>
                     </div>
                     <div className="spacing">
                         <Button title="Cancelar" disabled={false} onClick={this.handleCancel}/>

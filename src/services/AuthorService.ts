@@ -26,6 +26,19 @@ const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Aut
     return instance.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
 }
 
+const updateAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Author>> => {
+    const createAuthorForm = new FormData();
+    createAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
+    createAuthorForm.append("photo", photo);
+    const config: AxiosRequestConfig = {
+        headers: {
+            'Content-Type': undefined,
+        }
+    }
+    return instance.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
+}
+
+
 const getAuthorData = (authorID: AuthorID): Promise<AxiosResponse<Author>> => {
     const config: AxiosRequestConfig = {
         headers: {
@@ -61,5 +74,6 @@ export {
     createAuthor,
     getAuthorData,
     changeAuthorData,
-    deleteAuthor
+    deleteAuthor,
+    updateAuthor
 }
