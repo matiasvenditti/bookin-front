@@ -1,16 +1,12 @@
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
-import {dummyAvatar} from "../../../assets";
-import {AppBar, Avatar, Badge, Typography, Button, Grid} from "@material-ui/core";
-import SweetAlert from "react-bootstrap-sweetalert";
+import {Button} from "@material-ui/core";
 import {deleteAuthor, getAuthorData, updateAuthor} from "../../../services/AuthorService";
 import {changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
-import {formatDateTime} from "../../../utils/formateDateTime";
-import Flag from 'react-world-flags';
 import {UpdateAuthor} from "../../../model/UpdateAuthor";
 import './Author.css'
 import {isAuthorized} from "../../../services/AuthService";
@@ -55,17 +51,17 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             isAdmin: isAuthorized(["ROLE_ADMIN"]),
             data: {
                 id: this.props.match.params.id,
-                firstName: 'Pepito',
-                lastName: 'Argentina',
-                nationality: 'AR',
-                birthday: '08-07-1987',
+                firstName: '',
+                lastName: '',
+                nationality: '',
+                birthday: '',
                 photo: null,
             },
             showDelete: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
             error: null,
-            books: { //BOOKTYPE etc. for later. TODO
+            books: { //BOOKTYPE etc. for later.
                 book1: null,
                 book2: null,
                 book3: null,
@@ -75,14 +71,14 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     componentDidMount() {
-        // this.setState({...this.state, getAuthorDataStatus: RequestStatus.LOADING});
-        // getAuthorData({id: this.state.data.id})
-        //     .then((response: any) => this.setState({
-        //         ...this.state,
-        //         getAuthorDataStatus: RequestStatus.SUCCESS,
-        //         data: response.data
-        //     }))
-        //     .catch((error: any) => this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error}));
+        this.setState({...this.state, getAuthorDataStatus: RequestStatus.LOADING});
+        getAuthorData({id: this.state.data.id})
+            .then((response: any) => this.setState({
+                ...this.state,
+                getAuthorDataStatus: RequestStatus.SUCCESS,
+                data: response.data
+            }))
+            .catch((error: any) => this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error}));
     }
 
     handleCancel = () => {
@@ -153,8 +149,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                     data={data}
                     onCancel={this.handleCancel}
                     onSubmit={this.modifyAuthor}
-
-                    // editAuthorCallback={}
                 />
             );
         } else {
@@ -181,26 +175,5 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 </div>
             )
     }
-
-    // TODO delete Author
-    renderDelete() {
-        const {showDelete} = this.state;
-        if (showDelete) return (
-            <SweetAlert
-                danger
-                showCancel
-                confirmBtnText="Yes, delete it!"
-                confirmBtnBsStyle="danger"
-                title="Are you sure?"
-                onConfirm={this.deleteAuthorTemp}
-                onCancel={this.handleCancel}
-                focusCancelBtn
-            >
-                Author will be permanently deleted
-            </SweetAlert>
-        )
-    }
-
-
 }
 export default withRouter(Author);
