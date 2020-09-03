@@ -8,12 +8,10 @@ import {
 
 interface AuthorViewProps {
     data: {
-        id: string,
-        firstName: string,
-        lastName: string,
-        nationality: string,
-        birthday: any,
-        photo: any,
+        book1: string,
+        book2: string,
+        book3: string,
+        book4: string,
     },
     loading: boolean,
     error: boolean,
@@ -28,9 +26,10 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         super(props);
         this.state = {
             data: [
-                { key: 'Name', value: props.data.firstName + ' ' + props.data.lastName},
-                { key: 'Nationality', value: props.data.nationality },
-                { key: 'Birthday', value: props.data.birthday},
+                { key: 'Book1', value: props.data.book1},
+                { key: 'Book2', value: props.data.book2},
+                { key: 'Book3', value: props.data.book3},
+                { key: 'Book4', value: props.data.book4},
             ]
         }
     }
@@ -39,14 +38,14 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         const { loading, error } = this.props;
         if (loading) {
             return (
-                <div className='author-view-container'>
+                <div>
                     <Loader />
                 </div>
             );
         } else if (error) {
             return (
-                <div className='author-view-container'>
-                    <Typography color='error' variant='h6'>Hubo un error al obtener los datos del usuario</Typography>
+                <div>
+                    <Typography color='error' variant='h6'>Hubo un error al obtener los datos del Autor</Typography>
                 </div>
             )
         } else {

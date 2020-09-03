@@ -3,17 +3,17 @@ import React from "react";
 import {AuthorID} from "../../../model";
 import {AxiosResponse} from "axios";
 import {ResponseUpdate} from "../../../services/SessionService";
-import HoverableAvatar from "../../../components/HoverableAvatar/HoverableAvatar";
 import {dummyAvatar} from "../../../assets";
-import {AppBar, Typography} from "@material-ui/core";
+import {AppBar, Avatar, Badge, Typography} from "@material-ui/core";
 import SweetAlert from "react-bootstrap-sweetalert";
-import {changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS} from "../../../services/AuthorService";
+import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
 import {formatDateTime} from "../../../utils/formateDateTime";
 import Flag from 'react-world-flags';
 import { UpdateAuthor } from "../../../model/UpdateAuthor";
+import './Author.css'
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams>{
@@ -27,7 +27,7 @@ interface AuthorState {
     updateStatus: any,
     deleteStatus: any,
     showDelete: boolean,
-    authorData: {
+    data: {
         id: string,
         firstName: string,
         lastName: string,
@@ -47,14 +47,14 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
-            editAuthorMode: true,
+            editAuthorMode: false,
             getAuthorDataStatus: RequestStatus.NONE,
-            authorData: {
+            data: {
                 id: this.props.match.params.id,
-                firstName: 'Jorge Luis',
-                lastName: 'Borges',
-                nationality: 'AR',
-                birthday: '1899-08-24',
+                firstName: '',
+                lastName: '',
+                nationality: '',
+                birthday: '',
                 photo: null,
             },
             showDelete: false,
@@ -71,21 +71,21 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     componentDidMount() {
-        //this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
-        //getAuthorData(this.state.data.id)
-        //    .then((response: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.SUCCESS, data: response.data }))
-        //    .catch((error: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error }));
+        this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
+        getAuthorData({id:this.state.data.id})
+           .then((response: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.SUCCESS, data: response.data }))
+           .catch((error: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error }));
     }
 
     handleChangePhoto = (id: string, type: string, file: string) => {
         this.setState({ ...this.state, updateStatus: RequestStatus.LOADING });
-        const authorData = this.state.authorData;
+        const authorData = this.state.data;
         authorData.photo = file;
         // const formData = new FormData();
         // formData.append('photo', file);
         changeAuthorData(authorData, authorData.photo)
             .then(() => {
-                this.setState({ ...this.state, updateStatus: RequestStatus.SUCCESS, authorData: { ...this.state.authorData, photo: file } })
+                this.setState({ ...this.state, updateStatus: RequestStatus.SUCCESS, data: { ...this.state.data, photo: file } })
                 this.props.editAuthorCallback(RequestStatus.SUCCESS);
             })
             .catch((error) => {
@@ -100,7 +100,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     };
 
     deleteAuthorTemp = () => {
-        this.handleSubmit({ id: this.state.authorData.id });
+        this.handleSubmit({ id: this.state.data.id });
         this.handleCancel();
     }
 
@@ -123,23 +123,31 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         .catch((e) => console.error(e))
     }
     render() {
-        const { firstName, lastName, nationality, birthday, photo } = this.state.authorData;
+        const { firstName, lastName, nationality, birthday, photo } = this.state.data;
         return (
             <div className='route-container'>
                 <div className='card-container'>
-                    <div className='image-name-container'>
-                        <HoverableAvatar
-                            src={photo || dummyAvatar}
-                            id=''
-                            onChange={this.handleChangePhoto}
-                            onError={this.props.loadAvatarErrorCallback}
-                        />
-                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
-                        <div className='subtitle-container'>
-                             <Typography align='right' variant='subtitle1'><Flag code={nationality} height="16" /> {formatDateTime(birthday)}</Typography>
-                        </div>
+                    <div className='image-container'>
+                        <Badge
+                            color='primary'
+                            overlap='circle'
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            className={'avatar-image'}
+                        >
+                            <Avatar src={photo || dummyAvatar} />
 
+                        </Badge>
+
+                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
                     </div>
+                    <div className='subtitle-container'>
+                        <Typography align='center' variant='subtitle2'><Flag code={nationality} height="16" />{'    ' + formatDateTime(birthday)}</Typography>
+                    </div>
+
+
                     <AppBar position='static'>
                         {this.renderAuthor()}
                     </AppBar>
@@ -157,11 +165,11 @@ class Author extends React.Component<AuthorProps, AuthorState> {
      * Renders AuthorView or AuthorEdit
      */
     renderAuthor() {
-        const { editAuthorMode, authorData, getAuthorDataStatus } = this.state;
+        const { editAuthorMode, data,books, getAuthorDataStatus } = this.state;
         if (editAuthorMode) {
             return (
                 <ModifyAuthorForm
-                    data={authorData}
+                    data={data}
                     onCancel={this.handleCancel}
                     onSubmit={this.modifyAuthor}
 
@@ -171,7 +179,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         } else {
             return (
                 <AuthorView
-                    data={authorData}
+                    data={books}
                     loading={getAuthorDataStatus === RequestStatus.LOADING}
                     error={getAuthorDataStatus === RequestStatus.ERROR}
                 />
