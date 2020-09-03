@@ -4,7 +4,9 @@ import { NewUser } from '../../../model';
 import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
 import validateInput from '../../../utils/validateInput';
 
+
 interface RegisterFormProps {
+    loading: boolean,
     onSubmit(values: NewUser): void,
 }
 
@@ -13,7 +15,7 @@ interface RegisterFormState {
     formValid: boolean,
 }
 
-export default class SignupForm extends Component<RegisterFormProps, RegisterFormState> {
+export default class RegisterForm extends Component<RegisterFormProps, RegisterFormState> {
     constructor(props: RegisterFormProps) {
         super(props);
         this.state = {
@@ -53,6 +55,7 @@ export default class SignupForm extends Component<RegisterFormProps, RegisterFor
     }
 
     render() {
+        const { loading } = this.props;
         return (
             <form>
                 <Input
@@ -64,6 +67,7 @@ export default class SignupForm extends Component<RegisterFormProps, RegisterFor
                     error={this.state.values.firstName.touched && this.state.values.firstName.error}
                     errorText={this.state.values.firstName.touched && this.state.values.firstName.error ? 'Nombre inválido' : ''}
                     required
+                    disabled={loading}
                     autoFocus
                 />
                 <Input
@@ -75,6 +79,7 @@ export default class SignupForm extends Component<RegisterFormProps, RegisterFor
                     error={this.state.values.lastName.touched && this.state.values.lastName.error}
                     errorText={this.state.values.lastName.touched && this.state.values.lastName.error ? 'Apellido inválido' : ''}
                     required
+                    disabled={loading}
                 />
                 <Input
                     label='Mail'
@@ -85,6 +90,7 @@ export default class SignupForm extends Component<RegisterFormProps, RegisterFor
                     error={this.state.values.email.touched && this.state.values.email.error}
                     errorText={this.state.values.email.touched && this.state.values.email.error ? 'Mail inválido' : ''}
                     required
+                    disabled={loading}
                 />
                 <RadioGroup
                     title='Género'
@@ -95,6 +101,7 @@ export default class SignupForm extends Component<RegisterFormProps, RegisterFor
                     options={['Hombre', 'Mujer', 'Anónimo']}
                     error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}
+                    disabled={loading}
                 />
                 <Input
                     id='password'
@@ -105,6 +112,7 @@ export default class SignupForm extends Component<RegisterFormProps, RegisterFor
                     error={this.state.values.password.touched && this.state.values.password.error}
                     errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
                     required
+                    disabled={loading}
                 />
                 <Checkbox
                     id='acceptTerms'
@@ -114,10 +122,12 @@ export default class SignupForm extends Component<RegisterFormProps, RegisterFor
                     error={this.state.values.acceptTerms.touched && this.state.values.acceptTerms.error}
                     errorText='Debe aceptar los términos'
                     onChange={this.handleInput}
+                    disabled={loading}
                 />
                 <Button
                     title='Crear'
                     disabled={!this.state.formValid}
+                    loading={loading}
                     onClick={this.handleSubmit}
                 />
             </form>

@@ -1,9 +1,15 @@
 .textField {
     margin-left: auto;
     margin-right: auto;
+<<<<<<< HEAD
     width: 200;
   }
   .form-input-container {
+=======
+    width: 200px;
+  }
+.form-input-container {
+>>>>>>> origin/feature/AuthorView
     margin: 8px;
 }
 .select{
@@ -22,10 +28,21 @@
 .spacingw{
   width: 89px;
 }
+<<<<<<< HEAD
 .spacingh{
   height: 10px;
+=======
+.spacing {
+  margin-top: 20px;
+>>>>>>> origin/feature/AuthorView
 }
 .route-container .profile-edit-form-container > form >.profile-edit-buttons-container > button {
   margin-right: 10px;
   margin-top: 10px;
+<<<<<<< HEAD
+=======
+}
+.center {
+    text-align: center;
+>>>>>>> origin/feature/AuthorView
 }

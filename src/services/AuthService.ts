@@ -2,6 +2,7 @@ import jwt_decode from 'jwt-decode';
 import { AxiosResponse } from 'axios';
 import { ResponseLogin, logout } from './SessionService';
 import { DecodedToken } from '../model/DecodedToken';
+import {ACCESS_TOKEN} from "./EnvironmentService";
 
 /**
  * @description auxiliary function
@@ -10,10 +11,15 @@ import { DecodedToken } from '../model/DecodedToken';
 const getDecodedToken = (): DecodedToken => {
     const token = localStorage.getItem('token');
     if (token !== null) {
-        const decoded: DecodedToken = jwt_decode(token);
-        console.log(decoded);
-        return decoded;
+        return jwt_decode(token);
     } else return {authorities: [], exp: -1, sub: ''};
+}
+
+const getEncodedToken = (): string => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (token !== null) {
+        return token;
+    } else return '';
 }
 
 /**
@@ -24,8 +30,7 @@ const getDecodedToken = (): DecodedToken => {
  */
 const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
     const token = response.headers["authorization"].split(' ')[1];
-    console.log('saveloginresponse', token)
-    localStorage.setItem('token', token);
+    localStorage.setItem(ACCESS_TOKEN, token);
 }
  
 /**
@@ -37,12 +42,10 @@ const saveLoginResponse = (response: AxiosResponse<ResponseLogin>) => {
 const isLoggedIn = () => {
     const decodedToken: DecodedToken = getDecodedToken();
     if (new Date().getTime() > decodedToken.exp * 1000) {
-        console.log('isLoggedIn', decodedToken, 'expired')
         // my token expired
         logout(); 
         return false;
     } else {
-        console.log('isLoggedIn', decodedToken, 'nice')
         return true;
     }
 };
@@ -62,6 +65,7 @@ const isAuthorized = function(requiredRoles: string[]) {
 
 export {
     getDecodedToken,
+    getEncodedToken,
     saveLoginResponse,
     isLoggedIn,
     isAuthorized,

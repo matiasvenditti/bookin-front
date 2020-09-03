@@ -1,10 +1,11 @@
-import {NewUser} from "../model/NewUser";
+import {NewUser} from "../model";
 import axios, {AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import { LoginUser } from "../model/LoginUser";
 import translateGender from "../utils/translateGender";
-import { saveLoginResponse, getDecodedToken } from './AuthService';
-import { DecodedToken } from "../model/DecodedToken";
+import {getUserData} from "./UserService";
+import {UpdateUser} from "../model";
+import {UserID} from "../model";
 
 
 /* Register */
@@ -14,32 +15,45 @@ export interface ResponseRegister {
     lastName: string,
     email: string,
 }
-export function register(values: NewUser, history: any): void {
+export function register(values: NewUser): Promise<AxiosResponse> {
     values.gender = translateGender(values.gender);
-    axios.post<ResponseRegister>(`${baseURL}/signup`, values)
-        .then(() => history.push('/'))
-        .catch((error) => console.error(error));
+    return axios.post<ResponseRegister>(`${baseURL}/signup`, values)
 }
 
 
 /* Login */
 export interface ResponseLogin {
-    
+
 }
-export function login(values: LoginUser, history: any): any {
-    axios.post<ResponseLogin>(`${baseURL}/login`, values)
-        .then((response: AxiosResponse<ResponseLogin>) => {
-            saveLoginResponse(response);
-            history.push('/');
-        })
-        .catch((error) => console.error(error));
+
+export function login(values: LoginUser): Promise<AxiosResponse> {
+    return axios.post<ResponseLogin>(`${baseURL}/login`, values);
+}
+
+/* Update User  */
+export interface ResponseUpdate{
+
+
+}
+
+export function update(values: UpdateUser): Promise<AxiosResponse>
+{
+    return axios.post<ResponseUpdate>(`${baseURL}/users/update`,values)
+}
+
+export interface ResponseDelete{
+
+
+}
+export function deleteProfile(values: UserID): Promise<AxiosResponse>
+{
+    return axios.post<ResponseDelete>(`${baseURL}/users/delete`,values)
 }
 
 
 /* User Profile Data */
 export function getProfileData() {
-    const decodedToken: DecodedToken = getDecodedToken();
-    return decodedToken.sub; // TODO only user mail, prob will change
+    return getUserData();
 }
 
 

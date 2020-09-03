@@ -60,3 +60,15 @@ div.buttons{
 .right{
     margin-right: 40px;
 }
+.grow {
+    flex-grow: 0.5;
+}
+.icon {
+    align-items: center;
+}
+.center {
+    text-align: center;
+}
+.title:hover {
+    cursor: pointer;
+}

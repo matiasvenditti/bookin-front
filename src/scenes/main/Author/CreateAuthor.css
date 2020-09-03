@@ -1,6 +1,13 @@
 form > fieldset {
     margin-top: 15px !important;
 }
+<<<<<<< HEAD
 .spacing{
     height: 20px;
   }
+=======
+.form-container {
+    border-radius: 10px;
+    padding: 20px 65px 15px;
+}
+>>>>>>> origin/feature/AuthorView

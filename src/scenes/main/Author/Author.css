@@ -1,0 +1,33 @@
+.route-container .card-container .image-name-container .author-avatar-image {
+    border-radius: 70px;
+    position: relative;
+    width: 125px;
+    height: 125px;
+    margin-left: 20px;
+    margin-right: 40px;
+}
+
+.subtitle-container{
+    border-radius: 70px;
+    position: center;
+    width: 125px;
+    height: 125px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+.footer-buttons-container {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-left: 50px;
+    justify-content: space-between;
+}
+
+.author-view-container {
+    height: 250px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+}

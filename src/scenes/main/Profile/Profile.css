@@ -1,0 +1,48 @@
+.route-container .card-container .image-name-container {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.route-container .card-container .image-name-container .profile-avatar-image {
+    border-radius: 70px;
+    position: 'relative';
+    width: 125px;
+    height: 125px;
+    margin-left: 20px;
+    margin-right: 40px;
+}
+
+.route-container .card-container .profile-edit-form-container > form {
+    width: 400px;
+}
+
+.route-container .card-container .profile-edit-form-container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+
+.route-container .card-container .profile-edit-form-container > form > .profile-edit-buttons-container > button {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.footer-buttons-container {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.profile-view-container {
+    height: 250px;
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    justify-content: center;
+}
