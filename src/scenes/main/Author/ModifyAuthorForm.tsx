@@ -38,7 +38,7 @@ interface AuthorFormProps {
         birthday: string,
         photo: File,
     }
-//    onSubmit(values: UpdateAuthor): void;
+    onSubmit(values: UpdateAuthor): void;
     onCancel(): void;
     editVariable: EditVar,
 
@@ -274,7 +274,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
                 </Grid>
                 <div>
                     <div className="spacing">
-                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmitTemp}/>
+                        <Button title='Modificar Autor' disabled={!this.state.formValid} onClick={this.handleSubmitTemp}/>
                     </div>
                     <div className="spacing">
                         <Button title="Cancelar" disabled={false} onClick={this.handleCancel}/>

@@ -46,7 +46,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
-            editAuthorMode: false,
+            editAuthorMode: true,
             getAuthorDataStatus: RequestStatus.NONE,
             authorData: {
                 id: this.props.match.params.id,
@@ -157,6 +157,8 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 <ModifyAuthorForm
                     data={authorData}
                     onCancel={this.handleCancel}
+                    onSubmit={this.handleChangePhoto}
+
                     // editAuthorCallback={}
                 />
             );
