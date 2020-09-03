@@ -1,7 +1,7 @@
 import {User} from "../model";
 import axios, {AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
-import { Gender } from "../model/Gender";
+//import { Gender } from "../model/Gender";
 import {instance} from "../utils/Interceptors/Inerceptors";
 
 // User API calls to our server separated from component logic.

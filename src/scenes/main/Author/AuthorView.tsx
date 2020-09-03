@@ -1,40 +1,70 @@
 import React, {Component} from "react";
 import Loader from "../../../components/Loader/Loader";
 import {
-    Card,
+    Avatar,
+    Badge,
     Typography
 } from "@material-ui/core";
+import {dummyAvatar} from "../../../assets";
+import Flag from "react-world-flags";
+import {formatDateTime} from "../../../utils/formateDateTime";
 
 
 interface AuthorViewProps {
-    data: {
+    books: {
         book1: string,
         book2: string,
         book3: string,
         book4: string,
+    },
+    data: {
+        id: string,
+        firstName: string,
+        lastName: string,
+        nationality: string,
+        birthday: any,
+        photo: any,
     },
     loading: boolean,
     error: boolean,
 }
 
 interface AuthorViewState {
-    data: { key: string, value: string}[],
+
+    books: { key: string, value: string}[],
+    data: {
+        id: string,
+        firstName: string,
+        lastName: string,
+        nationality: string,
+        birthday: any,
+        photo: any,
+    },
 }
 
 export default class AuthorView extends Component<AuthorViewProps, AuthorViewState> {
     constructor(props: AuthorViewProps) {
         super(props);
         this.state = {
-            data: [
-                { key: 'Book1', value: props.data.book1},
-                { key: 'Book2', value: props.data.book2},
-                { key: 'Book3', value: props.data.book3},
-                { key: 'Book4', value: props.data.book4},
-            ]
+            books: [
+                { key: 'Book1', value: props.books.book1},
+                { key: 'Book2', value: props.books.book2},
+                { key: 'Book3', value: props.books.book3},
+                { key: 'Book4', value: props.books.book4},
+            ],
+            data:{
+                id: props.data.id,
+                firstName: props.data.firstName,
+                lastName: props.data.lastName,
+                nationality: props.data.nationality,
+                birthday: props.data.birthday,
+                photo: props.data.photo,
+            }
         }
     }
     render() {
-        const { data } = this.state;
+        //const { books } = this.state;
+        const {photo, firstName, lastName, nationality, birthday} = this.state.data;
         const { loading, error } = this.props;
         if (loading) {
             return (
@@ -51,11 +81,28 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         } else {
             return (
                 <div>
-                    <Card>
-                        {/* TODO DISPLAY BOOKS */}
-                    </Card>
-                </div>
+                    <div className='image-container'>
+                        <Badge
+                            color='primary'
+                            overlap='circle'
+                            anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right',
+                            }}
+                            className={'avatar-image'}
+                        >
+                            <Avatar src={photo || dummyAvatar}/>
 
+                        </Badge>
+
+                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
+                    </div>
+                    <div className='subtitle-container'>
+                        <Typography align='center' variant='subtitle2'><Flag code={nationality}
+                                                                             height="16"/>{'    ' + formatDateTime(birthday)}
+                        </Typography>
+                    </div>
+                </div>
             )
         }
     }

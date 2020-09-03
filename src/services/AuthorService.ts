@@ -2,7 +2,8 @@ import {NewAuthor} from "../model/NewAuthor";
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
-import {AuthorEditInterface, AuthorID} from "../model";
+import {AuthorID} from "../model";
+import {UpdateAuthor} from "../model/UpdateAuthor";
 
 
 export interface Author {
@@ -26,16 +27,16 @@ const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Aut
     return instance.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
 }
 
-const updateAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Author>> => {
-    const createAuthorForm = new FormData();
-    createAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
-    createAuthorForm.append("photo", photo);
+const updateAuthor = (author: UpdateAuthor, photo: File): Promise<AxiosResponse<Author>> => {
+    const changeAuthorForm = new FormData();
+    changeAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
+    changeAuthorForm.append("photo", photo);
     const config: AxiosRequestConfig = {
         headers: {
             'Content-Type': undefined,
         }
     }
-    return instance.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
+    return instance.post<Author>(`${baseURL}/authors/update/${author.id}`, changeAuthorForm, config)
 }
 
 
@@ -46,18 +47,6 @@ const getAuthorData = (authorID: AuthorID): Promise<AxiosResponse<Author>> => {
         }
     }
     return instance.post<Author>(`${baseURL}/authors/${authorID}`, config)
-}
-
-const changeAuthorData = (author: AuthorEditInterface, photo: File): Promise<AxiosResponse<Author>> => {
-    const changeAuthorForm = new FormData();
-    changeAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
-    changeAuthorForm.append("photo", photo);
-    const config: AxiosRequestConfig = {
-        headers: {
-            'Content-Type': undefined,
-        }
-    }
-    return instance.post<Author>(`${baseURL}/authors/update/${author.id}`, changeAuthorForm, config)
 }
 
 const deleteAuthor = (author: AuthorID): Promise<AxiosResponse<Author>> => {
@@ -73,7 +62,6 @@ const deleteAuthor = (author: AuthorID): Promise<AxiosResponse<Author>> => {
 export {
     createAuthor,
     getAuthorData,
-    changeAuthorData,
     deleteAuthor,
     updateAuthor
 }
