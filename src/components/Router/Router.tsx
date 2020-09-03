@@ -7,9 +7,6 @@ import Login from '../../scenes/session/Login/Login';
 import Profile from '../../scenes/main/Profile/Profile';
 import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
-<<<<<<< HEAD
-import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
-=======
 import { Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
@@ -17,7 +14,6 @@ import { RequestStatus } from "../../model/consts/RequestStatus";
 import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
 import {UserRoles} from "../../model/consts/Roles";
 import Author from "../../scenes/main/Author/Author";
->>>>>>> origin/feature/AuthorView
 
 interface RouterProps {
 
@@ -53,12 +49,6 @@ class Router extends React.Component<RouterProps, RouterState> {
                 <Menu logoutCallback={() => this.setState({ reload: true })} />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
-<<<<<<< HEAD
-                    <Route path='/signup' ><Signup registerCallback={() => this.setState({ reload: true })} /></Route>
-                    <Route path='/signin' ><Login loginCallback={() => this.setState({ reload: true })} /></Route>
-                    <PrivateRoute path='/profile' roles={[]} ><Profile /></PrivateRoute>
-                    <Route path='/create-author'><CreateAuthor /></Route>
-=======
                     <Route path='/register' >
                         <Register registerCallback={(registerStatus: RequestStatus, loginStatus: RequestStatus) =>
                             this.setState({ ...this.state, registerStatus, loginStatus })}
@@ -87,7 +77,6 @@ class Router extends React.Component<RouterProps, RouterState> {
                     </Route>
 
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor/></PrivateRoute>
->>>>>>> origin/feature/AuthorView
                 </Switch>
                 <Footer />
                 {this.renderToasts()}

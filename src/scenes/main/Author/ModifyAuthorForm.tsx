@@ -38,7 +38,7 @@ interface AuthorFormProps {
         birthday: string,
         photo: File,
     }
-//    onSubmit(values: UpdateAuthor): void;
+    onSubmit(values: UpdateAuthor, photo: File): void;
     onCancel(): void;
     editVariable: EditVar,
 
@@ -67,18 +67,18 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         }
     }
 
-    /**   handleSubmit = () => {
+    handleSubmit = () => {
         let values: UpdateAuthor = {
+            id: this.state.values.id.value,
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             nationality: this.state.values.nationality.value,
             birthday: this.state.values.birthday.value,
-            photo: this.state.values.photo.value
         }
-        //this.props.onSubmit(values , this.state.values.photo.value);
-    }*/
+        this.props.onSubmit(values , this.state.values.photo.value);
+    }
 
-     handleSubmit = (values: AuthorEditInterface) => {
+     handleSubmitT = (values: AuthorEditInterface) => {
         this.setState({ updateStatus: RequestStatus.LOADING, error: null });
         changeAuthorData(values, this.state.values.photo.value)
             .then((response: AxiosResponse<ResponseUpdate>) => {
@@ -88,7 +88,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             .catch((error) => {
                 this.setState({ updateStatus: RequestStatus.ERROR, error });
             });
-    } 
+    }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
@@ -164,7 +164,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
     }
 
     handleSubmitTemp = () => {
-        this.handleSubmit({
+        this.handleSubmitT({
             id: this.state.values.id.value, 
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,

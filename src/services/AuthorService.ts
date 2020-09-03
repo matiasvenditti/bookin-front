@@ -1,14 +1,9 @@
 import {NewAuthor} from "../model/NewAuthor";
-<<<<<<< HEAD
-import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
-import {baseURL} from "./EnvironmentService";
-import { instance } from "../utils/Interceptors/Inerceptors";
-=======
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
 import {AuthorEditInterface, AuthorID} from "../model";
->>>>>>> origin/feature/AuthorView
+import { UpdateAuthor } from "../model/UpdateAuthor";
 
 
 export interface Author {
@@ -31,10 +26,6 @@ const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Aut
     }
     return instance.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
 }
-<<<<<<< HEAD
-export {
-    createAuthor
-=======
 
 const getAuthorData = (authorID: AuthorID): Promise<AxiosResponse<Author>> => {
     const config: AxiosRequestConfig = {
@@ -45,7 +36,7 @@ const getAuthorData = (authorID: AuthorID): Promise<AxiosResponse<Author>> => {
     return instance.post<Author>(`${baseURL}/authors/${authorID}`, config)
 }
 
-const changeAuthorData = (author: AuthorEditInterface, photo: File): Promise<AxiosResponse<Author>> => {
+const changeAuthorData = (author: UpdateAuthor, photo: File): Promise<AxiosResponse<Author>> => {
     const changeAuthorForm = new FormData();
     changeAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
     changeAuthorForm.append("photo", photo);
@@ -54,7 +45,7 @@ const changeAuthorData = (author: AuthorEditInterface, photo: File): Promise<Axi
             'Content-Type': undefined,
         }
     }
-    return instance.post<Author>(`${baseURL}/authors/update/${author.id}`, changeAuthorForm, config)
+    return instance.put<Author>(`${baseURL}/authors/update/${author.id}`, changeAuthorForm, config)
 }
 
 const deleteAuthor = (author: AuthorID): Promise<AxiosResponse<Author>> => {
@@ -72,5 +63,4 @@ export {
     getAuthorData,
     changeAuthorData,
     deleteAuthor
->>>>>>> origin/feature/AuthorView
 }

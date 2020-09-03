@@ -111,11 +111,7 @@ export class Header extends React.Component<any, State>{
 			)
 		} else {
 			return (
-<<<<<<< HEAD
-				<div className='buttons'>
-=======
 				<div>
->>>>>>> origin/feature/AuthorView
 					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
 						<Button onClick={() => this.props.history.push('/signin')}>Iniciar Sesión</Button>
 						<Button onClick={() => this.props.history.push('/signup')}>Registrarte</Button>

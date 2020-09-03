@@ -13,6 +13,7 @@ import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
 import {formatDateTime} from "../../../utils/formateDateTime";
 import Flag from 'react-world-flags';
+import { UpdateAuthor } from "../../../model/UpdateAuthor";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams>{
@@ -46,7 +47,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
-            editAuthorMode: false,
+            editAuthorMode: true,
             getAuthorDataStatus: RequestStatus.NONE,
             authorData: {
                 id: this.props.match.params.id,
@@ -67,13 +68,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 book4: null,
             },
         }
-    }
-
-    componentDidMount() {
-        //this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
-        //getAuthorData(this.state.data.id)
-        //    .then((response: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.SUCCESS, data: response.data }))
-        //    .catch((error: any) => this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error }));
     }
 
     handleChangePhoto = (id: string, type: string, file: string) => {
@@ -99,12 +93,12 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     };
 
     deleteAuthorTemp = () => {
-        this.handleSubmit({ id: this.state.authorData.id });
+        this.handleSubmitDelete({ id: this.state.authorData.id, });
         this.handleCancel();
     }
 
 
-    handleSubmit = (values: AuthorID) => {
+    handleSubmitDelete = (values: AuthorID) => {
         this.setState({ deleteStatus: RequestStatus.LOADING, error: null });
         deleteAuthor(values)
             .then((response: AxiosResponse<ResponseUpdate>) => {
@@ -115,6 +109,14 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 this.setState({ deleteStatus: RequestStatus.ERROR, error });
             });
     }
+
+    handleSubmit = (values: UpdateAuthor, photo: File) => {
+        values.id = this.state.authorData.id;
+        changeAuthorData(values, photo)
+            .then((response: AxiosResponse<Author>) => console.log(response.data))
+            .catch((e) => console.error(e))
+    }
+
 
     render() {
         const { firstName, lastName, nationality, birthday, photo } = this.state.authorData;
@@ -157,6 +159,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 <ModifyAuthorForm
                     data={authorData}
                     onCancel={this.handleCancel}
+                    onSubmit={this.handleSubmit}
                     // editAuthorCallback={}
                 />
             );
