@@ -11,7 +11,7 @@ import { getUserData, changeUserData } from '../../../services/UserService';
 import SweetAlert from "react-bootstrap-sweetalert/dist";
 import { ResponseUpdate, update, deleteProfile, logout } from "../../../services/SessionService";
 import { AxiosResponse } from "axios";
-import { UserID } from "../../../model/UserID";
+import { UserID } from "../../../model";
 
 
 interface ProfileProps {

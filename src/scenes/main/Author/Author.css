@@ -1,4 +1,11 @@
-.route-container .card-container .image-name-container .author-avatar-image {
+.route-container .card-container .image-container{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.route-container .card-container .image-container .avatar-image .MuiAvatar-root{
     border-radius: 70px;
     position: relative;
     width: 125px;
@@ -8,12 +15,11 @@
 }
 
 .subtitle-container{
-    border-radius: 70px;
+    display: flex;
     position: center;
-    width: 125px;
-    height: 125px;
-    margin-left: 40px;
-    margin-right: 40px;
+    align-items: center;
+    width: 600px;
+    height: 25px;
 }
 
 .footer-buttons-container {
@@ -22,12 +28,4 @@
     align-items: center;
     margin-left: 50px;
     justify-content: space-between;
-}
-
-.author-view-container {
-    height: 250px;
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    justify-content: center;
 }
