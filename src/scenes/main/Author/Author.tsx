@@ -1,7 +1,7 @@
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
-import {Button} from "@material-ui/core";
+import {AppBar, Button} from "@material-ui/core";
 import {deleteAuthor, getAuthorData, updateAuthor} from "../../../services/AuthorService";
 import {changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
@@ -145,11 +145,13 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         const {editAuthorMode, data, books, getAuthorDataStatus} = this.state;
         if (editAuthorMode) {
             return (
+                <AppBar position='static'>
                 <ModifyAuthorForm
                     data={data}
                     onCancel={this.handleCancel}
                     onSubmit={this.modifyAuthor}
                 />
+                </AppBar>
             );
         } else {
             return (
