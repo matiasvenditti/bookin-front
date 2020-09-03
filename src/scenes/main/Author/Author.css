@@ -20,12 +20,10 @@
     align-items: center;
     width: 600px;
     height: 25px;
+    right: 500px;
 }
 
-.footer-buttons-container {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
-    margin-left: 50px;
-    justify-content: space-between;
+.button-divider{
+    position: absolute;
+    right: 20px;
 }

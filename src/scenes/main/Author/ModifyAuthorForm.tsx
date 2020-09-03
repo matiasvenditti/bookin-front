@@ -1,22 +1,18 @@
-import React, {ChangeEvent, Component} from 'react';
+import React, {Component} from 'react';
 import {Button, Input} from '../../../components/Form';
 import {AuthorFormModel} from '../../../model/Form/AuthorFormModel';
 import Grid from '@material-ui/core/Grid';
-import {Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField} from '@material-ui/core';
+import {Button as Buttons, FormControl, InputLabel, MenuItem, Select} from '@material-ui/core';
 
-import "./AuthorForm.css"
+import "./ModifyAuthorForm.css"
 import validateInput from '../../../utils/validateInput';
 import {AccountCircle} from '@material-ui/icons';
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { UpdateAuthor } from '../../../model/UpdateAuthor';
-import { EditAuthorFormModel } from '../../../model/Form/EditAuthorFormModel';
-import { RequestStatus } from '../../../model/consts/RequestStatus';
-import { AxiosResponse } from 'axios';
-import { ResponseUpdate, update } from '../../../services/SessionService';
-import { EditVar } from '../../../model/consts/EditVar';
-import { AuthorEditInterface } from '../../../model';
-import { changeAuthorData } from '../../../services/AuthorService';
+import {UpdateAuthor} from '../../../model/UpdateAuthor';
+import {EditAuthorFormModel} from '../../../model/Form/EditAuthorFormModel';
+import {RequestStatus} from '../../../model/consts/RequestStatus';
+import {EditVar} from '../../../model/consts/EditVar';
 
 
 interface AuthorFormState {
@@ -25,7 +21,6 @@ interface AuthorFormState {
     formValid: boolean,
     updateStatus: any,
     error: any,
-    editVariable: EditVar,
 }
 
 
@@ -38,8 +33,11 @@ interface AuthorFormProps {
         birthday: string,
         photo: File,
     }
+
     onSubmit(values: UpdateAuthor): void;
+
     onCancel(): void;
+
     editVariable: EditVar,
 
 }
@@ -62,32 +60,20 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             bytearray: null,
             formValid: false,
             updateStatus: RequestStatus.NONE,
-            editVariable: props.editVariable,
             error: null,
         }
     }
 
-      handleSubmit = () => {
+    handleSubmit = () => {
         let values: UpdateAuthor = {
+            id: this.state.values.id.value,
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             nationality: this.state.values.nationality.value,
             birthday: this.state.values.birthday.value,
         }
-        this.props.onSubmit(values , this.state.values.photo.value);
+        this.props.onSubmit(values, this.state.values.photo.value);
     }
-
-    /** handleSubmit = (values: AuthorEditInterface) => {
-        this.setState({ updateStatus: RequestStatus.LOADING, error: null });
-        changeAuthorData(values, this.state.values.photo.value)
-            .then((response: AxiosResponse<ResponseUpdate>) => {
-                this.setState({ updateStatus: RequestStatus.SUCCESS, error: null });
-                this.props.history.push('/profile');
-            })
-            .catch((error) => {
-                this.setState({ updateStatus: RequestStatus.ERROR, error });
-            });
-    } */
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
@@ -147,7 +133,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
                 ...this.state.values,
                 photo: {value: file, type: photo.type, error: error},
             },
-            formValid:!anyErrors,
+            formValid: !anyErrors,
         });
     }
 
@@ -161,17 +147,6 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             }));
         }
     }
-
-    /**handleSubmitTemp = () => {
-        this.handleSubmit({
-            id: this.state.values.id.value, 
-            firstName: this.state.values.firstName.value,
-            lastName: this.state.values.lastName.value,
-            nationality: this.state.values.nationality.value,
-            birthday: this.state.values.birthday.value,
-        });
-    }*/
-
 
     handleCancel = () => {
         this.props.onCancel({})
@@ -272,12 +247,15 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
                     </Grid>
                 </Grid>
                 <div>
-                    <div className="spacing">
-                        <Button title='Modificar Autor' disabled={!this.state.formValid} onClick={this.handleSubmit}/>
-                    </div>
-                    <div className="spacing">
-                        <Button title="Cancelar" disabled={false} onClick={this.handleCancel}/>
-                    </div>
+                    <Grid alignItems="center" container spacing={2} direction="column">
+                        <Grid item xs>
+                            <Button title='Modificar Autor' disabled={!this.state.formValid}
+                                    onClick={this.handleSubmit}/>
+                        </Grid>
+                        <Grid item xs>
+                            <Button title="Cancelar" disabled={false} onClick={this.handleCancel}/>
+                        </Grid>
+                    </Grid>
                 </div>
             </form>
         )
