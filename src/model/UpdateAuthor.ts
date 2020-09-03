@@ -3,5 +3,4 @@ export interface UpdateAuthor{
     lastName: string,
     nationality: string,
     birthday: string,
-    photo: File,
 }
