@@ -1,15 +1,14 @@
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
-import {AppBar, Button} from "@material-ui/core";
-import {deleteAuthor, getAuthorData, updateAuthor} from "../../../services/AuthorService";
+import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
-import {UpdateAuthor} from "../../../model/UpdateAuthor";
 import './Author.css'
 import {isAuthorized} from "../../../services/AuthService";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
+import {UpdateAuthor} from "../../../model/UpdateAuthor";
+import {AxiosResponse} from "axios";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -45,7 +44,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
-            editAuthorMode: false,
+            editAuthorMode: true,
             getAuthorDataStatus: RequestStatus.NONE,
             isAdmin: isAuthorized(["ROLE_ADMIN"]),
             data: {
@@ -106,22 +105,13 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             });
     }
 
-    modifyAuthor = (values: UpdateAuthor, photo: File) => {
-            updateAuthor(values, photo)
-                .then(() => {
-                    this.setState({
-                        ...this.state,
-                        updateStatus: RequestStatus.SUCCESS,
-                        data: {...this.state.data, photo: photo}
-                    })
-                    this.props.editAuthorCallback(RequestStatus.SUCCESS);
-
-                })
-                .catch((error) => {
-                    this.setState({...this.state, updateStatus: RequestStatus.ERROR, error});
-                    this.props.editAuthorCallback(RequestStatus.ERROR);
-                })
+    handleSubmit = (values: UpdateAuthor, photo: File) => {
+        values.id = this.state.data.id;
+        changeAuthorData(values, photo)
+            .then((response: AxiosResponse<Author>) => console.log(response.data))
+            .catch((e) => console.error(e))
     }
+
 
     render() {
         return (
@@ -144,13 +134,12 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         const {editAuthorMode, data, books, getAuthorDataStatus} = this.state;
         if (editAuthorMode) {
             return (
-                <AppBar position='static'>
                 <ModifyAuthorForm
                     data={data}
                     onCancel={this.handleCancel}
-                    onSubmit={this.modifyAuthor}
+                    onSubmit={this.handleSubmit}
+                    // editAuthorCallback={}
                 />
-                </AppBar>
             );
         } else {
             return (
@@ -176,6 +165,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 </div>
             )
     }
-}
 
+
+}
 export default withRouter(Author);

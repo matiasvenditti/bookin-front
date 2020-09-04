@@ -21,6 +21,7 @@ interface AuthorFormState {
     formValid: boolean,
     updateStatus: any,
     error: any,
+    editVariable: EditVar,
 }
 
 
@@ -33,9 +34,7 @@ interface AuthorFormProps {
         birthday: string,
         photo: File,
     }
-
-    onSubmit(values: UpdateAuthor): void;
-
+    onSubmit(values: UpdateAuthor, photo: File): void;
     onCancel(): void;
 
     editVariable: EditVar,
@@ -60,6 +59,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             bytearray: null,
             formValid: false,
             updateStatus: RequestStatus.NONE,
+            editVariable: props.editVariable,
             error: null,
         }
     }
@@ -70,9 +70,9 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             nationality: this.state.values.nationality.value,
-            birthday: this.state.values.birthday.value,
+            birthday: this.state.values.birthday.value
         }
-        this.props.onSubmit(values, this.state.values.photo.value);
+        this.props.onSubmit(values , this.state.values.photo.value);
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
