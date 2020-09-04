@@ -9,6 +9,7 @@ import './Author.css'
 import {isAuthorized} from "../../../services/AuthService";
 import {UpdateAuthor} from "../../../model/UpdateAuthor";
 import {AxiosResponse} from "axios";
+import {Button, ButtonGroup} from "@material-ui/core";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
