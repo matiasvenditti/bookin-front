@@ -3,15 +3,14 @@ import React from "react";
 import {AuthorID} from "../../../model";
 import {AppBar, Button} from "@material-ui/core";
 import {deleteAuthor, getAuthorData, updateAuthor} from "../../../services/AuthorService";
-import {changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
-import {UpdateAuthor} from "../../../model/UpdateAuthor";
 import './Author.css'
 import {isAuthorized} from "../../../services/AuthService";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { UpdateAuthor } from "../../../model/UpdateAuthor";
+import SweetAlert from "react-bootstrap-sweetalert";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -89,22 +88,28 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.setState({editAuthorMode: !this.state.editAuthorMode})
     }
 
-    deleteAuthorTemp = () => {
-        this.handleDelete({id: this.state.data.id});
-        this.handleCancel();
+    handleDelete = () => {
+        this.setState({showDelete: true})
+    }
+
+    handleConfirmDelete = () => {
+        this.deleteAuthor({id : this.state.data.id});
     }
 
 
-    handleDelete = (values: AuthorID) => {
+    deleteAuthor = (values: AuthorID) => {
         this.setState({deleteStatus: RequestStatus.LOADING, error: null});
         deleteAuthor(values)
             .then(() => {
                 this.setState({deleteStatus: RequestStatus.SUCCESS, error: null});
                 this.props.history.push("/") //Push to home?
+
             })
             .catch((error) => {
                 this.setState({deleteStatus: RequestStatus.ERROR, error});
+                //console.log("Error deleting", error)
             });
+        this.handleCancel()
     }
 
     modifyAuthor = (values: UpdateAuthor, photo: File) => {
@@ -130,6 +135,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 <div className='card-container'>
                     {this.renderButtons()}
                     {this.renderAuthor()}
+                    {this.renderDelete()}
                 </div>
             </div>
 
@@ -171,11 +177,31 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             return (
                 <div className="button-divider">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
-                        <Button onClick={this.handleModify}> Edit profile</Button>
-                        <Button onClick={this.deleteAuthorTemp}>Delete Profile</Button>
+                        <Button onClick={this.handleModify}>Edit profile</Button>
+                        <Button onClick={this.handleDelete}>Delete Profile</Button>
                     </ButtonGroup>
                 </div>
             )
     }
+
+    renderDelete() {
+        const {showDelete} = this.state;
+        if (showDelete) return (
+            <SweetAlert
+                danger
+                showCancel
+                confirmBtnText="Yes, delete it!"
+                confirmBtnBsStyle="danger"
+                title="Are you sure?"
+                onConfirm={this.handleConfirmDelete}
+                onCancel={this.handleCancel}
+                focusCancelBtn
+            >
+                Author will be permanently deleted
+            </SweetAlert>
+        )
+    }
+
+
 }
 export default withRouter(Author);
