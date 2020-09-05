@@ -13,6 +13,7 @@ import {UpdateAuthor} from '../../../model/UpdateAuthor';
 import {EditAuthorFormModel} from '../../../model/Form/EditAuthorFormModel';
 import {RequestStatus} from '../../../model/consts/RequestStatus';
 import {EditVar} from '../../../model/consts/EditVar';
+import { Author } from '../../../services/AuthorService';
 
 
 interface AuthorFormState {
@@ -26,14 +27,7 @@ interface AuthorFormState {
 
 
 interface AuthorFormProps {
-    data: {
-        id: string,
-        firstName: string,
-        lastName: string,
-        nationality: string,
-        birthday: string,
-        photo: File,
-    }
+    author: Author
     onSubmit(values: UpdateAuthor, photo: File): void;
     onCancel(): void;
 
@@ -47,14 +41,15 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
 
     constructor(props: AuthorFormProps) {
         super(props);
+        console.log(props.author.photo);
         this.state = {
             values: {
-                id: {value: props.data.id, type: 'hidden', error: false},
-                firstName: {value: props.data.firstName, type: 'text', error: false},
-                lastName: {value: props.data.lastName, type: 'text', error: false},
-                nationality: {value: props.data.nationality, type: 'select', error: false},
-                birthday: {value: props.data.birthday, type: 'date', error: false},
-                photo: {value: props.data.photo, type: 'File', error: false},
+                id: {value: props.author.id, type: 'hidden', error: false},
+                firstName: {value: props.author.firstname, type: 'text', error: false},
+                lastName: {value: props.author.lastname, type: 'text', error: false},
+                nationality: {value: props.author.nationality, type: 'select', error: false},
+                birthday: {value: props.author.date_of_birth, type: 'date', error: false},
+                photo: {value: props.author.photo, type: 'File', error: false},
             },
             bytearray: null,
             formValid: false,
