@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import './Loader.css';
+import React from 'react';
 import { CircularProgress } from '@material-ui/core';
+import './Loader.css';
 
 
 interface LoaderProps {
@@ -8,13 +8,14 @@ interface LoaderProps {
     mini?: boolean,
 }
 
-export default class Loader extends Component<LoaderProps, {}> {
-    render() {
-        const { disabled, mini } = this.props;
-        return (
-            <div className='loader-container'>
-                {!disabled && <CircularProgress size={mini ? 20 : 50} />}
-            </div>
-        )
-    }
-}
+const Loader = (props: LoaderProps) => {
+    const { disabled, mini } = props;
+    return (
+        <div className='loader-container'>
+            {!disabled && <CircularProgress size={mini ? 20 : 50} />}
+        </div>
+    )
+};
+
+
+export default Loader;

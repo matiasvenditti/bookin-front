@@ -1,4 +1,4 @@
-import React, { useRef, Component, createRef } from 'react'
+import React, { Component, createRef } from 'react'
 import { ButtonBase, Avatar, Badge } from '@material-ui/core';
 import './HoverableAvatar.css';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
@@ -8,12 +8,14 @@ import ConfirmPhotoModal from './ConfirmPhotoModal';
 interface HoverableAvatarProps {
     src: any,
     id: string,
-    onChange(id: string, type: string, file: any): void,
-    onError(error: any): void,
+    maxSize: number,
+    onChange(file: File): void,
+    onLoadError(): void,
 }
 
 interface HoverableAvatarState {
     photo: any,
+    photoFile: any,
     modalOpen: boolean,
     fileUploaderRef: any,
 }
@@ -23,26 +25,34 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         super(props);
         this.state = {
             photo: null,
+            photoFile: null,
             modalOpen: false,
             fileUploaderRef: createRef() as React.MutableRefObject<HTMLInputElement>,
         }
     }
 
-
-
     handleClick = (e: any) => {
-        this.state.fileUploaderRef.current.click()
+        this.state.fileUploaderRef.current.click();
     }
 
     onChangeFile = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
-        const file = event.target.files[0];
-        this.setState({ ...this.state, photo: file, modalOpen: true });
+        const { maxSize } = this.props;
+        const file: File = event.target.files[0];
+        this.setState({ ...this.state, photoFile: file });
+        if (file.size > maxSize) {
+            this.props.onLoadError();
+        } else {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => this.setState({ ...this.state, photo: reader.result, modalOpen: true });
+        }
     }
 
     handleModalConfirm = () => {
-        this.props.onChange(this.props.id, 'photo', this.state.photo)
+        this.props.onChange(this.state.photoFile);
+        this.setState({ ...this.state, modalOpen: false });
     }
 
     render() {
@@ -54,6 +64,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         return ([
             <Badge
                 id={id}
+                key={id}
                 color='primary'
                 overlap='circle'
                 badgeContent={
@@ -69,14 +80,16 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
             >
                 <Avatar src={src} />
                 <input
+                    accept='.png, .jpg, .jpeg'
                     type='file'
-                    id='profile-phoro-input'
+                    id='profile-photo-input'
                     ref={this.state.fileUploaderRef}
                     style={{ display: "none" }}
                     onChange={this.onChangeFile}
                 />
             </Badge>,
             <ConfirmPhotoModal
+                key={id + '-modal'}
                 open={this.state.modalOpen}
                 photo={this.state.photo}
                 handleCancel={() => this.setState({ ...this.state, modalOpen: false })}

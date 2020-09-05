@@ -1,3 +1,7 @@
+html, body {
+    margin: 0;
+}
+
 .route-container {
     display: flex;
     flex-flow: column nowrap;
@@ -19,6 +23,6 @@
     /* background-color: #dddddd; */
 }
 
-html, body {
-    margin: 0;
+.typography-bold {
+    font-weight: bold !important;
 }
