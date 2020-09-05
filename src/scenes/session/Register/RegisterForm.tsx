@@ -111,7 +111,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     onChange={this.handleInput}
                     value={this.state.values.password.value}
                     error={this.state.values.password.touched && this.state.values.password.error}
-                    errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
+                    errorText={this.state.values.password.touched && this.state.values.password.error ? 'La contraseña debe ser alfanumérica' : ''}
                     required
                     disabled={loading}
                 />

@@ -14,7 +14,7 @@ import { DeleteUserModal } from './DeleteUserModal';
 import { User } from '../../../model';
 import Gender from '../../../model/Gender';
 import { withRouter } from 'react-router-dom';
-import { UserEditFormModel } from '../../../model/Form/UserEditFormModel';
+import photoUtils from '../../../utils/photoUtils';
 
 
 interface ProfileProps {
@@ -37,7 +37,6 @@ interface ProfileState {
 class Profile extends Component<any, ProfileState> {
     constructor(props: any) {
         super(props);
-        console.log('ave', new File([""], dummyAvatar));
         this.state = {
             currentTab: 'profile',
             editProfileMode: false,
@@ -67,7 +66,7 @@ class Profile extends Component<any, ProfileState> {
                     getUserDataStatus: RequestStatus.SUCCESS,
                     data: {
                         ...response.data,
-                        // photo: `data:image/jpeg;base64,${nextProps.author.photo}`;
+                        photo: photoUtils.getPhotoFromBytearray(response.data.photo),
                     }
                 });
             })
@@ -84,30 +83,31 @@ class Profile extends Component<any, ProfileState> {
     }
 
     handleCancel = () => {
-        this.setState({ editProfileMode: false, deleteModalShow: false })
+        this.setState({ ...this.state, editProfileMode: false, deleteModalShow: false })
     };
 
     handleDeleteConfirm = () => {
-        this.setState({ deleteStatus: RequestStatus.LOADING });
+        this.setState({ ...this.state, deleteStatus: RequestStatus.LOADING });
         deleteProfile(this.state.data.id)
             .then((response: AxiosResponse<ResponseUpdate>) => {
                 // TODO call ToastContainer (context feature to be implemented)
-                this.setState({ deleteStatus: RequestStatus.SUCCESS });
+                this.setState({ ...this.state, deleteStatus: RequestStatus.SUCCESS });
                 logout();
                 this.props.history.push('/');
             })
             .catch((error) => {
-                this.setState({ deleteStatus: RequestStatus.ERROR });
+                this.setState({ ...this.state, deleteStatus: RequestStatus.ERROR });
             });
     }
 
-    handleUpdatePhoto = (photo: File) => this.handleUpdate(this.state.data, photo);
-    handleUpdateValues = (values: UserEditFormModel) => this.handleUpdate(values, this.state.data.photo);
-    handleUpdate = (values: UserEditFormModel, photo: File) => {
+    handleUpdatePhoto = (photo: File) => {
+        this.handleUpdate(this.state.data, photo);
+    }
+    handleUpdateValues = (values: User) => this.handleUpdate(values, this.state.data.photo);
+
+    handleUpdate = (values: User, photo: File) => {
         this.setState({ ...this.state, updateStatus: RequestStatus.LOADING });
-        const newValues: User = this.state.data;
-        Object.keys(values).forEach((key: keyof UserEditFormModel) => { newValues[key] = values[key].value });
-        updateProfile(this.state.data.id, newValues, photo)
+        updateProfile(this.state.data.id, values, photo)
             .then((response: AxiosResponse<ResponseUpdate>) => {
                 this.setState({ ...this.state, updateStatus: RequestStatus.SUCCESS, editProfileMode: false });
                 this.props.editProfileCallback(RequestStatus.SUCCESS);

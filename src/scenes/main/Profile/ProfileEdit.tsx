@@ -61,7 +61,15 @@ class ProfileEdit extends Component<any, ProfileEditState> {
     }
 
     handleSubmit = () => {
-        this.props.onSubmit(this.state.values);
+        this.props.onSubmit({
+            id: -1,
+            firstName: this.state.values.firstName.value,
+            lastName: this.state.values.lastName.value,
+            email: this.state.values.email.value,
+            password: '',
+            gender: this.state.values.gender.value,
+            photo: null,
+        });
     };
 
     handleCancel = () => {

@@ -16,10 +16,10 @@ export function getUserData(): Promise<AxiosResponse<User[]>> {
 /* Update User  */
 export interface ResponseUpdate {}
 
-export function updateProfile(id: number, user: User, photo: any): Promise<AxiosResponse> {
+export function updateProfile(id: number, user: User, photo: File): Promise<AxiosResponse> {
     const formData = new FormData();
     delete user.photo;
-    console.log('uploading', user, photo);
+    console.log(id, user, photo);
     formData.append('user', new Blob([JSON.stringify(user)], {type: 'application/json'}));
     formData.append('photo', photo);
     const config: AxiosRequestConfig = {

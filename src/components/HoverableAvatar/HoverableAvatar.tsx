@@ -15,6 +15,7 @@ interface HoverableAvatarProps {
 
 interface HoverableAvatarState {
     photo: any,
+    photoFile: any,
     modalOpen: boolean,
     fileUploaderRef: any,
 }
@@ -24,6 +25,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         super(props);
         this.state = {
             photo: null,
+            photoFile: null,
             modalOpen: false,
             fileUploaderRef: createRef() as React.MutableRefObject<HTMLInputElement>,
         }
@@ -38,6 +40,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         event.preventDefault();
         const { maxSize } = this.props;
         const file: File = event.target.files[0];
+        this.setState({ ...this.state, photoFile: file });
         console.log('changing file', file.size, maxSize);
         if (file.size > maxSize) {
             console.log('too big')
@@ -51,7 +54,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
     }
 
     handleModalConfirm = () => {
-        this.props.onChange(this.state.photo);
+        this.props.onChange(this.state.photoFile);
         this.setState({ ...this.state, modalOpen: false });
     }
 
@@ -80,6 +83,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
             >
                 <Avatar src={src} />
                 <input
+                    accept='.png, .jpg, .jpeg'
                     type='file'
                     id='profile-photo-input'
                     ref={this.state.fileUploaderRef}
