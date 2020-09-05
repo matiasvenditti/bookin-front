@@ -69,13 +69,13 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         if (loading) {
             return (
                 <div>
-                    <Loader />
+                    <Typography align='center'> <Loader /> </Typography>
                 </div>
             );
         } else if (error) {
             return (
                 <div>
-                    <Typography color='error' variant='h6'>Hubo un error al obtener los datos del Autor</Typography>
+                    <Typography align='center' color='error' variant='h6'>Hubo un error al obtener los datos del Autor</Typography>
                 </div>
             )
         } else {
