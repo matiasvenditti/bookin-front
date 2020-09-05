@@ -1,7 +1,7 @@
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
-import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
+import {changeAuthorData, deleteAuthor, getAuthorData, Author as Authors} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
@@ -109,7 +109,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     handleSubmit = (values: UpdateAuthor, photo: File) => {
         values.id = this.state.data.id;
         changeAuthorData(values, photo)
-            .then((response: AxiosResponse<Author>) => console.log(response.data))
+            .then((response: AxiosResponse<Authors>) => console.log(response.data))
             .catch((e) => console.error(e))
     }
 
