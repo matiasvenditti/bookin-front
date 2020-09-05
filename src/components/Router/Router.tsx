@@ -12,7 +12,7 @@ import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
 
 import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
-import {UserRoles} from "../../model/consts/Roles";
+import { UserRoles } from "../../model/consts/Roles";
 
 interface RouterProps {
 
@@ -24,6 +24,7 @@ interface RouterState {
     loginStatus: RequestStatus,
     loadAvatarError: boolean,
     editProfileStatus: RequestStatus,
+    deleteProfileStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -35,6 +36,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             loginStatus: RequestStatus.NONE,
             loadAvatarError: false,
             editProfileStatus: RequestStatus.NONE,
+            deleteProfileStatus: RequestStatus.NONE,
         };
     }
 
@@ -56,12 +58,11 @@ class Router extends React.Component<RouterProps, RouterState> {
                     </Route>
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
-                            loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
-                            editProfileCallback={(editProfileStatus: RequestStatus) =>
-                                this.setState({ ...this.state, editProfileStatus })}
+                            deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
+                            editProfileCallback={(editProfileStatus: RequestStatus) => this.setState({ ...this.state, editProfileStatus })}
                         />
                     </PrivateRoute>
-                    <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor/></PrivateRoute>
+                    <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor /></PrivateRoute>
                 </Switch>
                 <Footer />
                 {this.renderToasts()}
@@ -70,57 +71,32 @@ class Router extends React.Component<RouterProps, RouterState> {
     }
 
     renderToasts() {
-        const { registerStatus, loginStatus, loadAvatarError, editProfileStatus } = this.state;
-        return ([
-            <Snackbar
-                open={registerStatus === RequestStatus.SUCCESS}
-                autoHideDuration={2000}
-            >
-                <Alert severity='success'>
-                    Te has registrado correctamente!
-                </Alert>
-            </Snackbar>,
-            <Snackbar
-                open={registerStatus === RequestStatus.ERROR}
-                autoHideDuration={2000}
-            >
-                <Alert severity='error'>
-                    Hubo un error al registrarse, intente mas tarde.
-                </Alert>
-            </Snackbar>,
-            <Snackbar
-                open={loginStatus === RequestStatus.ERROR}
-                autoHideDuration={2000}
-            >
-                <Alert severity='error'>
-                    No se ha podido ingresar, intente mas tarde.
-                </Alert>
-            </Snackbar>,
-            <Snackbar
-                open={loadAvatarError}
-                autoHideDuration={2000}
-            >
-                <Alert severity='error'>
-                    No se ha podido cargar la nueva foto de perfil
-                </Alert>
-            </Snackbar>,
-            <Snackbar
-                open={editProfileStatus === RequestStatus.SUCCESS}
-                autoHideDuration={2000}
-            >
-                <Alert severity='error'>
-                    No se ha podido cargar la nueva foto de perfil
-                </Alert>
-            </Snackbar>,
-            <Snackbar
-                open={editProfileStatus === RequestStatus.ERROR}
-                autoHideDuration={2000}
-            >
-                <Alert severity='error'>
-                    No se ha podido cargar la nueva foto de perfil
-                </Alert>
-            </Snackbar>,
-        ]);
+        const { registerStatus, loginStatus, loadAvatarError, editProfileStatus, deleteProfileStatus } = this.state;
+        return (
+            <div>
+                <Snackbar open={registerStatus === RequestStatus.SUCCESS} autoHideDuration={2000}>
+                    <Alert severity='success'>Te has registrado correctamente!</Alert>
+                </Snackbar>
+                <Snackbar open={registerStatus === RequestStatus.ERROR} autoHideDuration={2000}>
+                    <Alert severity='error'>Hubo un error al registrarse, intente mas tarde.</Alert>
+                </Snackbar>
+                <Snackbar open={loginStatus === RequestStatus.ERROR} autoHideDuration={2000}>
+                    <Alert severity='error'>No se ha podido ingresar, intente mas tarde.</Alert>
+                </Snackbar>
+                <Snackbar open={loadAvatarError} autoHideDuration={2000}>
+                    <Alert severity='error'>No se ha podido cargar la nueva foto de perfil</Alert>
+                </Snackbar>
+                <Snackbar open={editProfileStatus === RequestStatus.SUCCESS} autoHideDuration={2000}>
+                    <Alert severity='error'>No se ha podido cargar la nueva foto de perfil</Alert>
+                </Snackbar>
+                <Snackbar open={editProfileStatus === RequestStatus.ERROR} autoHideDuration={2000}>
+                    <Alert severity='error'>No se ha podido cargar la nueva foto de perfil</Alert>
+                </Snackbar>
+                <Snackbar open={deleteProfileStatus === RequestStatus.ERROR} autoHideDuration={2000}>
+                    <Alert severity='error'>No se ha podido eliminar al cuenta, intente más tarde</Alert>
+                </Snackbar>
+            </div>
+        );
     }
 }
 

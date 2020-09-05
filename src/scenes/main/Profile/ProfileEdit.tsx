@@ -1,94 +1,70 @@
 import React, { Component } from 'react'
-import validateInput from "../../../utils/validateInput";
-import { EditFormModel } from "../../../model/Form/EditFormModel";
-import { RequestStatus } from "../../../model/consts/RequestStatus";
-import { EditVar } from "../../../model/consts/EditVar";
-import { Button, Input, RadioGroup } from "../../../components/Form";
-import { UpdateUser } from "../../../model/UpdateUser";
-import { ResponseUpdate, update } from "../../../services/SessionService";
-import { AxiosResponse } from "axios";
-import { saveLoginResponse } from "../../../services/AuthService";
-import translateGender from "../../../utils/translateGender";
+import validateInput from '../../../utils/validateInput';
+import { UserEditFormModel } from '../../../model/Form/UserEditFormModel';
+import { EditVar } from '../../../model/consts/EditVar';
+import { Button, Input, RadioGroup } from '../../../components/Form';
+import { User } from '../../../model';
+
 
 interface ProfileEditProps {
-    data: {
-        firstName: string,
-        lastName: string,
-        email: string,
-        gender: string,
-        photo: any,
-        password: any,
-    }
+    loading: boolean,
+    error: boolean,
+    data: User,
     editVariable: EditVar,
-    onSubmit(values: UpdateUser): void,
+    onSubmit(values: User): void,
     onCancel(): void,
 }
 
 interface ProfileEditState {
-    values: EditFormModel,
+    values: UserEditFormModel,
     formValid: boolean,
-    updateStatus: any,
     error: any,
-    editVariable: EditVar,
 }
 
-export default class ProfileEdit extends Component<any, ProfileEditState> {
+class ProfileEdit extends Component<any, ProfileEditState> {
     constructor(props: ProfileEditProps) {
         super(props);
         this.state = {
             values: {
-                firstName: { value: props.data.firstName, type: 'text', error: false },
-                lastName: { value: props.data.lastName, type: 'text', error: false },
-                email: { value: props.data.email, type: 'email', error: false },
-                gender: { value: props.data.gender, type: 'radio-group', error: false },
-                password: { value: props.data.password, type: 'password', error: false },
-                photo: { value: props.data.photo, type: 'text', error: false }, //TODO figure out a way for def value.
+                firstName: { value: props.data.firstName, type: 'text', error: false, touched: false },
+                lastName: { value: props.data.lastName, type: 'text', error: false, touched: false },
+                email: { value: props.data.email, type: 'email', error: false, touched: false },
+                gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
             },
             formValid: false,
-            updateStatus: RequestStatus.NONE,
-            editVariable: props.editVariable,
             error: null,
         }
     }
 
-    handleInput = (id: keyof EditFormModel, type: string, value: any) => {
+    handleInput = (id: keyof UserEditFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
+        const allTouched = () => {
+            if (id === 'firstName' || id === 'lastName') {
+                return this.state.values.firstName.touched || this.state.values.lastName.touched
+            } else return true;
+        };
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
+        const allInitialValue = Object.keys(this.state.values).every(key => {
+            // console.log('id=' + id, 'value=' + value, 'values=' + this.state.values[key].value, 'props=' + this.props.data[key]);
+            if (key === id) return value === this.props.data[id];
+            else return this.state.values[key].value === this.props.data[key];
+        });
         this.setState({
+            ...this.state,
             values: {
                 ...this.state.values,
-                [id]: { value, type, error },
+                [id]: { value, type, error, touched: true },
             },
-            formValid: !anyErrors,
+            formValid: !allInitialValue && allTouched && !anyErrors,
         });
     }
 
-    // TODO replace internal request submit to parent callback
-    handleSubmit = (values: UpdateUser) => {
-        this.setState({ updateStatus: RequestStatus.LOADING, error: null });
-        update(values)
-            .then((response: AxiosResponse<ResponseUpdate>) => {
-                this.setState({ updateStatus: RequestStatus.SUCCESS, error: null });
-                this.props.history.push('/profile');
-            })
-            .catch((error) => {
-                this.setState({ updateStatus: RequestStatus.ERROR, error });
-            });
-    }
-
-    handleSubmitTemp = () => {
-        this.handleSubmit({
-            firstName: this.state.values.firstName.value,
-            lastName: this.state.values.lastName.value,
-            email: this.state.values.email.value,
-            gender: translateGender(this.state.values.gender.value),
-            password: this.state.values.password.value,
-            photo: this.state.values.photo.value,
-        });
-    }
+    handleSubmit = () => {
+        this.props.onSubmit(this.state.values);
+    };
 
     handleCancel = () => {
-        this.props.onCancel({})
+        this.props.onCancel()
     }
 
     render() {
@@ -100,7 +76,7 @@ export default class ProfileEdit extends Component<any, ProfileEditState> {
                         <Button
                             title='Guardar'
                             disabled={!this.state.formValid}
-                            onClick={this.handleSubmitTemp}
+                            onClick={this.handleSubmit}
                         />
                         <Button
                             title='Cancelar'
@@ -114,12 +90,13 @@ export default class ProfileEdit extends Component<any, ProfileEditState> {
     }
 
     renderInputs() {
-        switch (this.state.editVariable) {
+        switch (this.props.editVariable) {
             case EditVar.NAME:
                 return ([
                     <Input
                         label='Nombre'
                         id='firstName'
+                        key='firstName'
                         type='text'
                         onChange={this.handleInput}
                         value={this.state.values.firstName.value}
@@ -131,6 +108,7 @@ export default class ProfileEdit extends Component<any, ProfileEditState> {
                     <Input
                         label='Apellido'
                         id='lastName'
+                        key='lastName'
                         type='text'
                         onChange={this.handleInput}
                         value={this.state.values.lastName.value}
@@ -144,6 +122,7 @@ export default class ProfileEdit extends Component<any, ProfileEditState> {
                     <Input
                         label='Mail'
                         id='email'
+                        key='email'
                         type='email'
                         onChange={this.handleInput}
                         value={this.state.values.email.value}
@@ -157,6 +136,7 @@ export default class ProfileEdit extends Component<any, ProfileEditState> {
                     <RadioGroup
                         title='Género'
                         id='gender'
+                        key='gender'
                         type='radio-group'
                         onChange={this.handleInput}
                         value={this.state.values.gender.value}
@@ -171,3 +151,6 @@ export default class ProfileEdit extends Component<any, ProfileEditState> {
         }
     }
 }
+
+
+export default ProfileEdit;

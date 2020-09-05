@@ -1,4 +1,4 @@
-import React, { useRef, Component, createRef } from 'react'
+import React, { Component, createRef } from 'react'
 import { ButtonBase, Avatar, Badge } from '@material-ui/core';
 import './HoverableAvatar.css';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
@@ -9,7 +9,7 @@ interface HoverableAvatarProps {
     src: any,
     id: string,
     onChange(id: string, type: string, file: any): void,
-    onError(error: any): void,
+    // onError(error: any): void,
 }
 
 interface HoverableAvatarState {
@@ -38,11 +38,12 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         event.stopPropagation();
         event.preventDefault();
         const file = event.target.files[0];
-        this.setState({ ...this.state, photo: file, modalOpen: true });
+        console.log('selected file', file);
+        this.setState({ ...this.state, photo: URL.createObjectURL(file), modalOpen: true });
     }
 
     handleModalConfirm = () => {
-        this.props.onChange(this.props.id, 'photo', this.state.photo)
+        this.props.onChange(this.props.id, 'photo', this.state.photo);
     }
 
     render() {
@@ -54,6 +55,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         return ([
             <Badge
                 id={id}
+                key={id}
                 color='primary'
                 overlap='circle'
                 badgeContent={
@@ -77,6 +79,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
                 />
             </Badge>,
             <ConfirmPhotoModal
+                key={id + '-modal'}
                 open={this.state.modalOpen}
                 photo={this.state.photo}
                 handleCancel={() => this.setState({ ...this.state, modalOpen: false })}

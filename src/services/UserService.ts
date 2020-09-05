@@ -1,8 +1,6 @@
 import {User} from "../model";
-import axios, {AxiosResponse} from 'axios';
+import {AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
-import {getEncodedToken} from "./AuthService";
-import { Gender } from "../model/Gender";
 import {instance} from "../utils/Interceptors/Inerceptors";
 
 // User API calls to our server separated from component logic.
@@ -15,16 +13,18 @@ export function getUserData(): Promise<AxiosResponse<User[]>> {
     return instance.get(`${baseURL}/users/me`)
 }
 
-export function changeUserData(id: number, values: User): Promise<User> {
-    console.log('change user data', values);
-    // return new Promise((resolve, reject) => resolve(
-    //     {
-    //         firstName: 'Mock User',
-    //         lastName: 'Mockerino',
-    //         email: 'mockuser123@mail.com',
-    //         gender: Gender.M,
-    //         photo: '',
-    //     }
-    // ))
-    return axios.put(`${baseURL}/users/${id}`, values)
+/* Update User  */
+export interface ResponseUpdate {}
+
+export function updateProfile(id: number, user: User, photo: any): Promise<AxiosResponse> {
+    var formData = new FormData();
+    formData.append('photo', photo);
+    return instance.put<ResponseUpdate>(`${baseURL}/users/${id}`, {user, formData});
+}
+
+/* Delete user */
+export interface ResponseDelete {}
+
+export function deleteProfile(id: number): Promise<AxiosResponse> {
+    return instance.delete<ResponseDelete>(`${baseURL}/users/${id}`);
 }
