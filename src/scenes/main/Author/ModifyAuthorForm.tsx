@@ -13,7 +13,7 @@ import {UpdateAuthor} from '../../../model/UpdateAuthor';
 import {EditAuthorFormModel} from '../../../model/Form/EditAuthorFormModel';
 import {RequestStatus} from '../../../model/consts/RequestStatus';
 import {EditVar} from '../../../model/consts/EditVar';
-import { Author } from '../../../services/AuthorService';
+import { Author } from '../../../model/Author';
 
 
 interface AuthorFormState {
@@ -22,7 +22,6 @@ interface AuthorFormState {
     formValid: boolean,
     updateStatus: any,
     error: any,
-    editVariable: EditVar,
 }
 
 
@@ -30,12 +29,9 @@ interface AuthorFormProps {
     author: Author
     onSubmit(values: UpdateAuthor, photo: File): void;
     onCancel(): void;
-
-    editVariable: EditVar,
-
 }
 
-export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
+export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorFormState> {
 
     maxFileSize: number = 100000;
 
@@ -43,21 +39,35 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         super(props);
         this.state = {
             values: {
-                id: {value: props.author.id, type: 'hidden', error: false},
-                firstName: {value: props.author.firstname, type: 'text', error: false},
-                lastName: {value: props.author.lastname, type: 'text', error: false},
-                nationality: {value: props.author.nationality, type: 'select', error: false},
-                birthday: {value: props.author.date_of_birth, type: 'date', error: false},
+                firstName: {value: this.props.author.firstName, type: 'text', error: false},
+                lastName: {value: this.props.author.lastName, type: 'text', error: false},
+                nationality: {value: this.props.author.nationality, type: 'select', error: false},
+                birthday: {value: this.props.author.birthday, type: 'date', error: false},
                 photo: {value: null, type: 'File', error: true},
             },
-            bytearray: props.author.photo,
+            bytearray: this.props.author.photo,
             formValid: false,
             updateStatus: RequestStatus.NONE,
-            editVariable: props.editVariable,
             error: null,
         }
     }
 
+    static getDerivedStateFromProps(nextProps: AuthorFormProps, _: AuthorFormState) {
+        const photo: string = `data:image/jpeg;base64,${nextProps.author.photo}`;
+        return {
+            values: {
+                firstName: {value: nextProps.author.firstName, type: 'text', error: false},
+                lastName: {value: nextProps.author.lastName, type: 'text', error: false},
+                nationality: {value: nextProps.author.nationality, type: 'select', error: false},
+                birthday: {value: nextProps.author.birthday, type: 'date', error: false},
+                photo: {value: null, type: 'File', error: true},
+            },
+            bytearray: photo,
+            formValid: false,
+            updateStatus: RequestStatus.NONE,
+            error: null,
+        };
+    }
     handleSubmit = () => {
         let values: UpdateAuthor = {
             id: this.state.values.id.value,
@@ -143,7 +153,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
     }
 
     handleCancel = () => {
-        this.props.onCancel({})
+        this.props.onCancel()
     }
 
 

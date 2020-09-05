@@ -1,7 +1,7 @@
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
-import {changeAuthorData, deleteAuthor, getAuthorData, Author as Authors} from "../../../services/AuthorService";
+import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
@@ -10,6 +10,8 @@ import {isAuthorized} from "../../../services/AuthService";
 import {UpdateAuthor} from "../../../model/UpdateAuthor";
 import {AxiosResponse} from "axios";
 import {Button, ButtonGroup} from "@material-ui/core";
+import { Author as Authors } from "../../../model/Author";
+
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -133,7 +135,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
 
     renderAuthor() {
         const {editAuthorMode, data, books, getAuthorDataStatus} = this.state;
-        if (editAuthorMode) {
+        /**if (editAuthorMode) {
             return (
                 <ModifyAuthorForm
                     data={data}
@@ -142,7 +144,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                     // editAuthorCallback={}
                 />
             );
-        } else {
+        } else {*/
             return (
                 <AuthorView
                     data={data}
@@ -151,7 +153,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                     error={getAuthorDataStatus === RequestStatus.ERROR}
                 />
             );
-        }
+        //}
     }
 
     renderButtons() {

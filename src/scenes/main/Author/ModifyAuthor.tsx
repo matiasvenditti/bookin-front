@@ -3,12 +3,13 @@ import {Typography} from "@material-ui/core";
 import {NewAuthor} from "../../../model/NewAuthor";
 import AuthorForm from "./AuthorForm";
 import "./CreateAuthor.css"
-import {Author, changeAuthorData, getAuthorData} from "../../../services/AuthorService";
+import {changeAuthorData, getAuthorData} from "../../../services/AuthorService";
 import {AxiosResponse} from "axios";
 import { UpdateAuthor } from "../../../model/UpdateAuthor";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { AuthorID } from "../../../model";
+import { Author } from "../../../model/Author";
 
 interface ModifyaAuthorProp extends RouteComponentProps<MatchParams> {
 }
@@ -18,16 +19,33 @@ interface MatchParams {
 }
 
 interface ModifyAuthorState {
-    author: Author | null
+    author: Author
 }
 
 class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
+
+    constructor(props: ModifyaAuthorProp){
+        super(props);
+        this.state = {
+            author: {
+                id: 0,
+                firstName: '',
+                lastName: '',
+                nationality: '',
+                birthday: new Date(),
+                photo: ''
+            }
+        }
+    }
 
     componentDidMount(){
         const id : string = this.props.match.params.id;
         const a : AuthorID = {id};
         getAuthorData(a)
-        .then((response: AxiosResponse<Author>) => this.setState({author: response.data }))
+        .then((response: AxiosResponse<Author>) => this.setState((prevState: ModifyAuthorState) => ({
+            ...prevState,
+            author: response.data, 
+        })))
         .catch((e) => console.error(e))
     }
      
@@ -37,12 +55,16 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
             .catch((e) => console.error(e))
     }
 
+    handleCancel = () => {
+        console.log('cancel')
+    }
+
     render() {
         return (
             <div className='route-container' >
                 <div className='form-container'>
                     <Typography align='center' variant='h5'>Creá un autor</Typography>
-                    <ModifyAuthorForm author={this.state.author} onSubmit={this.handleSubmit} />
+                    <ModifyAuthorForm author={this.state.author} onSubmit={this.handleSubmit} onCancel={this.handleCancel} />
                 </div>
             </div>
         )
