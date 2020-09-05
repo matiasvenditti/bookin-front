@@ -37,7 +37,6 @@ export default class ProfileView extends Component<ProfileViewProps, ProfileView
     };
 
     render() {
-        console.log('profile view', this.props.data.gender, genderToString(this.props.data.gender))
         const data = this.formatData();
         const { loading, error } = this.props;
         if (loading) {

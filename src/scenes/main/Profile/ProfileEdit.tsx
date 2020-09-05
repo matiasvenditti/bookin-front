@@ -46,7 +46,6 @@ class ProfileEdit extends Component<any, ProfileEditState> {
         };
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
         const allInitialValue = Object.keys(this.state.values).every(key => {
-            // console.log('id=' + id, 'value=' + value, 'values=' + this.state.values[key].value, 'props=' + this.props.data[key]);
             if (key === id) return value === this.props.data[id];
             else return this.state.values[key].value === this.props.data[key];
         });

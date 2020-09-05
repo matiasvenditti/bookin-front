@@ -41,12 +41,9 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         const { maxSize } = this.props;
         const file: File = event.target.files[0];
         this.setState({ ...this.state, photoFile: file });
-        console.log('changing file', file.size, maxSize);
         if (file.size > maxSize) {
-            console.log('too big')
             this.props.onLoadError();
         } else {
-            console.log('size is ok')
             let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = () => this.setState({ ...this.state, photo: reader.result, modalOpen: true });

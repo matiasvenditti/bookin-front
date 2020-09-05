@@ -60,7 +60,6 @@ class Profile extends Component<any, ProfileState> {
     _getUserData() {
         getUserData()
             .then((response: any) => {
-                console.log('response profile', response);
                 this.setState({
                     ...this.state,
                     getUserDataStatus: RequestStatus.SUCCESS,
