@@ -1,7 +1,7 @@
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
-import {AppBar, Button} from "@material-ui/core";
+import {AppBar, Button, Typography} from "@material-ui/core";
 import {deleteAuthor, getAuthorData, updateAuthor} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
@@ -11,6 +11,7 @@ import {isAuthorized} from "../../../services/AuthService";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import { UpdateAuthor } from "../../../model/UpdateAuthor";
 import SweetAlert from "react-bootstrap-sweetalert";
+import Loader from "../../../components/Loader/Loader";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -73,9 +74,9 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.setState({...this.state, getAuthorDataStatus: RequestStatus.LOADING});
         getAuthorData({id: this.state.data.id})
             .then((response: any) => this.setState({
-                ...this.state,
-                getAuthorDataStatus: RequestStatus.SUCCESS,
-                data: response.data
+                data: response.data,
+                getAuthorDataStatus: RequestStatus.SUCCESS
+
             }))
             .catch((error: any) => this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error}));
     }
@@ -95,6 +96,8 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     handleConfirmDelete = () => {
         this.deleteAuthor({id : this.state.data.id});
     }
+
+
 
 
     deleteAuthor = (values: AuthorID) => {
@@ -149,6 +152,13 @@ class Author extends React.Component<AuthorProps, AuthorState> {
 
     renderAuthor() {
         const {editAuthorMode, data, books, getAuthorDataStatus} = this.state;
+        if (getAuthorDataStatus === RequestStatus.LOADING) {
+            return (
+                <div>
+                    <Typography align='center'> <Loader /> </Typography>
+                </div>
+            );
+        }
         if (editAuthorMode) {
             return (
                 <AppBar position='static'>
@@ -161,10 +171,10 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             );
         } else {
             return (
+
                 <AuthorView
                     data={data}
                     books={books}
-                    loading={getAuthorDataStatus === RequestStatus.LOADING}
                     error={getAuthorDataStatus === RequestStatus.ERROR}
                 />
             );

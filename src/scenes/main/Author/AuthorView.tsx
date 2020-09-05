@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import Loader from "../../../components/Loader/Loader";
 import {
     Avatar,
     Badge,
@@ -8,6 +7,7 @@ import {
 import {dummyAvatar} from "../../../assets";
 import Flag from "react-world-flags";
 import {formatDateTime} from "../../../utils/formateDateTime";
+import {getCode} from "country-list";
 
 
 interface AuthorViewProps {
@@ -25,13 +25,12 @@ interface AuthorViewProps {
         birthday: any,
         photo: any,
     },
-    loading: boolean,
     error: boolean,
 }
 
 interface AuthorViewState {
 
-    books: { key: string, value: string}[],
+    books: { key: string, value: string }[],
     data: {
         id: string,
         firstName: string,
@@ -47,12 +46,12 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         super(props);
         this.state = {
             books: [
-                { key: 'Book1', value: props.books.book1},
-                { key: 'Book2', value: props.books.book2},
-                { key: 'Book3', value: props.books.book3},
-                { key: 'Book4', value: props.books.book4},
+                {key: 'Book1', value: props.books.book1},
+                {key: 'Book2', value: props.books.book2},
+                {key: 'Book3', value: props.books.book3},
+                {key: 'Book4', value: props.books.book4},
             ],
-            data:{
+            data: {
                 id: props.data.id,
                 firstName: props.data.firstName,
                 lastName: props.data.lastName,
@@ -62,20 +61,21 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
             }
         }
     }
+
+    testHandle = () => {
+        console.log(this.state.data);
+    }
+
     render() {
         //const { books } = this.state;
         const {photo, firstName, lastName, nationality, birthday} = this.state.data;
-        const { loading, error } = this.props;
-        if (loading) {
+        const {error} = this.props;
+
+        if (error) {
             return (
                 <div>
-                    <Typography align='center'> <Loader /> </Typography>
-                </div>
-            );
-        } else if (error) {
-            return (
-                <div>
-                    <Typography align='center' color='error' variant='h6'>Hubo un error al obtener los datos del Autor</Typography>
+                    <Typography align='center' color='error' variant='h6'>Hubo un error al obtener los datos del
+                        Autor</Typography>
                 </div>
             )
         } else {
@@ -91,14 +91,14 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                             }}
                             className={'avatar-image'}
                         >
-                            <Avatar src={photo || dummyAvatar}/>
+                            <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar}/>
 
                         </Badge>
 
                         <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
                     </div>
                     <div className='subtitle-container'>
-                        <Typography align='center' variant='subtitle2'><Flag code={nationality}
+                        <Typography align='center' variant='subtitle2'><Flag code={getCode(nationality)}
                                                                              height="16"/>{'    ' + formatDateTime(birthday)}
                         </Typography>
                     </div>
