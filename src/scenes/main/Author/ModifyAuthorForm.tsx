@@ -41,7 +41,6 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
 
     constructor(props: AuthorFormProps) {
         super(props);
-        console.log(props.author.photo);
         this.state = {
             values: {
                 id: {value: props.author.id, type: 'hidden', error: false},
@@ -49,9 +48,9 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
                 lastName: {value: props.author.lastname, type: 'text', error: false},
                 nationality: {value: props.author.nationality, type: 'select', error: false},
                 birthday: {value: props.author.date_of_birth, type: 'date', error: false},
-                photo: {value: props.author.photo, type: 'File', error: false},
+                photo: {value: null, type: 'File', error: true},
             },
-            bytearray: null,
+            bytearray: props.author.photo,
             formValid: false,
             updateStatus: RequestStatus.NONE,
             editVariable: props.editVariable,
