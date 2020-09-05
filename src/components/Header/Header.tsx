@@ -113,8 +113,8 @@ export class Header extends React.Component<any, State>{
 			return (
 				<div>
 					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
-						<Button onClick={() => this.props.history.push('/signin')}>Iniciar Sesión</Button>
-						<Button onClick={() => this.props.history.push('/signup')}>Registrarte</Button>
+						<Button onClick={() => this.props.history.push('/login')}>Iniciar Sesión</Button>
+						<Button onClick={() => this.props.history.push('/register')}>Registrarte</Button>
 					</ButtonGroup>
 				</div>
 			);
