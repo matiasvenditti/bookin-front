@@ -173,7 +173,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
 
     renderButtons() {
         const {isAdmin} = this.state;
-        if (!isAdmin)
+        if (isAdmin)
             return (
                 <div className="button-divider">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">

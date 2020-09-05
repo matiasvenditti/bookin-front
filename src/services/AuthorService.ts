@@ -41,12 +41,7 @@ const updateAuthor = (author: UpdateAuthor, photo: File): Promise<AxiosResponse<
 
 
 const getAuthorData = (authorID: AuthorID): Promise<AxiosResponse<Author>> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            'Content-Type': undefined,
-        }
-    }
-    return instance.post<Author>(`${baseURL}/authors/${authorID}`, config)
+    return instance.get<Author>(`${baseURL}/authors/${authorID.id}`)
 }
 
 const deleteAuthor = (author: AuthorID): Promise<AxiosResponse<Author>> => {
