@@ -3,6 +3,7 @@ import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
 import { NewUser } from '../../../model';
 import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
 import validateInput from '../../../utils/validateInput';
+import { genderToString, stringToGender } from '../../../utils/translateGender';
 
 
 interface RegisterFormProps {
@@ -38,7 +39,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: { value, type, error, touched: true },
+                [id]: { value: type === 'radio-group' ? stringToGender(value) : value, type, error, touched: true },
             },
             formValid: allTouched && !anyErrors,
         });
@@ -97,7 +98,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     id='gender'
                     type='radio-group'
                     onChange={this.handleInput}
-                    value={this.state.values.gender.value}
+                    value={genderToString(this.state.values.gender.value)}
                     options={['Hombre', 'Mujer', 'Anónimo']}
                     error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}

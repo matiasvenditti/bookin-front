@@ -8,8 +8,9 @@ import ConfirmPhotoModal from './ConfirmPhotoModal';
 interface HoverableAvatarProps {
     src: any,
     id: string,
-    onChange(id: string, type: string, file: any): void,
-    // onError(error: any): void,
+    maxSize: number,
+    onChange(file: File): void,
+    onLoadError(): void,
 }
 
 interface HoverableAvatarState {
@@ -28,22 +29,30 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         }
     }
 
-
-
     handleClick = (e: any) => {
-        this.state.fileUploaderRef.current.click()
+        this.state.fileUploaderRef.current.click();
     }
 
     onChangeFile = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
-        const file = event.target.files[0];
-        console.log('selected file', file);
-        this.setState({ ...this.state, photo: URL.createObjectURL(file), modalOpen: true });
+        const { maxSize } = this.props;
+        const file: File = event.target.files[0];
+        console.log('changing file', file.size, maxSize);
+        if (file.size > maxSize) {
+            console.log('too big')
+            this.props.onLoadError();
+        } else {
+            console.log('size is ok')
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => this.setState({ ...this.state, photo: reader.result, modalOpen: true });
+        }
     }
 
     handleModalConfirm = () => {
-        this.props.onChange(this.props.id, 'photo', this.state.photo);
+        this.props.onChange(this.state.photo);
+        this.setState({ ...this.state, modalOpen: false });
     }
 
     render() {
@@ -72,7 +81,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
                 <Avatar src={src} />
                 <input
                     type='file'
-                    id='profile-phoro-input'
+                    id='profile-photo-input'
                     ref={this.state.fileUploaderRef}
                     style={{ display: "none" }}
                     onChange={this.onChangeFile}

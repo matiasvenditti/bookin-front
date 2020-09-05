@@ -1,5 +1,5 @@
 import {User} from "../model";
-import {AxiosResponse} from 'axios';
+import {AxiosResponse, AxiosRequestConfig} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
 
@@ -17,9 +17,17 @@ export function getUserData(): Promise<AxiosResponse<User[]>> {
 export interface ResponseUpdate {}
 
 export function updateProfile(id: number, user: User, photo: any): Promise<AxiosResponse> {
-    var formData = new FormData();
+    const formData = new FormData();
+    delete user.photo;
+    console.log('uploading', user, photo);
+    formData.append('user', new Blob([JSON.stringify(user)], {type: 'application/json'}));
     formData.append('photo', photo);
-    return instance.put<ResponseUpdate>(`${baseURL}/users/${id}`, {user, formData});
+    const config: AxiosRequestConfig = {
+        headers: {
+            'Content-Type': undefined,
+        }
+    }
+    return instance.put<ResponseUpdate>(`${baseURL}/users/${id}`, formData, config)
 }
 
 /* Delete user */

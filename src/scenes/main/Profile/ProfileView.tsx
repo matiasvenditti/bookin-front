@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { List, ListItem, ListItemText, Divider, IconButton, Button, Typography } from '@material-ui/core'
-import translateGender from '../../../utils/translateGender';
+import { genderToString } from '../../../utils/translateGender';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { EditVar } from '../../../model/consts/EditVar';
 import Loader from '../../../components/Loader/Loader';
@@ -32,11 +32,12 @@ export default class ProfileView extends Component<ProfileViewProps, ProfileView
         return ([
             { key: 'Nombre', value: this.props.data.firstName + ' ' + this.props.data.lastName, type: EditVar.NAME },
             { key: 'Mail', value: this.props.data.email, type: EditVar.EMAIL },
-            { key: 'Género', value: translateGender(this.props.data.gender.toString()), type: EditVar.GENDER },
+            { key: 'Género', value: genderToString(this.props.data.gender), type: EditVar.GENDER },
         ])
-    }
+    };
 
     render() {
+        console.log('profile view', this.props.data.gender, genderToString(this.props.data.gender))
         const data = this.formatData();
         const { loading, error } = this.props;
         if (loading) {

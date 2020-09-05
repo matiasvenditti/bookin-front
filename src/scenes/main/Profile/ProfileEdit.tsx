@@ -4,6 +4,7 @@ import { UserEditFormModel } from '../../../model/Form/UserEditFormModel';
 import { EditVar } from '../../../model/consts/EditVar';
 import { Button, Input, RadioGroup } from '../../../components/Form';
 import { User } from '../../../model';
+import { genderToString, stringToGender } from '../../../utils/translateGender';
 
 
 interface ProfileEditProps {
@@ -53,7 +54,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             ...this.state,
             values: {
                 ...this.state.values,
-                [id]: { value, type, error, touched: true },
+                [id]: { value: type === 'radio-group' ? stringToGender(value) : value, type, error, touched: true },
             },
             formValid: !allInitialValue && allTouched && !anyErrors,
         });
@@ -139,7 +140,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         key='gender'
                         type='radio-group'
                         onChange={this.handleInput}
-                        value={this.state.values.gender.value}
+                        value={genderToString(this.state.values.gender.value)}
                         options={['Hombre', 'Mujer', 'Anónimo']}
                         error={this.state.values.gender.error}
                         errorText={'Elige un género'}

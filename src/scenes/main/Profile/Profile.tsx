@@ -12,13 +12,14 @@ import { logout } from "../../../services/SessionService";
 import { AxiosResponse } from "axios";
 import { DeleteUserModal } from './DeleteUserModal';
 import { User } from '../../../model';
-import { Gender } from '../../../model/Gender';
+import Gender from '../../../model/Gender';
 import { withRouter } from 'react-router-dom';
 import { UserEditFormModel } from '../../../model/Form/UserEditFormModel';
 
 
 interface ProfileProps {
     editProfileCallback(editProfileStatus: RequestStatus): void,
+    onLoadErrorCallback(): void,
     deleteProfileCallback(deleteProfileStatus: RequestStatus): void,
 }
 
@@ -57,26 +58,25 @@ class Profile extends Component<any, ProfileState> {
         }
     }
 
-    componentDidMount() {
-        this.setState({ ...this.state, getUserDataStatus: RequestStatus.LOADING });
+    _getUserData() {
         getUserData()
-            .then((response: any) => this.setState({ ...this.state, getUserDataStatus: RequestStatus.SUCCESS, data: response.data }))
+            .then((response: any) => {
+                console.log('response profile', response);
+                this.setState({
+                    ...this.state,
+                    getUserDataStatus: RequestStatus.SUCCESS,
+                    data: {
+                        ...response.data,
+                        // photo: `data:image/jpeg;base64,${nextProps.author.photo}`;
+                    }
+                });
+            })
             .catch((error: any) => this.setState({ ...this.state, getUserDataStatus: RequestStatus.ERROR }));
     }
 
-    handleChangePhoto = (id: string, type: string, file: string) => {
-        this.setState({ ...this.state, updateStatus: RequestStatus.LOADING });
-        // const formData = new FormData();
-        // formData.append('photo', file);
-        updateProfile(this.state.data.id, this.state.data, file)
-            .then(() => {
-                this.setState({ ...this.state, updateStatus: RequestStatus.SUCCESS, data: { ...this.state.data, photo: file } })
-                this.props.editProfileCallback(RequestStatus.SUCCESS);
-            })
-            .catch((error) => {
-                this.setState({ ...this.state, updateStatus: RequestStatus.ERROR });
-                this.props.editProfileCallback(RequestStatus.ERROR);
-            })
+    componentDidMount() {
+        this.setState({ ...this.state, getUserDataStatus: RequestStatus.LOADING });
+        this._getUserData();
     }
 
     handleChangeTab = (e: any, newValue: any) => {
@@ -101,17 +101,21 @@ class Profile extends Component<any, ProfileState> {
             });
     }
 
-    handleUpdate = (values: UserEditFormModel) => {
+    handleUpdatePhoto = (photo: File) => this.handleUpdate(this.state.data, photo);
+    handleUpdateValues = (values: UserEditFormModel) => this.handleUpdate(values, this.state.data.photo);
+    handleUpdate = (values: UserEditFormModel, photo: File) => {
+        this.setState({ ...this.state, updateStatus: RequestStatus.LOADING });
         const newValues: User = this.state.data;
         Object.keys(values).forEach((key: keyof UserEditFormModel) => { newValues[key] = values[key].value });
-        console.log('uploading', newValues);
-        updateProfile(this.state.data.id, newValues, this.state.data.photo)
+        updateProfile(this.state.data.id, newValues, photo)
             .then((response: AxiosResponse<ResponseUpdate>) => {
-                this.setState({ updateStatus: RequestStatus.SUCCESS });
-                this.props.history.push('/profile');
+                this.setState({ ...this.state, updateStatus: RequestStatus.SUCCESS, editProfileMode: false });
+                this.props.editProfileCallback(RequestStatus.SUCCESS);
+                this._getUserData();
             })
             .catch((error) => {
-                this.setState({ updateStatus: RequestStatus.ERROR });
+                this.setState({ ...this.state, updateStatus: RequestStatus.ERROR });
+                this.props.editProfileCallback(RequestStatus.ERROR);
             });
     }
 
@@ -125,7 +129,9 @@ class Profile extends Component<any, ProfileState> {
                         <HoverableAvatar
                             src={this.state.data.photo || dummyAvatar}
                             id=''
-                            onChange={this.handleChangePhoto}
+                            maxSize={100000}
+                            onChange={this.handleUpdatePhoto}
+                            onLoadError={this.props.onLoadErrorCallback}
                         />
                         <Typography align='center' variant='h4'>{firstName + ' ' + lastName}</Typography>
                     </div>
@@ -160,7 +166,7 @@ class Profile extends Component<any, ProfileState> {
                     error
                     data={data}
                     editVariable={editVariable}
-                    onSubmit={this.handleUpdate}
+                    onSubmit={this.handleUpdateValues}
                     onCancel={this.handleCancel}
                 />
             );

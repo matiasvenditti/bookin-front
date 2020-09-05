@@ -34,8 +34,8 @@ class Router extends React.Component<RouterProps, RouterState> {
             reload: false,
             registerStatus: RequestStatus.NONE,
             loginStatus: RequestStatus.NONE,
-            loadAvatarError: false,
             editProfileStatus: RequestStatus.NONE,
+            loadAvatarError: false,
             deleteProfileStatus: RequestStatus.NONE,
         };
     }
@@ -59,6 +59,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
                             deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
+                            onLoadErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
                             editProfileCallback={(editProfileStatus: RequestStatus) => this.setState({ ...this.state, editProfileStatus })}
                         />
                     </PrivateRoute>
@@ -71,29 +72,29 @@ class Router extends React.Component<RouterProps, RouterState> {
     }
 
     renderToasts() {
-        const { registerStatus, loginStatus, loadAvatarError, editProfileStatus, deleteProfileStatus } = this.state;
+        const { registerStatus, loginStatus, editProfileStatus, deleteProfileStatus, loadAvatarError } = this.state;
         return (
             <div>
-                <Snackbar open={registerStatus === RequestStatus.SUCCESS} autoHideDuration={2000}>
+                <Snackbar open={registerStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, registerStatus: RequestStatus.NONE })}>
                     <Alert severity='success'>Te has registrado correctamente!</Alert>
                 </Snackbar>
-                <Snackbar open={registerStatus === RequestStatus.ERROR} autoHideDuration={2000}>
-                    <Alert severity='error'>Hubo un error al registrarse, intente mas tarde.</Alert>
+                <Snackbar open={registerStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, registerStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>Hubo un error al registrarse, intente mas tarde</Alert>
                 </Snackbar>
-                <Snackbar open={loginStatus === RequestStatus.ERROR} autoHideDuration={2000}>
-                    <Alert severity='error'>No se ha podido ingresar, intente mas tarde.</Alert>
+                <Snackbar open={loginStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, loginStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>No se ha podido ingresar, intente mas tarde</Alert>
                 </Snackbar>
-                <Snackbar open={loadAvatarError} autoHideDuration={2000}>
-                    <Alert severity='error'>No se ha podido cargar la nueva foto de perfil</Alert>
+                <Snackbar open={editProfileStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, editProfileStatus: RequestStatus.NONE })}>
+                    <Alert severity='success'>Se han actualizado los datos del usuario correctamente</Alert>
                 </Snackbar>
-                <Snackbar open={editProfileStatus === RequestStatus.SUCCESS} autoHideDuration={2000}>
-                    <Alert severity='error'>No se ha podido cargar la nueva foto de perfil</Alert>
+                <Snackbar open={editProfileStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, editProfileStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>No se han podido actualizar los datos correctamente, intente mas tarde</Alert>
                 </Snackbar>
-                <Snackbar open={editProfileStatus === RequestStatus.ERROR} autoHideDuration={2000}>
-                    <Alert severity='error'>No se ha podido cargar la nueva foto de perfil</Alert>
-                </Snackbar>
-                <Snackbar open={deleteProfileStatus === RequestStatus.ERROR} autoHideDuration={2000}>
+                <Snackbar open={deleteProfileStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteProfileStatus: RequestStatus.NONE })}>
                     <Alert severity='error'>No se ha podido eliminar al cuenta, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={loadAvatarError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, loadAvatarError: false })}>
+                    <Alert severity='error'>La imagen pesa mas de 100KB, seleccione una mas pequeña</Alert>
                 </Snackbar>
             </div>
         );

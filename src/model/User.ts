@@ -1,4 +1,4 @@
-import { Gender } from "./Gender";
+import Gender from "./Gender";
 
 export interface User {
     [key: string]: any,
@@ -7,6 +7,6 @@ export interface User {
     lastName: string,
     email: string,
     password: string,
-    gender: Gender,
+    gender: string,
     photo: any,
 }

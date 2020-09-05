@@ -2,9 +2,6 @@ import {NewUser} from "../model";
 import axios, {AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import { LoginUser } from "../model/LoginUser";
-import translateGender from "../utils/translateGender";
-import {getUserData} from "./UserService";
-import {User} from "../model";
 
 
 /* Register */
@@ -16,7 +13,6 @@ export interface ResponseRegister {
 }
 
 export function register(values: NewUser): Promise<AxiosResponse> {
-    values.gender = translateGender(values.gender);
     return axios.post<ResponseRegister>(`${baseURL}/signup`, values)
 }
 
