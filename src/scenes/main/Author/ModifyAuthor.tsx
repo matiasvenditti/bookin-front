@@ -63,7 +63,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         return (
             <div className='route-container' >
                 <div className='form-container'>
-                    <Typography align='center' variant='h5'>Creá un autor</Typography>
+                    <Typography align='center' variant='h5'>Modificación del autor</Typography>
                     <ModifyAuthorForm author={this.state.author} onSubmit={this.handleSubmit} onCancel={this.handleCancel} />
                 </div>
             </div>
