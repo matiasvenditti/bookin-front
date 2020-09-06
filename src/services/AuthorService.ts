@@ -4,16 +4,9 @@ import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
 import {AuthorID} from "../model";
 import {UpdateAuthor} from "../model/UpdateAuthor";
+import { Author } from "../model/Author";
 
 
-export interface Author {
-    id: number,
-    firstname: string,
-    lastname: string,
-    nationality: string,
-    date_of_birth: Date,
-    photo: string,
-}
 
 const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Author>> => {
     const createAuthorForm = new FormData();

@@ -44,39 +44,39 @@ export class Header extends React.Component<any, State>{
         this.handleClose();
     }
 
-	handleHomeRedirect = () => {
-		this.props.history.push('/');
-	}
+    handleHomeRedirect = () => {
+        this.props.history.push('/');
+    }
 
-	render() {
-		const { classes } = this.props;
-		return (
-			<div>
-				<AppBar position='static' color='primary' className={classes.title}>
-					<Toolbar>
-						<div className={'right grow title'}>
-							<Typography onClick={this.handleHomeRedirect} variant='h6'>Book in</Typography>
-						</div>
-						<div className={classes.search}>
-							<div className={classes.searchIcon}>
-								<SearchIcon />
-							</div>
-							<InputBase
-								placeholder="Buscar"
-								classes={{
-									root: classes.inputRoot,
-									input: classes.inputInput,
-								}}
-								inputProps={{ 'aria-label': 'search' }}
-							/>
-						</div>
-						<div className="grow" />
-						{this.renderButtons()}
-					</Toolbar>
-				</AppBar>
-			</div>
-		)
-	}
+    render() {
+        const { classes } = this.props;
+        return (
+            <div>
+                <AppBar position='static' color='primary' className={classes.title}>
+                    <Toolbar>
+                        <div className={'right grow title'}>
+                            <Typography onClick={this.handleHomeRedirect} variant='h6'>Book in</Typography>
+                        </div>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                placeholder="Buscar"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'search' }}
+                            />
+                        </div>
+                        <div className="grow" />
+                        {this.renderButtons()}
+                    </Toolbar>
+                </AppBar>
+            </div>
+        )
+    }
 
 	renderButtons() {
 		const logged = isLoggedIn();

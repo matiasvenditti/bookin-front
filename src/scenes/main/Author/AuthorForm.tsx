@@ -1,15 +1,14 @@
-import React, {ChangeEvent, Component} from 'react';
-import {Button, Input} from '../../../components/Form';
-import {AuthorFormModel} from '../../../model/Form/AuthorFormModel';
-import {NewAuthor} from '../../../model/NewAuthor';
+import React, { Component } from 'react';
+import { Button, Input } from '../../../components/Form';
+import { AuthorFormModel } from '../../../model/Form/AuthorFormModel';
+import { NewAuthor } from '../../../model/NewAuthor';
 import Grid from '@material-ui/core/Grid';
-import {Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField} from '@material-ui/core';
-
-import "./AuthorForm.css"
+import { Button as Buttons, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import './AuthorForm.css';
 import validateInput from '../../../utils/validateInput';
-import {AccountCircle} from '@material-ui/icons';
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import { AccountCircle } from '@material-ui/icons';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 
 
 interface AuthorFormState {
@@ -30,11 +29,11 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         super(props);
         this.state = {
             values: {
-                firstName: {value: '', type: 'text', error: true, touched: false},
-                lastName: {value: '', type: 'text', error: true, touched: false},
-                nationality: {value: '', type: 'select', error: true, touched: false},
-                birthday: {value: null, type: 'date', error: true, touched: false},
-                photo: {value: null, type: 'File', error: true, touched: false},
+                firstName: { value: '', type: 'text', error: true, touched: false },
+                lastName: { value: '', type: 'text', error: true, touched: false },
+                nationality: { value: '', type: 'select', error: true, touched: false },
+                birthday: { value: null, type: 'date', error: true, touched: false },
+                photo: { value: null, type: 'File', error: true, touched: false },
             },
             bytearray: null,
             formValid: false
@@ -59,7 +58,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: {value, type, error, touched: true}
+                [id]: { value, type, error, touched: true }
             },
             formValid: allTouched && !anyErrors,
         });
@@ -75,7 +74,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         this.setState({
             values: {
                 ...this.state.values,
-                birthday: {value: date, type: birthday.type, error: error, touched: true}
+                birthday: { value: date, type: birthday.type, error: error, touched: true }
             },
             formValid: allTouched && !anyErrors,
         });
@@ -113,7 +112,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         this.setState({
             values: {
                 ...this.state.values,
-                photo: {value: file, type: photo.type, error: error, touched: true},
+                photo: { value: file, type: photo.type, error: error, touched: true },
             },
             formValid: allTouched && !anyErrors,
         });
@@ -132,8 +131,8 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
 
     render() {
         const image = this.state.bytearray ?
-            <img src={this.state.bytearray} width="100" height="100" alt="author-image"/> :
-            <AccountCircle color="secondary" style={{fontSize: 100}}/>
+            <img src={this.state.bytearray} width="100" height="100" alt='author' /> :
+            <AccountCircle color="secondary" style={{ fontSize: 100 }} />
 
         return (
             <form>
@@ -213,22 +212,22 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                     </Grid>
                     <Grid item xs>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
-                                 color='secondary'>
+                            color='secondary'>
                             Agrega una foto
                             <input
                                 accept="image/*"
                                 type="file"
-                                style={{display: "none"}}
+                                style={{ display: "none" }}
                             />
                         </Buttons>
                     </Grid>
                 </Grid>
                 <div>
                     <div className="spacing">
-                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit}/>
+                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} />
                     </div>
                     <div className="spacing">
-                        <Button title="Cancelar" disabled={false} onClick={this.handleSubmit}/>
+                        <Button title="Cancelar" disabled={false} onClick={this.handleSubmit} />
                     </div>
                 </div>
             </form>

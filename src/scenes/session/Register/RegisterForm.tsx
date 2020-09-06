@@ -3,6 +3,7 @@ import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
 import { NewUser } from '../../../model';
 import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
 import validateInput from '../../../utils/validateInput';
+import { genderToString, stringToGender } from '../../../utils/translateGender';
 
 
 interface RegisterFormProps {
@@ -38,7 +39,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: { value, type, error, touched: true },
+                [id]: { value: type === 'radio-group' ? stringToGender(value) : value, type, error, touched: true },
             },
             formValid: allTouched && !anyErrors,
         });
@@ -58,62 +59,70 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
         const { loading } = this.props;
         return (
             <form>
-                <Input
-                    label='Nombre'
-                    id='firstName'
-                    type='text'
-                    onChange={this.handleInput}
-                    value={this.state.values.firstName.value}
-                    error={this.state.values.firstName.touched && this.state.values.firstName.error}
-                    errorText={this.state.values.firstName.touched && this.state.values.firstName.error ? 'Nombre inválido' : ''}
-                    required
-                    disabled={loading}
-                    autoFocus
-                />
-                <Input
-                    label='Apellido'
-                    id='lastName'
-                    type='text'
-                    onChange={this.handleInput}
-                    value={this.state.values.lastName.value}
-                    error={this.state.values.lastName.touched && this.state.values.lastName.error}
-                    errorText={this.state.values.lastName.touched && this.state.values.lastName.error ? 'Apellido inválido' : ''}
-                    required
-                    disabled={loading}
-                />
-                <Input
-                    label='Mail'
-                    id='email'
-                    type='email'
-                    onChange={this.handleInput}
-                    value={this.state.values.email.value}
-                    error={this.state.values.email.touched && this.state.values.email.error}
-                    errorText={this.state.values.email.touched && this.state.values.email.error ? 'Mail inválido' : ''}
-                    required
-                    disabled={loading}
-                />
-                <RadioGroup
-                    title='Género'
-                    id='gender'
-                    type='radio-group'
-                    onChange={this.handleInput}
-                    value={this.state.values.gender.value}
-                    options={['Hombre', 'Mujer', 'Anónimo']}
-                    error={this.state.values.gender.touched && this.state.values.gender.error}
-                    errorText={'Elige un género'}
-                    disabled={loading}
-                />
-                <Input
-                    id='password'
-                    label='Contraseña'
-                    type='password'
-                    onChange={this.handleInput}
-                    value={this.state.values.password.value}
-                    error={this.state.values.password.touched && this.state.values.password.error}
-                    errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
-                    required
-                    disabled={loading}
-                />
+                <div className='form-input'>
+                    <Input
+                        label='Nombre'
+                        id='firstName'
+                        type='text'
+                        onChange={this.handleInput}
+                        value={this.state.values.firstName.value}
+                        error={this.state.values.firstName.touched && this.state.values.firstName.error}
+                        errorText={this.state.values.firstName.touched && this.state.values.firstName.error ? 'Nombre inválido' : ''}
+                        required
+                        disabled={loading}
+                        autoFocus
+                    />
+                </div>
+                <div className='form-input'>
+                    <Input
+                        label='Apellido'
+                        id='lastName'
+                        type='text'
+                        onChange={this.handleInput}
+                        value={this.state.values.lastName.value}
+                        error={this.state.values.lastName.touched && this.state.values.lastName.error}
+                        errorText={this.state.values.lastName.touched && this.state.values.lastName.error ? 'Apellido inválido' : ''}
+                        required
+                        disabled={loading}
+                    />
+                </div>
+                <div className='form-input'>
+                    <Input
+                        label='Mail'
+                        id='email'
+                        type='email'
+                        onChange={this.handleInput}
+                        value={this.state.values.email.value}
+                        error={this.state.values.email.touched && this.state.values.email.error}
+                        errorText={this.state.values.email.touched && this.state.values.email.error ? 'Mail inválido' : ''}
+                        required
+                        disabled={loading}
+                    />
+                </div>
+                    <RadioGroup
+                        title='Género'
+                        id='gender'
+                        type='radio-group'
+                        onChange={this.handleInput}
+                        value={this.state.values.gender.value}
+                        options={['Hombre', 'Mujer', 'Anónimo']}
+                        error={this.state.values.gender.touched && this.state.values.gender.error}
+                        errorText={'Elige un género'}
+                        disabled={loading}
+                    />
+                <div className='form-input'>
+                    <Input
+                        id='password'
+                        label='Contraseña'
+                        type='password'
+                        onChange={this.handleInput}
+                        value={this.state.values.password.value}
+                        error={this.state.values.password.touched && this.state.values.password.error}
+                        errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
+                        required
+                        disabled={loading}
+                    />
+                </div>
                 <Checkbox
                     id='acceptTerms'
                     type='accept-terms'

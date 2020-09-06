@@ -1,1 +1,5 @@
-export enum Gender { M, F, A };
+export default { 
+    M: 'M', 
+    F: 'F', 
+    A: 'A'
+};
