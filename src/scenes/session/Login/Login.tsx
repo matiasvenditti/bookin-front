@@ -41,7 +41,7 @@ class Login extends Component<any, LoginState> {
     }
 
     render() {
-        const { loginStatus, error } = this.state;
+        const { loginStatus } = this.state;
         return (
             <div className='route-container'>
                 <div className='card-container-narrow'>

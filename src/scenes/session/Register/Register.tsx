@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import './Register.css';
-import { Typography, Snackbar } from '@material-ui/core';
-import RegisterForm from './RegisterForm';
+import { Typography } from '@material-ui/core';
 import { NewUser } from '../../../model';
 import { register, login } from '../../../services/SessionService';
 import { withRouter } from 'react-router-dom';
-import { RequestStatus } from '../../../model/consts/RequestStatus';
 import { saveLoginResponse } from '../../../services/AuthService';
 import { AxiosResponse } from 'axios';
 import { ResponseLogin } from '../../../services/SessionService';
+import RegisterForm from './RegisterForm';
+import { RequestStatus } from '../../../model/consts/RequestStatus';
 
 
 export interface RegisterState {
