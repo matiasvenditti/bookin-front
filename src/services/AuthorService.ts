@@ -29,7 +29,7 @@ const changeAuthorData = (author: UpdateAuthor, photo: File): Promise<AxiosRespo
             'Content-Type': undefined,
         }
     }
-    return instance.put<Author>(`${baseURL}/authors/update/${author.id}`, changeAuthorForm, config)
+    return instance.put<Author>(`${baseURL}/authors/${author.id}`, changeAuthorForm, config)
 }
 
 

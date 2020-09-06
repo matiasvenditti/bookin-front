@@ -46,11 +46,14 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         const id : string = this.props.match.params.id;
         const a : AuthorID = {id};
         getAuthorData(a)
-        .then((response: AxiosResponse<Author>) => this.setState((prevState: ModifyAuthorState) => ({
-            ...prevState,
-            value: new EditAuthorFormModel(response.data), 
-            bytearray: response.data.photo,
-        })))
+        .then((response: AxiosResponse<Author>) => {
+            const photo: string = "...";
+            this.setState((prevState: ModifyAuthorState) => ({
+                ...prevState,
+                value: new EditAuthorFormModel(response.data),
+                bytearray: photo,
+            }))
+        })
         .catch((e) => console.error(e))
     }
      
