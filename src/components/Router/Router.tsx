@@ -66,6 +66,9 @@ class Router extends React.Component<RouterProps, RouterState> {
                             editProfileCallback={(editProfileStatus: RequestStatus) => this.setState({ ...this.state, editProfileStatus })}
                         />
                     </PrivateRoute>
+
+                    <PrivateRoute path='/authors/edit/:id' roles={[UserRoles.RoleAdmin]}><ModifyAuthor/></PrivateRoute>
+
                     <Route path='/authors/:id' roles={[]} >
                         <Author
                             loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
@@ -74,7 +77,6 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </Route>
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor /></PrivateRoute>
-                    <PrivateRoute path='/authors/edit/:id' roles={[UserRoles.RoleAdmin]}><ModifyAuthor/></PrivateRoute>
                 </Switch>
                 <Footer />
                 {this.renderToasts()}

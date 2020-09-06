@@ -101,29 +101,33 @@ class ProfileEdit extends Component<any, ProfileEditState> {
         switch (this.props.editVariable) {
             case EditVar.NAME:
                 return ([
-                    <Input
-                        label='Nombre'
-                        id='firstName'
-                        key='firstName'
-                        type='text'
-                        onChange={this.handleInput}
-                        value={this.state.values.firstName.value}
-                        error={this.state.values.firstName.error}
-                        errorText={this.state.values.firstName.error ? 'Nombre inválido' : ''}
-                        required
-                        autoFocus
-                    />,
-                    <Input
-                        label='Apellido'
-                        id='lastName'
-                        key='lastName'
-                        type='text'
-                        onChange={this.handleInput}
-                        value={this.state.values.lastName.value}
-                        error={this.state.values.lastName.error}
-                        errorText={this.state.values.lastName.error ? 'Apellido inválido' : ''}
-                        required
-                    />,
+                    <div className='form-input'>
+                        <Input
+                            label='Nombre'
+                            id='firstName'
+                            key='firstName'
+                            type='text'
+                            onChange={this.handleInput}
+                            value={this.state.values.firstName.value}
+                            error={this.state.values.firstName.error}
+                            errorText={this.state.values.firstName.error ? 'Nombre inválido' : ''}
+                            required
+                            autoFocus
+                        />
+                    </div>,
+                    <div className='form-input'>
+                        <Input
+                            label='Apellido'
+                            id='lastName'
+                            key='lastName'
+                            type='text'
+                            onChange={this.handleInput}
+                            value={this.state.values.lastName.value}
+                            error={this.state.values.lastName.error}
+                            errorText={this.state.values.lastName.error ? 'Apellido inválido' : ''}
+                            required
+                        />
+                    </div>,
                 ]);
             case EditVar.EMAIL:
                 return ([
