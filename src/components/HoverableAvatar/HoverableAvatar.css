@@ -35,3 +35,8 @@
 span > span > button {
     background-color: green;
 }
+
+.modal-avatar-image {
+    width: 125px;
+    height: 125px;
+}

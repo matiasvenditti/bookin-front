@@ -2,16 +2,15 @@ import { User } from './User';
 import { NewUser } from './NewUser';
 import { RegisterFormModel } from './Form/RegisterFormModel';
 import { LoginFormModel } from './Form/LoginFormModel';
-import { UpdateUser } from './UpdateUser';
-import { UserID } from './UserID';
+import { UpdateAuthor } from './UpdateAuthor';
 import { AuthorID } from './AuthorID';
+
 
 export type {
     User,
     NewUser,
     RegisterFormModel,
     LoginFormModel,
-    UpdateUser,
-    UserID,
+    UpdateAuthor,
     AuthorID,
 }

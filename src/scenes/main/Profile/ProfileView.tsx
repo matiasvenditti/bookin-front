@@ -1,40 +1,43 @@
 import React, { Component } from 'react'
 import { List, ListItem, ListItemText, Divider, IconButton, Button, Typography } from '@material-ui/core'
-import translateGender from '../../../utils/translateGender';
+import { genderToString } from '../../../utils/translateGender';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { EditVar } from '../../../model/consts/EditVar';
 import Loader from '../../../components/Loader/Loader';
+import { User } from '../../../model';
+
 
 interface ProfileViewProps {
-    data: {
-        firstName: string,
-        lastName: string,
-        email: string,
-        gender: string,
-        photo: any,
-    },
+    data: User,
     loading: boolean,
     error: boolean,
     onEdit(type: EditVar): void,
+    onChangePassword(): void,
+    onDeleteUser(): void,
 }
 
 interface ProfileViewState {
-    data: { key: string, value: string, type: EditVar }[],
+    data: { key: string, value: string, type: EditVar }[] | null,
 }
 
 export default class ProfileView extends Component<ProfileViewProps, ProfileViewState> {
     constructor(props: ProfileViewProps) {
         super(props);
         this.state = {
-            data: [
-                { key: 'Nombre', value: props.data.firstName + ' ' + props.data.lastName, type: EditVar.NAME },
-                { key: 'Mail', value: props.data.email, type: EditVar.EMAIL },
-                { key: 'Género', value: translateGender(props.data.gender), type: EditVar.GENDER },
-            ]
+            data: null,
         }
     }
+
+    formatData = () => {
+        return ([
+            { key: 'Nombre', value: this.props.data.firstName + ' ' + this.props.data.lastName, type: EditVar.NAME },
+            { key: 'Mail', value: this.props.data.email, type: EditVar.EMAIL },
+            { key: 'Género', value: genderToString(this.props.data.gender), type: EditVar.GENDER },
+        ])
+    };
+
     render() {
-        const { data } = this.state;
+        const data = this.formatData();
         const { loading, error } = this.props;
         if (loading) {
             return (
@@ -53,19 +56,24 @@ export default class ProfileView extends Component<ProfileViewProps, ProfileView
                 <div>
                     <List>
                         {data.map((item, i) => ([
-                            <ListItem>
-                                <ListItemText primary={item.key} secondary={item.value} />
+                            <ListItem key={'profile-view-item-' + i}>
+                                <ListItemText
+                                    primary={item.value}
+                                    secondary={item.key}
+                                    key={'text-' + i}
+                                />
                                 <IconButton
                                     size='medium'
+                                    key={'icon-button-' + i}
                                     onClick={() => this.props.onEdit(item.type)}
-                                ><ChevronRightIcon /></IconButton>
+                                ><ChevronRightIcon key='iconn' /></IconButton>
                             </ListItem>,
-                            (i !== data.length - 1) && <Divider />,
+                            (i !== data.length - 1) && <Divider key={'divider-' + i} />,
                         ]))}
                     </List>
                     <div className='footer-buttons-container'>
-                        <Button onClick={() => console.log('Cambiar la contraseña button clicked')}>Cambiar la contraseña</Button>
-                        <Button onClick={() => console.log('Eliminar cuenta button clicked')}>Eliminar cuenta</Button>
+                        <Button onClick={this.props.onChangePassword}>Cambiar la contraseña</Button>
+                        <Button onClick={this.props.onDeleteUser}>Eliminar cuenta</Button>
                     </div>
                 </div>
             )

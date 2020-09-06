@@ -1,10 +1,12 @@
-import { Gender } from "./Gender";
+import Gender from "./Gender";
 
 export interface User {
+    [key: string]: any,
     id: number,
     firstName: string,
     lastName: string,
     email: string,
-    gender: Gender,
-    photo: string,
+    password: string,
+    gender: string,
+    photo: any,
 }
