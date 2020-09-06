@@ -47,7 +47,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         const a : AuthorID = {id};
         getAuthorData(a)
         .then((response: AxiosResponse<Author>) => {
-            const photo: string = "...";
+            const photo: string = `data:image/jpeg;base64,${response.data.photo}`;            
             this.setState((prevState: ModifyAuthorState) => ({
                 ...prevState,
                 value: new EditAuthorFormModel(response.data),
