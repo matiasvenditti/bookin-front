@@ -10,6 +10,9 @@ import ModifyAuthorForm from "./ModifyAuthorForm";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { AuthorID } from "../../../model";
 import { Author } from "../../../model/Author";
+import { EditAuthorFormModel } from "../../../model/Form/EditAuthorFormModel";
+import { AuthorFormModel } from "../../../model/Form/AuthorFormModel";
+import validateInput from "../../../utils/validateInput";
 
 interface ModifyaAuthorProp extends RouteComponentProps<MatchParams> {
 }
@@ -19,22 +22,23 @@ interface MatchParams {
 }
 
 interface ModifyAuthorState {
-    author: Author
-}
+    values: EditAuthorFormModel;
+    bytearray: any;
+    formValid: boolean,
+    error: any,}
 
 class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
+
+    maxFileSize: number = 100000;
+
 
     constructor(props: ModifyaAuthorProp){
         super(props);
         this.state = {
-            author: {
-                id: 0,
-                firstName: '',
-                lastName: '',
-                nationality: '',
-                birthday: new Date(),
-                photo: ''
-            }
+            values: new EditAuthorFormModel(new Author),
+            bytearray: '',
+            formValid: false,
+            error: null,
         }
     }
 
@@ -44,7 +48,8 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         getAuthorData(a)
         .then((response: AxiosResponse<Author>) => this.setState((prevState: ModifyAuthorState) => ({
             ...prevState,
-            author: response.data, 
+            value: new EditAuthorFormModel(response.data), 
+            bytearray: response.data.photo,
         })))
         .catch((e) => console.error(e))
     }
@@ -59,12 +64,95 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         console.log('cancel')
     }
 
+    handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
+        const error = !validateInput(type, value);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
+        this.setState({
+            values: {
+                ...this.state.values,
+                [id]: {value, type, error}
+            },
+            formValid: !anyErrors,
+        });
+    }
+
+
+    handleDateChange = (date: Date | null) => {
+        const error: boolean = date ? date > new Date() : false;
+        const birthday = this.state.values.birthday;
+
+        const anyErrors = Object.values(this.state.values).some(value => value.type === birthday.type ? error : value.error);
+        this.setState({
+            values: {
+                ...this.state.values,
+                birthday: {value: date, type: birthday.type, error: error}
+            },
+            formValid: !anyErrors,
+        });
+    }
+
+    handleInputSelect = (object: any) => {
+        const nacionalidad = object.target.value as string;
+        const nationality = this.state.values.nationality;
+        const error: boolean = false;
+
+        const anyErrors = Object.values(this.state.values).some(value => value.type === nationality.type ? error : value.error);
+        this.setState({
+            values: {
+                ...this.state.values,
+                nationality: {
+                    value: nacionalidad,
+                    type: this.state.values.nationality.type,
+                    error: false,
+                },
+            },
+            formValid: !anyErrors,
+        });
+    }
+
+    handleChange = (event: any) => {
+        const file: File = event.target.files[0];
+        const error: boolean = file.size >= this.maxFileSize
+        const photo = this.state.values.photo;
+        this.readFile(file);
+
+        const anyErrors = Object.values(this.state.values).some(value => value.type === photo.type ? error : value.error);
+        this.setState({
+            values: {
+                ...this.state.values,
+                photo: {value: file, type: photo.type, error: error},
+            },
+            formValid: !anyErrors,
+        });
+    }
+
+    readFile = (file: File) => {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => {
+            this.setState((prevState: ModifyAuthorState) => ({
+                ...prevState,
+                bytearray: reader.result
+            }));
+        }
+    }
+
     render() {
         return (
             <div className='route-container' >
                 <div className='form-container'>
                     <Typography align='center' variant='h5'>Modificación del autor</Typography>
-                    <ModifyAuthorForm author={this.state.author} onSubmit={this.handleSubmit} onCancel={this.handleCancel} />
+                    <ModifyAuthorForm 
+                    formValid={this.state.formValid} 
+                    bytearray={this.state.bytearray}
+                    author={this.state.values} 
+                    onSubmit={this.handleSubmit} 
+                    onCancel={this.handleCancel} 
+                    onInput={this.handleInput} 
+                    onDateChange={this.handleDateChange}
+                    onInputSelect={this.handleInputSelect}
+                    onChange={this.handleChange}
+                    onReadFile={this.readFile}/>
                 </div>
             </div>
         )

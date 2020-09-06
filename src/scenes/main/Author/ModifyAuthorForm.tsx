@@ -16,140 +16,61 @@ import {EditVar} from '../../../model/consts/EditVar';
 import { Author } from '../../../model/Author';
 
 
-interface AuthorFormState {
-    values: EditAuthorFormModel;
-    bytearray: any;
-    formValid: boolean,
-    updateStatus: any,
-    error: any,
-}
+
 
 
 interface AuthorFormProps {
-    author: Author
+    author: EditAuthorFormModel,
+    formValid: boolean,
+    bytearray: any,
     onSubmit(values: UpdateAuthor, photo: File): void;
     onCancel(): void;
+    onInput(id: keyof AuthorFormModel, type: string, value: any): void;
+    onDateChange(date: Date | null): void;
+    onInputSelect(object: any): void;
+    onChange(event: any): void;
+    onReadFile(file: File): void;
 }
 
-export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorFormState> {
+export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
 
     maxFileSize: number = 100000;
 
     constructor(props: AuthorFormProps) {
         super(props);
-        this.state = {
-            values: {
-                firstName: {value: this.props.author.firstName, type: 'text', error: false},
-                lastName: {value: this.props.author.lastName, type: 'text', error: false},
-                nationality: {value: this.props.author.nationality, type: 'select', error: false},
-                birthday: {value: this.props.author.birthday, type: 'date', error: false},
-                photo: {value: null, type: 'File', error: true},
-            },
-            bytearray: this.props.author.photo,
-            formValid: false,
-            updateStatus: RequestStatus.NONE,
-            error: null,
-        }
+
     }
 
-    static getDerivedStateFromProps(nextProps: AuthorFormProps, _: AuthorFormState) {
-        const photo: string = `data:image/jpeg;base64,${nextProps.author.photo}`;
-        return {
-            values: {
-                firstName: {value: nextProps.author.firstName, type: 'text', error: false},
-                lastName: {value: nextProps.author.lastName, type: 'text', error: false},
-                nationality: {value: nextProps.author.nationality, type: 'select', error: false},
-                birthday: {value: nextProps.author.birthday, type: 'date', error: false},
-                photo: {value: null, type: 'File', error: true},
-            },
-            bytearray: photo,
-            formValid: false,
-            updateStatus: RequestStatus.NONE,
-            error: null,
-        };
-    }
     handleSubmit = () => {
         let values: UpdateAuthor = {
-            id: this.state.values.id.value,
-            firstName: this.state.values.firstName.value,
-            lastName: this.state.values.lastName.value,
-            nationality: this.state.values.nationality.value,
-            birthday: this.state.values.birthday.value
+            id: this.props.author.id.value,
+            firstName: this.props.author.firstName.value,
+            lastName: this.props.author.lastName.value,
+            nationality: this.props.author.nationality.value,
+            birthday: this.props.author.birthday.value
         }
-        this.props.onSubmit(values , this.state.values.photo.value);
+        this.props.onSubmit(values , this.props.author.photo.value);
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
-        const error = !validateInput(type, value);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                [id]: {value, type, error}
-            },
-            formValid: !anyErrors,
-        });
+        this.props.onInput(id, type, value);
     }
 
 
     handleDateChange = (date: Date | null) => {
-        const error: boolean = date ? date > new Date() : false;
-        const birthday = this.state.values.birthday;
-
-        const anyErrors = Object.values(this.state.values).some(value => value.type === birthday.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                birthday: {value: date, type: birthday.type, error: error}
-            },
-            formValid: !anyErrors,
-        });
+        this.props.onDateChange(date)
     }
 
     handleInputSelect = (object: any) => {
-        const nacionalidad = object.target.value as string;
-        const nationality = this.state.values.nationality;
-        const error: boolean = false;
-
-        const anyErrors = Object.values(this.state.values).some(value => value.type === nationality.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                nationality: {
-                    value: nacionalidad,
-                    type: this.state.values.nationality.type,
-                    error: false,
-                },
-            },
-            formValid: !anyErrors,
-        });
+        this.props.onInputSelect(object)
     }
 
     handleChange = (event: any) => {
-        const file: File = event.target.files[0];
-        const error: boolean = file.size >= this.maxFileSize
-        const photo = this.state.values.photo;
-        this.readFile(file);
-
-        const anyErrors = Object.values(this.state.values).some(value => value.type === photo.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                photo: {value: file, type: photo.type, error: error},
-            },
-            formValid: !anyErrors,
-        });
+        this.props.onChange(event)
     }
 
     readFile = (file: File) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            this.setState((prevState: AuthorFormState) => ({
-                ...prevState,
-                bytearray: reader.result
-            }));
-        }
+        this.props.onReadFile(file)
     }
 
     handleCancel = () => {
@@ -158,8 +79,8 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorF
 
 
     render() {
-        const image = this.state.bytearray ?
-            <img src={this.state.bytearray} width="100" height="100" alt="author-image"/> :
+        const image = this.props.bytearray ?
+            <img src={this.props.bytearray} width="100" height="100" alt="author-image"/> :
             <AccountCircle color="secondary" style={{fontSize: 100}}/>
 
         return (
@@ -171,9 +92,9 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorF
                             id='firstName'
                             type='text'
                             onChange={this.handleInput}
-                            value={this.state.values.firstName.value}
-                            error={this.state.values.firstName.error}
-                            errorText={this.state.values.firstName.error ? 'Nombre inválido' : ''}
+                            value={this.props.author.firstName.value}
+                            error={this.props.author.firstName.error}
+                            errorText={this.props.author.firstName.error ? 'Nombre inválido' : ''}
                             required
                         />
                     </Grid>
@@ -183,9 +104,9 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorF
                             id='lastName'
                             type='text'
                             onChange={this.handleInput}
-                            value={this.state.values.lastName.value}
-                            error={this.state.values.lastName.error}
-                            errorText={this.state.values.lastName.error ? 'Apellido inválido' : ''}
+                            value={this.props.author.lastName.value}
+                            error={this.props.author.lastName.error}
+                            errorText={this.props.author.lastName.error ? 'Apellido inválido' : ''}
                             required
                         />
                     </Grid>
@@ -205,7 +126,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorF
                                 id="nationality"
                                 type="select"
                                 name='nationality'
-                                value={this.state.values.nationality.value}
+                                value={this.props.author.nationality.value}
                                 onChange={this.handleInputSelect}
                                 label="Nacionalidad"
                             >
@@ -220,8 +141,8 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorF
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 fullWidth
-                                error={this.state.values.birthday.error}
-                                helperText={this.state.values.birthday.error ? 'Nacimiento mayor a fecha actual' : null}
+                                error={this.props.author.birthday.error}
+                                helperText={this.props.author.birthday.error ? 'Nacimiento mayor a fecha actual' : null}
                                 color="secondary"
                                 disableToolbar
                                 required
@@ -230,7 +151,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorF
                                 margin="none"
                                 id="date-picker-inline"
                                 label="Nacimiento"
-                                value={this.state.values.birthday.value}
+                                value={this.props.author.birthday.value}
                                 onChange={this.handleDateChange}
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
@@ -253,7 +174,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, AuthorF
                 <div>
                     <Grid alignItems="center" container spacing={2} direction="column">
                         <Grid item xs>
-                            <Button title='Modificar Autor' disabled={!this.state.formValid}
+                            <Button title='Modificar Autor' disabled={!this.props.formValid}
                                     onClick={this.handleSubmit}/>
                         </Grid>
                         <Grid item xs>
