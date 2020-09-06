@@ -3,7 +3,7 @@ import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
 import {AuthorID} from "../model";
-import {UpdateAuthor} from "../model/UpdateAuthor";
+import {UpdateAuthor} from "../model";
 import { Author } from "../model/Author";
 
 
@@ -29,7 +29,7 @@ const changeAuthorData = (author: UpdateAuthor, photo: File): Promise<AxiosRespo
             'Content-Type': undefined,
         }
     }
-    return instance.put<Author>(`${baseURL}/authors/${author.id}`, changeAuthorForm, config)
+    return instance.post<Author>(`${baseURL}/authors/update/${author.id}`, changeAuthorForm, config)
 }
 
 

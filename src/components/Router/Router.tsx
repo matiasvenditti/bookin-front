@@ -25,8 +25,8 @@ interface RouterState {
     loginStatus: RequestStatus,
     loadAvatarError: boolean,
     editProfileStatus: RequestStatus,
-    deleteProfileStatus: RequestStatus,
     editAuthorStatus: RequestStatus,
+    deleteProfileStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -36,10 +36,10 @@ class Router extends React.Component<RouterProps, RouterState> {
             reload: false,
             registerStatus: RequestStatus.NONE,
             loginStatus: RequestStatus.NONE,
-            editProfileStatus: RequestStatus.NONE,
             loadAvatarError: false,
-            deleteProfileStatus: RequestStatus.NONE,
+            editProfileStatus: RequestStatus.NONE,
             editAuthorStatus: RequestStatus.NONE,
+            deleteProfileStatus: RequestStatus.NONE,
         };
     }
 

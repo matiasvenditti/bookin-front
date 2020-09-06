@@ -1,11 +1,9 @@
 import React, {Component} from "react";
 import {Typography} from "@material-ui/core";
-import {NewAuthor} from "../../../model/NewAuthor";
-import AuthorForm from "./AuthorForm";
 import "./CreateAuthor.css"
 import {changeAuthorData, getAuthorData} from "../../../services/AuthorService";
 import {AxiosResponse} from "axios";
-import { UpdateAuthor } from "../../../model/UpdateAuthor";
+import { UpdateAuthor } from "../../../model";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { AuthorID } from "../../../model";
@@ -35,7 +33,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
     constructor(props: ModifyaAuthorProp){
         super(props);
         this.state = {
-            values: new EditAuthorFormModel(new Author),
+            values: new EditAuthorFormModel(new Author()),
             bytearray: '',
             formValid: false,
             error: null,

@@ -11,6 +11,6 @@ export type {
     NewUser,
     RegisterFormModel,
     LoginFormModel,
-    UpdateAuthor,
     AuthorID,
+    UpdateAuthor,
 }

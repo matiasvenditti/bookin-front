@@ -5,6 +5,13 @@
     margin-bottom: 15px;
 }
 
+.route-container .card-container {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 20px 65px 15px;
+    margin-top: 20px;
+}
+
 .route-container .card-container .image-container .avatar-image .MuiAvatar-root{
     border-radius: 70px;
     position: relative;

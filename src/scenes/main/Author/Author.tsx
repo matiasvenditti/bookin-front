@@ -1,27 +1,23 @@
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
-import {changeAuthorData, deleteAuthor, getAuthorData} from "../../../services/AuthorService";
+import {Button, Typography} from "@material-ui/core";
+import {deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
-import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
 import './Author.css'
 import {isAuthorized} from "../../../services/AuthService";
-import {UpdateAuthor} from "../../../model/UpdateAuthor";
-import {AxiosResponse} from "axios";
-import {Button, ButtonGroup} from "@material-ui/core";
-import { Author as Authors } from "../../../model/Author";
-
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import SweetAlert from "react-bootstrap-sweetalert";
+import Loader from "../../../components/Loader/Loader";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
     loadAvatarErrorCallback(): void,
-
     editAuthorCallback(editAuthorStatus: RequestStatus): void,
 }
 
 interface AuthorState {
-    editAuthorMode: boolean,
     isAdmin: boolean,
     getAuthorDataStatus: RequestStatus,
     updateStatus: any,
@@ -47,7 +43,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
-            editAuthorMode: true,
             getAuthorDataStatus: RequestStatus.NONE,
             isAdmin: isAuthorized(["ROLE_ADMIN"]),
             data: {
@@ -75,44 +70,44 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.setState({...this.state, getAuthorDataStatus: RequestStatus.LOADING});
         getAuthorData({id: this.state.data.id})
             .then((response: any) => this.setState({
-                ...this.state,
-                getAuthorDataStatus: RequestStatus.SUCCESS,
-                data: response.data
+                data: response.data,
+                getAuthorDataStatus: RequestStatus.SUCCESS
+
             }))
             .catch((error: any) => this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error}));
     }
 
     handleCancel = () => {
-        this.setState({editAuthorMode: false, showDelete: false})
+        this.setState({showDelete: false})
     };
 
-    handleModify = () => {
-        this.setState({editAuthorMode: !this.state.editAuthorMode})
+    handleEdit = () => {
+        const id = this.state.data.id;
+        this.props.history.push(`/authors/edit/${id}`) //Push to home?
     }
 
-    deleteAuthorTemp = () => {
-        this.handleDelete({id: this.state.data.id});
-        this.handleCancel();
+    handleDelete = () => {
+        this.setState({showDelete: true})
+    }
+
+    handleConfirmDelete = () => {
+        this.deleteAuthor({id : this.state.data.id});
     }
 
 
-    handleDelete = (values: AuthorID) => {
+    deleteAuthor = (values: AuthorID) => {
         this.setState({deleteStatus: RequestStatus.LOADING, error: null});
         deleteAuthor(values)
             .then(() => {
                 this.setState({deleteStatus: RequestStatus.SUCCESS, error: null});
                 this.props.history.push("/") //Push to home?
+
             })
             .catch((error) => {
                 this.setState({deleteStatus: RequestStatus.ERROR, error});
+                //console.log("Error deleting", error)
             });
-    }
-
-    handleSubmit = (values: UpdateAuthor, photo: File) => {
-        values.id = this.state.data.id;
-        changeAuthorData(values, photo)
-            .then((response: AxiosResponse<Authors>) => console.log(response.data))
-            .catch((e) => console.error(e))
+        this.handleCancel()
     }
 
 
@@ -122,6 +117,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 <div className='card-container'>
                     {this.renderButtons()}
                     {this.renderAuthor()}
+                    {this.renderDelete()}
                 </div>
             </div>
 
@@ -134,39 +130,52 @@ class Author extends React.Component<AuthorProps, AuthorState> {
      */
 
     renderAuthor() {
-        const {editAuthorMode, data, books, getAuthorDataStatus} = this.state;
-        /**if (editAuthorMode) {
+        const {data, books, getAuthorDataStatus} = this.state;
+        if (getAuthorDataStatus === RequestStatus.LOADING) {
             return (
-                <ModifyAuthorForm
-                    data={data}
-                    onCancel={this.handleCancel}
-                    onSubmit={this.handleSubmit}
-                    // editAuthorCallback={}
-                />
+                <div>
+                    <Typography align='center' variant='subtitle1'> <Loader /> </Typography>
+                </div>
             );
-        } else {*/
+        }
             return (
                 <AuthorView
                     data={data}
                     books={books}
-                    loading={getAuthorDataStatus === RequestStatus.LOADING}
                     error={getAuthorDataStatus === RequestStatus.ERROR}
                 />
             );
-        //}
-    }
+        }
 
     renderButtons() {
         const {isAdmin} = this.state;
-        if (!isAdmin)
+        if (isAdmin)
             return (
                 <div className="button-divider">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
-                        <Button onClick={this.handleModify}> Edit profile</Button>
-                        <Button onClick={this.deleteAuthorTemp}>Delete Profile</Button>
+                        <Button onClick={this.handleEdit}>Edit profile</Button>
+                        <Button onClick={this.handleDelete}>Delete Profile</Button>
                     </ButtonGroup>
                 </div>
             )
+    }
+
+    renderDelete() {
+        const {showDelete} = this.state;
+        if (showDelete) return (
+            <SweetAlert
+                danger
+                showCancel
+                confirmBtnText="Yes, delete it!"
+                confirmBtnBsStyle="danger"
+                title="Are you sure?"
+                onConfirm={this.handleConfirmDelete}
+                onCancel={this.handleCancel}
+                focusCancelBtn
+            >
+                Author will be permanently deleted
+            </SweetAlert>
+        )
     }
 
 
