@@ -3,8 +3,9 @@ import {Typography} from "@material-ui/core";
 import {NewAuthor} from "../../../model/NewAuthor";
 import AuthorForm from "./AuthorForm";
 import "./CreateAuthor.css"
-import {Author, createAuthor} from "../../../services/AuthorService";
+import { createAuthor} from "../../../services/AuthorService";
 import {AxiosResponse} from "axios";
+import { Author } from "../../../model/Author";
 
 export default class CreateAuthor extends Component {
      

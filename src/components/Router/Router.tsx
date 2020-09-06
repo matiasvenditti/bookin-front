@@ -12,7 +12,8 @@ import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
 import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
 import { UserRoles } from "../../model/consts/Roles";
-
+import Author from "../../scenes/main/Author/Author";
+import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor";
 
 interface RouterProps {
 
@@ -25,6 +26,7 @@ interface RouterState {
     loadAvatarError: boolean,
     editProfileStatus: RequestStatus,
     deleteProfileStatus: RequestStatus,
+    editAuthorStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -37,6 +39,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             editProfileStatus: RequestStatus.NONE,
             loadAvatarError: false,
             deleteProfileStatus: RequestStatus.NONE,
+            editAuthorStatus: RequestStatus.NONE,
         };
     }
 
@@ -63,6 +66,16 @@ class Router extends React.Component<RouterProps, RouterState> {
                             editProfileCallback={(editProfileStatus: RequestStatus) => this.setState({ ...this.state, editProfileStatus })}
                         />
                     </PrivateRoute>
+
+                    <PrivateRoute path='/authors/edit/:id' roles={[UserRoles.RoleAdmin]}><ModifyAuthor/></PrivateRoute>
+
+                    <Route path='/authors/:id' roles={[]} >
+                        <Author
+                            loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
+                            editAuthorCallback={(editAuthorStatus: RequestStatus) =>
+                                this.setState({ ...this.state, editAuthorStatus })}
+                        />
+                    </Route>
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor /></PrivateRoute>
                 </Switch>
                 <Footer />

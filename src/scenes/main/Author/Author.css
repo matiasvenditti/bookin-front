@@ -1,0 +1,29 @@
+.route-container .card-container .image-container{
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.route-container .card-container .image-container .avatar-image .MuiAvatar-root{
+    border-radius: 70px;
+    position: relative;
+    width: 125px;
+    height: 125px;
+    margin-left: 20px;
+    margin-right: 40px;
+}
+
+.subtitle-container{
+    display: flex;
+    position: center;
+    align-items: center;
+    width: 600px;
+    height: 25px;
+    right: 500px;
+}
+
+.button-divider{
+    position: absolute;
+    right: 20px;
+}

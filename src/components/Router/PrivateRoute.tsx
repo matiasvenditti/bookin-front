@@ -25,7 +25,7 @@ const PrivateRoute = (props: PrivateRouteProps) => {
         return <Redirect exact to={'/'} />
     }
 
-    return <Route exact={exact} path={path}>{children}</Route>
+    return <Route exact={exact} path={path} children={children}></Route>
 };
 
 export default PrivateRoute;
