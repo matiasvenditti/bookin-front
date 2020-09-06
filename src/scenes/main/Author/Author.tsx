@@ -1,22 +1,22 @@
-import {RequestStatus} from "../../../model/consts/RequestStatus";
+import { RequestStatus } from "../../../model/consts/RequestStatus";
 import React from "react";
-import {AuthorID} from "../../../model";
-import {AxiosResponse} from "axios";
-import {ResponseUpdate} from "../../../services/SessionService";
+import { AuthorID } from "../../../model";
+import { AxiosResponse } from "axios";
+// import { ResponseUpdate } from "../../../services/SessionService";
 import HoverableAvatar from "../../../components/HoverableAvatar/HoverableAvatar";
-import {dummyAvatar} from "../../../assets";
-import {AppBar, Typography} from "@material-ui/core";
+import { dummyAvatar } from "../../../assets";
+import { AppBar, Typography } from "@material-ui/core";
 import SweetAlert from "react-bootstrap-sweetalert";
-import {changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS} from "../../../services/AuthorService";
+import { changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS } from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import ModifyAuthorForm from "./ModifyAuthorForm";
-import {RouteComponentProps, withRouter} from 'react-router';
-import {formatDateTime} from "../../../utils/formateDateTime";
+import { RouteComponentProps, withRouter } from 'react-router';
+import { formatDateTime } from "../../../utils/formateDateTime";
 import Flag from 'react-world-flags';
 import { UpdateAuthor } from "../../../model/UpdateAuthor";
 
 
-interface AuthorProps extends RouteComponentProps<MatchParams>{
+interface AuthorProps extends RouteComponentProps<MatchParams> {
     loadAvatarErrorCallback(): void,
     editAuthorCallback(editAuthorStatus: RequestStatus): void,
 }
@@ -70,7 +70,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         }
     }
 
-    handleChangePhoto = (id: string, type: string, file: string) => {
+    handleChangePhoto = (file: File) => {
         this.setState({ ...this.state, updateStatus: RequestStatus.LOADING });
         const authorData = this.state.authorData;
         authorData.photo = file;
@@ -101,7 +101,8 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     handleSubmitDelete = (values: AuthorID) => {
         this.setState({ deleteStatus: RequestStatus.LOADING, error: null });
         deleteAuthor(values)
-            .then((response: AxiosResponse<ResponseUpdate>) => {
+            // .then((response: AxiosResponse<ResponseUpdate>) => {
+            .then(() => {
                 this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null });
                 this.props.history.push("/") //Push to home?
             })
@@ -113,7 +114,8 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     handleSubmit = (values: UpdateAuthor, photo: File) => {
         values.id = this.state.authorData.id;
         changeAuthorData(values, photo)
-            .then((response: AxiosResponse<Author>) => console.log(response.data))
+            // .then((response: AxiosResponse<Author>) => console.log(response.data))
+            .then(() => console.log('change author data response'))
             .catch((e) => console.error(e))
     }
 
@@ -127,12 +129,13 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                         <HoverableAvatar
                             src={photo || dummyAvatar}
                             id=''
+                            maxSize={100000}
                             onChange={this.handleChangePhoto}
-                            onError={this.props.loadAvatarErrorCallback}
+                            onLoadError={this.props.loadAvatarErrorCallback}
                         />
                         <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
                         <div className='subtitle-container'>
-                             <Typography align='right' variant='subtitle1'><Flag code={nationality} height="16" /> {formatDateTime(birthday)}</Typography>
+                            <Typography align='right' variant='subtitle1'><Flag code={nationality} height="16" /> {formatDateTime(birthday)}</Typography>
                         </div>
 
                     </div>
@@ -160,7 +163,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                     data={authorData}
                     onCancel={this.handleCancel}
                     onSubmit={this.handleSubmit}
-                    // editAuthorCallback={}
+                // editAuthorCallback={}
                 />
             );
         } else {

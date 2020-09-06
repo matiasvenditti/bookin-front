@@ -59,6 +59,7 @@ const isLoggedIn = () => {
  */
 const isAuthorized = function(requiredRoles: string[]) {
     const userRoles: string[] = getDecodedToken().authorities;
+    console.log('isAuthorized', userRoles, requiredRoles);
     return requiredRoles.every(role => userRoles.includes(role));
 };
 

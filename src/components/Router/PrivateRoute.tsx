@@ -1,6 +1,6 @@
 import React from "react";
-import {Redirect, Route} from "react-router-dom";
-import {isAuthorized, isLoggedIn} from "../../services/AuthService";
+import { Redirect, Route } from "react-router-dom";
+import { isAuthorized, isLoggedIn } from "../../services/AuthService";
 
 interface PrivateRouteProps {
     exact?: boolean,

@@ -27,6 +27,7 @@ interface RouterState {
     editProfileStatus: RequestStatus,
     editAuthorStatus: RequestStatus,
     deleteProfileStatus: RequestStatus,
+    createAuthorStatus: RequestStatus,
 }
 
 
@@ -41,6 +42,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             editAuthorStatus: RequestStatus.NONE,
             loadAvatarError: false,
             deleteProfileStatus: RequestStatus.NONE,
+            createAuthorStatus: RequestStatus.NONE,
         };
     }
 
@@ -76,8 +78,11 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </Route>
 
-                    <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor /></PrivateRoute>
-                    <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor /></PrivateRoute>
+                    <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}>
+                        <CreateAuthor
+                            createAuthorCallback={(createAuthorStatus: RequestStatus) => this.setState({ ...this.state, createAuthorStatus })}
+                        />
+                    </PrivateRoute>
                 </Switch>
                 <Footer />
                 {this.renderToasts()}
@@ -86,7 +91,14 @@ class Router extends React.Component<RouterProps, RouterState> {
     }
 
     renderToasts() {
-        const { registerStatus, loginStatus, editProfileStatus, deleteProfileStatus, loadAvatarError } = this.state;
+        const {
+            registerStatus,
+            loginStatus,
+            editProfileStatus,
+            deleteProfileStatus,
+            loadAvatarError,
+            createAuthorStatus,
+        } = this.state;
         return (
             <div>
                 <Snackbar open={registerStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, registerStatus: RequestStatus.NONE })}>
@@ -109,6 +121,12 @@ class Router extends React.Component<RouterProps, RouterState> {
                 </Snackbar>
                 <Snackbar open={loadAvatarError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, loadAvatarError: false })}>
                     <Alert severity='error'>La imagen pesa mas de 100KB, seleccione una mas pequeña</Alert>
+                </Snackbar>
+                <Snackbar open={createAuthorStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createAuthorStatus: RequestStatus.NONE })}>
+                    <Alert severity='success'>Se ha creado el autor exitosamente</Alert>
+                </Snackbar>
+                <Snackbar open={createAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createAuthorStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>Hubo un error al crear el autor, intente más tarde</Alert>
                 </Snackbar>
             </div>
         );

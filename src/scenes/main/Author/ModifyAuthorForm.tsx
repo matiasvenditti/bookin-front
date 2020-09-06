@@ -1,19 +1,18 @@
-import React, {ChangeEvent, Component} from 'react';
-import {Button, Input} from '../../../components/Form';
-import {AuthorFormModel} from '../../../model/Form/AuthorFormModel';
+import React, { ChangeEvent, Component } from 'react';
+import { Button, Input } from '../../../components/Form';
+import { AuthorFormModel } from '../../../model/Form/AuthorFormModel';
 import Grid from '@material-ui/core/Grid';
-import {Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField} from '@material-ui/core';
+import { Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 
 import "./AuthorForm.css"
 import validateInput from '../../../utils/validateInput';
-import {AccountCircle} from '@material-ui/icons';
-import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
+import { AccountCircle } from '@material-ui/icons';
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { UpdateAuthor } from '../../../model/UpdateAuthor';
 import { EditAuthorFormModel } from '../../../model/Form/EditAuthorFormModel';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
 import { AxiosResponse } from 'axios';
-import { ResponseUpdate, update } from '../../../services/SessionService';
 import { EditVar } from '../../../model/consts/EditVar';
 import { AuthorEditInterface } from '../../../model';
 import { changeAuthorData } from '../../../services/AuthorService';
@@ -52,12 +51,12 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         super(props);
         this.state = {
             values: {
-                id: {value: props.data.id, type: 'hidden', error: false},
-                firstName: {value: props.data.firstName, type: 'text', error: false},
-                lastName: {value: props.data.lastName, type: 'text', error: false},
-                nationality: {value: props.data.nationality, type: 'select', error: false},
-                birthday: {value: props.data.birthday, type: 'date', error: false},
-                photo: {value: props.data.photo, type: 'File', error: false},
+                id: { value: props.data.id, type: 'hidden', error: false },
+                firstName: { value: props.data.firstName, type: 'text', error: false },
+                lastName: { value: props.data.lastName, type: 'text', error: false },
+                nationality: { value: props.data.nationality, type: 'select', error: false },
+                birthday: { value: props.data.birthday, type: 'date', error: false },
+                photo: { value: props.data.photo, type: 'File', error: false },
             },
             bytearray: null,
             formValid: false,
@@ -75,13 +74,14 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
             nationality: this.state.values.nationality.value,
             birthday: this.state.values.birthday.value,
         }
-        this.props.onSubmit(values , this.state.values.photo.value);
+        this.props.onSubmit(values, this.state.values.photo.value);
     }
 
-     handleSubmitT = (values: AuthorEditInterface) => {
+    handleSubmitT = (values: AuthorEditInterface) => {
         this.setState({ updateStatus: RequestStatus.LOADING, error: null });
         changeAuthorData(values, this.state.values.photo.value)
-            .then((response: AxiosResponse<ResponseUpdate>) => {
+            // .then((response: AxiosResponse<ResponseUpdate>) => {
+            .then(() => {
                 this.setState({ updateStatus: RequestStatus.SUCCESS, error: null });
                 this.props.history.push('/profile');
             })
@@ -96,7 +96,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: {value, type, error}
+                [id]: { value, type, error }
             },
             formValid: !anyErrors,
         });
@@ -111,7 +111,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         this.setState({
             values: {
                 ...this.state.values,
-                birthday: {value: date, type: birthday.type, error: error}
+                birthday: { value: date, type: birthday.type, error: error }
             },
             formValid: !anyErrors,
         });
@@ -146,9 +146,9 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
         this.setState({
             values: {
                 ...this.state.values,
-                photo: {value: file, type: photo.type, error: error},
+                photo: { value: file, type: photo.type, error: error },
             },
-            formValid:!anyErrors,
+            formValid: !anyErrors,
         });
     }
 
@@ -165,7 +165,7 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
 
     handleSubmitTemp = () => {
         this.handleSubmitT({
-            id: this.state.values.id.value, 
+            id: this.state.values.id.value,
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             nationality: this.state.values.nationality.value,
@@ -181,8 +181,8 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
 
     render() {
         const image = this.state.bytearray ?
-            <img src={this.state.bytearray} width="100" height="100" alt="author-image"/> :
-            <AccountCircle color="secondary" style={{fontSize: 100}}/>
+            <img src={this.state.bytearray} width="100" height="100" alt="author-image" /> :
+            <AccountCircle color="secondary" style={{ fontSize: 100 }} />
 
         return (
             <form>
@@ -262,22 +262,22 @@ export default class ModifyAuthorForm extends Component<any, AuthorFormState> {
                     </Grid>
                     <Grid item xs>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
-                                 color='secondary'>
+                            color='secondary'>
                             Agrega una foto
                             <input
                                 accept="image/*"
                                 type="file"
-                                style={{display: "none"}}
+                                style={{ display: "none" }}
                             />
                         </Buttons>
                     </Grid>
                 </Grid>
                 <div>
                     <div className="spacing">
-                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmitTemp}/>
+                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmitTemp} />
                     </div>
                     <div className="spacing">
-                        <Button title="Cancelar" disabled={false} onClick={this.handleCancel}/>
+                        <Button title="Cancelar" disabled={false} onClick={this.handleCancel} />
                     </div>
                 </div>
             </form>
