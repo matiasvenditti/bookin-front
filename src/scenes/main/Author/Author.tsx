@@ -2,14 +2,12 @@ import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
 import {AuthorID} from "../../../model";
 import {Button, Typography} from "@material-ui/core";
-import {deleteAuthor, getAuthorData, updateAuthor} from "../../../services/AuthorService";
+import {deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
-import ModifyAuthorForm from "./ModifyAuthorForm";
 import {RouteComponentProps, withRouter} from 'react-router';
 import './Author.css'
 import {isAuthorized} from "../../../services/AuthService";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import { UpdateAuthor } from "../../../model/UpdateAuthor";
 import SweetAlert from "react-bootstrap-sweetalert";
 import Loader from "../../../components/Loader/Loader";
 
@@ -20,7 +18,6 @@ interface AuthorProps extends RouteComponentProps<MatchParams> {
 }
 
 interface AuthorState {
-    editAuthorMode: boolean,
     isAdmin: boolean,
     getAuthorDataStatus: RequestStatus,
     updateStatus: any,
@@ -46,7 +43,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
-            editAuthorMode: false,
             getAuthorDataStatus: RequestStatus.NONE,
             isAdmin: isAuthorized(["ROLE_ADMIN"]),
             data: {
@@ -82,11 +78,12 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     handleCancel = () => {
-        this.setState({editAuthorMode: false, showDelete: false})
+        this.setState({showDelete: false})
     };
 
-    handleModify = () => {
-        this.setState({editAuthorMode: !this.state.editAuthorMode})
+    handleEdit = () => {
+        const id = this.state.data.id;
+        this.props.history.push(`/authors/edit/${id}`) //Push to home?
     }
 
     handleDelete = () => {
@@ -96,8 +93,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     handleConfirmDelete = () => {
         this.deleteAuthor({id : this.state.data.id});
     }
-
-
 
 
     deleteAuthor = (values: AuthorID) => {
@@ -115,22 +110,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.handleCancel()
     }
 
-    modifyAuthor = (values: UpdateAuthor, photo: File) => {
-            updateAuthor(values, photo)
-                .then(() => {
-                    this.setState({
-                        ...this.state,
-                        updateStatus: RequestStatus.SUCCESS,
-                        data: {...this.state.data, photo: photo}
-                    })
-                    this.props.editAuthorCallback(RequestStatus.SUCCESS);
-
-                })
-                .catch((error) => {
-                    this.setState({...this.state, updateStatus: RequestStatus.ERROR, error});
-                    this.props.editAuthorCallback(RequestStatus.ERROR);
-                })
-    }
 
     render() {
         return (
@@ -151,7 +130,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
      */
 
     renderAuthor() {
-        const {editAuthorMode, data, books, getAuthorDataStatus} = this.state;
+        const {data, books, getAuthorDataStatus} = this.state;
         if (getAuthorDataStatus === RequestStatus.LOADING) {
             return (
                 <div>
@@ -159,15 +138,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 </div>
             );
         }
-        if (editAuthorMode) {
-            return (
-                <ModifyAuthorForm
-                    data={data}
-                    onCancel={this.handleCancel}
-                    onSubmit={this.modifyAuthor}
-                />
-            );
-        } else {
             return (
                 <AuthorView
                     data={data}
@@ -176,7 +146,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 />
             );
         }
-    }
 
     renderButtons() {
         const {isAdmin} = this.state;
@@ -184,7 +153,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             return (
                 <div className="button-divider">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
-                        <Button onClick={this.handleModify}>Edit profile</Button>
+                        <Button onClick={this.handleEdit}>Edit profile</Button>
                         <Button onClick={this.handleDelete}>Delete Profile</Button>
                     </ButtonGroup>
                 </div>

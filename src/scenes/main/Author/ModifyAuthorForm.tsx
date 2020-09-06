@@ -5,18 +5,12 @@ import Grid from '@material-ui/core/Grid';
 import {Button as Buttons, FormControl, InputLabel, MenuItem, Select} from '@material-ui/core';
 
 import "./ModifyAuthorForm.css"
-import validateInput from '../../../utils/validateInput';
+
 import {AccountCircle} from '@material-ui/icons';
 import {KeyboardDatePicker, MuiPickersUtilsProvider} from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import {UpdateAuthor} from '../../../model/UpdateAuthor';
+import {UpdateAuthor} from '../../../model';
 import {EditAuthorFormModel} from '../../../model/Form/EditAuthorFormModel';
-import {RequestStatus} from '../../../model/consts/RequestStatus';
-import {EditVar} from '../../../model/consts/EditVar';
-import { Author } from '../../../model/Author';
-
-
-
 
 
 interface AuthorFormProps {
