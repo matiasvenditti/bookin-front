@@ -26,3 +26,8 @@ html, body {
 .typography-bold {
     font-weight: bold !important;
 }
+
+.form-input {
+    width: 100%;
+    margin: 8px;
+}

@@ -1,19 +1,15 @@
-import { RequestStatus } from "../../../model/consts/RequestStatus";
+import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
-import { AuthorID } from "../../../model";
-import { AxiosResponse } from "axios";
-// import { ResponseUpdate } from "../../../services/SessionService";
-import HoverableAvatar from "../../../components/HoverableAvatar/HoverableAvatar";
-import { dummyAvatar } from "../../../assets";
-import { AppBar, Typography } from "@material-ui/core";
-import SweetAlert from "react-bootstrap-sweetalert";
-import { changeAuthorData, deleteAuthor, getAuthorData, updateAuthor, Author as AuthorS } from "../../../services/AuthorService";
+import {AuthorID} from "../../../model";
+import {Button, Typography} from "@material-ui/core";
+import {deleteAuthor, getAuthorData} from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
-import ModifyAuthorForm from "./ModifyAuthorForm";
-import { RouteComponentProps, withRouter } from 'react-router';
-import { formatDateTime } from "../../../utils/formateDateTime";
-import Flag from 'react-world-flags';
-import { UpdateAuthor } from "../../../model/UpdateAuthor";
+import {RouteComponentProps, withRouter} from 'react-router';
+import './Author.css'
+import {isAuthorized} from "../../../services/AuthService";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
+import SweetAlert from "react-bootstrap-sweetalert";
+import Loader from "../../../components/Loader/Loader";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -22,12 +18,12 @@ interface AuthorProps extends RouteComponentProps<MatchParams> {
 }
 
 interface AuthorState {
-    editAuthorMode: boolean,
+    isAdmin: boolean,
     getAuthorDataStatus: RequestStatus,
     updateStatus: any,
     deleteStatus: any,
     showDelete: boolean,
-    authorData: {
+    data: {
         id: string,
         firstName: string,
         lastName: string,
@@ -47,21 +43,21 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     constructor(props: AuthorProps) {
         super(props);
         this.state = {
-            editAuthorMode: true,
             getAuthorDataStatus: RequestStatus.NONE,
-            authorData: {
+            isAdmin: isAuthorized(["ROLE_ADMIN"]),
+            data: {
                 id: this.props.match.params.id,
-                firstName: 'Jorge Luis',
-                lastName: 'Borges',
-                nationality: 'AR',
-                birthday: '1899-08-24',
+                firstName: '',
+                lastName: '',
+                nationality: '',
+                birthday: '',
                 photo: null,
             },
             showDelete: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
             error: null,
-            books: { //BOOKTYPE etc. for later. TODO
+            books: { //BOOKTYPE etc. for later.
                 book1: null,
                 book2: null,
                 book3: null,
@@ -70,82 +66,59 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         }
     }
 
-    handleChangePhoto = (file: File) => {
-        this.setState({ ...this.state, updateStatus: RequestStatus.LOADING });
-        const authorData = this.state.authorData;
-        authorData.photo = file;
-        // const formData = new FormData();
-        // formData.append('photo', file);
-        changeAuthorData(authorData, authorData.photo)
-            .then(() => {
-                this.setState({ ...this.state, updateStatus: RequestStatus.SUCCESS, authorData: { ...this.state.authorData, photo: file } })
-                this.props.editAuthorCallback(RequestStatus.SUCCESS);
-            })
-            .catch((error) => {
-                this.setState({ ...this.state, updateStatus: RequestStatus.ERROR });
-                this.props.editAuthorCallback(RequestStatus.ERROR);
-            })
-    }
+    componentDidMount() {
+        this.setState({...this.state, getAuthorDataStatus: RequestStatus.LOADING});
+        getAuthorData({id: this.state.data.id})
+            .then((response: any) => this.setState({
+                data: response.data,
+                getAuthorDataStatus: RequestStatus.SUCCESS
 
+            }))
+            .catch((error: any) => this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error}));
+    }
 
     handleCancel = () => {
-        this.setState({ editAuthorMode: false, showDelete: false })
+        this.setState({showDelete: false})
     };
 
-    deleteAuthorTemp = () => {
-        this.handleSubmitDelete({ id: this.state.authorData.id, });
-        this.handleCancel();
+    handleEdit = () => {
+        const id = this.state.data.id;
+        this.props.history.push(`/authors/edit/${id}`) //Push to home?
+    }
+
+    handleDelete = () => {
+        this.setState({showDelete: true})
+    }
+
+    handleConfirmDelete = () => {
+        this.deleteAuthor({id : this.state.data.id});
     }
 
 
-    handleSubmitDelete = (values: AuthorID) => {
-        this.setState({ deleteStatus: RequestStatus.LOADING, error: null });
+    deleteAuthor = (values: AuthorID) => {
+        this.setState({deleteStatus: RequestStatus.LOADING, error: null});
         deleteAuthor(values)
-            // .then((response: AxiosResponse<ResponseUpdate>) => {
             .then(() => {
-                this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null });
+                this.setState({deleteStatus: RequestStatus.SUCCESS, error: null});
                 this.props.history.push("/") //Push to home?
+
             })
             .catch((error) => {
-                this.setState({ deleteStatus: RequestStatus.ERROR, error });
+                this.setState({deleteStatus: RequestStatus.ERROR, error});
+                //console.log("Error deleting", error)
             });
-    }
-
-    handleSubmit = (values: UpdateAuthor, photo: File) => {
-        values.id = this.state.authorData.id;
-        changeAuthorData(values, photo)
-            // .then((response: AxiosResponse<Author>) => console.log(response.data))
-            .then(() => console.log('change author data response'))
-            .catch((e) => console.error(e))
+        this.handleCancel()
     }
 
 
     render() {
-        const { firstName, lastName, nationality, birthday, photo } = this.state.authorData;
         return (
             <div className='route-container'>
                 <div className='card-container'>
-                    <div className='image-name-container'>
-                        <HoverableAvatar
-                            src={photo || dummyAvatar}
-                            id=''
-                            maxSize={100000}
-                            onChange={this.handleChangePhoto}
-                            onLoadError={this.props.loadAvatarErrorCallback}
-                        />
-                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
-                        <div className='subtitle-container'>
-                            <Typography align='right' variant='subtitle1'><Flag code={nationality} height="16" /> {formatDateTime(birthday)}</Typography>
-                        </div>
-
-                    </div>
-                    <AppBar position='static'>
-                        {this.renderAuthor()}
-                    </AppBar>
-
+                    {this.renderButtons()}
+                    {this.renderAuthor()}
+                    {this.renderDelete()}
                 </div>
-                {/* <button onClick={this.handleDelete}> Delete profile</button>
-                {this.renderDelete()} */}
             </div>
 
 
@@ -155,31 +128,40 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     /**
      * Renders AuthorView or AuthorEdit
      */
+
     renderAuthor() {
-        const { editAuthorMode, authorData, getAuthorDataStatus } = this.state;
-        if (editAuthorMode) {
+        const {data, books, getAuthorDataStatus} = this.state;
+        if (getAuthorDataStatus === RequestStatus.LOADING) {
             return (
-                <ModifyAuthorForm
-                    data={authorData}
-                    onCancel={this.handleCancel}
-                    onSubmit={this.handleSubmit}
-                // editAuthorCallback={}
-                />
+                <div>
+                    <Typography align='center' variant='subtitle1'> <Loader /> </Typography>
+                </div>
             );
-        } else {
+        }
             return (
                 <AuthorView
-                    data={authorData}
-                    loading={getAuthorDataStatus === RequestStatus.LOADING}
+                    data={data}
+                    books={books}
                     error={getAuthorDataStatus === RequestStatus.ERROR}
                 />
             );
         }
+
+    renderButtons() {
+        const {isAdmin} = this.state;
+        if (isAdmin)
+            return (
+                <div className="button-divider">
+                    <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
+                        <Button onClick={this.handleEdit}>Edit profile</Button>
+                        <Button onClick={this.handleDelete}>Delete Profile</Button>
+                    </ButtonGroup>
+                </div>
+            )
     }
 
-    // TODO delete Author
     renderDelete() {
-        const { showDelete } = this.state;
+        const {showDelete} = this.state;
         if (showDelete) return (
             <SweetAlert
                 danger
@@ -187,7 +169,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 confirmBtnText="Yes, delete it!"
                 confirmBtnBsStyle="danger"
                 title="Are you sure?"
-                onConfirm={this.deleteAuthorTemp}
+                onConfirm={this.handleConfirmDelete}
                 onCancel={this.handleCancel}
                 focusCancelBtn
             >

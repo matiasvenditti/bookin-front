@@ -4,6 +4,7 @@ import { ResponseLogin, logout } from './SessionService';
 import { DecodedToken } from '../model/DecodedToken';
 import {ACCESS_TOKEN} from "./EnvironmentService";
 
+
 /**
  * @description auxiliary function
  * @return { DecodedToken } data included in the token

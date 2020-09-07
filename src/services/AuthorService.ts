@@ -2,18 +2,11 @@ import {NewAuthor} from "../model/NewAuthor";
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
-import {AuthorEditInterface, AuthorID} from "../model";
-import { UpdateAuthor } from "../model/UpdateAuthor";
+import {AuthorID} from "../model";
+import {UpdateAuthor} from "../model";
+import { Author } from "../model/Author";
 
 
-export interface Author {
-    id: number,
-    firstname: string,
-    lastname: string,
-    nationality: string,
-    date_of_birth: Date,
-    photo: string,
-}
 
 const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Author>> => {
     const createAuthorForm = new FormData();
@@ -27,7 +20,7 @@ const createAuthor = (author: NewAuthor, photo: File): Promise<AxiosResponse<Aut
     return instance.post<Author>(`${baseURL}/authors`, createAuthorForm, config)
 }
 
-const updateAuthor = (author: UpdateAuthor, photo: File): Promise<AxiosResponse<Author>> => {
+const changeAuthorData = (author: UpdateAuthor, photo: File): Promise<AxiosResponse<Author>> => {
     const changeAuthorForm = new FormData();
     changeAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
     changeAuthorForm.append("photo", photo);
@@ -41,24 +34,7 @@ const updateAuthor = (author: UpdateAuthor, photo: File): Promise<AxiosResponse<
 
 
 const getAuthorData = (authorID: AuthorID): Promise<AxiosResponse<Author>> => {
-    const config: AxiosRequestConfig = {
-        headers: {
-            'Content-Type': undefined,
-        }
-    }
-    return instance.post<Author>(`${baseURL}/authors/${authorID}`, config)
-}
-
-const changeAuthorData = (author: UpdateAuthor, photo: File): Promise<AxiosResponse<Author>> => {
-    const changeAuthorForm = new FormData();
-    changeAuthorForm.append("author", new Blob([JSON.stringify(author)], {type: 'application/json'}));
-    changeAuthorForm.append("photo", photo);
-    const config: AxiosRequestConfig = {
-        headers: {
-            'Content-Type': undefined,
-        }
-    }
-    return instance.put<Author>(`${baseURL}/authors/update/${author.id}`, changeAuthorForm, config)
+    return instance.get<Author>(`${baseURL}/authors/${authorID.id}`)
 }
 
 const deleteAuthor = (author: AuthorID): Promise<AxiosResponse<Author>> => {
@@ -75,6 +51,5 @@ export {
     createAuthor,
     getAuthorData,
     deleteAuthor,
-    updateAuthor,
     changeAuthorData
 }

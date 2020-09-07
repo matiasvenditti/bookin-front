@@ -50,29 +50,32 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
         const { loading } = this.props;
         return (
             <form>
-                <Input
-                    label='Mail'
-                    id='email'
-                    type='email'
-                    onChange={this.handleInput}
-                    value={this.state.values.email.value}
-                    error={this.state.values.email.touched && this.state.values.email.error}
-                    errorText={this.state.values.email.touched && this.state.values.email.error ? 'Mail inválido' : ''}
-                    required
-                    disabled={loading}
-                />
-
-                <Input
-                    id='password'
-                    label='Contraseña'
-                    type='password'
-                    onChange={this.handleInput}
-                    value={this.state.values.password.value}
-                    error={this.state.values.password.touched && this.state.values.password.error}
-                    errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
-                    required
-                    disabled={loading}
-                />
+                <div className='form-input'>
+                    <Input
+                        label='Mail'
+                        id='email'
+                        type='email'
+                        onChange={this.handleInput}
+                        value={this.state.values.email.value}
+                        error={this.state.values.email.touched && this.state.values.email.error}
+                        errorText={this.state.values.email.touched && this.state.values.email.error ? 'Mail inválido' : ''}
+                        required
+                        disabled={loading}
+                    />
+                </div>
+                <div className="form-input">
+                    <Input
+                        id='password'
+                        label='Contraseña'
+                        type='password'
+                        onChange={this.handleInput}
+                        value={this.state.values.password.value}
+                        error={this.state.values.password.touched && this.state.values.password.error}
+                        errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
+                        required
+                        disabled={loading}
+                    />
+                </div>
                 <Button
                     title='Ingresar'
                     disabled={!this.state.formValid}
