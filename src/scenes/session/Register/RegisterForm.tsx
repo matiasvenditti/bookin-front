@@ -99,17 +99,17 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                         disabled={loading}
                     />
                 </div>
-                    <RadioGroup
-                        title='Género'
-                        id='gender'
-                        type='radio-group'
-                        onChange={this.handleInput}
-                        value={this.state.values.gender.value}
-                        options={['Hombre', 'Mujer', 'Anónimo']}
-                        error={this.state.values.gender.touched && this.state.values.gender.error}
-                        errorText={'Elige un género'}
-                        disabled={loading}
-                    />
+                <RadioGroup
+                    title='Género'
+                    id='gender'
+                    type='radio-group'
+                    onChange={this.handleInput}
+                    value={this.state.values.gender.value}
+                    options={['Hombre', 'Mujer', 'Anónimo']}
+                    error={this.state.values.gender.touched && this.state.values.gender.error}
+                    errorText={'Elige un género'}
+                    disabled={loading}
+                />
                 <div className='form-input'>
                     <Input
                         id='password'
@@ -118,7 +118,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                         onChange={this.handleInput}
                         value={this.state.values.password.value}
                         error={this.state.values.password.touched && this.state.values.password.error}
-                        errorText={this.state.values.password.touched && this.state.values.password.error ? 'Contraseña inválida' : ''}
+                        errorText={this.state.values.password.touched && this.state.values.password.error ? 'La contraseña debe ser alfanumérica' : ''}
                         required
                         disabled={loading}
                     />
