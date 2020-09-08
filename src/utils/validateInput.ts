@@ -7,6 +7,10 @@ export default function(type: string, value: any) {
         case 'email': regex = /^[\w-.]{3,50}@([\w-]+\.)+[\w-]{2,4}$/; break;
         case 'radio-group': return value !== null;
         case 'accept-terms': return value;
+        case 'photo': return value !== null;
+        case 'date':
+            if (value.toString() === 'Invalid Date') return true;
+            else return value < new Date();
         default: break;
     } 
     return regex.test(value);

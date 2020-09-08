@@ -18,6 +18,7 @@ interface AuthorFormState {
 }
 
 interface AuthorFormProps {
+    loading: boolean,
     onSubmit(values: NewAuthor, photo: File): void;
 }
 
@@ -33,13 +34,12 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                 lastName: { value: '', type: 'text', error: true, touched: false },
                 nationality: { value: '', type: 'select', error: true, touched: false },
                 birthday: { value: null, type: 'date', error: true, touched: false },
-                photo: { value: null, type: 'File', error: true, touched: false },
+                photo: { value: null, type: 'photo', error: true, touched: false },
             },
             bytearray: null,
             formValid: false
         }
     }
-
 
     handleSubmit = () => {
         let values: NewAuthor = {
@@ -66,7 +66,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
 
 
     handleDateChange = (date: Date | null) => {
-        const error: boolean = date ? date > new Date() : false;
+        const error = !validateInput('date', date);
         const birthday = this.state.values.birthday;
 
         const allTouched = Object.values(this.state.values).every(value => value.type === birthday.type ? true : value.touched);
@@ -74,7 +74,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         this.setState({
             values: {
                 ...this.state.values,
-                birthday: { value: date, type: birthday.type, error: error, touched: true }
+                birthday: { value: date, type: birthday.type, error, touched: true }
             },
             formValid: allTouched && !anyErrors,
         });
@@ -130,6 +130,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
     render() {
+        const { loading } = this.props;
         const image = this.state.bytearray ?
             <img src={this.state.bytearray} width="100" height="100" alt='author' /> :
             <AccountCircle color="secondary" style={{ fontSize: 100 }} />
@@ -147,6 +148,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                             error={this.state.values.firstName.touched && this.state.values.firstName.error}
                             errorText={this.state.values.firstName.touched && this.state.values.firstName.error ? 'Nombre inválido' : ''}
                             required
+                            disabled={loading}
                         />
                     </Grid>
                     <Grid item xs>
@@ -159,6 +161,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                             error={this.state.values.lastName.touched && this.state.values.lastName.error}
                             errorText={this.state.values.lastName.touched && this.state.values.lastName.error ? 'Apellido inválido' : ''}
                             required
+                            disabled={loading}
                         />
                     </Grid>
                     <Grid item xs>
@@ -180,6 +183,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                                 value={this.state.values.nationality.value}
                                 onChange={this.handleInputSelect}
                                 label="Nacionalidad"
+                                disabled={loading}
                             >
                                 <MenuItem value='Argentina'>Argentina</MenuItem>
                                 <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
@@ -193,7 +197,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                             <KeyboardDatePicker
                                 fullWidth
                                 error={this.state.values.birthday.touched && this.state.values.birthday.error}
-                                helperText={this.state.values.birthday.touched && this.state.values.birthday.error ? 'Nacimiento mayor a fecha actual' : null}
+                                helperText={this.state.values.birthday.touched && this.state.values.birthday.error ? 'Fecha inválida' : null}
                                 color="secondary"
                                 disableToolbar
                                 required
@@ -207,12 +211,20 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                                 KeyboardButtonProps={{
                                     'aria-label': 'change date',
                                 }}
+                                disabled={loading}
+                                maxDate={new Date()}
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
                     <Grid item xs>
-                        <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
-                            color='secondary'>
+                        <Buttons
+                            fullWidth
+                            variant="contained"
+                            component="label"
+                            onChange={this.handleChange}
+                            disabled={loading}
+                            color='secondary'
+                        >
                             Agrega una foto
                             <input
                                 accept="image/*"
@@ -224,10 +236,10 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                 </Grid>
                 <div>
                     <div className="spacing">
-                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} />
+                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} loading={loading} />
                     </div>
                     <div className="spacing">
-                        <Button title="Cancelar" disabled={false} onClick={this.handleSubmit} />
+                        <Button title="Cancelar" disabled={false} onClick={() => console.log('Cancel create author (WIP)')} loading={loading} />
                     </div>
                 </div>
             </form>

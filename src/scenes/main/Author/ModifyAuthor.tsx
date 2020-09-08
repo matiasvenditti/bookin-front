@@ -45,7 +45,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         const a : AuthorID = {id};
         getAuthorData(a)
         .then((response: AxiosResponse<Author>) => {
-            const photo: string = `data:image/jpeg;base64,${response.data.photo}`;            
+            const photo: string = `data:image/jpeg;base64,${response.data.photo}`;
             this.setState((prevState: ModifyAuthorState) => ({
                 ...prevState,
                 values: new EditAuthorFormModel(response.data),
@@ -54,7 +54,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         })
         .catch((e) => console.error(e))
     }
-     
+
     handleSubmit = (values: UpdateAuthor, photo: File) => {
         changeAuthorData(values, photo)
             .then((response: AxiosResponse<Author>) => console.log(response.data))
@@ -143,13 +143,13 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
             <div className='route-container' >
                 <div className='form-container'>
                     <Typography align='center' variant='h5'>Modificación del autor</Typography>
-                    <ModifyAuthorForm 
-                    formValid={this.state.formValid} 
+                    <ModifyAuthorForm
+                    formValid={this.state.formValid}
                     bytearray={this.state.bytearray}
-                    author={this.state.values} 
-                    onSubmit={this.handleSubmit} 
-                    onCancel={this.handleCancel} 
-                    onInput={this.handleInput} 
+                    author={this.state.values}
+                    onSubmit={this.handleSubmit}
+                    onCancel={this.handleCancel}
+                    onInput={this.handleInput}
                     onDateChange={this.handleDateChange}
                     onInputSelect={this.handleInputSelect}
                     onChange={this.handleChange}
