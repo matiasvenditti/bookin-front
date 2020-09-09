@@ -62,10 +62,6 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         }
     }
 
-    testHandle = () => {
-        console.log(this.state.data);
-    }
-
     render() {
         //const { books } = this.state;
         const {photo, firstName, lastName, nationality, birthday} = this.state.data;
