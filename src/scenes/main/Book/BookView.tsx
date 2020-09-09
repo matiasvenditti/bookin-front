@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {
     Avatar,
-    Badge,
+    Badge, Box,
     Card,
     CardContent,
     CardMedia, Divider,
@@ -14,6 +14,7 @@ import {
 import {dummyAvatar} from "../../../assets";
 import {Author} from "../../../model/Author";
 import {baseURL} from "../../../services/EnvironmentService";
+import Rating from "@material-ui/lab/Rating";
 
 interface BookViewProps {
     data: {
@@ -126,13 +127,16 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                 <List>
                                     {authors.map((item, i) => ([
 
-                                        <ListItem key={'profile-view-item-' + i} button component={Link} href={`${baseURL}/authors/${item.id}`}>
+                                        <ListItem key={'profile-view-item-' + i} button component={Link} href={`/authors/${item.id}`}>
                                             <Badge
                                                 color='primary'
                                                 overlap='circle'
                                                 anchorOrigin={{
                                                     vertical: 'bottom',
                                                     horizontal: 'right',
+                                                }}
+                                                style={{
+                                                    marginRight: 15,
                                                 }}
                                                 className={'avatar-image'}
                                             >
@@ -147,6 +151,11 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                         (i !== authors.length - 1) && <Divider key={'divider-' + i} />,
                                     ]))}
                                 </List>
+
+                                <Box component="fieldset" mb={3} borderColor="transparent">
+                                    <Typography component="legend">Rating en Promedio</Typography>
+                                    <Rating name="read-only" value={data.stars} precision={0.5} readOnly />
+                                </Box>
 
                             </div>
                         </Grid>
