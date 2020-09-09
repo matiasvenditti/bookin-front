@@ -33,13 +33,14 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
     }
 
     handleInput = (id: keyof RegisterFormModel, type: string, value: any) => {
+        console.log(id, type, value);
         const error = !validateInput(type, value);
         const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched === true);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error === true);
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: { value: type === 'radio-group' ? stringToGender(value) : value, type, error, touched: true },
+                [id]: { value, type, error, touched: true },
             },
             formValid: allTouched && !anyErrors,
         });
@@ -105,7 +106,11 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     type='radio-group'
                     onChange={this.handleInput}
                     value={this.state.values.gender.value}
-                    options={['Hombre', 'Mujer', 'Anónimo']}
+                    options={[
+                        { id: 'M', value: 'Hombre' },
+                        { id: 'F', value: 'Mujer' },
+                        { id: 'A', value: 'Anónimo' },
+                    ]}
                     error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}
                     disabled={loading}

@@ -152,7 +152,11 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         type='radio-group'
                         onChange={this.handleInput}
                         value={genderToString(this.state.values.gender.value)}
-                        options={['Hombre', 'Mujer', 'Anónimo']}
+                        options={[
+                            { id: 'M', value: 'Hombre' },
+                            { id: 'F', value: 'Mujer' },
+                            { id: 'A', value: 'Anónimo' },
+                        ]}
                         error={this.state.values.gender.error}
                         errorText={'Elige un género'}
                     />

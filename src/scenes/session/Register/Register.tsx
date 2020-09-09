@@ -34,8 +34,8 @@ class Register extends Component<any, RegisterState> {
                     .then((response: AxiosResponse<ResponseLogin>) => {
                         saveLoginResponse(response);
                         this.props.registerCallback(RequestStatus.SUCCESS, RequestStatus.SUCCESS);
-                        this.setState({ ...this.state, registerStatus: RequestStatus.SUCCESS });
                         this.props.history.push('/');
+                        this.setState({ ...this.state, registerStatus: RequestStatus.SUCCESS });
                     })
                     .catch((error) => {
                         this.props.registerCallback(RequestStatus.SUCCESS, RequestStatus.ERROR)
