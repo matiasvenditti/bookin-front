@@ -7,6 +7,9 @@ import validateInput from '../../../utils/validateInput';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { Button, Input } from '../../../components/Form';
 import './CreateBookForm.css'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+
 
 
 interface BookFormState {
@@ -29,7 +32,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
             values: {
                 title: { value: '', type: 'text', error: true, touched: false },
                 genre: { value: '', type: 'select', error: true, touched: false },
-                languaje: { value: '', type: 'select', error: true, touched: false },
+                language: { value: '', type: 'select', error: true, touched: false },
                 release: { value: null, type: 'date', error: true, touched: false },
                 photo: { value: null, type: 'File', error: true, touched: false },
             },
@@ -42,7 +45,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         let book: NewBook = {
             title: this.state.values.title.value,
             genre: this.state.values.genre.value,
-            languaje: this.state.values.languaje.value,
+            language: this.state.values.language.value,
             release: this.state.values.release.value
         }
         this.props.onSubmit(book, this.state.values.photo.value);
@@ -63,38 +66,60 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
 
     handleDateChange = (date: Date | null) => {
         const error: boolean = date ? date > new Date() : false;
-        const birthday = this.state.values.birthday;
+        const release = this.state.values.release;
 
-        const allTouched = Object.values(this.state.values).every(value => value.type === birthday.type ? true : value.touched);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === birthday.type ? error : value.error);
+        const allTouched = Object.values(this.state.values).every(value => value.type === release.type ? true : value.touched);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === release.type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,
-                birthday: { value: date, type: birthday.type, error: error, touched: true }
+                release: { value: date, type: release.type, error: error, touched: true }
             },
             formValid: allTouched && !anyErrors,
         });
     }
 
-    handleInputSelect = (object: any) => {
-        const nacionalidad = object.target.value as string;
-        const nationality = this.state.values.nationality;
+    handleInputSelectL = (object: any) => {
+        const idioma = object.target.value as string;
+        const language = this.state.values.language;
         const error: boolean = false;
 
-        const allTouched = Object.values(this.state.values).every(value => value.type === nationality.type ? true : value.touched);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === nationality.type ? error : value.error);
+        const allTouched = Object.values(this.state.values).every(value => value.type === language.type ? true : value.touched);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === language.type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,
-                nationality: {
-                    value: nacionalidad,
-                    type: this.state.values.nationality.type,
+                language: {
+                    value: language,
+                    type: this.state.values.language.type,
                     error: false,
                     touched: true
                 },
             },
             formValid: allTouched && !anyErrors,
         });
+    }
+
+    handleInputSelectG = (object: any) => {
+        const genero = object.target.value as string;
+        const genre = this.state.values.genre;
+        const error: boolean = false;
+
+        const allTouched = Object.values(this.state.values).every(value => value.type === genre.type ? true : value.touched);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === genre.type ? error : value.error);
+        this.setState({
+            values: {
+                ...this.state.values,
+                genre: {
+                    value: genre,
+                    type: this.state.values.language.type,
+                    error: false,
+                    touched: true
+                },
+            },
+            formValid: allTouched && !anyErrors,
+        });
+        console.log(this.state);
     }
 
     handleChange = (event: any) => {
@@ -132,44 +157,85 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
 
         return(
             <form>
-                <Input
-                    label='Titulo'
-                    id='title'
-                    type='text'
-                    onChange={this.handleInput}
-                    value={this.state.values.title.value}
-                    error={this.state.values.title.touched && this.state.values.title.error}
-                    errorText={this.state.values.title.touched && this.state.values.title.error ? 'Nombre inválido' : ''}
-                    required
-                />
-                <FormControl required fullWidth color='secondary' variant='outlined'>
-                    <InputLabel id="demo-simple-select-label">Género</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id='genre'
-                        type='select'
-                        name='genre'
-                        value={this.state.values.genre.value}
-                        onChange={this.handleInputSelect}
-                        label='Género'
-                    >
-                        <MenuItem value='Terror'>Terror</MenuItem>
-                        <MenuItem value='Policial'>Policial</MenuItem>
-                        <MenuItem value='Drama'>Drama</MenuItem>
-                    </Select>
-                </FormControl>
-                <div>
-                    {image}
-                </div>
-                <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
-                            color='secondary'>
-                            Agrega una foto
-                            <input
-                                accept="image/*"
-                                type="file"
-                                style={{ display: "none" }}
+                <Grid alignItems='center' container spacing={2}>
+                    <Grid item xs>
+                        <Input
+                            label='Titulo'
+                            id='title'
+                            type='text'
+                            onChange={this.handleInput}
+                            value={this.state.values.title.value}
+                            error={this.state.values.title.touched && this.state.values.title.error}
+                            errorText={this.state.values.title.touched && this.state.values.title.error ? 'Nombre inválido' : ''}
+                            required
+                        />
+                        <FormControl required fullWidth color='secondary' variant='outlined'>
+                            <InputLabel id="demo-simple-select-label">Género</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id='genre'
+                                type='select'
+                                name='genre'
+                                value={this.state.values.genre.value}
+                                onChange={this.handleInputSelectG}
+                                label='Género'
+                            >
+                                <MenuItem value='Terror'>Terror</MenuItem>
+                                <MenuItem value='Policial'>Policial</MenuItem>
+                                <MenuItem value='Drama'>Drama</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl required fullWidth color='secondary' variant='outlined'>
+                            <InputLabel id='idioma' color='secondary' variant='outlined'>Idioma</InputLabel>
+                            <Select 
+                            labelId='idioma'
+                            id='language'
+                            type='select'
+                            name='genre'
+                            value={this.state.values.language.value}
+                            onChange={this.handleInputSelectL}
+                            label='Idioma'
+                            >
+                                <MenuItem value='Español'>Español</MenuItem>
+                                <MenuItem value='Inglés'>Inglés</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <KeyboardDatePicker
+                                fullWidth
+                                error={this.state.values.release.touched && this.state.values.release.error}
+                                helperText={this.state.values.release.touched && this.state.values.release.error ? 'Lanzamiento mayor a fecha actual' : null}
+                                color="secondary"
+                                disableToolbar
+                                required
+                                inputVariant="outlined"
+                                format="dd/MM/yyyy"
+                                margin="none"
+                                id="date-picker-inline"
+                                label="Nacimiento"
+                                value={this.state.values.release.value}
+                                onChange={this.handleDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
                             />
-                </Buttons>
+                        </MuiPickersUtilsProvider>
+                    </Grid>
+                    <Grid item xs>
+                        <div>
+                            {image}
+                        </div>
+                        <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
+                                    color='secondary'>
+                                    Agrega una foto
+                                    <input
+                                        accept="image/*"
+                                        type="file"
+                                        style={{ display: "none" }}
+                                    />
+                        </Buttons>
+                    </Grid>
+                </Grid>
             </form>
         )
     }
