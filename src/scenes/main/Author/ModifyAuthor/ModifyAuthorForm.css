@@ -38,9 +38,8 @@
     justify-content: flex-end;
     margin-top: 20px;
     width: 100%;
-    
 }
-/* #root > div.route-container > div > form > div.modify-author-buttons-container > button:nth-child(1) */
+
 .modify-author-buttons-container > button:nth-child(1) {
     margin-right: 10px;
 }

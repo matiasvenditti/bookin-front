@@ -6,7 +6,6 @@ import AuthorView from "./AuthorView";
 import { RouteComponentProps, withRouter } from 'react-router';
 import './Author.css'
 import { isAuthorized } from "../../../../services/AuthService";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Loader from "../../../../components/Loader/Loader";
 import { DeleteAuthorModal } from "./DeleteAuthorModal";
 

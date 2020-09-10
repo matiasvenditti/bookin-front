@@ -3,7 +3,6 @@ import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
 import { NewUser } from '../../../model';
 import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
 import validateInput from '../../../utils/validateInput';
-import { genderToString, stringToGender } from '../../../utils/translateGender';
 
 
 interface RegisterFormProps {
@@ -142,6 +141,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     disabled={!this.state.formValid}
                     loading={loading}
                     onClick={this.handleSubmit}
+                    variant='contained'
+                    color='primary'
                 />
             </form>
         )

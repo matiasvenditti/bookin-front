@@ -30,7 +30,7 @@ class CreateAuthor extends Component<any, CreateAuthorState> {
             .then((response: AxiosResponse<Author>) => {
                 this.props.createAuthorCallback(RequestStatus.SUCCESS);
                 this.setState({ ...this.state, createAuthorStatus: RequestStatus.SUCCESS });
-                this.props.history.push('/');
+                this.props.history.push('/authors/' + response.data.id);
             })
             .catch((error) => {
                 this.props.createAuthorCallback(RequestStatus.ERROR);
@@ -46,6 +46,7 @@ class CreateAuthor extends Component<any, CreateAuthorState> {
                     <Typography align='center' variant='h5'>Creá un autor</Typography>
                     <AuthorForm
                         onSubmit={this.handleSubmit}
+                        onCancel={this.props.history.goBack}
                         loading={createAuthorStatus === RequestStatus.LOADING}
                     />
                 </div>

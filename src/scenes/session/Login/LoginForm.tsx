@@ -4,6 +4,7 @@ import { LoginFormModel } from '../../../model';
 import { Input, Button } from '../../../components/Form';
 import validateInput from '../../../utils/validateInput';
 
+
 interface LoginFormProps {
     loading: boolean,
     onSubmit(values: LoginUser): void,
@@ -81,6 +82,8 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
                     disabled={!this.state.formValid}
                     loading={loading}
                     onClick={this.handleSubmit}
+                    variant='contained'
+                    color='primary'
                 />
             </form>
         )

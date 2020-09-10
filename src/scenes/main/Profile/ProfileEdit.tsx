@@ -4,7 +4,6 @@ import { UserEditFormModel } from '../../../model/Form/UserEditFormModel';
 import { EditVar } from '../../../model/consts/EditVar';
 import { Button, Input, RadioGroup } from '../../../components/Form';
 import { User } from '../../../model';
-import { genderToString, stringToGender } from '../../../utils/translateGender';
 
 
 interface ProfileEditProps {

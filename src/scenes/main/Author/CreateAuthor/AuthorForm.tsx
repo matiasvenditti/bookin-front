@@ -21,6 +21,7 @@ interface AuthorFormState {
 interface AuthorFormProps {
     loading: boolean,
     onSubmit(values: NewAuthor, photo: File): void;
+    onCancel(): void;
 }
 
 export default class AuthorForm extends Component<AuthorFormProps, AuthorFormState> {
@@ -166,13 +167,9 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div>
-                    <div className="spacing">
-                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} loading={loading} />
-                    </div>
-                    <div className="spacing">
-                        <Button title="Cancelar" disabled={false} onClick={() => console.log('Cancel create author (WIP)')} loading={loading} />
-                    </div>
+                <div className='create-author-buttons-container'>
+                    <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.props.onCancel} loading={loading} />
+                    <Button title='Crear Autor' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} loading={loading} />
                 </div>
             </form>
         )
