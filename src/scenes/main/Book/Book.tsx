@@ -12,7 +12,6 @@ import {Author} from "../../../model/Author";
 import BookView from "./BookView";
 import "./Book.css"
 import {UserRoles} from "../../../model/consts/Roles";
-import {AxiosResponse} from "axios";
 
 interface BookProps extends RouteComponentProps<MatchParams> {
 }
@@ -72,14 +71,11 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     getData = () => {
-        getBookData({id: this.state.data.id})
-            .then((response: AxiosResponse) => this.setState({
-                data: response.data,
-            }))
-            .catch((error: any) => this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error}));
-        getBookAuthors({id: this.state.data.id})
-            .then((response: AxiosResponse) => this.setState({
-                authors: response.data,
+        const result: Promise<any> = Promise.all([getBookData({id: this.state.data.id}), getBookAuthors({id: this.state.data.id})]);
+        result
+            .then((response) => this.setState({
+                data: response[0].data,
+                authors: response[1].data,
                 getBookDataStatus: RequestStatus.SUCCESS
             }))
             .catch((error: any) => this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error}));

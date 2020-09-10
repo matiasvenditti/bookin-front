@@ -68,7 +68,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
     render() {
         const {data, authors} = this.state;
-        const {error} = this.props;
+        const {error} = this.props
+        const date = data.date ? data.date : new Date().toString();
 
         if (error) {
             return (
@@ -109,9 +110,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                                                            fontWeight="fontWeightBold">{data.language}</Box></Typography>
                                         <Typography align='left' variant='h5'>Fecha de publicacion: <Box
                                             display="inline-block"
-                                            fontWeight="fontWeightBold">{formatDateTimeYears(data.date)}</Box></Typography>
+                                            fontWeight="fontWeightBold">{formatDateTimeYears(date)}</Box></Typography>
                                     </CardContent>
-
                                     <CardMedia
                                         title={data.title}
                                         image={`data:image/jpeg;base64,${data.photo}`}
@@ -120,13 +120,10 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                 height: 100,
                                                 paddingTop: '100%', // 16:9
                                                 boxShadow: '',
-
                                             }
                                         }
                                     />
-
                                 </Card>
-
                             </div>
                         </Grid>
                         <Grid container item xs={7}>
@@ -136,35 +133,36 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                 variant='h4'
                                                 style={{fontWeight: "bold", color: "darkgray"}}>Autores </Typography>
                                     <List style={{backgroundColor: '#f6f6f7', padding: 0, margin: '8px 0'}}>
-                                        {authors.map((item, i) => ([
-
-                                            <ListItem key={'author-view-item-' + i} button component={Link}
-                                                      href={`/authors/${item.id}`}>
-                                                <Badge
-                                                    color='primary'
-                                                    overlap='circle'
-                                                    anchorOrigin={{
-                                                        vertical: 'bottom',
-                                                        horizontal: 'right',
-                                                    }}
-                                                    style={{
-                                                        marginRight: 15,
-                                                    }}
-                                                    className={'avatar-image'}
-                                                >
-                                                    <Avatar
-                                                        src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
-
-                                                </Badge>
-                                                <ListItemText
-                                                    primary={<Typography variant="h6"
-                                                                         style={{color: 'black'}}>{item.firstName + ' ' + item.lastName + ' ' }<Flag code={getCode(item.nationality)}
-                                                                                                                                               height="16"/></Typography>}
-                                                    key={'text-' + i}
-                                                />
-                                            </ListItem>,
-                                            (i !== authors.length - 1) && <Divider key={'divider-' + i}/>,
-                                        ]))}
+                                        {authors.map((item, i) => {
+                                            const authorData = <Typography variant="h6" style={{color: 'black', display: 'flex', alignItems: 'center'}}>{item.firstName + ' ' + item.lastName + ' ' }<Flag style={{marginLeft: 10}} code={getCode(item.nationality)} height="20"/></Typography>
+                                            return (
+                                                <div key={'author-view-item-' + i}>
+                                                    <ListItem button component={Link}
+                                                              href={`/authors/${item.id}`}>
+                                                        <Badge
+                                                            color='primary'
+                                                            overlap='circle'
+                                                            anchorOrigin={{
+                                                                vertical: 'bottom',
+                                                                horizontal: 'right',
+                                                            }}
+                                                            style={{
+                                                                marginRight: 15,
+                                                            }}
+                                                            className={'avatar-image'}
+                                                        >
+                                                            <Avatar
+                                                                src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
+                                                        </Badge>
+                                                        <ListItemText
+                                                            primary={authorData}
+                                                            key={'text-' + i}
+                                                        />
+                                                    </ListItem>
+                                                    {(i !== authors.length - 1) && <Divider key={'divider-' + i}/>}
+                                                </div>
+                                            )
+                                        })}
                                     </List>
                                 </div>
                             </Grid>
