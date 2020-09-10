@@ -14,6 +14,7 @@ import CreateAuthor from "../../scenes/main/Author/CreateAuthor/CreateAuthor";
 import { UserRoles } from "../../model/consts/Roles";
 import Author from "../../scenes/main/Author/Author/Author";
 import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor/ModifyAuthor";
+import Book from "../../scenes/main/Book/Book";
 
 
 interface RouterProps {
@@ -94,6 +95,10 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </Route>
 
+                    <Route path='/books/:id' roles={[]} >
+                        <Book
+                        />
+                    </Route>
 
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}>
                         <CreateAuthor
