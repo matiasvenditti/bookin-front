@@ -4,9 +4,9 @@ import {
     Badge,
     Typography
 } from "@material-ui/core";
-import { dummyAvatar } from "../../../assets";
+import { dummyAvatar } from "../../../../assets";
 import Flag from "react-world-flags";
-import { formatDateTime } from "../../../utils/formateDateTime";
+import { formatDateTime } from "../../../../utils/formateDateTime";
 import { getCode } from "country-list";
 
 

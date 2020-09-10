@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Typography } from "@material-ui/core";
-import { NewAuthor } from "../../../model/NewAuthor";
+import { NewAuthor } from "../../../../model/NewAuthor";
 import AuthorForm from "./AuthorForm";
 import "./CreateAuthor.css"
 import { AxiosResponse } from "axios";
-import { RequestStatus } from "../../../model/consts/RequestStatus";
+import { RequestStatus } from "../../../../model/consts/RequestStatus";
 import { withRouter } from "react-router-dom";
-import { Author } from "../../../model/Author";
-import { createAuthor} from "../../../services/AuthorService";
+import { Author } from "../../../../model/Author";
+import { createAuthor } from "../../../../services/AuthorService";
 
 
 export interface CreateAuthorState {

@@ -42,7 +42,7 @@ const deleteAuthor = (id: number): Promise<AxiosResponse<Author>> => {
             'Content-Type': undefined,
         }
     }
-    return instance.post<Author>(`${baseURL}/authors/delete/${id}`, config)
+    return instance.delete<Author>(`${baseURL}/authors/${id}`, config)
 }
 
 

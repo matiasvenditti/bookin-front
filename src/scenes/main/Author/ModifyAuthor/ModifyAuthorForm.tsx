@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
-import { Button, Input } from '../../../components/Form';
-import { AuthorFormModel } from '../../../model/Form/AuthorFormModel';
+import { Button, Input } from '../../../../components/Form';
+import { AuthorFormModel } from '../../../../model/Form/AuthorFormModel';
 import Grid from '@material-ui/core/Grid';
 import { Button as MaterialButton, FormControl, InputLabel, MenuItem, Select, Typography } from '@material-ui/core';
-
-import "./ModifyAuthorForm.css"
-
+import "./ModifyAuthorForm.css";
 import { AccountCircle } from '@material-ui/icons';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { UpdateAuthor } from '../../../model';
-import { EditAuthorFormModel } from '../../../model/Form/EditAuthorFormModel';
+import { UpdateAuthor } from '../../../../model';
+import { EditAuthorFormModel } from '../../../../model/Form/EditAuthorFormModel';
 
 
 interface AuthorFormProps {
@@ -163,16 +161,9 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         {this.props.author.photo.error && <Typography color='error'>La foto no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div>
-                    <Grid alignItems="center" container spacing={2} direction="column">
-                        <Grid item xs>
-                            <Button title='Modificar Autor' disabled={!this.props.formValid}
-                                onClick={this.handleSubmit} />
-                        </Grid>
-                        <Grid item xs>
-                            <Button title="Cancelar" disabled={false} onClick={this.handleCancel} />
-                        </Grid>
-                    </Grid>
+                <div className='modify-author-buttons-container'>
+                    <Button title="Cancelar" disabled={false} onClick={this.handleCancel} />
+                    <Button title='Guardar' disabled={!this.props.formValid} onClick={this.handleSubmit} />
                 </div>
             </form>
         )

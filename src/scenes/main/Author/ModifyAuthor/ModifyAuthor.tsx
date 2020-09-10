@@ -1,18 +1,18 @@
 import React, { Component } from "react";
 import { Typography } from "@material-ui/core";
-import "./CreateAuthor.css"
-import { changeAuthorData, getAuthorData } from "../../../services/AuthorService";
+import "../CreateAuthor/CreateAuthor.css"
+import { changeAuthorData, getAuthorData } from "../../../../services/AuthorService";
 import { AxiosResponse } from "axios";
-import { UpdateAuthor } from "../../../model";
+import { UpdateAuthor } from "../../../../model";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { Author } from "../../../model/Author";
-import { EditAuthorFormModel } from "../../../model/Form/EditAuthorFormModel";
-import { AuthorFormModel } from "../../../model/Form/AuthorFormModel";
-import validateInput from "../../../utils/validateInput";
-import photoUtils from "../../../utils/photoUtils";
-import { RequestStatus } from "../../../model/consts/RequestStatus";
-import Loader from "../../../components/Loader/Loader";
+import { Author } from "../../../../model/Author";
+import { EditAuthorFormModel } from "../../../../model/Form/EditAuthorFormModel";
+import { AuthorFormModel } from "../../../../model/Form/AuthorFormModel";
+import validateInput from "../../../../utils/validateInput";
+import photoUtils from "../../../../utils/photoUtils";
+import { RequestStatus } from "../../../../model/consts/RequestStatus";
+import Loader from "../../../../components/Loader/Loader";
 
 
 interface ModifyaAuthorProp extends RouteComponentProps<MatchParams> {
@@ -159,6 +159,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
     }
 
     render() {
+        console.log('render modify author')
         const loading = this.state.getAuthorDataStatus === RequestStatus.LOADING;
         return (
             <div className='route-container' >

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Button, Input } from '../../../components/Form';
-import { AuthorFormModel } from '../../../model/Form/AuthorFormModel';
-import { NewAuthor } from '../../../model/NewAuthor';
+import { Button, Input } from '../../../../components/Form';
+import { AuthorFormModel } from '../../../../model/Form/AuthorFormModel';
+import { NewAuthor } from '../../../../model/NewAuthor';
 import Grid from '@material-ui/core/Grid';
 import { Button as MaterialButton, Typography } from '@material-ui/core';
 import './AuthorForm.css';
-import validateInput from '../../../utils/validateInput';
+import validateInput from '../../../../utils/validateInput';
 import { AccountCircle } from '@material-ui/icons';
-import { Select } from '../../../components/Form/Select/Select';
-import photoUtils from '../../../utils/photoUtils';
-import { DatePicker } from '../../../components/Form/DatePicker/DatePicker';
+import { Select } from '../../../../components/Form/Select/Select';
+import photoUtils from '../../../../utils/photoUtils';
+import { DatePicker } from '../../../../components/Form/DatePicker/DatePicker';
 
 
 interface AuthorFormState {

@@ -1,26 +1,28 @@
-import { RequestStatus } from "../../../model/consts/RequestStatus";
+import { RequestStatus } from "../../../../model/consts/RequestStatus";
 import React from "react";
 import { Button, Typography } from "@material-ui/core";
-import { deleteAuthor, getAuthorData } from "../../../services/AuthorService";
+import { deleteAuthor, getAuthorData } from "../../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import { RouteComponentProps, withRouter } from 'react-router';
 import './Author.css'
-import { isAuthorized } from "../../../services/AuthService";
+import { isAuthorized } from "../../../../services/AuthService";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import SweetAlert from "react-bootstrap-sweetalert";
-import Loader from "../../../components/Loader/Loader";
+import Loader from "../../../../components/Loader/Loader";
+import { DeleteAuthorModal } from "./DeleteAuthorModal";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
     loadAvatarErrorCallback(): void,
+    getAuthorDataErrorCallback(): void,
     editAuthorCallback(editAuthorStatus: RequestStatus): void,
+    deleteAuthorCallback(editAuthorStatus: RequestStatus): void,
 }
 
 interface AuthorState {
     isAdmin: boolean,
     getAuthorDataStatus: RequestStatus,
-    updateStatus: any,
-    deleteStatus: any,
+    updateStatus: RequestStatus,
+    deleteStatus: RequestStatus,
     showDelete: boolean,
     data: {
         id: number,
@@ -72,42 +74,33 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 this.setState({ data: response.data, getAuthorDataStatus: RequestStatus.SUCCESS });
             })
             .catch((error: any) => {
+                this.props.getAuthorDataErrorCallback();
                 this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error });
             });
     }
 
-    handleCancel = () => {
-        this.setState({ showDelete: false });
-    };
 
     handleEdit = () => {
         this.props.history.push(`/authors/edit/${this.state.data.id}`); //Push to home?
     }
 
-    handleDelete = () => {
-        this.setState({ showDelete: true })
-    }
-
-    handleConfirmDelete = () => {
-        this.deleteAuthor(this.state.data.id);
-    }
-
-
+    /* Delete author */
+    handleDelete = () => this.setState({ showDelete: true });
+    handleDeleteConfirm = () => this.deleteAuthor(this.state.data.id);
+    handleDeleteCancel = () => this.setState({ showDelete: false });
     deleteAuthor = (id: number) => {
         this.setState({ deleteStatus: RequestStatus.LOADING, error: null });
         deleteAuthor(id)
             .then(() => {
-                this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null });
-                this.props.history.push("/") //Push to home?
-
+                this.props.deleteAuthorCallback(RequestStatus.SUCCESS);
+                this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null, showDelete: false });
+                this.props.history.push("/");
             })
             .catch((error) => {
-                this.setState({ deleteStatus: RequestStatus.ERROR, error });
-                //console.log("Error deleting", error)
+                this.props.deleteAuthorCallback(RequestStatus.ERROR);
+                this.setState({ deleteStatus: RequestStatus.ERROR, error, showDelete: false });
             });
-        this.handleCancel()
     }
-
 
     render() {
         return (
@@ -159,23 +152,19 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     renderDelete() {
-        const { showDelete } = this.state;
-        if (showDelete) return (
-            <SweetAlert
-                danger
-                showCancel
-                confirmBtnText="Yes, delete it!"
-                confirmBtnBsStyle="danger"
-                title="Are you sure?"
-                onConfirm={this.handleConfirmDelete}
-                onCancel={this.handleCancel}
-                focusCancelBtn
-            >
-                Author will be permanently deleted
-            </SweetAlert>
-        )
+        const { showDelete, deleteStatus } = this.state;
+        if (showDelete) {
+            return (
+                <DeleteAuthorModal
+                    open={showDelete}
+                    loading={deleteStatus === RequestStatus.LOADING}
+                    onConfirm={this.handleDeleteConfirm}
+                    onCancel={this.handleDeleteCancel}
+                />
+            );
+        }
     }
-
-
 }
+
+
 export default withRouter(Author);
