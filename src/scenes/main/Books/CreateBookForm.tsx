@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Button as Buttons, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { NewBook } from '../../../model/NewBook';
 import { BookFormModel } from '../../../model/Form/BookFormModel';
@@ -9,6 +9,8 @@ import { Button, Input } from '../../../components/Form';
 import './CreateBookForm.css'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
+import { Autocomplete } from '@material-ui/lab';
+import { Author } from '../../../model/Author';
 
 
 
@@ -20,6 +22,7 @@ interface BookFormState {
 
 interface BookFormProps {
     onSubmit(values: NewBook, photo: File): void;
+    authors: Author[];
 }
 
 export default class CreateBookForm extends Component<BookFormProps, BookFormState> {
@@ -35,6 +38,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                 language: { value: '', type: 'select', error: true, touched: false },
                 release: { value: null, type: 'date', error: true, touched: false },
                 photo: { value: null, type: 'File', error: true, touched: false },
+                authors: { value:[], type: 'array', error: false, touched: true}
             },
             bytearray: null,
             formValid: false
@@ -46,7 +50,8 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
             title: this.state.values.title.value,
             genre: this.state.values.genre.value,
             language: this.state.values.language.value,
-            release: this.state.values.release.value
+            date: this.state.values.release.value,
+            authors: this.state.values.authors.value
         }
         this.props.onSubmit(book, this.state.values.photo.value);
     }
@@ -90,7 +95,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
             values: {
                 ...this.state.values,
                 language: {
-                    value: language,
+                    value: idioma,
                     type: this.state.values.language.type,
                     error: false,
                     touched: true
@@ -111,7 +116,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
             values: {
                 ...this.state.values,
                 genre: {
-                    value: genre,
+                    value: genero,
                     type: this.state.values.language.type,
                     error: false,
                     touched: true
@@ -212,7 +217,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                 format="dd/MM/yyyy"
                                 margin="none"
                                 id="date-picker-inline"
-                                label="Nacimiento"
+                                label="Fecha de lanzamiento"
                                 value={this.state.values.release.value}
                                 onChange={this.handleDateChange}
                                 KeyboardButtonProps={{
@@ -220,6 +225,22 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                 }}
                             />
                         </MuiPickersUtilsProvider>
+                        <Autocomplete
+                            multiple
+                            id="tags-outlined"
+                            options={this.props.authors}
+                            getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                            defaultValue={[]}
+                            filterSelectedOptions
+                            renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                label="filterSelectedOptions"
+                                placeholder="Autor/es"
+                            />
+                            )}
+                        />
                     </Grid>
                     <Grid item xs>
                         <div>
@@ -236,6 +257,14 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                         </Buttons>
                     </Grid>
                 </Grid>
+                <div>
+                    <div className="spacing">
+                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} />
+                    </div>
+                    <div className="spacing">
+                        <Button title="Cancelar" disabled={false} onClick={this.handleSubmit} />
+                    </div>
+                </div>
             </form>
         )
     }

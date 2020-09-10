@@ -1,6 +1,9 @@
+import { Author } from "./Author";
+
 export interface NewBook {
     title: string,
     genre: string, 
     language: string,
-    release: string
+    date: string,
+    authors: Author[]
 }

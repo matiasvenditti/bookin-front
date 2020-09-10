@@ -7,7 +7,7 @@ import { Book } from "../model/Book";
 
 const createBook = (book: NewBook, photo: File): Promise<AxiosResponse<Book>> => {
     const createBookForm = new FormData();
-    createBookForm.append("author", new Blob([JSON.stringify(book)], {type: 'application/json'}));
+    createBookForm.append("book", new Blob([JSON.stringify(book)], {type: 'application/json'}));
     createBookForm.append("photo", photo);
     const config: AxiosRequestConfig = {
         headers: {
