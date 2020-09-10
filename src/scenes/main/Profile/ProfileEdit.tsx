@@ -81,11 +81,14 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                     {this.renderInputs()}
                     <div className='profile-edit-buttons-container'>
                         <Button
+                            color='primary'
+                            variant='contained'
                             title='Guardar'
                             disabled={!this.state.formValid}
                             onClick={this.handleSubmit}
                         />
                         <Button
+                            variant='outlined'
                             title='Cancelar'
                             disabled={false}
                             onClick={this.handleCancel}
