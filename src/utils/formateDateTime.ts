@@ -13,3 +13,8 @@ export function formatDateTime(dateTimeString:string) {
     return date.getDate() + ' ' + monthNames[monthIndex] + ' ' + year
 
 }
+
+export function formatDateTimeYears(dateTimeString:string) {
+    const date = new Date(dateTimeString);
+    return date.getFullYear();
+}

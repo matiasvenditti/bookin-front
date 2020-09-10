@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import {
     Avatar,
-    Badge, Box,
+    Badge,
     Card,
     CardContent,
     CardMedia, Divider,
@@ -13,15 +13,15 @@ import {
 } from "@material-ui/core";
 import {dummyAvatar} from "../../../assets";
 import {Author} from "../../../model/Author";
-import {baseURL} from "../../../services/EnvironmentService";
 import Rating from "@material-ui/lab/Rating";
+import {formatDateTimeYears} from "../../../utils/formateDateTime";
 
 interface BookViewProps {
     data: {
         id: string,
         title: string,
         genre: string,
-        date: Date,
+        date: string,
         photo: string,
         language: string,
         stars: number,
@@ -36,7 +36,7 @@ interface BookViewState {
         id: string,
         title: string,
         genre: string,
-        date: Date,
+        date: string,
         photo: string,
         language: string,
         stars: number,
@@ -58,7 +58,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                 stars: props.data.stars,
                 language: props.data.language,
             },
-            authors: this.props.authors,
+            authors: props.authors,
         }
     }
 
@@ -96,11 +96,14 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                 >
                                     <CardContent>
                                         <Typography align='left' variant='h3'
-                                                    style={{marginBottom: 5}}>{data.title} </Typography>
+                                                    style={{
+                                                        marginBottom: 5,
+                                                        fontWeight: "bold"
+                                                    }}>{data.title} </Typography>
                                         <Typography align='left' variant='h5'>{'Género: ' + data.genre} </Typography>
                                         <Typography align='left' variant='h5'>{'Idioma: ' + data.language} </Typography>
                                         <Typography align='left'
-                                                    variant='h5'>{'Fecha de publicacion: ' + data.date.getFullYear()} </Typography>
+                                                    variant='h5'>{'Fecha de publicacion: ' + formatDateTimeYears(data.date)} </Typography>
                                     </CardContent>
 
                                     <CardMedia
@@ -120,14 +123,16 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
                             </div>
                         </Grid>
-                        <Grid container item xs={12} sm={6} spacing={2}>
-                            <div className='author-container'>
+                        <Grid container item xs={12} sm={4} spacing={2}>
+                            <div className='author-container' >
                                 <Typography align='left'
-                                            variant='h5'>Autores </Typography>
-                                <List>
+                                            variant='h4'
+                                            style={{fontWeight: "bold", color: "darkgray"}}>Autores </Typography>
+                                <List style={{backgroundColor: '#f6f6f7'}}>
                                     {authors.map((item, i) => ([
 
-                                        <ListItem key={'profile-view-item-' + i} button component={Link} href={`/authors/${item.id}`}>
+                                        <ListItem key={'author-view-item-' + i} button component={Link}
+                                                  href={`/authors/${item.id}`}>
                                             <Badge
                                                 color='primary'
                                                 overlap='circle'
@@ -144,19 +149,24 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
                                             </Badge>
                                             <ListItemText
-                                                primary={<Typography variant="h4" style={{ color: 'black' }}>{item.firstName + ' ' + item.lastName}</Typography>}
+                                                primary={<Typography variant="h4"
+                                                                     style={{color: 'black'}}>{item.firstName + ' ' + item.lastName}</Typography>}
                                                 key={'text-' + i}
                                             />
                                         </ListItem>,
-                                        (i !== authors.length - 1) && <Divider key={'divider-' + i} />,
+                                        (i !== authors.length - 1) && <Divider key={'divider-' + i}/>,
                                     ]))}
                                 </List>
-
-                                <Box component="fieldset" mb={3} borderColor="transparent">
-                                    <Typography component="legend">Rating en Promedio</Typography>
-                                    <Rating name="read-only" value={data.stars} precision={0.5} readOnly />
-                                </Box>
-
+                            </div>
+                            <div className='reviews-container'>
+                                <Typography variant='h4' style={{
+                                    fontWeight: "bold",
+                                    color: "darkgray",
+                                    marginTop: 10,
+                                    marginBottom: 10
+                                }}>Rating
+                                    en Promedio</Typography>
+                                <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
                             </div>
                         </Grid>
                     </Grid>
