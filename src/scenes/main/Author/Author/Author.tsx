@@ -143,10 +143,8 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         if (isAdmin)
             return (
                 <div className="button-divider">
-                    <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
-                        <Button onClick={this.handleEdit}>Edit profile</Button>
-                        <Button onClick={this.handleDelete}>Delete Profile</Button>
-                    </ButtonGroup>
+                    <Button variant="outlined" color="secondary" onClick={this.handleDelete}>Eliminar Autor</Button>
+                    <Button variant="contained" color="secondary" onClick={this.handleEdit}>Editar Autor</Button>
                 </div>
             )
     }

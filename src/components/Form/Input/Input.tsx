@@ -57,6 +57,7 @@ export default class Input extends Component<InputProps, InputState> {
                     color='secondary'
                     fullWidth
                     label={label}
+                    key={id}
                     type={type === 'password' ?
                         this.state.showPassword ?
                             'text'

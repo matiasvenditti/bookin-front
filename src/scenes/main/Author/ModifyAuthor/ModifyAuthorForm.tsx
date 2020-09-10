@@ -162,8 +162,8 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                     </Grid>
                 </Grid>
                 <div className='modify-author-buttons-container'>
-                    <Button title="Cancelar" disabled={false} onClick={this.handleCancel} />
-                    <Button title='Guardar' disabled={!this.props.formValid} onClick={this.handleSubmit} />
+                    <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.handleCancel} />
+                    <Button title='Guardar' variant='contained' disabled={!this.props.formValid} onClick={this.handleSubmit} />
                 </div>
             </form>
         )

@@ -25,8 +25,8 @@ export const DeleteAuthorModal = (props: DeleteAuthorModalProps) => {
                     </DialogContent>
                 }
                 <DialogActions>
-                    <Button color='secondary' onClick={props.onCancel}>Cancelar</Button>
-                    <Button color='primary' onClick={props.onConfirm}>Aceptar</Button>
+                    <Button color='secondary' variant='outlined' onClick={props.onCancel}>Cancelar</Button>
+                    <Button color='primary' variant='contained' onClick={props.onConfirm}>Aceptar</Button>
                 </DialogActions>
             </Dialog>
         </div>

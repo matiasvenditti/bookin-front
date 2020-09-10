@@ -159,7 +159,6 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
     }
 
     render() {
-        console.log('render modify author')
         const loading = this.state.getAuthorDataStatus === RequestStatus.LOADING;
         return (
             <div className='route-container' >

@@ -53,7 +53,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             ...this.state,
             values: {
                 ...this.state.values,
-                [id]: { value: type === 'radio-group' ? stringToGender(value) : value, type, error, touched: true },
+                [id]: { value, type, error, touched: true },
             },
             formValid: !allInitialValue && allTouched && !anyErrors,
         });
@@ -101,7 +101,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
         switch (this.props.editVariable) {
             case EditVar.NAME:
                 return ([
-                    <div className='form-input'>
+                    <div className='form-input' key='form-input-firtname'>
                         <Input
                             label='Nombre'
                             id='firstName'
@@ -115,7 +115,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                             autoFocus
                         />
                     </div>,
-                    <div className='form-input'>
+                    <div className='form-input' key='form-input-lastname    '>
                         <Input
                             label='Apellido'
                             id='lastName'
@@ -151,7 +151,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         key='gender'
                         type='radio-group'
                         onChange={this.handleInput}
-                        value={genderToString(this.state.values.gender.value)}
+                        value={this.state.values.gender.value}
                         options={[
                             { id: 'M', value: 'Hombre' },
                             { id: 'F', value: 'Mujer' },

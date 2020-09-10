@@ -50,7 +50,6 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
-        console.log(id, type, value);
         const error = !validateInput(type, value);
         const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
@@ -82,7 +81,6 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
     render() {
-        console.log(this.state);
         const { loading } = this.props;
         const image = this.state.bytearray ?
             <img src={this.state.bytearray} width="100" height="100" alt='author' /> :
