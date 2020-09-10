@@ -1,82 +1,85 @@
-import {RequestStatus} from "../../../model/consts/RequestStatus";
 import React from "react";
-import {AuthorID} from "../../../model";
-import {Button, Typography} from "@material-ui/core";
-import {deleteAuthor, getAuthorData} from "../../../services/AuthorService";
-import AuthorView from "./AuthorView";
-import {RouteComponentProps, withRouter} from 'react-router';
-import './Author.css'
+import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {isAuthorized} from "../../../services/AuthService";
+import {BookID} from "../../../model";
+import {Button, Typography} from "@material-ui/core";
+import Loader from "../../../components/Loader/Loader";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import SweetAlert from "react-bootstrap-sweetalert";
-import Loader from "../../../components/Loader/Loader";
+import {RouteComponentProps, withRouter} from "react-router";
+import {getBookData, deleteBook, getBookAuthors} from "../../../services/BookService";
+import {Author} from "../../../model/Author";
+import BookView from "./BookView";
+import "./Book.css"
 import {UserRoles} from "../../../model/consts/Roles";
 
-
-interface AuthorProps extends RouteComponentProps<MatchParams> {
-    loadAvatarErrorCallback(): void,
-    editAuthorCallback(editAuthorStatus: RequestStatus): void,
+interface BookProps extends RouteComponentProps<MatchParams> {
 }
 
-interface AuthorState {
+interface BookState {
     isAdmin: boolean,
-    getAuthorDataStatus: RequestStatus,
+    getBookDataStatus: RequestStatus,
     updateStatus: any,
     deleteStatus: any,
     showDelete: boolean,
     data: {
         id: string,
-        firstName: string,
-        lastName: string,
-        nationality: string,
-        birthday: any,
-        photo: any,
+        title: string,
+        genre: string,
+        date: string,
+        photo: string,
+        language: string,
+        stars: number,
+
     },
+    authors: Author[],
     error: any,
-    books: any
 }
 
 interface MatchParams {
     id: string,
 }
 
-class Author extends React.Component<AuthorProps, AuthorState> {
-    constructor(props: AuthorProps) {
+
+class Book extends React.Component<BookProps, BookState> {
+    constructor(props: BookProps) {
         super(props);
         this.state = {
-            getAuthorDataStatus: RequestStatus.NONE,
+            getBookDataStatus: RequestStatus.NONE,
             isAdmin: isAuthorized([UserRoles.RoleAdmin]),
             data: {
                 id: this.props.match.params.id,
-                firstName: '',
-                lastName: '',
-                nationality: '',
-                birthday: '',
-                photo: null,
+                title: '',
+                genre: '',
+                date: '',
+                photo: "",
+                language: '',
+                stars: 0,
+
             },
+            authors: [],
             showDelete: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
             error: null,
-            books: { //BOOKTYPE etc. for later.
-                book1: null,
-                book2: null,
-                book3: null,
-                book4: null,
-            },
         }
     }
 
     componentDidMount() {
-        this.setState({...this.state, getAuthorDataStatus: RequestStatus.LOADING});
-        getAuthorData({id: this.state.data.id})
-            .then((response: any) => this.setState({
-                data: response.data,
-                getAuthorDataStatus: RequestStatus.SUCCESS
-
-            }))
-            .catch((error: any) => this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error}));
+        this.setState({...this.state, getBookDataStatus: RequestStatus.LOADING});
+        this.getData();
     }
+
+    getData = () => {
+        const result: Promise<any> = Promise.all([getBookData({id: this.state.data.id}), getBookAuthors({id: this.state.data.id})]);
+        result
+            .then((response) => this.setState({
+                data: response[0].data,
+                authors: response[1].data,
+                getBookDataStatus: RequestStatus.SUCCESS
+            }))
+            .catch((error: any) => this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error}));
+    };
 
     handleCancel = () => {
         this.setState({showDelete: false})
@@ -84,7 +87,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
 
     handleEdit = () => {
         const id = this.state.data.id;
-        this.props.history.push(`/authors/edit/${id}`) //Push to home?
+        this.props.history.push(`/books/edit/${id}`)
     }
 
     handleDelete = () => {
@@ -92,13 +95,13 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     handleConfirmDelete = () => {
-        this.deleteAuthor({id : this.state.data.id});
+        this.deleteBook({id: this.state.data.id});
     }
 
 
-    deleteAuthor = (values: AuthorID) => {
+    deleteBook = (values: BookID) => {
         this.setState({deleteStatus: RequestStatus.LOADING, error: null});
-        deleteAuthor(values)
+        deleteBook(values)
             .then(() => {
                 this.setState({deleteStatus: RequestStatus.SUCCESS, error: null});
                 this.props.history.push("/") //Push to home?
@@ -117,7 +120,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             <div className='route-container'>
                 <div className='card-container'>
                     {this.renderButtons()}
-                    {this.renderAuthor()}
+                    {this.renderBook()}
                     {this.renderDelete()}
                 </div>
             </div>
@@ -130,32 +133,32 @@ class Author extends React.Component<AuthorProps, AuthorState> {
      * Renders AuthorView or AuthorEdit
      */
 
-    renderAuthor() {
-        const {data, books, getAuthorDataStatus} = this.state;
-        if (getAuthorDataStatus === RequestStatus.LOADING) {
+    renderBook() {
+        const {data, getBookDataStatus, authors} = this.state;
+        if (getBookDataStatus === RequestStatus.LOADING) {
             return (
                 <div>
-                    <Typography align='center' variant='subtitle1'> <Loader /> </Typography>
+                    <Typography align='center' variant='subtitle1'> <Loader/> </Typography>
                 </div>
             );
         }
-            return (
-                <AuthorView
-                    data={data}
-                    books={books}
-                    error={getAuthorDataStatus === RequestStatus.ERROR}
-                />
-            );
-        }
+        return (
+            <BookView
+                data={data}
+                authors={authors}
+                error={getBookDataStatus === RequestStatus.ERROR}
+            />
+        );
+    }
 
     renderButtons() {
         const {isAdmin} = this.state;
         if (isAdmin)
             return (
-                <div className="button-divider">
+                <div className="button-container">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
-                        <Button onClick={this.handleEdit}>Edit profile</Button>
-                        <Button onClick={this.handleDelete}>Delete Profile</Button>
+                        <Button onClick={this.handleEdit}>Edit book</Button>
+                        <Button onClick={this.handleDelete}>Delete book</Button>
                     </ButtonGroup>
                 </div>
             )
@@ -181,4 +184,5 @@ class Author extends React.Component<AuthorProps, AuthorState> {
 
 
 }
-export default withRouter(Author);
+
+export default withRouter(Book);

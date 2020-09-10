@@ -14,6 +14,7 @@ import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
 import { UserRoles } from "../../model/consts/Roles";
 import Author from "../../scenes/main/Author/Author";
 import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor";
+import Book from "../../scenes/main/Book/Book";
 
 interface RouterProps {
 
@@ -76,6 +77,11 @@ class Router extends React.Component<RouterProps, RouterState> {
                             loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
                             editAuthorCallback={(editAuthorStatus: RequestStatus) =>
                                 this.setState({ ...this.state, editAuthorStatus })}
+                        />
+                    </Route>
+
+                    <Route path='/books/:id' roles={[]} >
+                        <Book
                         />
                     </Route>
 
