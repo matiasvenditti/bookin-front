@@ -10,6 +10,7 @@ import {isAuthorized} from "../../../services/AuthService";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import SweetAlert from "react-bootstrap-sweetalert";
 import Loader from "../../../components/Loader/Loader";
+import {UserRoles} from "../../../model/consts/Roles";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -44,7 +45,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         super(props);
         this.state = {
             getAuthorDataStatus: RequestStatus.NONE,
-            isAdmin: isAuthorized(["ROLE_ADMIN"]),
+            isAdmin: isAuthorized([UserRoles.RoleAdmin]),
             data: {
                 id: this.props.match.params.id,
                 firstName: '',

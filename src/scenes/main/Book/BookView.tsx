@@ -9,12 +9,15 @@ import {
     Link, List,
     ListItem,
     ListItemText,
-    Typography
+    Typography,
+    Box
 } from "@material-ui/core";
 import {dummyAvatar} from "../../../assets";
 import {Author} from "../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
 import {formatDateTimeYears} from "../../../utils/formateDateTime";
+import {getCode} from "country-list";
+import Flag from "react-world-flags";
 
 interface BookViewProps {
     data: {
@@ -83,7 +86,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         justify="center"
                         alignItems="center"
                     >
-                        <Grid container item xs={12} sm={3} spacing={1}>
+                        <Grid container item xs={5}>
                             <div className='book-container'>
                                 <Card
                                     style={
@@ -100,10 +103,13 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                         marginBottom: 5,
                                                         fontWeight: "bold"
                                                     }}>{data.title} </Typography>
-                                        <Typography align='left' variant='h5'>{'Género: ' + data.genre} </Typography>
-                                        <Typography align='left' variant='h5'>{'Idioma: ' + data.language} </Typography>
-                                        <Typography align='left'
-                                                    variant='h5'>{'Fecha de publicacion: ' + formatDateTimeYears(data.date)} </Typography>
+                                        <Typography align='left' variant='h5'>Genero: <Box display="inline-block"
+                                                                                           fontWeight="fontWeightBold">{data.genre}</Box></Typography>
+                                        <Typography align='left' variant='h5'>Idioma: <Box display="inline-block"
+                                                                                           fontWeight="fontWeightBold">{data.language}</Box></Typography>
+                                        <Typography align='left' variant='h5'>Fecha de publicacion: <Box
+                                            display="inline-block"
+                                            fontWeight="fontWeightBold">{formatDateTimeYears(data.date)}</Box></Typography>
                                     </CardContent>
 
                                     <CardMedia
@@ -123,51 +129,57 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
                             </div>
                         </Grid>
-                        <Grid container item xs={12} sm={4} spacing={2}>
-                            <div className='author-container' >
-                                <Typography align='left'
-                                            variant='h4'
-                                            style={{fontWeight: "bold", color: "darkgray"}}>Autores </Typography>
-                                <List style={{backgroundColor: '#f6f6f7'}}>
-                                    {authors.map((item, i) => ([
+                        <Grid container item xs={7}>
+                            <Grid item xs={12}>
+                                <div className='author-container'>
+                                    <Typography align='left'
+                                                variant='h4'
+                                                style={{fontWeight: "bold", color: "darkgray"}}>Autores </Typography>
+                                    <List style={{backgroundColor: '#f6f6f7', padding: 0, margin: '8px 0'}}>
+                                        {authors.map((item, i) => ([
 
-                                        <ListItem key={'author-view-item-' + i} button component={Link}
-                                                  href={`/authors/${item.id}`}>
-                                            <Badge
-                                                color='primary'
-                                                overlap='circle'
-                                                anchorOrigin={{
-                                                    vertical: 'bottom',
-                                                    horizontal: 'right',
-                                                }}
-                                                style={{
-                                                    marginRight: 15,
-                                                }}
-                                                className={'avatar-image'}
-                                            >
-                                                <Avatar src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
+                                            <ListItem key={'author-view-item-' + i} button component={Link}
+                                                      href={`/authors/${item.id}`}>
+                                                <Badge
+                                                    color='primary'
+                                                    overlap='circle'
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'right',
+                                                    }}
+                                                    style={{
+                                                        marginRight: 15,
+                                                    }}
+                                                    className={'avatar-image'}
+                                                >
+                                                    <Avatar
+                                                        src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
 
-                                            </Badge>
-                                            <ListItemText
-                                                primary={<Typography variant="h4"
-                                                                     style={{color: 'black'}}>{item.firstName + ' ' + item.lastName}</Typography>}
-                                                key={'text-' + i}
-                                            />
-                                        </ListItem>,
-                                        (i !== authors.length - 1) && <Divider key={'divider-' + i}/>,
-                                    ]))}
-                                </List>
-                            </div>
-                            <div className='reviews-container'>
-                                <Typography variant='h4' style={{
-                                    fontWeight: "bold",
-                                    color: "darkgray",
-                                    marginTop: 10,
-                                    marginBottom: 10
-                                }}>Rating
-                                    en Promedio</Typography>
-                                <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
-                            </div>
+                                                </Badge>
+                                                <ListItemText
+                                                    primary={<Typography variant="h6"
+                                                                         style={{color: 'black'}}>{item.firstName + ' ' + item.lastName + ' ' }<Flag code={getCode(item.nationality)}
+                                                                                                                                               height="16"/></Typography>}
+                                                    key={'text-' + i}
+                                                />
+                                            </ListItem>,
+                                            (i !== authors.length - 1) && <Divider key={'divider-' + i}/>,
+                                        ]))}
+                                    </List>
+                                </div>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <div className='reviews-container'>
+                                    <Typography variant='h4' style={{
+                                        fontWeight: "bold",
+                                        color: "darkgray",
+                                        marginTop: 10,
+                                        marginBottom: 10
+                                    }}>Rating
+                                        en Promedio</Typography>
+                                    <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
+                                </div>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </div>

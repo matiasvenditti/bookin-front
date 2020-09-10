@@ -11,9 +11,10 @@ import {getBookData, deleteBook, getBookAuthors} from "../../../services/BookSer
 import {Author} from "../../../model/Author";
 import BookView from "./BookView";
 import "./Book.css"
+import {UserRoles} from "../../../model/consts/Roles";
+import {AxiosResponse} from "axios";
 
 interface BookProps extends RouteComponentProps<MatchParams> {
-    loadAvatarErrorCallback(): void,
 }
 
 interface BookState {
@@ -46,7 +47,7 @@ class Book extends React.Component<BookProps, BookState> {
         super(props);
         this.state = {
             getBookDataStatus: RequestStatus.NONE,
-            isAdmin: isAuthorized(["ROLE_ADMIN"]),
+            isAdmin: isAuthorized([UserRoles.RoleAdmin]),
             data: {
                 id: this.props.match.params.id,
                 title: '',
@@ -72,12 +73,12 @@ class Book extends React.Component<BookProps, BookState> {
 
     getData = () => {
         getBookData({id: this.state.data.id})
-            .then((response: any) => this.setState({
+            .then((response: AxiosResponse) => this.setState({
                 data: response.data,
             }))
             .catch((error: any) => this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error}));
         getBookAuthors({id: this.state.data.id})
-            .then((response: any) => this.setState({
+            .then((response: AxiosResponse) => this.setState({
                 authors: response.data,
                 getBookDataStatus: RequestStatus.SUCCESS
             }))
@@ -158,7 +159,7 @@ class Book extends React.Component<BookProps, BookState> {
         const {isAdmin} = this.state;
         if (isAdmin)
             return (
-                <div className="button-divider">
+                <div className="button-container">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
                         <Button onClick={this.handleEdit}>Edit book</Button>
                         <Button onClick={this.handleDelete}>Delete book</Button>

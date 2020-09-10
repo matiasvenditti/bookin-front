@@ -82,12 +82,8 @@ class Router extends React.Component<RouterProps, RouterState> {
 
                     <Route path='/books/:id' roles={[]} >
                         <Book
-                            loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
                         />
                     </Route>
-
-
-                    <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}><CreateAuthor /></PrivateRoute>
 
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}>
                         <CreateAuthor
