@@ -1,68 +1,88 @@
-import React, {Component} from "react";
-import {Typography} from "@material-ui/core";
+import React, { Component } from "react";
+import { Typography } from "@material-ui/core";
 import "./CreateAuthor.css"
-import {changeAuthorData, getAuthorData} from "../../../services/AuthorService";
-import {AxiosResponse} from "axios";
+import { changeAuthorData, getAuthorData } from "../../../services/AuthorService";
+import { AxiosResponse } from "axios";
 import { UpdateAuthor } from "../../../model";
 import ModifyAuthorForm from "./ModifyAuthorForm";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { AuthorID } from "../../../model";
 import { Author } from "../../../model/Author";
 import { EditAuthorFormModel } from "../../../model/Form/EditAuthorFormModel";
 import { AuthorFormModel } from "../../../model/Form/AuthorFormModel";
 import validateInput from "../../../utils/validateInput";
+import photoUtils from "../../../utils/photoUtils";
+import { RequestStatus } from "../../../model/consts/RequestStatus";
+import Loader from "../../../components/Loader/Loader";
+
 
 interface ModifyaAuthorProp extends RouteComponentProps<MatchParams> {
+    updateCallback(r: RequestStatus): void,
+    getAuthorDataErrorCallback(): void,
 }
 
 interface MatchParams {
-    id: string
+    id: string,
 }
 
 interface ModifyAuthorState {
-    values: EditAuthorFormModel;
-    bytearray: any;
+    id: number,
+    values: EditAuthorFormModel,
+    bytearray: any,
     formValid: boolean,
-    error: any,}
+    error: any,
+    updateAuthorStatus: RequestStatus,
+    getAuthorDataStatus: RequestStatus,
+}
 
 class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
-
-    maxFileSize: number = 100000;
-
-
-    constructor(props: ModifyaAuthorProp){
+    constructor(props: ModifyaAuthorProp) {
         super(props);
         this.state = {
+            id: parseInt(this.props.match.params.id),
             values: new EditAuthorFormModel(new Author()),
             bytearray: '',
             formValid: false,
             error: null,
+            getAuthorDataStatus: RequestStatus.NONE,
+            updateAuthorStatus: RequestStatus.NONE,
         }
     }
 
-    componentDidMount(){
-        const id : string = this.props.match.params.id;
-        const a : AuthorID = {id};
-        getAuthorData(a)
-        .then((response: AxiosResponse<Author>) => {
-            const photo: string = `data:image/jpeg;base64,${response.data.photo}`;
-            this.setState((prevState: ModifyAuthorState) => ({
-                ...prevState,
-                values: new EditAuthorFormModel(response.data),
-                bytearray: photo,
-            }))
-        })
-        .catch((e) => console.error(e))
+    componentDidMount() {
+        this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
+        getAuthorData(this.state.id)
+            .then((response: AxiosResponse<Author>) => {
+                this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.SUCCESS });
+                const photo: string = `data:image/jpeg;base64,${response.data.photo}`;
+                this.setState((prevState: ModifyAuthorState) => ({
+                    ...prevState,
+                    values: new EditAuthorFormModel(response.data),
+                    bytearray: photo,
+                }))
+            })
+            .catch((e) => {
+                this.props.getAuthorDataErrorCallback();
+                this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR });
+                this.props.history.push('/authors/' + this.state.id);
+            });
     }
 
     handleSubmit = (values: UpdateAuthor, photo: File) => {
+        this.setState({ ...this.state, updateAuthorStatus: RequestStatus.LOADING });
         changeAuthorData(values, photo)
-            .then((response: AxiosResponse<Author>) => console.log(response.data))
-            .catch((e) => console.error(e))
+            .then((response: AxiosResponse<Author>) => {
+                this.props.updateCallback(RequestStatus.SUCCESS);
+                this.setState({ ...this.state, updateAuthorStatus: RequestStatus.SUCCESS });
+                this.props.history.push('/authors/' + this.state.id);
+            })
+            .catch((e) => {
+                this.props.updateCallback(RequestStatus.ERROR);
+                this.setState({ ...this.state, updateAuthorStatus: RequestStatus.ERROR });
+            })
     }
 
     handleCancel = () => {
-        console.log('cancel')
+        this.props.history.push('/authors/' + this.state.id);
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
@@ -71,7 +91,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         this.setState({
             values: {
                 ...this.state.values,
-                [id]: {value, type, error}
+                [id]: { value, type, error }
             },
             formValid: !anyErrors,
         });
@@ -86,7 +106,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         this.setState({
             values: {
                 ...this.state.values,
-                birthday: {value: date, type: birthday.type, error: error}
+                birthday: { value: date, type: birthday.type, error: error }
             },
             formValid: !anyErrors,
         });
@@ -113,15 +133,15 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
 
     handleChange = (event: any) => {
         const file: File = event.target.files[0];
-        const error: boolean = file.size >= this.maxFileSize
+        const error: boolean = file.size > photoUtils.MAX_PHOTO_SIZE;
         const photo = this.state.values.photo;
-        this.readFile(file);
+        if (!error) this.readFile(file);
 
         const anyErrors = Object.values(this.state.values).some(value => value.type === photo.type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,
-                photo: {value: file, type: photo.type, error: error},
+                photo: { value: !error && file, type: photo.type, error },
             },
             formValid: !anyErrors,
         });
@@ -139,25 +159,29 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
     }
 
     render() {
+        const loading = this.state.getAuthorDataStatus === RequestStatus.LOADING;
         return (
             <div className='route-container' >
-                <div className='form-container'>
-                    <Typography align='center' variant='h5'>Modificación del autor</Typography>
-                    <ModifyAuthorForm
-                    formValid={this.state.formValid}
-                    bytearray={this.state.bytearray}
-                    author={this.state.values}
-                    onSubmit={this.handleSubmit}
-                    onCancel={this.handleCancel}
-                    onInput={this.handleInput}
-                    onDateChange={this.handleDateChange}
-                    onInputSelect={this.handleInputSelect}
-                    onChange={this.handleChange}
-                    onReadFile={this.readFile}/>
-                </div>
+                {loading ? <Loader /> :
+                    <div className='form-container'>
+                        <Typography align='center' variant='h5'>Modificación del autor</Typography>
+                        <ModifyAuthorForm
+                            formValid={this.state.formValid}
+                            bytearray={this.state.bytearray}
+                            author={this.state.values}
+                            onSubmit={this.handleSubmit}
+                            onCancel={this.handleCancel}
+                            onInput={this.handleInput}
+                            onDateChange={this.handleDateChange}
+                            onInputSelect={this.handleInputSelect}
+                            onChange={this.handleChange}
+                            onReadFile={this.readFile}
+                        />
+                    </div>
+                }
             </div>
         )
     }
 
- }
- export default withRouter(ModifyAuthor);
+}
+export default withRouter(ModifyAuthor);

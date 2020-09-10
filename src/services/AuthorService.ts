@@ -2,7 +2,6 @@ import {NewAuthor} from "../model/NewAuthor";
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
-import {AuthorID} from "../model";
 import {UpdateAuthor} from "../model";
 import { Author } from "../model/Author";
 
@@ -33,17 +32,17 @@ const changeAuthorData = (author: UpdateAuthor, photo: File): Promise<AxiosRespo
 }
 
 
-const getAuthorData = (authorID: AuthorID): Promise<AxiosResponse<Author>> => {
-    return instance.get<Author>(`${baseURL}/authors/${authorID.id}`)
+const getAuthorData = (id: number): Promise<AxiosResponse<Author>> => {
+    return instance.get<Author>(`${baseURL}/authors/${id}`)
 }
 
-const deleteAuthor = (author: AuthorID): Promise<AxiosResponse<Author>> => {
+const deleteAuthor = (id: number): Promise<AxiosResponse<Author>> => {
     const config: AxiosRequestConfig = {
         headers: {
             'Content-Type': undefined,
         }
     }
-    return instance.post<Author>(`${baseURL}/authors/delete/${author.id}`, config)
+    return instance.post<Author>(`${baseURL}/authors/delete/${id}`, config)
 }
 
 

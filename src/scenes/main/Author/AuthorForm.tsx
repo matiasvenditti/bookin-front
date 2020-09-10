@@ -3,12 +3,13 @@ import { Button, Input } from '../../../components/Form';
 import { AuthorFormModel } from '../../../model/Form/AuthorFormModel';
 import { NewAuthor } from '../../../model/NewAuthor';
 import Grid from '@material-ui/core/Grid';
-import { Button as Buttons, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Button as MaterialButton, Typography } from '@material-ui/core';
 import './AuthorForm.css';
 import validateInput from '../../../utils/validateInput';
 import { AccountCircle } from '@material-ui/icons';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import DateFnsUtils from '@date-io/date-fns';
+import { Select } from '../../../components/Form/Select/Select';
+import photoUtils from '../../../utils/photoUtils';
+import { DatePicker } from '../../../components/Form/DatePicker/DatePicker';
 
 
 interface AuthorFormState {
@@ -23,9 +24,6 @@ interface AuthorFormProps {
 }
 
 export default class AuthorForm extends Component<AuthorFormProps, AuthorFormState> {
-
-    maxFileSize: number = 100000;
-
     constructor(props: AuthorFormProps) {
         super(props);
         this.state = {
@@ -52,6 +50,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
+        console.log(id, type, value);
         const error = !validateInput(type, value);
         const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
@@ -64,72 +63,26 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
         });
     }
 
-
-    handleDateChange = (date: Date | null) => {
-        const error = !validateInput('date', date);
-        const birthday = this.state.values.birthday;
-
-        const allTouched = Object.values(this.state.values).every(value => value.type === birthday.type ? true : value.touched);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === birthday.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                birthday: { value: date, type: birthday.type, error, touched: true }
-            },
-            formValid: allTouched && !anyErrors,
-        });
-    }
-
-    handleInputSelect = (object: any) => {
-        const nacionalidad = object.target.value as string;
-        const nationality = this.state.values.nationality;
-        const error: boolean = false;
-
-        const allTouched = Object.values(this.state.values).every(value => value.type === nationality.type ? true : value.touched);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === nationality.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                nationality: {
-                    value: nacionalidad,
-                    type: this.state.values.nationality.type,
-                    error: false,
-                    touched: true
-                },
-            },
-            formValid: allTouched && !anyErrors,
-        });
-    }
-
-    handleChange = (event: any) => {
+    handleChangePhoto = (event: any) => {
         const file: File = event.target.files[0];
-        const error: boolean = file.size >= this.maxFileSize
-        const photo = this.state.values.photo;
-        this.readFile(file);
-
-        const allTouched = Object.values(this.state.values).every(value => value.type === photo.type ? true : value.touched);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === photo.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                photo: { value: file, type: photo.type, error: error, touched: true },
-            },
-            formValid: allTouched && !anyErrors,
-        });
+        if (file === undefined) return;
+        const error: boolean = file.size >= photoUtils.MAX_PHOTO_SIZE;
+        if (!error) {
+            this.readFile(file);
+            this.handleInput('photo', 'photo', file);
+        } else {
+            this.setState({ ...this.state, values: { ...this.state.values, photo: { value: null, type: 'photo', error: true, touched: true } } })
+        }
     }
 
     readFile = (file: File) => {
         let reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => {
-            this.setState((prevState: AuthorFormState) => ({
-                ...prevState,
-                bytearray: reader.result
-            }));
-        }
+        reader.onload = () => this.setState({ ...this.state, bytearray: reader.result });
     }
 
     render() {
+        console.log(this.state);
         const { loading } = this.props;
         const image = this.state.bytearray ?
             <img src={this.state.bytearray} width="100" height="100" alt='author' /> :
@@ -173,55 +126,35 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
 
                 <Grid alignItems="center" container spacing={3}>
                     <Grid item xs>
-                        <FormControl required fullWidth color="secondary" variant="outlined">
-                            <InputLabel id="demo-simple-select-label">Nacionalidad</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="nationality"
-                                type="select"
-                                name='nationality'
-                                value={this.state.values.nationality.value}
-                                onChange={this.handleInputSelect}
-                                label="Nacionalidad"
-                                disabled={loading}
-                            >
-                                <MenuItem value='Argentina'>Argentina</MenuItem>
-                                <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
-                                <MenuItem value='España'>España</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <Select
+                            label='Nacionalidad'
+                            id='nationality'
+                            value={this.state.values.nationality.value}
+                            options={['Argentina', 'Gran Bretaña', 'España']}
+                            disabled={loading}
+                            onChange={this.handleInput}
+                        />
                     </Grid>
 
                     <Grid item xs>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                                fullWidth
-                                error={this.state.values.birthday.touched && this.state.values.birthday.error}
-                                helperText={this.state.values.birthday.touched && this.state.values.birthday.error ? 'Fecha inválida' : null}
-                                color="secondary"
-                                disableToolbar
-                                required
-                                inputVariant="outlined"
-                                format="dd/MM/yyyy"
-                                margin="none"
-                                id="date-picker-inline"
-                                label="Nacimiento"
-                                value={this.state.values.birthday.value}
-                                onChange={this.handleDateChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                                disabled={loading}
-                                maxDate={new Date()}
-                            />
-                        </MuiPickersUtilsProvider>
+                        <DatePicker
+                            error={this.state.values.birthday.touched && this.state.values.birthday.error}
+                            helperText={this.state.values.birthday.touched && this.state.values.birthday.error ? 'Fecha inválida' : null}
+                            required
+                            id='birthday'
+                            label='Nacimiento'
+                            value={this.state.values.birthday.value}
+                            onChange={this.handleInput}
+                            disabled={loading}
+                            maxDate={new Date()}
+                        />
                     </Grid>
                     <Grid item xs>
-                        <Buttons
+                        <MaterialButton
                             fullWidth
                             variant="contained"
                             component="label"
-                            onChange={this.handleChange}
+                            onChange={this.handleChangePhoto}
                             disabled={loading}
                             color='secondary'
                         >
@@ -231,7 +164,8 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                                 type="file"
                                 style={{ display: "none" }}
                             />
-                        </Buttons>
+                        </MaterialButton>
+                        {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
                 <div>

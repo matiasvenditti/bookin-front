@@ -1,12 +1,11 @@
-import {RequestStatus} from "../../../model/consts/RequestStatus";
+import { RequestStatus } from "../../../model/consts/RequestStatus";
 import React from "react";
-import {AuthorID} from "../../../model";
-import {Button, Typography} from "@material-ui/core";
-import {deleteAuthor, getAuthorData} from "../../../services/AuthorService";
+import { Button, Typography } from "@material-ui/core";
+import { deleteAuthor, getAuthorData } from "../../../services/AuthorService";
 import AuthorView from "./AuthorView";
-import {RouteComponentProps, withRouter} from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router';
 import './Author.css'
-import {isAuthorized} from "../../../services/AuthService";
+import { isAuthorized } from "../../../services/AuthService";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import SweetAlert from "react-bootstrap-sweetalert";
 import Loader from "../../../components/Loader/Loader";
@@ -24,7 +23,7 @@ interface AuthorState {
     deleteStatus: any,
     showDelete: boolean,
     data: {
-        id: string,
+        id: number,
         firstName: string,
         lastName: string,
         nationality: string,
@@ -46,7 +45,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             getAuthorDataStatus: RequestStatus.NONE,
             isAdmin: isAuthorized(["ROLE_ADMIN"]),
             data: {
-                id: this.props.match.params.id,
+                id: parseInt(this.props.match.params.id),
                 firstName: '',
                 lastName: '',
                 nationality: '',
@@ -67,44 +66,43 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     componentDidMount() {
-        this.setState({...this.state, getAuthorDataStatus: RequestStatus.LOADING});
-        getAuthorData({id: this.state.data.id})
-            .then((response: any) => this.setState({
-                data: response.data,
-                getAuthorDataStatus: RequestStatus.SUCCESS
-
-            }))
-            .catch((error: any) => this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error}));
+        this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
+        getAuthorData(this.state.data.id)
+            .then((response: any) => {
+                this.setState({ data: response.data, getAuthorDataStatus: RequestStatus.SUCCESS });
+            })
+            .catch((error: any) => {
+                this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error });
+            });
     }
 
     handleCancel = () => {
-        this.setState({showDelete: false})
+        this.setState({ showDelete: false });
     };
 
     handleEdit = () => {
-        const id = this.state.data.id;
-        this.props.history.push(`/authors/edit/${id}`) //Push to home?
+        this.props.history.push(`/authors/edit/${this.state.data.id}`); //Push to home?
     }
 
     handleDelete = () => {
-        this.setState({showDelete: true})
+        this.setState({ showDelete: true })
     }
 
     handleConfirmDelete = () => {
-        this.deleteAuthor({id : this.state.data.id});
+        this.deleteAuthor(this.state.data.id);
     }
 
 
-    deleteAuthor = (values: AuthorID) => {
-        this.setState({deleteStatus: RequestStatus.LOADING, error: null});
-        deleteAuthor(values)
+    deleteAuthor = (id: number) => {
+        this.setState({ deleteStatus: RequestStatus.LOADING, error: null });
+        deleteAuthor(id)
             .then(() => {
-                this.setState({deleteStatus: RequestStatus.SUCCESS, error: null});
+                this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null });
                 this.props.history.push("/") //Push to home?
 
             })
             .catch((error) => {
-                this.setState({deleteStatus: RequestStatus.ERROR, error});
+                this.setState({ deleteStatus: RequestStatus.ERROR, error });
                 //console.log("Error deleting", error)
             });
         this.handleCancel()
@@ -130,7 +128,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
      */
 
     renderAuthor() {
-        const {data, books, getAuthorDataStatus} = this.state;
+        const { data, books, getAuthorDataStatus } = this.state;
         if (getAuthorDataStatus === RequestStatus.LOADING) {
             return (
                 <div>
@@ -138,17 +136,17 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 </div>
             );
         }
-            return (
-                <AuthorView
-                    data={data}
-                    books={books}
-                    error={getAuthorDataStatus === RequestStatus.ERROR}
-                />
-            );
-        }
+        return (
+            <AuthorView
+                data={data}
+                books={books}
+                error={getAuthorDataStatus === RequestStatus.ERROR}
+            />
+        );
+    }
 
     renderButtons() {
-        const {isAdmin} = this.state;
+        const { isAdmin } = this.state;
         if (isAdmin)
             return (
                 <div className="button-divider">
@@ -161,7 +159,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     renderDelete() {
-        const {showDelete} = this.state;
+        const { showDelete } = this.state;
         if (showDelete) return (
             <SweetAlert
                 danger
