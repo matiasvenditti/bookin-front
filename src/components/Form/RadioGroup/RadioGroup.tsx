@@ -7,7 +7,7 @@ interface RadioGroupProps {
     id: string,
     type: string,
     value: string,
-    options: string[],
+    options: { id: string, value: string }[],
     error: boolean,
     errorText: string,
     disabled?: boolean,
@@ -31,7 +31,7 @@ export default class RadioGroup extends Component<RadioGroupProps, RadioGroupSta
                     onChange={(e) => this.props.onChange(id, type, e.target.value)}
                 >
                     {options.map((option, i) => (
-                        <FormControlLabel key={'radio-group-form-control-label-' + i} value={option} control={<Radio />} label={option} />
+                        <FormControlLabel key={'radio-group-form-control-label-' + i} value={option.id} control={<Radio />} label={option.value} />
                     ))}
                 </MaterialRadioGroup>
                 <FormLabel component='legend' error={error}>{error && errorText}</FormLabel>

@@ -10,11 +10,12 @@ import Footer from "../Footer/Footer";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
-import CreateAuthor from "../../scenes/main/Author/CreateAuthor";
+import CreateAuthor from "../../scenes/main/Author/CreateAuthor/CreateAuthor";
 import { UserRoles } from "../../model/consts/Roles";
-import Author from "../../scenes/main/Author/Author";
-import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor";
+import Author from "../../scenes/main/Author/Author/Author";
+import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor/ModifyAuthor";
 import Book from "../../scenes/main/Book/Book";
+
 
 interface RouterProps {
 
@@ -29,6 +30,10 @@ interface RouterState {
     editAuthorStatus: RequestStatus,
     deleteProfileStatus: RequestStatus,
     createAuthorStatus: RequestStatus,
+    updateAuthorStatus: RequestStatus,
+    getAuthorDataError: boolean,
+    getModifyAuthorDataError: boolean,
+    deleteAuthorStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -43,6 +48,10 @@ class Router extends React.Component<RouterProps, RouterState> {
             editAuthorStatus: RequestStatus.NONE,
             deleteProfileStatus: RequestStatus.NONE,
             createAuthorStatus: RequestStatus.NONE,
+            updateAuthorStatus: RequestStatus.NONE,
+            getAuthorDataError: false,
+            getModifyAuthorDataError: false,
+            deleteAuthorStatus: RequestStatus.NONE,
         };
     }
 
@@ -70,13 +79,19 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </PrivateRoute>
 
-                    <PrivateRoute path='/authors/edit/:id' roles={[UserRoles.RoleAdmin]}><ModifyAuthor/></PrivateRoute>
+                    <PrivateRoute path='/authors/edit/:id' roles={[UserRoles.RoleAdmin]}>
+                        <ModifyAuthor
+                            updateCallback={(updateAuthorStatus: RequestStatus) => this.setState({ ...this.state, updateAuthorStatus })}
+                            getAuthorDataErrorCallback={() => this.setState({ ...this.state, getModifyAuthorDataError: true })}
+                        />
+                    </PrivateRoute>
 
                     <Route path='/authors/:id' roles={[]} >
                         <Author
                             loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
-                            editAuthorCallback={(editAuthorStatus: RequestStatus) =>
-                                this.setState({ ...this.state, editAuthorStatus })}
+                            getAuthorDataErrorCallback={() => this.setState({ ...this.state, getAuthorDataError: true })}
+                            editAuthorCallback={(editAuthorStatus: RequestStatus) => this.setState({ ...this.state, editAuthorStatus })}
+                            deleteAuthorCallback={(deleteAuthorStatus: RequestStatus) => this.setState({ ...this.state, deleteAuthorStatus })}
                         />
                     </Route>
 
@@ -90,6 +105,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                             createAuthorCallback={(createAuthorStatus: RequestStatus) => this.setState({ ...this.state, createAuthorStatus })}
                         />
                     </PrivateRoute>
+
                 </Switch>
                 <Footer />
                 {this.renderToasts()}
@@ -105,6 +121,10 @@ class Router extends React.Component<RouterProps, RouterState> {
             deleteProfileStatus,
             loadAvatarError,
             createAuthorStatus,
+            updateAuthorStatus,
+            getAuthorDataError,
+            getModifyAuthorDataError,
+            deleteAuthorStatus,
         } = this.state;
         return (
             <div>
@@ -134,6 +154,21 @@ class Router extends React.Component<RouterProps, RouterState> {
                 </Snackbar>
                 <Snackbar open={createAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createAuthorStatus: RequestStatus.NONE })}>
                     <Alert severity='error'>Hubo un error al crear el autor, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={updateAuthorStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateAuthorStatus: RequestStatus.NONE })}>
+                    <Alert severity='success'>Se ha modificado el autor exitosamente</Alert>
+                </Snackbar>
+                <Snackbar open={updateAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateAuthorStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>Hubo un error al modificar el autor, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={getAuthorDataError || getModifyAuthorDataError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, getAuthorDataError: false, getModifyAuthorDataError: false })}>
+                    <Alert severity='error'>Hubo un error al obtener los datos del autor, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={deleteAuthorStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteAuthorStatus: RequestStatus.NONE })}>
+                    <Alert severity='success'>Se ha eliminado el autor exitosamente</Alert>
+                </Snackbar>
+                <Snackbar open={deleteAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteAuthorStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>Hubo un error al eliminar el autor, intente más tarde</Alert>
                 </Snackbar>
             </div>
         );

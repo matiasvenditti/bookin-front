@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Button, Avatar, Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
-import Loader from '../Loader/Loader';
 
 
 interface ConfirmPhotoModalProps {
@@ -15,7 +14,6 @@ const ConfirmPhotoModal = (props: ConfirmPhotoModalProps) => {
         open,
         photo,
     } = props;
-    const [loading, setLoading] = useState(false);
 
     return (
         <Dialog

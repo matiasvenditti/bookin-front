@@ -7,18 +7,20 @@ interface ButtonProps {
     title: string,
     disabled: boolean,
     loading?: boolean,
+    variant?: "text" | "outlined" | "contained" | undefined,
     onClick(): void,
+    color?: "inherit" | "primary" | "secondary" | "default" | undefined,
 }
 
 export default class Button extends Component<ButtonProps> {
     render() {
-        const { title, disabled, loading } = this.props;
+        const { title, disabled, loading, variant, color } = this.props;
         return (
             <MaterialButton
-                variant='contained'
-                color='secondary'
+                color={color || 'secondary'}
                 disabled={disabled}
                 onClick={this.props.onClick}
+                variant={variant}
             >{loading ? <Loader mini /> : title}</MaterialButton>
         )
     }

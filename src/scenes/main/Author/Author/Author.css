@@ -34,3 +34,7 @@
     position: absolute;
     right: 20px;
 }
+
+.button-divider > button:nth-child(1) {
+    margin-right: 15px;
+}
