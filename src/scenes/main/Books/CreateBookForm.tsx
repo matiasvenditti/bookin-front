@@ -144,6 +144,16 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         });
     }
 
+    handleChangeArray = (event: any, values: Author[]) => {
+        this.setState ({
+            values: {
+                ...this.state.values,
+                authors: { value: values, type: 'array', error: false, touched: true },
+            }
+        });
+        console.log(this.state)
+    }
+
     readFile = (file: File) => {
         let reader = new FileReader();
         reader.readAsDataURL(file);
@@ -231,6 +241,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                             options={this.props.authors}
                             getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
                             defaultValue={[]}
+                            onChange={this.handleChangeArray}
                             filterSelectedOptions
                             renderInput={(params) => (
                             <TextField

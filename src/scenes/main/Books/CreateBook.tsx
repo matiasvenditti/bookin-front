@@ -14,6 +14,13 @@ interface CreateBookState {
 }
 
 export default class CreateBook extends Component<{}, CreateBookState> {
+
+    constructor(props: any){
+        super(props);
+        this.state = {
+            authors: []
+        }
+    }
      
     handleSubmit = (values: NewBook, photo: File) => {
         createBook(values, photo)
