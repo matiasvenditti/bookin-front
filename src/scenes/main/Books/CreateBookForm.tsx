@@ -167,94 +167,104 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
 
     render(){
         const image = this.state.bytearray ? 
-        <img src={this.state.bytearray} width='100' height='150' /> :
+        <img src={this.state.bytearray} width='100' /> :
         <MenuBookIcon color='secondary' style={{ height: 150, width: 100}}/>
 
         return(
             <form>
                 <Grid alignItems='center' container spacing={2}>
                     <Grid item xs>
-                        <Input
-                            label='Titulo'
-                            id='title'
-                            type='text'
-                            onChange={this.handleInput}
-                            value={this.state.values.title.value}
-                            error={this.state.values.title.touched && this.state.values.title.error}
-                            errorText={this.state.values.title.touched && this.state.values.title.error ? 'Nombre inválido' : ''}
-                            required
-                        />
-                        <FormControl required fullWidth color='secondary' variant='outlined'>
-                            <InputLabel id="demo-simple-select-label">Género</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id='genre'
+                        <div className='spacing'>
+                            <Input
+                                label='Titulo'
+                                id='title'
+                                type='text'
+                                onChange={this.handleInput}
+                                value={this.state.values.title.value}
+                                error={this.state.values.title.touched && this.state.values.title.error}
+                                errorText={this.state.values.title.touched && this.state.values.title.error ? 'Nombre inválido' : ''}
+                                required
+                            />
+                        </div>
+                        <div className='spacing'>
+                            <FormControl required fullWidth color='secondary' variant='outlined'>
+                                <InputLabel id="demo-simple-select-label">Género</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id='genre'
+                                    type='select'
+                                    name='genre'
+                                    value={this.state.values.genre.value}
+                                    onChange={this.handleInputSelectG}
+                                    label='Género'
+                                >
+                                    <MenuItem value='Terror'>Terror</MenuItem>
+                                    <MenuItem value='Policial'>Policial</MenuItem>
+                                    <MenuItem value='Drama'>Drama</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className='spacing'>
+                            <FormControl required fullWidth color='secondary' variant='outlined'>
+                                <InputLabel id='idioma' color='secondary' variant='outlined'>Idioma</InputLabel>
+                                <Select 
+                                labelId='idioma'
+                                id='language'
                                 type='select'
                                 name='genre'
-                                value={this.state.values.genre.value}
-                                onChange={this.handleInputSelectG}
-                                label='Género'
-                            >
-                                <MenuItem value='Terror'>Terror</MenuItem>
-                                <MenuItem value='Policial'>Policial</MenuItem>
-                                <MenuItem value='Drama'>Drama</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <FormControl required fullWidth color='secondary' variant='outlined'>
-                            <InputLabel id='idioma' color='secondary' variant='outlined'>Idioma</InputLabel>
-                            <Select 
-                            labelId='idioma'
-                            id='language'
-                            type='select'
-                            name='genre'
-                            value={this.state.values.language.value}
-                            onChange={this.handleInputSelectL}
-                            label='Idioma'
-                            >
-                                <MenuItem value='Español'>Español</MenuItem>
-                                <MenuItem value='Inglés'>Inglés</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                                fullWidth
-                                error={this.state.values.release.touched && this.state.values.release.error}
-                                helperText={this.state.values.release.touched && this.state.values.release.error ? 'Lanzamiento mayor a fecha actual' : null}
-                                color="secondary"
-                                disableToolbar
-                                required
-                                inputVariant="outlined"
-                                format="dd/MM/yyyy"
-                                margin="none"
-                                id="date-picker-inline"
-                                label="Fecha de lanzamiento"
-                                value={this.state.values.release.value}
-                                onChange={this.handleDateChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
+                                value={this.state.values.language.value}
+                                onChange={this.handleInputSelectL}
+                                label='Idioma'
+                                >
+                                    <MenuItem value='Español'>Español</MenuItem>
+                                    <MenuItem value='Inglés'>Inglés</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className='spacing'>
+                            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                                <KeyboardDatePicker
+                                    fullWidth
+                                    error={this.state.values.release.touched && this.state.values.release.error}
+                                    helperText={this.state.values.release.touched && this.state.values.release.error ? 'Lanzamiento mayor a fecha actual' : null}
+                                    color="secondary"
+                                    disableToolbar
+                                    required
+                                    inputVariant="outlined"
+                                    format="dd/MM/yyyy"
+                                    margin="none"
+                                    id="date-picker-inline"
+                                    label="Fecha de lanzamiento"
+                                    value={this.state.values.release.value}
+                                    onChange={this.handleDateChange}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </MuiPickersUtilsProvider>
+                        </div>
+                        <div className='spacing'>
+                            <Autocomplete
+                                multiple
+                                id="tags-outlined"
+                                options={this.props.authors}
+                                getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                                defaultValue={[]}
+                                onChange={this.handleChangeArray}
+                                filterSelectedOptions
+                                renderInput={(params) => (
+                                <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    label="Autores"
+                                    placeholder="Autor/es"
+                                />
+                                )}
                             />
-                        </MuiPickersUtilsProvider>
-                        <Autocomplete
-                            multiple
-                            id="tags-outlined"
-                            options={this.props.authors}
-                            getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
-                            defaultValue={[]}
-                            onChange={this.handleChangeArray}
-                            filterSelectedOptions
-                            renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="outlined"
-                                label="filterSelectedOptions"
-                                placeholder="Autor/es"
-                            />
-                            )}
-                        />
+                        </div>
                     </Grid>
                     <Grid item xs>
-                        <div>
+                        <div className='photo'>
                             {image}
                         </div>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
@@ -268,13 +278,9 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                         </Buttons>
                     </Grid>
                 </Grid>
-                <div>
-                    <div className="spacing">
-                        <Button title='Crear Autor' disabled={!this.state.formValid} onClick={this.handleSubmit} />
-                    </div>
-                    <div className="spacing">
-                        <Button title="Cancelar" disabled={false} onClick={this.handleSubmit} />
-                    </div>
+                <div className='create-author-buttons-container'>
+                    <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.handleSubmit} />
+                    <Button title='Crear Autor' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} />
                 </div>
             </form>
         )

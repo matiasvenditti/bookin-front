@@ -1,3 +1,6 @@
+import photoUtils from "./photoUtils";
+
+
 export default function(type: string, value: any) {
     let regex = /$a/; // impossible regex -> always false
     switch (type) {
@@ -7,6 +10,11 @@ export default function(type: string, value: any) {
         case 'email': regex = /^[\w-.]{3,50}@([\w-]+\.)+[\w-]{2,4}$/; break;
         case 'radio-group': return value !== null;
         case 'accept-terms': return value;
+        case 'photo': return value !== null && value.size < photoUtils.MAX_PHOTO_SIZE;
+        case 'date':
+            if (value.toString() === 'Invalid Date') return false;
+            else return true;
+        case 'select': return value !== null;
         default: break;
     } 
     return regex.test(value);
