@@ -8,24 +8,37 @@ import {AxiosResponse} from "axios";
 import { Book } from "../../../model/Book";
 import { Author } from "../../../model/Author";
 import { getAuthors } from "../../../services/AuthorService";
+import { RequestStatus } from "../../../model/consts/RequestStatus";
+import { withRouter } from "react-router-dom";
 
 interface CreateBookState {
     authors: Author[],
+    status: RequestStatus
 }
 
-export default class CreateBook extends Component<{}, CreateBookState> {
+class CreateBook extends Component<any, CreateBookState> {
 
     constructor(props: any){
         super(props);
         this.state = {
-            authors: []
+            authors: [],
+            status: RequestStatus.NONE
         }
     }
      
     handleSubmit = (values: NewBook, photo: File) => {
         createBook(values, photo)
-            .then((response: AxiosResponse<Book>) => console.log(response.data))
-            .catch((e) => console.error(e))
+            .then((response: AxiosResponse<Book>) => { 
+                console.log(response.data);
+                this.props.createAuthorCallback(RequestStatus.SUCCESS);
+                this.setState({ ...this.state, status: RequestStatus.SUCCESS});
+                this.props.history.push('/books/' + response.data.id)
+            })
+            .catch((e) => { 
+                console.error(e);
+                this.props.createAuthorCallback(RequestStatus.ERROR);
+                this.setState({ ...this.state, status: RequestStatus.SUCCESS});
+            })
     }
 
     componentDidMount(){
@@ -44,10 +57,16 @@ export default class CreateBook extends Component<{}, CreateBookState> {
             <div className='route-container' >
                 <div className='form-container'>
                     <Typography align='center' variant='h5'>Creá un libro</Typography>
-                    <CreateBookForm onSubmit={this.handleSubmit} authors={this.state.authors}/>
+                    <CreateBookForm 
+                    onSubmit={this.handleSubmit}
+                    authors={this.state.authors}
+                    onCancel={this.props.history.goBack}
+                    loading={this.state.status === RequestStatus.LOADING}                    />
                 </div>
             </div>
         )
     }
 
  }
+
+ export default withRouter(CreateBook);

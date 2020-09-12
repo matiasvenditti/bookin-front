@@ -23,6 +23,8 @@ interface BookFormState {
 interface BookFormProps {
     onSubmit(values: NewBook, photo: File): void;
     authors: Author[];
+    onCancel(): void;
+    loading: boolean,
 }
 
 export default class CreateBookForm extends Component<BookFormProps, BookFormState> {
@@ -33,7 +35,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         super(props)
         this.state = {
             values: {
-                title: { value: '', type: 'text', error: true, touched: false },
+                title: { value: '', type: 'alphanumeric', error: true, touched: false },
                 genre: { value: '', type: 'select', error: true, touched: false },
                 language: { value: '', type: 'select', error: true, touched: false },
                 release: { value: null, type: 'date', error: true, touched: false },
@@ -178,7 +180,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                             <Input
                                 label='Titulo'
                                 id='title'
-                                type='text'
+                                type='alphanumeric'
                                 onChange={this.handleInput}
                                 value={this.state.values.title.value}
                                 error={this.state.values.title.touched && this.state.values.title.error}
@@ -279,8 +281,8 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                     </Grid>
                 </Grid>
                 <div className='create-author-buttons-container'>
-                    <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.handleSubmit} />
-                    <Button title='Crear Autor' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} />
+                    <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.props.onCancel} />
+                    <Button title='Crear Libro' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} />
                 </div>
             </form>
         )
