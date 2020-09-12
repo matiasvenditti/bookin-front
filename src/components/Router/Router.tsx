@@ -130,6 +130,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             deleteProfileStatus,
             loadAvatarError,
             createAuthorStatus,
+            createBookStatus,
             updateAuthorStatus,
             getAuthorDataError,
             getModifyAuthorDataError,
@@ -178,6 +179,12 @@ class Router extends React.Component<RouterProps, RouterState> {
                 </Snackbar>
                 <Snackbar open={deleteAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteAuthorStatus: RequestStatus.NONE })}>
                     <Alert severity='error'>Hubo un error al eliminar el autor, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={createBookStatus === RequestStatus.SUCCESS} autoHideDuration={2000}>
+                    <Alert severity='success'>Se ha creado el libro exitosamente</Alert>
+                </Snackbar>
+                <Snackbar open={createBookStatus === RequestStatus.ERROR} autoHideDuration={2000}>
+                    <Alert severity='error'>Hubo un error al crear el libro, intente más tarde</Alert>
                 </Snackbar>
             </div>
         );

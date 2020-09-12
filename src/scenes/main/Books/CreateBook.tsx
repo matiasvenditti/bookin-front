@@ -9,15 +9,15 @@ import { Book } from "../../../model/Book";
 import { Author } from "../../../model/Author";
 import { getAuthors } from "../../../services/AuthorService";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
-import { withRouter } from "react-router-dom";
-
+import { withRouter, RouteComponentProps } from "react-router-dom";
 interface CreateBookState {
     authors: Author[],
     status: RequestStatus
 }
-
-class CreateBook extends Component<any, CreateBookState> {
-
+interface CreateBookProps extends RouteComponentProps {
+    createBookCallback: (status: RequestStatus) => void
+}
+class CreateBook extends Component<CreateBookProps, CreateBookState> {
     constructor(props: any){
         super(props);
         this.state = {
@@ -25,12 +25,10 @@ class CreateBook extends Component<any, CreateBookState> {
             status: RequestStatus.NONE
         }
     }
-     
     handleSubmit = (values: NewBook, photo: File) => {
         createBook(values, photo)
-            .then((response: AxiosResponse<Book>) => { 
-                console.log(response.data);
-                this.props.createAuthorCallback(RequestStatus.SUCCESS);
+            .then((response: AxiosResponse<Book>) => {
+                this.props.createBookCallback(RequestStatus.SUCCESS);
                 this.setState({ ...this.state, status: RequestStatus.SUCCESS});
                 this.props.history.push('/books/' + response.data.id)
             })
@@ -40,7 +38,6 @@ class CreateBook extends Component<any, CreateBookState> {
                 this.setState({ ...this.state, status: RequestStatus.SUCCESS});
             })
     }
-
     componentDidMount(){
         getAuthors()
         .then((response: AxiosResponse<Author[]>) => {            
@@ -51,7 +48,6 @@ class CreateBook extends Component<any, CreateBookState> {
         })
         .catch((e) => console.error(e))
     }
-
     render() {
         return (
             <div className='route-container' >
@@ -66,7 +62,5 @@ class CreateBook extends Component<any, CreateBookState> {
             </div>
         )
     }
-
  }
-
  export default withRouter(CreateBook);
