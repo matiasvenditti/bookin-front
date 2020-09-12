@@ -35,7 +35,7 @@ class CreateBook extends Component<CreateBookProps, CreateBookState> {
             .catch((e) => { 
                 console.error(e);
                 this.props.createBookCallback(RequestStatus.ERROR);
-                this.setState({ ...this.state, status: RequestStatus.SUCCESS});
+                this.setState({ ...this.state, status: RequestStatus.ERROR});
             })
     }
     componentDidMount(){
