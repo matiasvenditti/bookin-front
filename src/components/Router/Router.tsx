@@ -31,6 +31,7 @@ interface RouterState {
     editAuthorStatus: RequestStatus,
     deleteProfileStatus: RequestStatus,
     createAuthorStatus: RequestStatus,
+    createBookStatus: RequestStatus,
     updateAuthorStatus: RequestStatus,
     getAuthorDataError: boolean,
     getModifyAuthorDataError: boolean,
@@ -49,6 +50,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             editAuthorStatus: RequestStatus.NONE,
             deleteProfileStatus: RequestStatus.NONE,
             createAuthorStatus: RequestStatus.NONE,
+            createBookStatus: RequestStatus.NONE, 
             updateAuthorStatus: RequestStatus.NONE,
             getAuthorDataError: false,
             getModifyAuthorDataError: false,
@@ -107,7 +109,11 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </PrivateRoute>
                     
-                    <Route path='/books' roles={[]}><CreateBook/></Route>
+                    <Route path='/books' roles={[]}>
+                        <CreateBook
+                        createBookCallback={(createBookStatus: RequestStatus) => this.setState({...this.state, createBookStatus})}
+                        />
+                    </Route>
 
                 </Switch>
                 <Footer />
