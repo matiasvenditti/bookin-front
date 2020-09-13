@@ -3,11 +3,11 @@ import { FormControl, InputLabel, Select as MaterialSelect, MenuItem } from '@ma
 
 
 interface SelectProps {
-    label: string,
+    label?: string,
     id: string,
     value: string,
     options: string[],
-    disabled: boolean,
+    disabled?: boolean,
     onChange(id: string, type: string, value: string): void,
 }
 

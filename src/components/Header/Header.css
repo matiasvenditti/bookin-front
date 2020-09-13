@@ -13,7 +13,7 @@
     padding: auto;
     height: '100%';
     position: fixed;
-    top: 27px;
+    /* top: 27px; */
     width: 27px;
     border-radius: 50%;
     border-color: black;
@@ -24,8 +24,6 @@
     align-items: 'center'; 
     justify-content: 'center';
     background-color:#ff5f5f;
-
-
 }
 .iconLogo{
     position: relative;
@@ -67,8 +65,17 @@ div.buttons{
     align-items: center;
 }
 .center {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
     text-align: center;
 }
 .title:hover {
     cursor: pointer;
+}
+
+.center .navbar-firstname {
+    font-weight: 500;
+    margin-top: 3px;
+    white-space: nowrap;
 }

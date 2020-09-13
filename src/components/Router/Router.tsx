@@ -16,6 +16,7 @@ import CreateBook from "../../scenes/main/Books/CreateBook";
 import Book from "../../scenes/main/Book/Book";
 import Author from "../../scenes/main/Author/Author/Author";
 import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor/ModifyAuthor";
+import { ResultsMenu } from "../../scenes/main/Results/ResultsMenu/ResultsMenu";
 
 
 interface RouterProps {
@@ -50,7 +51,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             editAuthorStatus: RequestStatus.NONE,
             deleteProfileStatus: RequestStatus.NONE,
             createAuthorStatus: RequestStatus.NONE,
-            createBookStatus: RequestStatus.NONE, 
+            createBookStatus: RequestStatus.NONE,
             updateAuthorStatus: RequestStatus.NONE,
             getAuthorDataError: false,
             getModifyAuthorDataError: false,
@@ -61,7 +62,7 @@ class Router extends React.Component<RouterProps, RouterState> {
     render() {
         return (
             <BrowserRouter>
-                <Menu logoutCallback={() => this.setState({ reload: true })} />
+                <Menu logoutCallback={() => this.setState({ reload: true })} nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
                     <Route path='/register' >
@@ -70,9 +71,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </Route>
                     <Route path='/login' >
-                        <Login loginCallback={(loginStatus: RequestStatus) =>
-                            this.setState({ ...this.state, loginStatus })}
-                        />
+                        <Login loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })} />
                     </Route>
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
@@ -98,23 +97,26 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </Route>
 
-                    <Route path='/books/:id' roles={[]} >
-                        <Book
-                        />
-                    </Route>
-
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}>
                         <CreateAuthor
                             createAuthorCallback={(createAuthorStatus: RequestStatus) => this.setState({ ...this.state, createAuthorStatus })}
                         />
                     </PrivateRoute>
-                    
+
+                    <Route path='/books/:id' roles={[]} >
+                        <Book
+                        />
+                    </Route>
+
                     <PrivateRoute path='/books' roles={[UserRoles.RoleAdmin]}>
                         <CreateBook
-                        createBookCallback={(createBookStatus: RequestStatus) => this.setState({...this.state, createBookStatus})}
+                            createBookCallback={(createBookStatus: RequestStatus) => this.setState({ ...this.state, createBookStatus })}
                         />
                     </PrivateRoute>
 
+                    <Route path='/results' roles={[]}>
+                        <ResultsMenu />
+                    </Route>
                 </Switch>
                 <Footer />
                 {this.renderToasts()}

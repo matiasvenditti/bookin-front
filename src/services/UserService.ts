@@ -9,7 +9,7 @@ export function getAllUsers(): Promise<AxiosResponse<User[]>> {
 }
 
 // User API calls to our server separated from component logic.
-export function getUserData(): Promise<AxiosResponse<User[]>> {
+export function getUserData(): Promise<AxiosResponse<User>> {
     return instance.get(`${baseURL}/users/me`)
 }
 

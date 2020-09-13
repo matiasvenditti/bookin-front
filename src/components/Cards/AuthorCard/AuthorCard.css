@@ -1,0 +1,15 @@
+.author-card-container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    padding: 15px;
+}
+
+.author-card-container div {
+    width: 100px;
+    height: 100px;
+}
+
+.author-card-container p {
+    font-weight: 500;
+}

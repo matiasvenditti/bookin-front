@@ -9,23 +9,41 @@ import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withRouter } from "react-router-dom";
 import { logout } from "../../services/SessionService";
 import { isLoggedIn } from "../../services/AuthService";
+import { getUserData } from "../../services/UserService";
 
 
 type State = {
-    username: string,
-    anchorEl: Element | null
+    firstName: string,
+    anchorEl: Element | null,
 }
 
-export class Header extends React.Component<any, State>{
+class Header extends React.Component<any, State>{
     constructor(props: any) {
         super(props);
         this.state = {
-            username: '',
-            anchorEl: null
+            firstName: '',
+            anchorEl: null,
         };
         this.handleMenu = this.handleMenu.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
+    }
+
+    // on reload the page
+    componentDidMount() {
+        if (isLoggedIn())
+            getUserData()
+                .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
+                .catch((error) => console.log(error));
+    }
+
+    // on not logged to logged
+    componentDidUpdate(prevProps: any) {
+        if (!prevProps.nowIsLogged && this.props.nowIsLogged && isLoggedIn()) {
+            getUserData()
+                .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
+                .catch((error) => console.log(error));
+        }
     }
 
     handleMenu(event: React.MouseEvent<HTMLElement>) { this.setAnchorEl(event.currentTarget); }
@@ -78,49 +96,50 @@ export class Header extends React.Component<any, State>{
         )
     }
 
-	renderButtons() {
-		const logged = isLoggedIn();
-		if (logged) {
-			return (
-				<div className="button">
-					<div className="center">
-						<IconButton onClick={this.handleMenu}>
-							<AccountCircle fontSize='large' />
-						</IconButton>
-					</div>
-					<Menu
-						id="menu-appbar"
-						anchorEl={this.state.anchorEl}
-						onClose={this.handleClose}
-						anchorOrigin={{
-							vertical: 'top',
-							horizontal: 'right',
-						}}
-						keepMounted
-						transformOrigin={{
-							vertical: 'top',
-							horizontal: 'right',
-						}}
-						open={Boolean(this.state.anchorEl)}>
-						<MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
-						<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
-						<MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
-						<MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>
-						<MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
-					</Menu>
-				</div>
-			)
-		} else {
-			return (
-				<div>
-					<ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
-						<Button onClick={() => this.props.history.push('/login')}>Iniciar Sesión</Button>
-						<Button onClick={() => this.props.history.push('/register')}>Registrarte</Button>
-					</ButtonGroup>
-				</div>
-			);
-		}
-	}
+    renderButtons() {
+        const logged = isLoggedIn();
+        if (logged) {
+            return (
+                <div>
+                    <div className="center">
+                        <Typography className='navbar-firstname'>{'¡Hola ' + this.state.firstName + '!'}</Typography>
+                        <IconButton onClick={this.handleMenu}>
+                            <AccountCircle fontSize='large' />
+                        </IconButton>
+                    </div>
+                    <Menu
+                        id="menu-appbar"
+                        anchorEl={this.state.anchorEl}
+                        onClose={this.handleClose}
+                        anchorOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        keepMounted
+                        transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'right',
+                        }}
+                        open={Boolean(this.state.anchorEl)}>
+                        <MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
+                        <MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
+                        <MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
+                        <MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>
+                        <MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
+                    </Menu>
+                </div>
+            )
+        } else {
+            return (
+                <div>
+                    <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group" >
+                        <Button onClick={() => this.props.history.push('/login')}>Iniciar Sesión</Button>
+                        <Button onClick={() => this.props.history.push('/register')}>Registrarte</Button>
+                    </ButtonGroup>
+                </div>
+            );
+        }
+    }
 }
 
 const styles = (theme: Theme) => ({
