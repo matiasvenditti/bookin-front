@@ -29,11 +29,20 @@ class Header extends React.Component<any, State>{
         this.setAnchorEl = this.setAnchorEl.bind(this);
     }
 
-    componentDidUpdate(prevProps: any) {
-        if (!prevProps.nowIsLogged && this.props.nowIsLogged) {
+    // on reload the page
+    componentDidMount() {
+        if (isLoggedIn())
             getUserData()
                 .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
-                .catch((error) => this.setState({ ...this.state, firstName: '' }))
+                .catch((error) => console.log(error));
+    }
+
+    // on not logged to logged
+    componentDidUpdate(prevProps: any) {
+        if (!prevProps.nowIsLogged && this.props.nowIsLogged && isLoggedIn()) {
+            getUserData()
+                .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
+                .catch((error) => console.log(error));
         }
     }
 
