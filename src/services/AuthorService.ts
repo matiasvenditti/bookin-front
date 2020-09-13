@@ -36,6 +36,10 @@ const getAuthorData = (id: number): Promise<AxiosResponse<Author>> => {
     return instance.get<Author>(`${baseURL}/authors/${id}`)
 }
 
+const getAuthors = (): Promise<AxiosResponse<Author[]>> => {
+    return instance.get<Author[]>(`${baseURL}/authors/`)
+}
+
 const deleteAuthor = (id: number): Promise<AxiosResponse<Author>> => {
     const config: AxiosRequestConfig = {
         headers: {
@@ -50,5 +54,6 @@ export {
     createAuthor,
     getAuthorData,
     deleteAuthor,
-    changeAuthorData
+    changeAuthorData,
+    getAuthors
 }

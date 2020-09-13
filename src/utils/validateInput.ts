@@ -15,6 +15,7 @@ export default function(type: string, value: any) {
             if (value.toString() === 'Invalid Date') return false;
             else return true;
         case 'select': return value !== null;
+        case 'alphanumeric': regex = /^([a-zA-Z0-9]+(?:[\s]+[a-zA-Z0-9]+)*[ñáéíóúü]*){3,30}$/; break;        
         default: break;
     } 
     return regex.test(value);

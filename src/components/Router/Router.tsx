@@ -12,9 +12,10 @@ import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
 import CreateAuthor from "../../scenes/main/Author/CreateAuthor/CreateAuthor";
 import { UserRoles } from "../../model/consts/Roles";
+import CreateBook from "../../scenes/main/Books/CreateBook";
+import Book from "../../scenes/main/Book/Book";
 import Author from "../../scenes/main/Author/Author/Author";
 import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor/ModifyAuthor";
-import Book from "../../scenes/main/Book/Book";
 
 
 interface RouterProps {
@@ -30,6 +31,7 @@ interface RouterState {
     editAuthorStatus: RequestStatus,
     deleteProfileStatus: RequestStatus,
     createAuthorStatus: RequestStatus,
+    createBookStatus: RequestStatus,
     updateAuthorStatus: RequestStatus,
     getAuthorDataError: boolean,
     getModifyAuthorDataError: boolean,
@@ -48,6 +50,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             editAuthorStatus: RequestStatus.NONE,
             deleteProfileStatus: RequestStatus.NONE,
             createAuthorStatus: RequestStatus.NONE,
+            createBookStatus: RequestStatus.NONE, 
             updateAuthorStatus: RequestStatus.NONE,
             getAuthorDataError: false,
             getModifyAuthorDataError: false,
@@ -105,6 +108,12 @@ class Router extends React.Component<RouterProps, RouterState> {
                             createAuthorCallback={(createAuthorStatus: RequestStatus) => this.setState({ ...this.state, createAuthorStatus })}
                         />
                     </PrivateRoute>
+                    
+                    <Route path='/books' roles={[]}>
+                        <CreateBook
+                        createBookCallback={(createBookStatus: RequestStatus) => this.setState({...this.state, createBookStatus})}
+                        />
+                    </Route>
 
                 </Switch>
                 <Footer />
@@ -121,6 +130,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             deleteProfileStatus,
             loadAvatarError,
             createAuthorStatus,
+            createBookStatus,
             updateAuthorStatus,
             getAuthorDataError,
             getModifyAuthorDataError,
@@ -169,6 +179,12 @@ class Router extends React.Component<RouterProps, RouterState> {
                 </Snackbar>
                 <Snackbar open={deleteAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteAuthorStatus: RequestStatus.NONE })}>
                     <Alert severity='error'>Hubo un error al eliminar el autor, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={createBookStatus === RequestStatus.SUCCESS} autoHideDuration={2000}>
+                    <Alert severity='success'>Se ha creado el libro exitosamente</Alert>
+                </Snackbar>
+                <Snackbar open={createBookStatus === RequestStatus.ERROR} autoHideDuration={2000}>
+                    <Alert severity='error'>Hubo un error al crear el libro, intente más tarde</Alert>
                 </Snackbar>
             </div>
         );
