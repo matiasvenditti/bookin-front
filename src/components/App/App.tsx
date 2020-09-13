@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Router from "../Router/Router";
 import { MuiThemeProvider } from "@material-ui/core";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import { ResultsMenu } from '../../scenes/main/Results/ResultsMenu/ResultsMenu';
 
 
 const theme = createMuiTheme({

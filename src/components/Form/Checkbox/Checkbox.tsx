@@ -4,7 +4,7 @@ import './Checkbox.css';
 
 interface CheckboxProps {
     id: string,
-    label: string,
+    label?: string,
     checked: boolean,
     type: string,
     error: boolean,
