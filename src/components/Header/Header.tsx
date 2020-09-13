@@ -100,7 +100,7 @@ class Header extends React.Component<any, State>{
         const logged = isLoggedIn();
         if (logged) {
             return (
-                <div className="button">
+                <div>
                     <div className="center">
                         <Typography className='navbar-firstname'>{'¡Hola ' + this.state.firstName + '!'}</Typography>
                         <IconButton onClick={this.handleMenu}>
