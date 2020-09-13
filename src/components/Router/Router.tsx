@@ -109,11 +109,11 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </PrivateRoute>
                     
-                    <Route path='/books' roles={[]}>
+                    <PrivateRoute path='/books' roles={[UserRoles.RoleAdmin]}>
                         <CreateBook
                         createBookCallback={(createBookStatus: RequestStatus) => this.setState({...this.state, createBookStatus})}
                         />
-                    </Route>
+                    </PrivateRoute>
 
                 </Switch>
                 <Footer />
