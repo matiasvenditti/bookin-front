@@ -236,7 +236,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                     format="dd/MM/yyyy"
                                     margin="none"
                                     id="date-picker-inline"
-                                    label="Fecha de lanzamiento"
+                                    label="Fecha de Publicación"
                                     value={this.state.values.release.value}
                                     onChange={this.handleDateChange}
                                     KeyboardButtonProps={{

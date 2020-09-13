@@ -104,6 +104,7 @@ export class Header extends React.Component<any, State>{
 						open={Boolean(this.state.anchorEl)}>
 						<MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
 						<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
+						<MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
 						<MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>
 						<MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
 					</Menu>
