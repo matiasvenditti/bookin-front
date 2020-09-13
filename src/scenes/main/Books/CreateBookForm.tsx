@@ -184,7 +184,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                 onChange={this.handleInput}
                                 value={this.state.values.title.value}
                                 error={this.state.values.title.touched && this.state.values.title.error}
-                                errorText={this.state.values.title.touched && this.state.values.title.error ? 'Titulo nválido' : ''}
+                                errorText={this.state.values.title.touched && this.state.values.title.error ? 'Titulo inválido' : ''}
                                 required
                             />
                         </div>
