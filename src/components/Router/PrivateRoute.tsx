@@ -18,7 +18,7 @@ const PrivateRoute = (props: PrivateRouteProps) => {
     } = props;
 
     if (!isLoggedIn()) {
-        return <Redirect to={'/signin'} />
+        return <Redirect to={'/login'} />
     }
 
     if (!isAuthorized(roles)) {

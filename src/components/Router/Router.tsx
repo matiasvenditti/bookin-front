@@ -59,10 +59,55 @@ class Router extends React.Component<RouterProps, RouterState> {
     render() {
         return (
             <BrowserRouter>
-                <Menu logoutCallback={() => this.setState({ reload: true })} />
+                <Menu logoutCallback={() => this.setState({ reload: true })} nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} />
 
-                <ResultsMenu />
+                <Route exact path='/'><Home /></Route>
+                <Route path='/register' >
+                    <Register registerCallback={(registerStatus: RequestStatus, loginStatus: RequestStatus) =>
+                        this.setState({ ...this.state, registerStatus, loginStatus })}
+                    />
+                </Route>
+                <Route path='/login' >
+                    <Login loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })} />
+                </Route>
+                <PrivateRoute path='/profile' roles={[]} >
+                    <Profile
+                        deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
+                        onLoadErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
+                        editProfileCallback={(editProfileStatus: RequestStatus) => this.setState({ ...this.state, editProfileStatus })}
+                    />
+                </PrivateRoute>
 
+                <PrivateRoute path='/authors/edit/:id' roles={[UserRoles.RoleAdmin]}>
+                    <ModifyAuthor
+                        updateCallback={(updateAuthorStatus: RequestStatus) => this.setState({ ...this.state, updateAuthorStatus })}
+                        getAuthorDataErrorCallback={() => this.setState({ ...this.state, getModifyAuthorDataError: true })}
+                    />
+                </PrivateRoute>
+
+                <Route path='/authors/:id' roles={[]} >
+                    <Author
+                        loadAvatarErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
+                        getAuthorDataErrorCallback={() => this.setState({ ...this.state, getAuthorDataError: true })}
+                        editAuthorCallback={(editAuthorStatus: RequestStatus) => this.setState({ ...this.state, editAuthorStatus })}
+                        deleteAuthorCallback={(deleteAuthorStatus: RequestStatus) => this.setState({ ...this.state, deleteAuthorStatus })}
+                    />
+                </Route>
+
+                <Route path='/books/:id' roles={[]} >
+                    <Book
+                    />
+                </Route>
+
+                <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}>
+                    <CreateAuthor
+                        createAuthorCallback={(createAuthorStatus: RequestStatus) => this.setState({ ...this.state, createAuthorStatus })}
+                    />
+                </PrivateRoute>
+
+                <Route path='/results' roles={[]}>
+                    <ResultsMenu />
+                </Route>
                 <Footer />
                 {this.renderToasts()}
             </BrowserRouter>
