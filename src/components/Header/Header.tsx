@@ -133,8 +133,9 @@ class Header extends React.Component<any, State>{
                                 <MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
                                 <MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>                            
                             </div>
-                            :<div></div>
+                            :null
                         }
+
                         <MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
                     </Menu>
                 </div>
