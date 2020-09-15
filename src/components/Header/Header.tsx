@@ -8,14 +8,17 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withRouter } from "react-router-dom";
 import { logout } from "../../services/SessionService";
-import { isLoggedIn } from "../../services/AuthService";
 import { getUserData } from "../../services/UserService";
+import { isAuthorized, isLoggedIn } from "../../services/AuthService";
+
 
 
 type State = {
     firstName: string,
     anchorEl: Element | null,
 }
+
+
 
 class Header extends React.Component<any, State>{
     constructor(props: any) {
@@ -98,6 +101,8 @@ class Header extends React.Component<any, State>{
 
     renderButtons() {
         const logged = isLoggedIn();
+        const authorized = isAuthorized(this.props.roles);
+        console.log(authorized)
         if (logged) {
             return (
                 <div>
@@ -123,8 +128,13 @@ class Header extends React.Component<any, State>{
                         open={Boolean(this.state.anchorEl)}>
                         <MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
                         <MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
-                        <MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
-                        <MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>
+                        {authorized
+                            ?<div>
+                                <MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
+                                <MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>                            
+                            </div>
+                            :<div></div>
+                        }
                         <MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
                     </Menu>
                 </div>
