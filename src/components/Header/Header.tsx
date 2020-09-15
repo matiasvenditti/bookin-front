@@ -127,6 +127,7 @@ class Header extends React.Component<any, State>{
                         open={Boolean(this.state.anchorEl)}>
                         <MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
                         <MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>
+                        {/* TODO: Uncomment when reviews are implemented */ }
                         {/*<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>*/}                        
                         {authorized
                             ?<div>
