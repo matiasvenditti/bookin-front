@@ -62,7 +62,7 @@ class Router extends React.Component<RouterProps, RouterState> {
     render() {
         return (
             <BrowserRouter>
-                <Menu logoutCallback={() => this.setState({ reload: true })} nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} />
+                <Menu logoutCallback={() => this.setState({ reload: true })} nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} roles={[UserRoles.RoleAdmin]}/>
                 <Switch>
                     <Route exact path='/'><Home /></Route>
                     <Route path='/register' >
