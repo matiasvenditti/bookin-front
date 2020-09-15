@@ -1,7 +1,12 @@
-// Modeling of our backend data.
-export interface User{
+import Gender from "./Gender";
+
+export interface User {
+    [key: string]: any,
     id: number,
     firstName: string,
     lastName: string,
-    username: string,
+    email: string,
+    password: string,
+    gender: string,
+    photo: any,
 }
