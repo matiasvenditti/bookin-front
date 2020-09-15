@@ -102,7 +102,6 @@ class Header extends React.Component<any, State>{
     renderButtons() {
         const logged = isLoggedIn();
         const authorized = isAuthorized(this.props.roles);
-        console.log(authorized)
         if (logged) {
             return (
                 <div>
