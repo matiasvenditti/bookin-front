@@ -7,7 +7,7 @@ import {
 import { dummyAvatar } from "../../../../assets";
 import Flag from "react-world-flags";
 import { formatDateTime } from "../../../../utils/formateDateTime";
-import { getCode } from "country-list";
+import constsUtils from "../../../../utils/constsUtils";
 
 
 interface AuthorViewProps {
@@ -93,7 +93,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                         <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
                     </div>
                     <div className='subtitle-container'>
-                        <Typography align='center' variant='subtitle2'><Flag code={getCode(nationality)}
+                        <Typography align='center' variant='subtitle2'><Flag code={constsUtils.getCountryName(nationality)}
                             height="16" />{'    ' + formatDateTime(birthday)}
                         </Typography>
                     </div>

@@ -110,8 +110,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                     {this.renderDelete()}
                 </div>
             </div>
-
-
         );
     }
 

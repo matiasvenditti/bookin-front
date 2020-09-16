@@ -10,6 +10,7 @@ import { AccountCircle } from '@material-ui/icons';
 import { Select } from '../../../../components/Form/Select/Select';
 import photoUtils from '../../../../utils/photoUtils';
 import { DatePicker } from '../../../../components/Form/DatePicker/DatePicker';
+import { CountriesSelect } from '../../../../components/Form/CountriesSelect/CountriesSelect';
 
 
 interface AuthorFormState {
@@ -51,6 +52,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
+        console.log(id, type, value);
         const error = !validateInput(type, value);
         const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
@@ -125,13 +127,12 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
 
                 <Grid alignItems="center" container spacing={3}>
                     <Grid item xs>
-                        <Select
-                            label='Nacionalidad'
+                        <CountriesSelect
+                            placeholder='Nacionalidad'
                             id='nationality'
                             value={this.state.values.nationality.value}
-                            options={['Argentina', 'Gran Bretaña', 'España']}
-                            disabled={loading}
                             onChange={this.handleInput}
+                            disabled={loading}
                         />
                     </Grid>
 

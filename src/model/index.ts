@@ -5,6 +5,7 @@ import { LoginFormModel } from './Form/LoginFormModel';
 import { UpdateAuthor } from './UpdateAuthor';
 import { Book } from './Book';
 import { BookID } from './BookID';
+import { NameCode } from './NameCode';
 
 
 export type {
@@ -15,4 +16,5 @@ export type {
     UpdateAuthor,
     Book,
     BookID,
+    NameCode,
 }

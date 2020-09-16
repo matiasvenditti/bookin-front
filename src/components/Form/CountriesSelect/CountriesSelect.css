@@ -1,0 +1,9 @@
+.countries-select-option-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.countries-select-option-container img {
+    max-width: 35px;
+    margin-right: 5px;
+}

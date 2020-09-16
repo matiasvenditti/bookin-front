@@ -16,8 +16,9 @@ import {dummyAvatar} from "../../../assets";
 import {Author} from "../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
 import {formatDateTimeYears} from "../../../utils/formateDateTime";
-import {getCode} from "country-list";
-import Flag from "react-world-flags";
+import Flag from 'react-world-flags';
+import constsUtils from "../../../utils/constsUtils";
+
 
 interface BookViewProps {
     data: {
@@ -134,7 +135,20 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                 style={{fontWeight: "bold", color: "darkgray"}}>Autores </Typography>
                                     <List style={{backgroundColor: '#f6f6f7', padding: 0, margin: '8px 0'}}>
                                         {authors.map((item, i) => {
-                                            const authorData = <Typography variant="h6" style={{color: 'black', display: 'flex', alignItems: 'center'}}>{item.firstName + ' ' + item.lastName + ' ' }<Flag style={{marginLeft: 10}} code={getCode(item.nationality)} height="20"/></Typography>
+                                            const authorData = (
+                                                <Typography 
+                                                    variant="h6" 
+                                                    style={{color: 'black', display: 'flex', alignItems: 'center'}}
+                                                >
+                                                    {item.firstName + ' ' + item.lastName + ' ' }
+                                                    <Flag 
+                                                        style={{marginLeft: 10}} 
+                                                        code={constsUtils.getCountryName(item.nationality)} 
+                                                        height="20"
+                                                    />
+                                                </Typography>
+                                            );
+                                            
                                             return (
                                                 <div key={'author-view-item-' + i}>
                                                     <ListItem button component={Link}
