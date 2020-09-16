@@ -157,8 +157,8 @@ class Book extends React.Component<BookProps, BookState> {
             return (
                 <div className="button-container">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
-                        <Button onClick={this.handleEdit}>Edit book</Button>
-                        <Button onClick={this.handleDelete}>Delete book</Button>
+                        <Button onClick={this.handleEdit}>Editar libro</Button>
+                        <Button onClick={this.handleDelete}>Eliminar libro</Button>
                     </ButtonGroup>
                 </div>
             )
