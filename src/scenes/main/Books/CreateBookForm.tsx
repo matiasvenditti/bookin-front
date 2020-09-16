@@ -11,6 +11,7 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/picker
 import DateFnsUtils from '@date-io/date-fns';
 import { Autocomplete } from '@material-ui/lab';
 import { Author } from '../../../model/Author';
+import photoUtils from "../../../utils/photoUtils";
 
 
 
@@ -131,19 +132,14 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
 
     handleChange = (event: any) => {
         const file: File = event.target.files[0];
-        const error: boolean = file.size >= this.maxFileSize
-        const photo = this.state.values.photo;
-        this.readFile(file);
-
-        const allTouched = Object.values(this.state.values).every(value => value.type === photo.type ? true : value.touched);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === photo.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                photo: { value: file, type: photo.type, error: error, touched: true },
-            },
-            formValid: allTouched && !anyErrors,
-        });
+        if (file === undefined) return;
+        const error: boolean = file.size >= photoUtils.MAX_PHOTO_SIZE;
+        if (!error) {
+            this.readFile(file);
+            this.handleInput('photo', 'photo', file);
+        } else {
+            this.setState({ ...this.state, values: { ...this.state.values, photo: { value: null, type: 'photo', error: true, touched: true } }, formValid: false })
+        }
     }
 
     handleChangeArray = (event: any, values: Author[]) => {
@@ -269,7 +265,6 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                     <Grid item xs>
                         <div className='photo'>
                             {image}
-                            {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                         </div>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
                                     color='secondary'>
@@ -280,6 +275,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                         style={{ display: "none" }}
                                     />
                         </Buttons>
+                        {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
                 <div className='create-author-buttons-container'>
