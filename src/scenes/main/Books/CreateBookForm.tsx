@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import {Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { NewBook } from '../../../model/NewBook';
 import { BookFormModel } from '../../../model/Form/BookFormModel';
@@ -269,6 +269,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                     <Grid item xs>
                         <div className='photo'>
                             {image}
+                            {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                         </div>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
                                     color='secondary'>
