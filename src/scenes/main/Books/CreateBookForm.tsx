@@ -40,7 +40,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                 genre: { value: '', type: 'select', error: true, touched: false },
                 language: { value: '', type: 'select', error: true, touched: false },
                 release: { value: null, type: 'date', error: true, touched: false },
-                photo: { value: null, type: 'File', error: true, touched: false },
+                photo: { value: null, type: 'photo', error: true, touched: false },
                 authors: { value:[], type: 'array', error: false, touched: true}
             },
             bytearray: null,
