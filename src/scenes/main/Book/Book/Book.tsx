@@ -1,17 +1,17 @@
 import React from "react";
-import {RequestStatus} from "../../../model/consts/RequestStatus";
-import {isAuthorized} from "../../../services/AuthService";
-import {BookID} from "../../../model";
+import {RequestStatus} from "../../../../model/consts/RequestStatus";
+import {isAuthorized} from "../../../../services/AuthService";
 import {Button, Typography} from "@material-ui/core";
-import Loader from "../../../components/Loader/Loader";
+import Loader from "../../../../components/Loader/Loader";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import SweetAlert from "react-bootstrap-sweetalert";
 import {RouteComponentProps, withRouter} from "react-router";
-import {getBookData, deleteBook, getBookAuthors} from "../../../services/BookService";
-import {Author} from "../../../model/Author";
+import {getBookData, deleteBook, getBookAuthors} from "../../../../services/BookService";
+import {BookID} from "../../../../model";
+import {Author} from "../../../../model/Author";
 import BookView from "./BookView";
 import "./Book.css"
-import {UserRoles} from "../../../model/consts/Roles";
+import {UserRoles} from "../../../../model/consts/Roles";
 
 interface BookProps extends RouteComponentProps<MatchParams> {
 }
@@ -30,7 +30,6 @@ interface BookState {
         photo: string,
         language: string,
         stars: number,
-
     },
     authors: Author[],
     error: any,
@@ -86,8 +85,7 @@ class Book extends React.Component<BookProps, BookState> {
     };
 
     handleEdit = () => {
-        const id = this.state.data.id;
-        this.props.history.push(`/books/edit/${id}`)
+        this.props.history.push(`/books/edit/${this.state.data.id}`)
     }
 
     handleDelete = () => {
@@ -177,7 +175,7 @@ class Book extends React.Component<BookProps, BookState> {
                 onCancel={this.handleCancel}
                 focusCancelBtn
             >
-                Author will be permanently deleted
+                Book will be permanently deleted
             </SweetAlert>
         )
     }

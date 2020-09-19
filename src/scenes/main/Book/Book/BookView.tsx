@@ -12,10 +12,10 @@ import {
     Typography,
     Box
 } from "@material-ui/core";
-import {dummyAvatar} from "../../../assets";
-import {Author} from "../../../model/Author";
+import {dummyAvatar} from "../../../../assets";
+import {Author} from "../../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
-import {formatDateTimeYears} from "../../../utils/formateDateTime";
+import {formatDateTimeYears} from "../../../../utils/formateDateTime";
 import {getCode} from "country-list";
 import Flag from "react-world-flags";
 

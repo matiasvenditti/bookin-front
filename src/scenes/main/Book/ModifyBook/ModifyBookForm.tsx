@@ -1,18 +1,16 @@
 import React, {Component} from 'react'
 import { Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
-import { NewBook } from '../../../model/NewBook';
-import { BookFormModel } from '../../../model/Form/BookFormModel';
-import validateInput from '../../../utils/validateInput';
+import { BookFormModel } from '../../../../model/Form/BookFormModel';
+import validateInput from '../../../../utils/validateInput';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import { Button, Input } from '../../../components/Form';
-import './CreateBookForm.css'
+import { Button, Input } from '../../../../components/Form';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { Autocomplete } from '@material-ui/lab';
-import { Author } from '../../../model/Author';
-
-
+import { Author } from '../../../../model/Author';
+import {UpdateBook} from "../../../../model";
+import "./ModifyBookForm.css"
 
 interface BookFormState {
     values: BookFormModel;
@@ -21,13 +19,22 @@ interface BookFormState {
 }
 
 interface BookFormProps {
-    onSubmit(values: NewBook, photo: File): void;
+    onSubmit(values: UpdateBook, photo: File): void;
     authors: Author[];
+    book: {
+        id: string,
+        title: string,
+        genre: string,
+        date: string,
+        photo: string,
+        language: string,
+        stars: number,
+    },
     onCancel(): void;
     loading: boolean,
 }
 
-export default class CreateBookForm extends Component<BookFormProps, BookFormState> {
+export default class ModifyBookForm extends Component<BookFormProps, BookFormState> {
 
     maxFileSize: number = 100000;
 
@@ -35,54 +42,54 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         super(props)
         this.state = {
             values: {
-                title: { value: '', type: 'alphanumeric', error: true, touched: false },
-                genre: { value: '', type: 'select', error: true, touched: false },
-                language: { value: '', type: 'select', error: true, touched: false },
-                release: { value: null, type: 'date', error: true, touched: false },
-                photo: { value: null, type: 'File', error: true, touched: false },
-                authors: { value:[], type: 'array', error: false, touched: true}
+                id:{ value: this.props.book.id, type: 'hidden', error: false, touched: true},
+                title: { value: this.props.book.title, type: 'alphanumeric', error: false, touched: true },
+                genre: { value: this.props.book.genre, type: 'select', error: false, touched: true },
+                language: { value: this.props.book.language, type: 'select', error: false, touched: true },
+                date: { value: this.props.book.date, type: 'date', error: false, touched: true },
+                photo: { value: this.props.book.photo, type: 'File', error: false, touched: true },
+                authors: { value:this.props.authors, type: 'array', error: false, touched: true}
             },
-            bytearray: null,
+            bytearray: this.props.book.photo,
             formValid: false
         }
     }
 
     handleSubmit = () => {
-        let book: NewBook = {
+        let book: UpdateBook = {
+            id: this.state.values.id.value,
             title: this.state.values.title.value,
             genre: this.state.values.genre.value,
             language: this.state.values.language.value,
-            date: this.state.values.release.value,
+            date: this.state.values.date.value,
             authors: this.state.values.authors.value
         }
         this.props.onSubmit(book, this.state.values.photo.value);
     }
     handleInput = (id: keyof BookFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
-        const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,
                 [id]: { value, type, error, touched: true }
             },
-            formValid: allTouched && !anyErrors,
+            formValid: !anyErrors,
         });
     }
 
 
-    handleDateChange = (date: Date | null) => {
-        const error: boolean = date ? date > new Date() : false;
-        const release = this.state.values.release;
+    handleDateChange = (date2: Date | null) => {
+        const error: boolean = date2 ? date2 > new Date() : false;
+        const date = this.state.values.date;
 
-        const allTouched = Object.values(this.state.values).every(value => value.type === release.type ? true : value.touched);
-        const anyErrors = Object.values(this.state.values).some(value => value.type === release.type ? error : value.error);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === date.type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,
-                release: { value: date, type: release.type, error: error, touched: true }
+                date: { value: date, type: date.type, error: error, touched: true }
             },
-            formValid: allTouched && !anyErrors,
+            formValid: !anyErrors,
         });
     }
 
@@ -91,7 +98,6 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         const language = this.state.values.language;
         const error: boolean = false;
 
-        const allTouched = Object.values(this.state.values).every(value => value.type === language.type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === language.type ? error : value.error);
         this.setState({
             values: {
@@ -103,7 +109,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                     touched: true
                 },
             },
-            formValid: allTouched && !anyErrors,
+            formValid: !anyErrors,
         });
     }
 
@@ -112,7 +118,6 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         const genre = this.state.values.genre;
         const error: boolean = false;
 
-        const allTouched = Object.values(this.state.values).every(value => value.type === genre.type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === genre.type ? error : value.error);
         this.setState({
             values: {
@@ -124,9 +129,8 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                     touched: true
                 },
             },
-            formValid: allTouched && !anyErrors,
+            formValid: !anyErrors,
         });
-        console.log(this.state);
     }
 
     handleChange = (event: any) => {
@@ -135,14 +139,13 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         const photo = this.state.values.photo;
         this.readFile(file);
 
-        const allTouched = Object.values(this.state.values).every(value => value.type === photo.type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === photo.type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,
                 photo: { value: file, type: photo.type, error: error, touched: true },
             },
-            formValid: allTouched && !anyErrors,
+            formValid: !anyErrors,
         });
     }
 
@@ -153,7 +156,6 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                 authors: { value: values, type: 'array', error: false, touched: true },
             }
         });
-        console.log(this.state)
     }
 
     readFile = (file: File) => {
@@ -168,9 +170,10 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
     }
 
     render(){
-        const image = this.state.bytearray ? 
-        <img src={this.state.bytearray} width='100' /> :
-        <MenuBookIcon color='secondary' style={{ height: 150, width: 100}}/>
+
+        const image = this.state.values.photo.value ?
+            <img src={"data:image/jpeg;base64, "+this.state.bytearray} height='100' width='100' alt={"Cover Page"}/> :
+            <MenuBookIcon color='secondary' style={{ height: 100, width: 100}}/>
 
         return(
             <form>
@@ -209,14 +212,14 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                         <div className='spacing'>
                             <FormControl required fullWidth color='secondary' variant='outlined'>
                                 <InputLabel id='idioma' color='secondary' variant='outlined'>Idioma</InputLabel>
-                                <Select 
-                                labelId='idioma'
-                                id='language'
-                                type='select'
-                                name='genre'
-                                value={this.state.values.language.value}
-                                onChange={this.handleInputSelectL}
-                                label='Idioma'
+                                <Select
+                                    labelId='idioma'
+                                    id='language'
+                                    type='select'
+                                    name='genre'
+                                    value={this.state.values.language.value}
+                                    onChange={this.handleInputSelectL}
+                                    label='Idioma'
                                 >
                                     <MenuItem value='Español'>Español</MenuItem>
                                     <MenuItem value='Inglés'>Inglés</MenuItem>
@@ -227,8 +230,8 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                                 <KeyboardDatePicker
                                     fullWidth
-                                    error={this.state.values.release.touched && this.state.values.release.error}
-                                    helperText={this.state.values.release.touched && this.state.values.release.error ? 'Lanzamiento mayor a fecha actual' : null}
+                                    error={this.state.values.date.touched && this.state.values.date.error}
+                                    helperText={this.state.values.date.touched && this.state.values.date.error ? 'Lanzamiento mayor a fecha actual' : null}
                                     color="secondary"
                                     disableToolbar
                                     required
@@ -237,7 +240,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                     margin="none"
                                     id="date-picker-inline"
                                     label="Fecha de Publicación"
-                                    value={this.state.values.release.value}
+                                    value={this.state.values.date.value}
                                     onChange={this.handleDateChange}
                                     KeyboardButtonProps={{
                                         'aria-label': 'change date',
@@ -251,17 +254,17 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                 id="tags-outlined"
                                 options={this.props.authors}
                                 getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
-                                defaultValue={[]}
+                                defaultValue={this.state.values.authors.value}
                                 onChange={this.handleChangeArray}
                                 filterSelectedOptions
                                 renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="outlined"
-                                    label="Autores"
-                                    placeholder="Autor/es"
-                                    color="secondary"
-                                />
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        label="Autores"
+                                        placeholder="Autor/es"
+                                        color="secondary"
+                                    />
                                 )}
                             />
                         </div>
@@ -271,19 +274,19 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                             {image}
                         </div>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handleChange}
-                                    color='secondary'>
-                                    Agrega una foto
-                                    <input
-                                        accept="image/*"
-                                        type="file"
-                                        style={{ display: "none" }}
-                                    />
+                                 color='secondary'>
+                            Modifica la Foto
+                            <input
+                                accept="image/*"
+                                type="file"
+                                style={{ display: "none" }}
+                            />
                         </Buttons>
                     </Grid>
                 </Grid>
                 <div className='create-author-buttons-container'>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.props.onCancel} />
-                    <Button title='Crear Libro' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} />
+                    <Button title='Actualizar' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} />
                 </div>
             </form>
         )
