@@ -24,6 +24,35 @@
     display: flex;
 }
 
+.container .subtitle-container {
+    /* background-color: green; */
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: flex-start;
+    justify-content: center;
+}
+.container .subtitle-container .name {
+    /* background-color: green; */
+    font-weight: bold;
+}
+
+.container .subtitle-container .birthday {
+    /* background-color: green; */
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;   
+    padding: 10px;
+}
+
+.container .subtitle-container .birthday img {
+    margin-right: 10px;
+}
+
+.container .subtitle-container .birthday p {
+    font-weight: 400;
+}
+
 .title-container {
     align-self: center;
 }

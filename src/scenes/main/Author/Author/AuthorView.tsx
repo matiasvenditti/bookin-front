@@ -5,9 +5,8 @@ import {
     Typography
 } from "@material-ui/core";
 import { dummyAvatar } from "../../../../assets";
-import Flag from "react-world-flags";
 import { formatDateTime } from "../../../../utils/formateDateTime";
-import constsUtils from "../../../../utils/constsUtils";
+import { Flag } from "../../../../components/Flag/Flag";
 
 
 interface AuthorViewProps {
@@ -87,17 +86,14 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                             className={'avatar-image'}
                         >
                             <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar} />
-
                         </Badge>
                     </div>
                     <div className='subtitle-container'>
-                        <Typography 
-                            align='center' 
-                            variant='subtitle2'
-                        >
-                            <Flag code={nationality} height="16" />
-                            {'    ' + formatDateTime(birthday)}
-                        </Typography>
+                        <Typography className='name' align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
+                        <div className='birthday'>
+                            <Flag code={nationality} height="28" />
+                            <Typography>{formatDateTime(birthday)}</Typography>
+                        </div>
                     </div>
                 </div>
             )

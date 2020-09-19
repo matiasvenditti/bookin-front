@@ -10,7 +10,7 @@ export function formatDateTime(dateTimeString:string) {
     const monthIndex = date.getMonth();
     const year = date.getFullYear();
 
-    return date.getDate() + ' ' + monthNames[monthIndex] + ' ' + year
+    return date.getDate() + ' de ' + monthNames[monthIndex] + ' de ' + year
 
 }
 
