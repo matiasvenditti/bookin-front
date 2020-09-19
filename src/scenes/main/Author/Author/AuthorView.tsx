@@ -93,8 +93,12 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                         <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
                     </div>
                     <div className='subtitle-container'>
-                        <Typography align='center' variant='subtitle2'><Flag code={constsUtils.getCountryName(nationality)}
-                            height="16" />{'    ' + formatDateTime(birthday)}
+                        <Typography 
+                            align='center' 
+                            variant='subtitle2'
+                        >
+                            <Flag code={nationality} height="16" />
+                            {'    ' + formatDateTime(birthday)}
                         </Typography>
                     </div>
                 </div>

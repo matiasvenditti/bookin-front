@@ -176,6 +176,8 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
                             onInputSelect={this.handleInputSelect}
                             onChange={this.handleChange}
                             onReadFile={this.readFile}
+                            updateAuthorStatus={this.state.updateAuthorStatus}
+                            getAuthorDataStatus={this.state.getAuthorDataStatus}
                         />
                     </div>
                 }

@@ -9,6 +9,8 @@ import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/picker
 import DateFnsUtils from "@date-io/date-fns";
 import { UpdateAuthor } from '../../../../model';
 import { EditAuthorFormModel } from '../../../../model/Form/EditAuthorFormModel';
+import { CountriesSelect } from '../../../../components/Form/CountriesSelect/CountriesSelect';
+import { RequestStatus } from '../../../../model/consts/RequestStatus';
 
 
 interface AuthorFormProps {
@@ -22,6 +24,8 @@ interface AuthorFormProps {
     onInputSelect(object: any): void,
     onChange(event: any): void,
     onReadFile(file: File): void,
+    updateAuthorStatus: RequestStatus,
+    getAuthorDataStatus: RequestStatus,
 }
 
 export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
@@ -40,13 +44,8 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
         this.props.onInput(id, type, value);
     }
 
-
     handleDateChange = (date: Date | null) => {
         this.props.onDateChange(date)
-    }
-
-    handleInputSelect = (object: any) => {
-        this.props.onInputSelect(object)
     }
 
     handleChange = (event: any) => {
@@ -66,7 +65,10 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
         const image = this.props.bytearray ?
             <img src={this.props.bytearray} width="100" height="100" alt="author" /> :
             <AccountCircle color="secondary" style={{ fontSize: 100 }} />
-
+        const loading = (this.props.updateAuthorStatus === RequestStatus.LOADING || 
+            this.props.getAuthorDataStatus === RequestStatus.LOADING);
+        // error only with update because get error will redirect to author view
+        const error = (this.props.updateAuthorStatus === RequestStatus.ERROR);
         return (
             <form>
                 <Grid alignItems="center" container spacing={3}>
@@ -103,22 +105,15 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
 
                 <Grid alignItems="center" container spacing={3}>
                     <Grid item xs>
-                        <FormControl required fullWidth color="secondary" variant="outlined">
-                            <InputLabel id="demo-simple-select-label">Nacionalidad</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="nationality"
-                                type="select"
-                                name='nationality'
-                                value={this.props.author.nationality.value}
-                                onChange={this.handleInputSelect}
-                                label="Nacionalidad"
-                            >
-                                <MenuItem value='Argentina'>Argentina</MenuItem>
-                                <MenuItem value='Gran Bretaña'>Gran Bretaña</MenuItem>
-                                <MenuItem value='España'>España</MenuItem>
-                            </Select>
-                        </FormControl>
+                        <CountriesSelect
+                            placeholder='Nacionalidad'
+                            id='nationality'
+                            value={this.props.author.nationality.value}
+                            onChange={this.handleInput}
+                            disabled={loading}
+                            error={this.props.author.nationality.error}
+                            errorText={this.props.author.nationality.error ? 'Por favor elija una nacionalidad' : ''}
+                        />
                     </Grid>
 
                     <Grid item xs>

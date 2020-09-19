@@ -7,7 +7,6 @@ import { Button as MaterialButton, Typography } from '@material-ui/core';
 import './AuthorForm.css';
 import validateInput from '../../../../utils/validateInput';
 import { AccountCircle } from '@material-ui/icons';
-import { Select } from '../../../../components/Form/Select/Select';
 import photoUtils from '../../../../utils/photoUtils';
 import { DatePicker } from '../../../../components/Form/DatePicker/DatePicker';
 import { CountriesSelect } from '../../../../components/Form/CountriesSelect/CountriesSelect';
@@ -133,6 +132,8 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                             value={this.state.values.nationality.value}
                             onChange={this.handleInput}
                             disabled={loading}
+                            error={this.state.values.nationality.touched && this.state.values.nationality.error}
+                            errorText={this.state.values.nationality.touched && this.state.values.nationality.error ? 'Por favor elija una nacionalidad' : ''}
                         />
                     </Grid>
 
