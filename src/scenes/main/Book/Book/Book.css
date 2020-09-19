@@ -2,3 +2,24 @@
     display: inline-block;
     float: right;
 }
+
+.route-container .card-container {
+    padding-bottom: 50px;
+}
+
+.book-container {
+    padding-bottom: 50px;
+}
+
+.title {
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: large;
+}
+
+.rating {
+    font-weight: bold;
+    color: darkgray;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

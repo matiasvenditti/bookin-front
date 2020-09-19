@@ -33,9 +33,8 @@ class CreateBook extends Component<CreateBookProps, CreateBookState> {
                 this.props.history.push('/books/' + response.data.id)
             })
             .catch((e) => { 
-                console.error(e);
                 this.props.createBookCallback(RequestStatus.ERROR);
-                this.setState({ ...this.state, status: RequestStatus.ERROR});
+                this.setState({ ...this.state, status: RequestStatus.SUCCESS});
             })
     }
     componentDidMount(){
