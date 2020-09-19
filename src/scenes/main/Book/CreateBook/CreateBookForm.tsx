@@ -10,8 +10,9 @@ import './CreateBookForm.css'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { Autocomplete } from '@material-ui/lab';
-import { Author } from '../../../model/Author';
-import photoUtils from "../../../utils/photoUtils";
+import {Author} from "../../../../model/Author";
+import photoUtils from "../../../../utils/photoUtils";
+
 
 
 
