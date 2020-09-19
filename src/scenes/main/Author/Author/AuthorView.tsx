@@ -75,7 +75,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
             )
         } else {
             return (
-                <div>
+                <div className='container'>
                     <div className='image-container'>
                         <Badge
                             color='primary'
@@ -89,8 +89,6 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                             <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar} />
 
                         </Badge>
-
-                        <Typography align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
                     </div>
                     <div className='subtitle-container'>
                         <Typography 

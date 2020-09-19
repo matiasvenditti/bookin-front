@@ -1,8 +1,7 @@
-.route-container .card-container .image-container{
+.route-container .card-container .image-container {
     display: flex;
     flex-flow: row wrap;
     align-items: center;
-    margin-bottom: 15px;
 }
 
 .route-container .card-container {
@@ -12,7 +11,7 @@
     margin-top: 20px;
 }
 
-.route-container .card-container .image-container .avatar-image .MuiAvatar-root{
+.route-container .card-container .image-container .avatar-image .MuiAvatar-root {
     border-radius: 70px;
     position: relative;
     width: 125px;
@@ -21,16 +20,31 @@
     margin-right: 40px;
 }
 
-.subtitle-container{
+.container {
+    display: flex;
+}
+
+.title-container {
+    align-self: center;
+}
+
+.nationality {
     display: flex;
     position: center;
     align-items: center;
     width: 600px;
     height: 25px;
     right: 500px;
+    color: grey;
+    font-weight: 400;
 }
 
-.button-divider{
+.nationality .flag {
+    /*vertical-align: text-bottom;*/
+    margin-right: 5px;
+}
+
+.button-divider {
     position: absolute;
     right: 20px;
 }
