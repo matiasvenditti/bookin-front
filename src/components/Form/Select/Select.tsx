@@ -8,6 +8,7 @@ interface SelectProps {
     value: string,
     options: string[],
     disabled?: boolean,
+    
     onChange(id: string, type: string, value: string): void,
 }
 
