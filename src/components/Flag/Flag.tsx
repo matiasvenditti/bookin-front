@@ -8,7 +8,7 @@ interface FlagProps {
     height?: string,
 }
 
-export const Flag = (props: FlagProps) => {
+const Flag = (props: FlagProps) => {
     const {code, height} = props;
 
     return (
@@ -17,3 +17,6 @@ export const Flag = (props: FlagProps) => {
         </div>
     )
 }
+
+
+export default Flag;

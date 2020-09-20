@@ -17,7 +17,7 @@ interface CountriesSelectProps {
     onChange(id: string, type: string, value: string): void,
 }
 
-export const CountriesSelect = (props: CountriesSelectProps) => {
+const CountriesSelect = (props: CountriesSelectProps) => {
     const {
         label,
         placeholder,
@@ -60,3 +60,6 @@ export const CountriesSelect = (props: CountriesSelectProps) => {
         </FormControl>
     )
 }
+
+
+export default CountriesSelect;

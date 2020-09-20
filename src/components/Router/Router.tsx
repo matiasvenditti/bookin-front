@@ -1,22 +1,21 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import React from "react";
 import PrivateRoute from './PrivateRoute';
-import Home from "../../scenes/main/Home/Home";
+import Home from "../../scenes/home/Home";
 import Register from "../../scenes/session/Register/Register";
 import Login from '../../scenes/session/Login/Login';
-import Profile from '../../scenes/main/Profile/Profile';
+import Profile from '../../scenes/profile/Profile';
 import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
-import CreateAuthor from "../../scenes/main/Author/CreateAuthor/CreateAuthor";
+import CreateAuthor from "../../scenes/authors/CreateAuthor/CreateAuthor";
 import { UserRoles } from "../../model/consts/Roles";
-import CreateBook from "../../scenes/main/Books/CreateBook";
-import Book from "../../scenes/main/Book/Book";
-import Author from "../../scenes/main/Author/Author/Author";
-import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor/ModifyAuthor";
-import { ResultsMenu } from "../../scenes/main/Results/ResultsMenu/ResultsMenu";
+import Author from "../../scenes/authors/Author/Author";
+import ModifyAuthor from "../../scenes/authors/ModifyAuthor/ModifyAuthor";
+import { Book, CreateBook } from "../../scenes/books";
+import ResultsMenu from "../../scenes/results/ResultsMenu/ResultsMenu";
 
 
 interface RouterProps {

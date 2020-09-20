@@ -1,4 +1,4 @@
-import photoUtils from "./photoUtils";
+import PhotoUtils from './PhotoUtils';
 
 
 export default function(type: string, value: any) {
@@ -10,7 +10,7 @@ export default function(type: string, value: any) {
         case 'email': regex = /^[\w-.]{3,50}@([\w-]+\.)+[\w-]{2,4}$/; break;
         case 'radio-group': return value !== null;
         case 'accept-terms': return value;
-        case 'photo': return value !== null && value.size < photoUtils.MAX_PHOTO_SIZE;
+        case 'photo': return value !== null && value.size < PhotoUtils.MAX_PHOTO_SIZE;
         case 'date':
             if (value.toString() === 'Invalid Date') return false;
             else return true;

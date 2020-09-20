@@ -1,7 +1,7 @@
 import { allBookGenres, allCountries } from "./consts";
 
 
-export default class constsUtils {
+class ConstsUtils {
     static getCountryName = (codename: string) => {
         const country = allCountries.find((country) => country.codename === codename);
         if (country !== undefined) return country.name;
@@ -12,3 +12,6 @@ export default class constsUtils {
         if (bookGenre !== undefined) return bookGenre.name;
     };    
 }
+
+
+export default ConstsUtils;

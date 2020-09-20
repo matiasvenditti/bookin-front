@@ -7,18 +7,13 @@ import "./Header.css";
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withRouter } from "react-router-dom";
-import { logout } from "../../services/SessionService";
-import { getUserData } from "../../services/UserService";
-import { isAuthorized, isLoggedIn } from "../../services/AuthService";
-
+import { AuthService, SessionService, UserService } from "../../services";
 
 
 type State = {
     firstName: string,
     anchorEl: Element | null,
 }
-
-
 
 class Header extends React.Component<any, State>{
     constructor(props: any) {
@@ -34,16 +29,16 @@ class Header extends React.Component<any, State>{
 
     // on reload the page
     componentDidMount() {
-        if (isLoggedIn())
-            getUserData()
+        if (AuthService.isLoggedIn())
+            UserService.getUserData()
                 .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
                 .catch((error) => console.log(error));
     }
 
     // on not logged to logged
     componentDidUpdate(prevProps: any) {
-        if (!prevProps.nowIsLogged && this.props.nowIsLogged && isLoggedIn()) {
-            getUserData()
+        if (!prevProps.nowIsLogged && this.props.nowIsLogged && AuthService.isLoggedIn()) {
+            UserService.getUserData()
                 .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
                 .catch((error) => console.log(error));
         }
@@ -59,7 +54,7 @@ class Header extends React.Component<any, State>{
     }
 
     handleLogout = () => {
-        logout();
+        SessionService.logout();
         this.props.history.push('/login');
         this.props.logoutCallback();
         this.handleClose();
@@ -100,8 +95,8 @@ class Header extends React.Component<any, State>{
     }
 
     renderButtons() {
-        const logged = isLoggedIn();
-        const authorized = isAuthorized(this.props.roles);
+        const logged = AuthService.isLoggedIn();
+        const authorized = AuthService.isAuthorized(this.props.roles);
         if (logged) {
             return (
                 <div>

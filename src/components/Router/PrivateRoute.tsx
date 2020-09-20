@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect, Route } from "react-router-dom";
-import { isAuthorized, isLoggedIn } from "../../services/AuthService";
+import { AuthService } from "../../services";
 
 interface PrivateRouteProps {
     exact?: boolean,
@@ -17,11 +17,11 @@ const PrivateRoute = (props: PrivateRouteProps) => {
         roles,
     } = props;
 
-    if (!isLoggedIn()) {
+    if (!AuthService.isLoggedIn()) {
         return <Redirect to={'/login'} />
     }
 
-    if (!isAuthorized(roles)) {
+    if (!AuthService.isAuthorized(roles)) {
         return <Redirect exact to={'/'} />
     }
 

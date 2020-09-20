@@ -15,7 +15,7 @@ interface DatePickerProps {
     maxDate: Date,
 }
 
-export const DatePicker = (props: DatePickerProps) => {
+const DatePicker = (props: DatePickerProps) => {
     const {
         error,
         helperText,
@@ -50,3 +50,6 @@ export const DatePicker = (props: DatePickerProps) => {
         </MuiPickersUtilsProvider>
     )
 }
+
+
+export default DatePicker;
