@@ -1,18 +1,20 @@
 import { NameCode } from "../model";
 
-export const allBookGenres: NameCode[] = [
-    {name: 'Aventura', codename: 'Aventura'},
-    {name: 'Acción', codename: 'Acción'},
-    {name: 'Autoayuda', codename: 'Autoayuda'},
-    {name: 'Biografías', codename: 'Biografías'},
-    {name: 'Ciencia Ficción', codename: 'Ciencia Ficción'},
-    {name: 'Educativos', codename: 'Educativos'},
-    {name: 'Fantasia', codename: 'Fantasia'},
-    {name: 'Infantiles', codename: 'Infantiles'},
-    {name: 'Novelas románticas', codename: 'Novelas románticas'},
-    {name: 'Poesías', codename: 'Poesías'},
-    {name: 'Policiales', codename: 'Policiales'},
-    {name: 'Terror', codename: 'Terror'},
+export const allLanguages: string[] = ['Español', 'Inglés'];
+
+export const allBookGenres: string[] = [
+    'Aventura',
+    'Acción',
+    'Autoayuda',
+    'Biografías',
+    'Ciencia Ficción',
+    'Educativos',
+    'Fantasia',
+    'Infantiles',
+    'Novelas románticas',
+    'Poesías',
+    'Policiales',
+    'Terror',
 ];
 
 export const allCountries: NameCode[] = [

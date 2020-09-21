@@ -1,17 +1,19 @@
 import React, {Component} from 'react'
-import {Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from '@material-ui/core';
+import {Button as Buttons, TextField, Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { NewBook } from '../../../model/NewBook';
 import { BookFormModel } from '../../../model/Form/BookFormModel';
 import validateInput from '../../../utils/validateInput';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-import { Button, Input } from '../../../components/Form';
+import { Button, Input, Select } from '../../../components/Form';
 import './CreateBookForm.css'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns';
 import { Autocomplete } from '@material-ui/lab';
 import { Author } from '../../../model/Author';
 import photoUtils from "../../../utils/PhotoUtils";
+import { allBookGenres } from '../../../utils';
+import { allLanguages } from '../../../utils/consts';
 
 
 
@@ -58,7 +60,9 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
         }
         this.props.onSubmit(book, this.state.values.photo.value);
     }
+
     handleInput = (id: keyof BookFormModel, type: string, value: any) => {
+        console.log(id, type, value);
         const error = !validateInput(type, value);
         const allTouched = Object.values(this.state.values).every(value => value.type === type ? true : value.touched);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
@@ -165,7 +169,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
 
     render(){
         const image = this.state.bytearray ? 
-        <img src={this.state.bytearray} width='100' /> :
+        <img src={this.state.bytearray} width='100' alt='avatar' /> :
         <MenuBookIcon color='secondary' style={{ height: 150, width: 100}}/>
 
         return(
@@ -185,25 +189,16 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                             />
                         </div>
                         <div className='spacing'>
-                            <FormControl required fullWidth color='secondary' variant='outlined'>
-                                <InputLabel id="demo-simple-select-label">Género</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id='genre'
-                                    type='select'
-                                    name='genre'
-                                    value={this.state.values.genre.value}
-                                    onChange={this.handleInputSelectG}
-                                    label='Género'
-                                >
-                                    <MenuItem value='Terror'>Terror</MenuItem>
-                                    <MenuItem value='Policial'>Policial</MenuItem>
-                                    <MenuItem value='Drama'>Drama</MenuItem>
-                                </Select>
-                            </FormControl>
+                            <Select
+                                label='Género'
+                                id='genre'
+                                value={this.state.values.genre.value}
+                                options={allBookGenres}
+                                onChange={this.handleInput}
+                            />
                         </div>
                         <div className='spacing'>
-                            <FormControl required fullWidth color='secondary' variant='outlined'>
+                            {/* <FormControl required fullWidth color='secondary' variant='outlined'>
                                 <InputLabel id='idioma' color='secondary' variant='outlined'>Idioma</InputLabel>
                                 <Select 
                                 labelId='idioma'
@@ -217,7 +212,14 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                                     <MenuItem value='Español'>Español</MenuItem>
                                     <MenuItem value='Inglés'>Inglés</MenuItem>
                                 </Select>
-                            </FormControl>
+                            </FormControl> */}
+                            <Select
+                                label='Idioma'
+                                id='language'
+                                value={this.state.values.language.value}
+                                options={allLanguages}
+                                onChange={this.handleInput}
+                            />
                         </div>
                         <div className='spacing'>
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>

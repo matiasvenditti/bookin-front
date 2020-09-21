@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withRouter } from "react-router-dom";
 import { AuthService, SessionService, UserService } from "../../services";
-import { SearchSelect } from "../Form/SearchSelect/SearchSelect";
+// import { SearchSelect } from "../Form/SearchSelect/SearchSelect";
 
 
 type State = {
@@ -78,15 +78,15 @@ class Header extends React.Component<any, State>{
                             <div className={classes.searchIcon}>
                                 <SearchIcon />
                             </div>
-                            {/* <InputBase
+                            <InputBase
                                 placeholder="Buscar"
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
                                 inputProps={{ 'aria-label': 'search' }}
-                            /> */}
-                            <SearchSelect
+                            />
+                            {/* <SearchSelect
                                 value={'aaa'}
                                 placeholder='Busca un autor un libro aqui!'
                                 id='header-search-select'
@@ -95,7 +95,7 @@ class Header extends React.Component<any, State>{
                                 error={false}
                                 errorText={''}
                                 onChange={(id, type, value) => console.log(id, type, value)}
-                            />
+                            /> */}
                         </div>
                         <div className="grow" />
                         {this.renderButtons()}

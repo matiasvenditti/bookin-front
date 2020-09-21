@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Input, CountriesSelect } from '../../../components/Form';
 import Grid from '@material-ui/core/Grid';
-import { Button as MaterialButton, FormControl, InputLabel, MenuItem, Select, Typography } from '@material-ui/core';
+import { Button as MaterialButton, Typography } from '@material-ui/core';
 import "./ModifyAuthorForm.css";
 import { AccountCircle } from '@material-ui/icons';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -61,13 +61,12 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
 
 
     render() {
-        const image = this.props.bytearray ?
-            <img src={this.props.bytearray} width="100" height="100" alt="author" /> :
+        const image = (this.props.bytearray ?
+            <img src={this.props.bytearray} width="100" height="100" alt="author" /> 
+            :
             <AccountCircle color="secondary" style={{ fontSize: 100 }} />
-        const loading = (this.props.updateAuthorStatus === RequestStatus.LOADING || 
-            this.props.getAuthorDataStatus === RequestStatus.LOADING);
-        // error only with update because get error will redirect to author view
-        const error = (this.props.updateAuthorStatus === RequestStatus.ERROR);
+        );
+        
         return (
             <form>
                 <Grid alignItems="center" container spacing={3}>
@@ -109,12 +108,10 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                             id='nationality'
                             value={this.props.author.nationality.value}
                             onChange={this.handleInput}
-                            disabled={loading}
                             error={this.props.author.nationality.error}
                             errorText={this.props.author.nationality.error ? 'Por favor elija una nacionalidad' : ''}
                         />
                     </Grid>
-
                     <Grid item xs>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker

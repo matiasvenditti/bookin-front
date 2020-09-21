@@ -12,7 +12,9 @@ import "./Book.css"
 import {UserRoles} from "../../../model/consts/Roles";
 import { AuthService, BooksService } from "../../../services";
 
+
 interface BookProps extends RouteComponentProps<MatchParams> {
+
 }
 
 interface BookState {
@@ -39,7 +41,6 @@ interface MatchParams {
     id: string,
 }
 
-
 class Book extends React.Component<BookProps, BookState> {
     constructor(props: BookProps) {
         super(props);
@@ -51,7 +52,7 @@ class Book extends React.Component<BookProps, BookState> {
                 title: '',
                 genre: '',
                 date: '',
-                photo: "",
+                photo: '',
                 language: '',
                 stars: 0,
 

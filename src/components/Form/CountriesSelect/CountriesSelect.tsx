@@ -1,5 +1,5 @@
 import React from 'react';
-import { FormControl, InputLabel, TextField, Typography } from '@material-ui/core';
+import { FormControl, TextField, Typography } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Flag from "react-world-flags";
 import { allCountries } from '../../../utils/consts';
@@ -19,7 +19,7 @@ interface CountriesSelectProps {
 
 const CountriesSelect = (props: CountriesSelectProps) => {
     const {
-        label,
+        // label,
         placeholder,
         id,
         value,
