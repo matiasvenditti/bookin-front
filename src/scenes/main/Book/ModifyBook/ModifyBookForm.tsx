@@ -51,7 +51,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                 photo: { value: this.props.book.photo, type: 'File', error: false, touched: true },
                 authors: { value:this.props.authors, type: 'array', error: false, touched: true}
             },
-            bytearray: this.props.book.photo,
+            bytearray: "data:image/jpeg;base64, "+ this.props.book.photo,
             formValid: false
         }
     }
@@ -177,7 +177,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
     render(){
 
         const image = this.state.values.photo.value ?
-            <img src={"data:image/jpeg;base64, "+this.state.bytearray} height='100' width='100' alt={"Cover Page"}/> :
+            <img src={this.state.bytearray} height='100' width='100' alt={"Cover Page"}/> :
             <MenuBookIcon color='secondary' style={{ height: 100, width: 100}}/>
 
         return(
