@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import {Button as Buttons, FormControl, InputLabel, MenuItem, Select, TextField, Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import { BookFormModel } from '../../../../model/Form/BookFormModel';
 import validateInput from '../../../../utils/validateInput';
@@ -11,6 +11,7 @@ import { Autocomplete } from '@material-ui/lab';
 import { Author } from '../../../../model/Author';
 import {UpdateBook} from "../../../../model";
 import "./ModifyBookForm.css"
+import photoUtils from "../../../../utils/photoUtils";
 
 interface BookFormState {
     values: BookFormModel,
@@ -48,10 +49,10 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                 genre: { value: this.props.book.genre, type: 'select', error: false, touched: true },
                 language: { value: this.props.book.language, type: 'select', error: false, touched: true },
                 date: { value: this.props.book.date, type: 'date', error: false, touched: true },
-                photo: { value: this.props.book.photo, type: 'File', error: false, touched: true },
+                photo: { value: this.props.book.photo, type: 'photo', error: false, touched: true },
                 authors: { value:this.props.authors, type: 'array', error: false, touched: true}
             },
-            bytearray: "data:image/jpeg;base64, "+ this.props.book.photo,
+            bytearray: photoUtils.getPhotoFromBytearray(this.props.book.photo),
             formValid: false
         }
     }
@@ -138,8 +139,9 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
         const file: File = event.target.files[0];
         const error: boolean = file.size >= this.maxFileSize
         const photo = this.state.values.photo;
-        this.readFile(file);
-
+        if (!error) {
+            this.readFile(file);
+        }
         const anyErrors = Object.values(this.state.values).some(value => value.type === photo.type ? error : value.error);
         this.setState({
             values: {
@@ -289,6 +291,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                                 style={{ display: "none" }}
                             />
                         </Buttons>
+                        {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
                 <div className='create-author-buttons-container'>
