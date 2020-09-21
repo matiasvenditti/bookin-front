@@ -13,14 +13,16 @@ import {UpdateBook} from "../../../../model";
 import "./ModifyBookForm.css"
 
 interface BookFormState {
-    values: BookFormModel;
-    bytearray: any;
+    values: BookFormModel,
+    allAuthors: Author[],
+    bytearray: any,
     formValid: boolean
 }
 
 interface BookFormProps {
     onSubmit(values: UpdateBook, photo: File): void;
-    authors: Author[];
+    authors: Author[],
+    allAuthors: Author[],
     book: {
         id: string,
         title: string,
@@ -50,6 +52,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                 photo: { value: this.props.book.photo, type: 'File', error: false, touched: true },
                 authors: { value:this.props.authors, type: 'array', error: false, touched: true}
             },
+            allAuthors: this.props.allAuthors,
             bytearray: this.props.book.photo,
             formValid: false
         }
@@ -79,15 +82,15 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
     }
 
 
-    handleDateChange = (date2: Date | null) => {
-        const error: boolean = date2 ? date2 > new Date() : false;
-        const date = this.state.values.date;
+    handleDateChange = (date: Date | null) => {
+        const error: boolean = date ? date > new Date() : false;
+        const date2 = this.state.values.date;
 
-        const anyErrors = Object.values(this.state.values).some(value => value.type === date.type ? error : value.error);
+        const anyErrors = Object.values(this.state.values).some(value => value.type === date2.type ? error : value.error);
         this.setState({
             values: {
                 ...this.state.values,
-                date: { value: date, type: date.type, error: error, touched: true }
+                date: { value: date, type: date2.type, error: error, touched: true }
             },
             formValid: !anyErrors,
         });
@@ -150,11 +153,15 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
     }
 
     handleChangeArray = (event: any, values: Author[]) => {
+        const error: boolean = false;
+        const authors = this.state.values.authors;
+        const anyErrors = Object.values(this.state.values).some(value => value.type === authors.type ? error : value.error);
         this.setState ({
             values: {
                 ...this.state.values,
                 authors: { value: values, type: 'array', error: false, touched: true },
-            }
+            },
+            formValid: !anyErrors,
         });
     }
 
@@ -252,7 +259,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                             <Autocomplete
                                 multiple
                                 id="tags-outlined"
-                                options={this.props.authors}
+                                options={this.props.allAuthors}
                                 getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
                                 defaultValue={this.state.values.authors.value}
                                 onChange={this.handleChangeArray}

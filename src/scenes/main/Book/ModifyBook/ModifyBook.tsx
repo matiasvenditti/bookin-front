@@ -10,10 +10,12 @@ import ModifyBookForm from "./ModifyBookForm";
 import {Typography} from "@material-ui/core";
 import Loader from "../../../../components/Loader/Loader";
 import "./ModifyBook.css"
+import {getAuthors} from "../../../../services/AuthorService";
 
 interface ModifyBookState {
     id: string,
     authors: Author[],
+    allAuthors: Author[],
     book: {
         id: string,
         title: string,
@@ -43,6 +45,7 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
         this.state = {
             id: this.props.match.params.id,
             authors: [],
+            allAuthors: [],
             book: {
                 id: "",
                 title: '',
@@ -63,12 +66,13 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
     }
 
     getData = () => {
-        const result: Promise<any> = Promise.all([getBookData({id: this.state.id}), getBookAuthors({id: this.state.id})]);
+        const result: Promise<any> = Promise.all([getBookData({id: this.state.id}), getBookAuthors({id: this.state.id}), getAuthors()]);
         result
             .then((response) => {
                 this.setState({
                     book: response[0].data,
                     authors: response[1].data,
+                    allAuthors: response[2].data,
                     getBookDataStatus: RequestStatus.SUCCESS
                 })
             })
@@ -95,7 +99,6 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
 
     render() {
         const getBookDataStatus = this.state.getBookDataStatus;
-        console.log(this.state.book.id);
         if (getBookDataStatus === RequestStatus.LOADING) {
             return (
                 <div>
@@ -106,9 +109,11 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
         return (
             <div className='route-container'>
                 <div className='form-container'>
+                    <Typography align='center' variant='h5'>Modificacion de libro</Typography>
                     <ModifyBookForm
                         onSubmit={this.handleSubmit}
                         authors={this.state.authors}
+                        allAuthors={this.state.allAuthors}
                         book={this.state.book}
                         onCancel={this.props.history.goBack}
                         loading={this.state.getBookDataStatus === RequestStatus.LOADING}/>
