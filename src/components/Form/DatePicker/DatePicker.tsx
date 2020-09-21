@@ -11,7 +11,7 @@ interface DatePickerProps {
     label: string,
     value: any,
     onChange(id: string, type: string, value: any): void,
-    disabled: boolean,
+    disabled?: boolean,
     maxDate: Date,
 }
 
