@@ -14,7 +14,6 @@ import "./ModifyBookForm.css"
 
 interface BookFormState {
     values: BookFormModel,
-    allAuthors: Author[],
     bytearray: any,
     formValid: boolean
 }
@@ -52,7 +51,6 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                 photo: { value: this.props.book.photo, type: 'File', error: false, touched: true },
                 authors: { value:this.props.authors, type: 'array', error: false, touched: true}
             },
-            allAuthors: this.props.allAuthors,
             bytearray: this.props.book.photo,
             formValid: false
         }
@@ -260,6 +258,8 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                                 multiple
                                 id="tags-outlined"
                                 options={this.props.allAuthors}
+                                value={this.state.values.authors.value as Author[]}
+                                getOptionSelected={(option, value) => option.id === value.id}
                                 getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
                                 defaultValue={this.state.values.authors.value}
                                 onChange={this.handleChangeArray}
