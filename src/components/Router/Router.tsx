@@ -40,6 +40,7 @@ interface RouterState {
     getModifyAuthorDataError: boolean,
     getModifyBookDataError: boolean,
     deleteAuthorStatus: RequestStatus,
+    deleteBookStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -61,6 +62,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             getModifyAuthorDataError: false,
             getModifyBookDataError: false,
             deleteAuthorStatus: RequestStatus.NONE,
+            deleteBookStatus: RequestStatus.NONE,
         };
     }
 
@@ -110,6 +112,7 @@ class Router extends React.Component<RouterProps, RouterState> {
 
                     <Route path='/books/:id' roles={[]} exact={true}>
                         <Book
+                            deleteBookCallback={(deleteBookStatus: RequestStatus) => this.setState({ ...this.state, deleteBookStatus })}
                         />
                     </Route>
 

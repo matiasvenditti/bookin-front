@@ -14,7 +14,7 @@ interface AuthorProps extends RouteComponentProps<MatchParams> {
     loadAvatarErrorCallback(): void,
     getAuthorDataErrorCallback(): void,
     editAuthorCallback(editAuthorStatus: RequestStatus): void,
-    deleteAuthorCallback(editAuthorStatus: RequestStatus): void,
+    deleteAuthorCallback(deleteAuthorStatus: RequestStatus): void,
 }
 
 interface AuthorState {
