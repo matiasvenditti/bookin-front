@@ -4,7 +4,7 @@ import {isAuthorized} from "../../../../services/AuthService";
 import {Button, Typography} from "@material-ui/core";
 import Loader from "../../../../components/Loader/Loader";
 import {RouteComponentProps, withRouter} from "react-router";
-import {getBookData, deleteBook, getBookAuthors} from "../../../../services/BookService";
+import {deleteBook, getBookAuthors, getBookData} from "../../../../services/BookService";
 import {BookID} from "../../../../model";
 import {Author} from "../../../../model/Author";
 import BookView from "./BookView";
@@ -14,6 +14,7 @@ import {DeleteBookModal} from "./DeleteBookModal";
 
 interface BookProps extends RouteComponentProps<MatchParams> {
     deleteBookCallback(deleteBookStatus: RequestStatus): void,
+    getBookDataErrorCallback():void,
 }
 
 interface BookState {
@@ -72,12 +73,17 @@ class Book extends React.Component<BookProps, BookState> {
     getData = () => {
         const result: Promise<any> = Promise.all([getBookData({id: this.state.data.id}), getBookAuthors({id: this.state.data.id})]);
         result
-            .then((response) => this.setState({
+            .then((response) =>
+                this.setState({
                 data: response[0].data,
                 authors: response[1].data,
                 getBookDataStatus: RequestStatus.SUCCESS
-            }))
-            .catch((error: any) => this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error}));
+                })
+            )
+            .catch((error: any) => {
+                this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error});
+                this.props.getBookDataErrorCallback();
+            })
     };
 
     handleCancel = () => {
