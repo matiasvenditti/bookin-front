@@ -3,7 +3,6 @@ import {RequestStatus} from "../../../../model/consts/RequestStatus";
 import {isAuthorized} from "../../../../services/AuthService";
 import {Button, Typography} from "@material-ui/core";
 import Loader from "../../../../components/Loader/Loader";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {RouteComponentProps, withRouter} from "react-router";
 import {getBookData, deleteBook, getBookAuthors} from "../../../../services/BookService";
 import {BookID} from "../../../../model";
@@ -152,11 +151,9 @@ class Book extends React.Component<BookProps, BookState> {
         const {isAdmin} = this.state;
         if (isAdmin)
             return (
-                <div className="button-container">
-                    <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">
-                        <Button onClick={this.handleEdit}>Editar libro</Button>
-                        <Button onClick={this.handleDelete}>Eliminar libro</Button>
-                    </ButtonGroup>
+                <div className="button-divider">
+                    <Button variant="contained" color="secondary" onClick={this.handleEdit}>Editar libro</Button>
+                    <Button variant="outlined" color="secondary" onClick={this.handleDelete}>Eliminar libro</Button>
                 </div>
             )
     }
