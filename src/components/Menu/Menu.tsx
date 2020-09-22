@@ -15,7 +15,8 @@ export class Menu extends React.Component<MenuProps, {}> {
     render() {
         return (
             <div>
-                <Header logoutCallback={this.props.logoutCallback} nowIsLogged={this.props.nowIsLogged} roles={this.props.roles} />
+                <Header 
+                    logoutCallback={this.props.logoutCallback} nowIsLogged={this.props.nowIsLogged} roles={this.props.roles} />
             </div>
         )
     }

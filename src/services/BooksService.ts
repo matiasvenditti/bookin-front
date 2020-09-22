@@ -30,7 +30,12 @@ class BooksService {
     }
     
     static deleteBook = (bookID: BookID): Promise<AxiosResponse<Book>> => {
-        return instance.delete <Book>(`${baseURL}/books/${bookID.id}`)
+        return instance.delete<Book>(`${baseURL}/books/${bookID.id}`)
+    }
+
+    // TODO: finish request to work
+    static searchBooks = (query: string): Promise<AxiosResponse<Book[]>> => {
+        return instance.get<Book[]>(`${baseURL}/books/search`)
     }
 }
 

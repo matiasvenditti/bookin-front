@@ -1,6 +1,7 @@
 import { FormControl, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React from 'react';
+import { SelectGroupedOptions } from '../../../model/SelectGroupedOptions';
 import './SearchSelect.css';
 
 
@@ -8,10 +9,13 @@ interface SearchSelectProps {
     value: string,
     placeholder: string,
     id: string,
+    loading: boolean,
     disabled?: boolean
     loadingOptions?: boolean,
     error: boolean
     errorText: string,
+    bookOptions: SelectGroupedOptions[],
+    authorOptions: SelectGroupedOptions[],
     onChange(id: string, type: string, value: string): void,
 }
 
@@ -20,10 +24,13 @@ export const SearchSelect = (props: SearchSelectProps) => {
         value,
         placeholder,
         id,
+        loading,
         disabled,
         loadingOptions,
         error,
         errorText,
+        bookOptions,
+        authorOptions,
     } = props;
 
     return (
@@ -31,24 +38,18 @@ export const SearchSelect = (props: SearchSelectProps) => {
             {/* TODO: InputLabel no anda correctamente, se renderiza superpuesto a Autocomplete */}
             {/* <InputLabel id={`${id}-label`}>{label}</InputLabel> */}
             <Autocomplete
-                color='error'
+                color='primary'
                 disabled={disabled}
                 id={id}
                 // value note: empty NameCode to avoid undefined value and react 
                 // giving controlled error
-                value={value}
-                options={['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff']}
-                getOptionLabel={(value) => value}
+                value={{type: '', value}}
+                options={bookOptions.concat(authorOptions)}
+                groupBy={(option) => option.type}
+                getOptionLabel={(option) => option.value}
                 renderOption={(option, state) => (
-                    <div className='countries-select-option-container'>
-                        <Typography>{option}</Typography>
-                    </div>
-                )}
-                ListboxComponent={(option, state) => (
-                    <div>
-                        <Typography>LIST BOX A</Typography>
-                        <Typography>{option}</Typography>
-                        <Typography>LIST BOX B</Typography>
+                    <div className='select-option-container'>
+                        <Typography>{option.value}</Typography>
                     </div>
                 )}
                 renderInput={(params) => <TextField {...params} label={placeholder || ''} variant='outlined'/>}

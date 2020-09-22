@@ -1,27 +1,46 @@
 import React from "react";
 import AppBar from '@material-ui/core/AppBar';
-import { InputBase, fade, Theme, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
+import { fade, Theme, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import "./Header.css";
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withRouter } from "react-router-dom";
-import { AuthService, SessionService, UserService } from "../../services";
+import { AuthorsService, AuthService, BooksService, SessionService, UserService } from "../../services";
+import { SearchSelect } from "./SearchSelect/SearchSelect";
+import { RequestStatus } from "../../model/consts/RequestStatus";
 // import { SearchSelect } from "../Form/SearchSelect/SearchSelect";
 
 
-type State = {
-    firstName: string,
-    anchorEl: Element | null,
+interface HeaderProps {
+    nowIsLogged: boolean,
+    roles: string[],
+    logoutCallback(): void,
+    getUserDataErrorCallback(): void,
+    searchBooksErrorCallback(): void,
+    searchAuthorsErrorCallback(): void,
 }
 
-class Header extends React.Component<any, State>{
+interface HeaderState {
+    firstName: string,
+    anchorEl: Element | null,
+    getUserDataStatus: RequestStatus,
+    searchInput: string,
+    searchBooksStatus: RequestStatus,
+    searchAuthorsStatus: RequestStatus,
+}
+
+class Header extends React.Component<any, HeaderState>{
     constructor(props: any) {
         super(props);
         this.state = {
             firstName: '',
             anchorEl: null,
+            getUserDataStatus: RequestStatus.NONE,
+            searchInput: '',
+            searchBooksStatus: RequestStatus.NONE,
+            searchAuthorsStatus: RequestStatus.NONE,
         };
         this.handleMenu = this.handleMenu.bind(this);
         this.handleClose = this.handleClose.bind(this);
@@ -30,10 +49,17 @@ class Header extends React.Component<any, State>{
 
     // on reload the page
     componentDidMount() {
+        this.setState({...this.state, getUserDataStatus: RequestStatus.LOADING});
         if (AuthService.isLoggedIn())
             UserService.getUserData()
-                .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
-                .catch((error) => console.log(error));
+                .then((response) => {
+                    this.setState({ ...this.state, firstName: response.data.firstName, getUserDataStatus: RequestStatus.SUCCESS })
+                })
+                .catch((error) => {
+                    this.setState({ ...this.state, getUserDataStatus: RequestStatus.ERROR })
+                    this.props.getUserDataErrorCallback();
+                    console.log(error);
+                });
     }
 
     // on not logged to logged
@@ -48,7 +74,7 @@ class Header extends React.Component<any, State>{
     handleMenu(event: React.MouseEvent<HTMLElement>) { this.setAnchorEl(event.currentTarget); }
     handleClose() { this.setAnchorEl(null); }
     setAnchorEl(anchorEl: Element | null) {
-        this.setState((prevState: State) => ({
+        this.setState((prevState: HeaderState) => ({
             ...prevState,
             anchorEl: anchorEl
         }))
@@ -67,6 +93,10 @@ class Header extends React.Component<any, State>{
 
     render() {
         const { classes } = this.props;
+        const searchInputLoading = (this.state.searchAuthorsStatus === RequestStatus.LOADING
+            || this.state.searchBooksStatus === RequestStatus.LOADING
+        );
+
         return (
             <div>
                 <AppBar position='static' color='primary' className={classes.title}>
@@ -78,24 +108,27 @@ class Header extends React.Component<any, State>{
                             <div className={classes.searchIcon}>
                                 <SearchIcon />
                             </div>
-                            <InputBase
+                            {/* <InputBase
                                 placeholder="Buscar"
                                 classes={{
                                     root: classes.inputRoot,
                                     input: classes.inputInput,
                                 }}
                                 inputProps={{ 'aria-label': 'search' }}
-                            />
-                            {/* <SearchSelect
-                                value={'aaa'}
-                                placeholder='Busca un autor un libro aqui!'
+                            /> */}
+                            <SearchSelect
+                                value={this.state.searchInput}
+                                placeholder='Busca un autor un libro!'
                                 id='header-search-select'
-                                // disabled
+                                loading={searchInputLoading}
                                 loadingOptions={false}
                                 error={false}
                                 errorText={''}
+                                //  TODO falta manejar requests y darselas a search select
+                                bookOptions={[]}
+                                authorOptions={[]}
                                 onChange={(id, type, value) => console.log(id, type, value)}
-                            /> */}
+                            />
                         </div>
                         <div className="grow" />
                         {this.renderButtons()}
@@ -121,15 +154,9 @@ class Header extends React.Component<any, State>{
                         id="menu-appbar"
                         anchorEl={this.state.anchorEl}
                         onClose={this.handleClose}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
+                        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                        transformOrigin={{vertical: 'top', horizontal: 'right'}}
                         keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
                         open={Boolean(this.state.anchorEl)}>
                         <MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
                         {/* TODO: Uncomment when reviews are implemented */ }
@@ -141,7 +168,6 @@ class Header extends React.Component<any, State>{
                             </div>
                             :null
                         }
-
                         <MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
                     </Menu>
                 </div>

@@ -5,7 +5,6 @@ import Home from "../../scenes/home/Home";
 import Register from "../../scenes/session/Register/Register";
 import Login from '../../scenes/session/Login/Login';
 import Profile from '../../scenes/profile/Profile';
-import Menu from "../Menu/Menu";
 import Footer from "../Footer/Footer";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
@@ -16,6 +15,7 @@ import Author from "../../scenes/authors/Author/Author";
 import ModifyAuthor from "../../scenes/authors/ModifyAuthor/ModifyAuthor";
 import { Book, CreateBook } from "../../scenes/books";
 import ResultsMenu from "../../scenes/results/ResultsMenu/ResultsMenu";
+import { Header } from "..";
 
 
 interface RouterProps {
@@ -23,7 +23,10 @@ interface RouterProps {
 }
 
 interface RouterState {
-    reload: boolean,
+    logoutStatus: boolean,
+    getUserDataError: boolean,
+    searchBooksError: boolean,
+    searchAuthorsError: boolean,
     registerStatus: RequestStatus,
     loginStatus: RequestStatus,
     loadAvatarError: boolean,
@@ -42,7 +45,10 @@ class Router extends React.Component<RouterProps, RouterState> {
     constructor(props: RouterProps) {
         super(props);
         this.state = {
-            reload: false,
+            logoutStatus: false,
+            getUserDataError: false,
+            searchBooksError: false,
+            searchAuthorsError: false,
             registerStatus: RequestStatus.NONE,
             loginStatus: RequestStatus.NONE,
             loadAvatarError: false,
@@ -61,7 +67,14 @@ class Router extends React.Component<RouterProps, RouterState> {
     render() {
         return (
             <BrowserRouter>
-                <Menu logoutCallback={() => this.setState({ reload: true })} nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} roles={[UserRoles.RoleAdmin]}/>
+                <Header 
+                    nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} 
+                    roles={[UserRoles.RoleAdmin]}
+                    logoutCallback={() => this.setState({...this.state, logoutStatus: true })} 
+                    getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
+                    searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
+                    searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
+                />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
                     <Route path='/register' >
