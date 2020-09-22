@@ -14,7 +14,7 @@ interface AuthorProps extends RouteComponentProps<MatchParams> {
     loadAvatarErrorCallback(): void,
     getAuthorDataErrorCallback(): void,
     editAuthorCallback(editAuthorStatus: RequestStatus): void,
-    deleteAuthorCallback(editAuthorStatus: RequestStatus): void,
+    deleteAuthorCallback(deleteAuthorStatus: RequestStatus): void,
 }
 
 interface AuthorState {
@@ -142,8 +142,8 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         if (isAdmin)
             return (
                 <div className="button-divider">
-                    <Button variant="outlined" color="secondary" onClick={this.handleDelete}>Eliminar Autor</Button>
                     <Button variant="contained" color="secondary" onClick={this.handleEdit}>Editar Autor</Button>
+                    <Button variant="outlined" color="secondary" onClick={this.handleDelete}>Eliminar Autor</Button>
                 </div>
             )
     }

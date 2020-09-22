@@ -39,7 +39,9 @@ interface RouterState {
     getAuthorDataError: boolean,
     getModifyAuthorDataError: boolean,
     getModifyBookDataError: boolean,
+    getBookDataError: boolean,
     deleteAuthorStatus: RequestStatus,
+    deleteBookStatus: RequestStatus,
 }
 
 class Router extends React.Component<RouterProps, RouterState> {
@@ -61,6 +63,8 @@ class Router extends React.Component<RouterProps, RouterState> {
             getModifyAuthorDataError: false,
             getModifyBookDataError: false,
             deleteAuthorStatus: RequestStatus.NONE,
+            deleteBookStatus: RequestStatus.NONE,
+            getBookDataError: false,
         };
     }
 
@@ -110,6 +114,8 @@ class Router extends React.Component<RouterProps, RouterState> {
 
                     <Route path='/books/:id' roles={[]} exact={true}>
                         <Book
+                            getBookDataErrorCallback={() => this.setState({ ...this.state, getBookDataError: true })}
+                            deleteBookCallback={(deleteBookStatus: RequestStatus) => this.setState({ ...this.state, deleteBookStatus })}
                         />
                     </Route>
 
@@ -149,6 +155,10 @@ class Router extends React.Component<RouterProps, RouterState> {
             getAuthorDataError,
             getModifyAuthorDataError,
             deleteAuthorStatus,
+            getModifyBookDataError,
+            getBookDataError,
+            deleteBookStatus,
+            updateBookStatus,
         } = this.state;
         return (
             <div>
@@ -200,6 +210,23 @@ class Router extends React.Component<RouterProps, RouterState> {
                 <Snackbar open={createBookStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createBookStatus: RequestStatus.NONE })} >
                     <Alert severity='error'>Hubo un error al crear el libro, intente más tarde</Alert>
                 </Snackbar>
+                <Snackbar open={deleteBookStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteBookStatus: RequestStatus.NONE })}>
+                    <Alert severity='success'>Se ha eliminado el libro exitosamente</Alert>
+                </Snackbar>
+                <Snackbar open={deleteBookStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteBookStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>Hubo un error al eliminar el libro, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={updateBookStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateBookStatus: RequestStatus.NONE })}>
+                    <Alert severity='success'>Se ha modificado el libro exitosamente</Alert>
+                </Snackbar>
+                <Snackbar open={updateBookStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateBookStatus: RequestStatus.NONE })}>
+                    <Alert severity='error'>Hubo un error al modificar el libro, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={getBookDataError || getModifyBookDataError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, getBookDataError: false, getModifyBookDataError: false })}>
+                    <Alert severity='error'>Hubo un error al obtener los datos del libro, intente más tarde</Alert>
+                </Snackbar>
+
+
             </div>
         );
     }
