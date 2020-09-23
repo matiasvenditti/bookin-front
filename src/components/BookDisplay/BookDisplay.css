@@ -1,0 +1,19 @@
+.BookDisplay{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    background-color: #f71735;
+    height: 300px;
+    text-align: center;
+    border-radius: 25px;
+    border: 1px solid black;
+}
+
+.ratingDisplay{
+    margin-top: 15px;
+    margin-bottom: 50px;
+    align-items: center;
+}
+
+.BookName{
+    display: inline-block;
+}

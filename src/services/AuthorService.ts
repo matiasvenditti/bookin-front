@@ -2,7 +2,7 @@ import {NewAuthor} from "../model/NewAuthor";
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
-import {UpdateAuthor} from "../model";
+import {Book, UpdateAuthor} from "../model";
 import { Author } from "../model/Author";
 
 
@@ -49,11 +49,15 @@ const deleteAuthor = (id: number): Promise<AxiosResponse<Author>> => {
     return instance.delete<Author>(`${baseURL}/authors/${id}`, config)
 }
 
+const getAuthorBooks = (id: number): Promise<AxiosResponse<Book[]>> => {
+    return instance.get<Book[]>(`${baseURL}/authors/${id}/books`)
+}
 
 export {
     createAuthor,
     getAuthorData,
     deleteAuthor,
     changeAuthorData,
-    getAuthors
+    getAuthors,
+    getAuthorBooks
 }

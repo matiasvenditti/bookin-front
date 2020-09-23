@@ -2,21 +2,19 @@ import React, { Component } from "react";
 import {
     Avatar,
     Badge,
+    Grid,
     Typography
 } from "@material-ui/core";
 import { dummyAvatar } from "../../../../assets";
 import Flag from "react-world-flags";
 import { formatDateTime } from "../../../../utils/formateDateTime";
 import { getCode } from "country-list";
+import { Book } from "../../../../model";
+import BookDisplay from "../../../../components/BookDisplay/BookDisplay";
 
 
 interface AuthorViewProps {
-    books: {
-        book1: string,
-        book2: string,
-        book3: string,
-        book4: string,
-    },
+    books: Book[],
     data: {
         id: number,
         firstName: string,
@@ -29,7 +27,7 @@ interface AuthorViewProps {
 }
 
 interface AuthorViewState {
-    books: { key: string, value: string }[],
+    books: Book[],
     data: {
         id: number,
         firstName: string,
@@ -44,12 +42,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
     constructor(props: AuthorViewProps) {
         super(props);
         this.state = {
-            books: [
-                { key: 'Book1', value: props.books.book1 },
-                { key: 'Book2', value: props.books.book2 },
-                { key: 'Book3', value: props.books.book3 },
-                { key: 'Book4', value: props.books.book4 },
-            ],
+            books: this.props.books,
             data: {
                 id: props.data.id,
                 firstName: props.data.firstName,
@@ -62,9 +55,14 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
     }
 
     render() {
-        //const { books } = this.state;
         const { photo, firstName, lastName, nationality, birthday } = this.state.data;
         const { error } = this.props;
+        const books = this.props.books.sort((a, b) => b.rating - a.rating);
+        const listBooks = books.map((books, index) =>
+            <Grid item xs={3}>
+                <BookDisplay book={books} crown={index === 0}/>
+            </Grid> 
+        );
 
         if (error) {
             return (
@@ -96,6 +94,11 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                         <Typography align='center' variant='subtitle2'><Flag code={getCode(nationality)}
                             height="16" />{'    ' + formatDateTime(birthday)}
                         </Typography>
+                    </div>
+                    <div>
+                        <Grid alignItems='center' container spacing={2} >
+                            {listBooks}
+                        </Grid>
                     </div>
                 </div>
             )

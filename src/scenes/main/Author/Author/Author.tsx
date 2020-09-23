@@ -1,13 +1,14 @@
 import { RequestStatus } from "../../../../model/consts/RequestStatus";
 import React from "react";
 import { Button, Typography } from "@material-ui/core";
-import { deleteAuthor, getAuthorData } from "../../../../services/AuthorService";
+import { deleteAuthor, getAuthorBooks, getAuthorData } from "../../../../services/AuthorService";
 import AuthorView from "./AuthorView";
 import { RouteComponentProps, withRouter } from 'react-router';
 import './Author.css'
 import { isAuthorized } from "../../../../services/AuthService";
 import Loader from "../../../../components/Loader/Loader";
 import { DeleteAuthorModal } from "./DeleteAuthorModal";
+import { Book } from "../../../../model/Book";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -32,7 +33,7 @@ interface AuthorState {
         photo: any,
     },
     error: any,
-    books: any
+    books: Book[]
 }
 
 interface MatchParams {
@@ -57,12 +58,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
             error: null,
-            books: { //BOOKTYPE etc. for later.
-                book1: null,
-                book2: null,
-                book3: null,
-                book4: null,
-            },
+            books:[],
         }
     }
 
@@ -71,6 +67,14 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         getAuthorData(this.state.data.id)
             .then((response: any) => {
                 this.setState({ data: response.data, getAuthorDataStatus: RequestStatus.SUCCESS });
+            })
+            .catch((error: any) => {
+                this.props.getAuthorDataErrorCallback();
+                this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error });
+            });
+        getAuthorBooks(this.state.data.id)
+            .then((response: any) => {
+                this.setState({ books: response.data})
             })
             .catch((error: any) => {
                 this.props.getAuthorDataErrorCallback();
