@@ -70,7 +70,7 @@ class Router extends React.Component<RouterProps, RouterState> {
                 <Header 
                     nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} 
                     roles={[UserRoles.RoleAdmin]}
-                    logoutCallback={() => this.setState({...this.state, logoutStatus: true })} 
+                    logoutCallback={() => this.setState({...this.state, logoutStatus: true })}  // only one to trigger re-render
                     getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
                     searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
                     searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
@@ -138,6 +138,9 @@ class Router extends React.Component<RouterProps, RouterState> {
 
     renderToasts() {
         const {
+            getUserDataError,
+            searchBooksError,
+            searchAuthorsError,
             registerStatus,
             loginStatus,
             editProfileStatus,
@@ -152,20 +155,29 @@ class Router extends React.Component<RouterProps, RouterState> {
         } = this.state;
         return (
             <div>
+                <Snackbar open={getUserDataError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, getUserDataError: false })}>
+                    <Alert severity='error'>Hubo un error al obtener los datos del usuario, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={searchBooksError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, searchBooksError: false })}>
+                    <Alert severity='error'>Hubo un error al buscar libros, intente más tarde</Alert>
+                </Snackbar>
+                <Snackbar open={searchAuthorsError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, searchAuthorsError: false })}>
+                    <Alert severity='error'>Hubo un error al buscar autores, intente más tarde</Alert>
+                </Snackbar>
                 <Snackbar open={registerStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, registerStatus: RequestStatus.NONE })}>
                     <Alert severity='success'>Te has registrado correctamente!</Alert>
                 </Snackbar>
                 <Snackbar open={registerStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, registerStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>Hubo un error al registrarse, intente mas tarde</Alert>
+                    <Alert severity='error'>Hubo un error al registrarse, intente más tarde</Alert>
                 </Snackbar>
                 <Snackbar open={loginStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, loginStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>No se ha podido ingresar, intente mas tarde</Alert>
+                    <Alert severity='error'>No se ha podido ingresar, intente más tarde</Alert>
                 </Snackbar>
                 <Snackbar open={editProfileStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, editProfileStatus: RequestStatus.NONE })}>
                     <Alert severity='success'>Se han actualizado los datos del usuario correctamente</Alert>
                 </Snackbar>
                 <Snackbar open={editProfileStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, editProfileStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>No se han podido actualizar los datos correctamente, intente mas tarde</Alert>
+                    <Alert severity='error'>No se han podido actualizar los datos correctamente, intente más tarde</Alert>
                 </Snackbar>
                 <Snackbar open={deleteProfileStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteProfileStatus: RequestStatus.NONE })}>
                     <Alert severity='error'>No se ha podido eliminar al cuenta, intente más tarde</Alert>

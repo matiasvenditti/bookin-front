@@ -1,17 +1,19 @@
 export class Book {
     id: number;
-    title: string;   
+    title: string;
     genre: string;
-    languaje: string;
-    release: Date;
+    language: string;
+    date: Date;
     photo: string;
+    stars: number;
 
     constructor(){
         this.id = 0;
         this.title = '';
         this.genre = '';
-        this.languaje = '';
-        this.release = new Date();
+        this.language = '';
+        this.date = new Date();
         this.photo = '';
+        this.stars = 0;
     }
 }

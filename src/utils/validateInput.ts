@@ -13,7 +13,7 @@ export default function(type: string, value: any) {
         case 'accept-terms': return value;
         case 'photo': return value !== null && value.size < PhotoUtils.MAX_PHOTO_SIZE;
         case 'date':
-            if (value.toString() === 'Invalid Date') return false;
+            if (value?.toString() === 'Invalid Date') return false;
             else return true;
         case 'select': return value !== null;
         case 'autocomplete-select': return value !== '';

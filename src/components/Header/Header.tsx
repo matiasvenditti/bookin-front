@@ -2,13 +2,12 @@ import React from "react";
 import AppBar from '@material-ui/core/AppBar';
 import { fade, Theme, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import SearchIcon from '@material-ui/icons/Search';
 import "./Header.css";
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withRouter } from "react-router-dom";
 import { AuthorsService, AuthService, BooksService, SessionService, UserService } from "../../services";
-import { SearchSelect } from "./SearchSelect/SearchSelect";
+import SearchSelect from "./SearchSelect/SearchSelect";
 import { RequestStatus } from "../../model/consts/RequestStatus";
 // import { SearchSelect } from "../Form/SearchSelect/SearchSelect";
 
@@ -27,7 +26,11 @@ interface HeaderState {
     anchorEl: Element | null,
     getUserDataStatus: RequestStatus,
     searchInput: string,
+    userIsTyping: boolean,
+    typingTimeout: any,
+    books: any[],
     searchBooksStatus: RequestStatus,
+    authors: any[],
     searchAuthorsStatus: RequestStatus,
 }
 
@@ -39,7 +42,11 @@ class Header extends React.Component<any, HeaderState>{
             anchorEl: null,
             getUserDataStatus: RequestStatus.NONE,
             searchInput: '',
+            userIsTyping: false,
+            typingTimeout: 0,
+            books: [],
             searchBooksStatus: RequestStatus.NONE,
+            authors: [],
             searchAuthorsStatus: RequestStatus.NONE,
         };
         this.handleMenu = this.handleMenu.bind(this);
@@ -91,11 +98,45 @@ class Header extends React.Component<any, HeaderState>{
         this.props.history.push('/');
     }
 
+    _searchRequest = (value: string) => {
+        console.log('searching request', value)
+        this.setState({...this.state, searchBooksStatus: RequestStatus.LOADING, searchAuthorsStatus: RequestStatus.LOADING});
+        BooksService.searchBooks(value)
+            .then((response) => {
+                this.setState({...this.state, searchBooksStatus: RequestStatus.SUCCESS, books: response.data});
+            })
+            .catch((error: any) => {
+                this.props.searchBooksErrorCallback();
+                this.setState({...this.state, searchBooksStatus: RequestStatus.ERROR});
+            });
+        AuthorsService.searchAuthors(value)
+            .then((response) => {
+                this.setState({...this.state, searchAuthorsStatus: RequestStatus.SUCCESS, authors: response.data});
+            })
+            .catch((error: any) => {
+                this.props.searchAuthorsErrorCallback();
+                this.setState({...this.state, searchAuthorsStatus: RequestStatus.ERROR});
+            });
+    }
+
+    handleSearchChange = (value: string) => {
+        if (this.state.typingTimeout) clearTimeout(this.state.typingTimeout);
+        this.setState({
+            ...this.state,
+            userIsTyping: false,
+            typingTimeout: setTimeout(() => {
+                this._searchRequest(value);
+            }, 1000),
+        })
+    }
+
     render() {
         const { classes } = this.props;
         const searchInputLoading = (this.state.searchAuthorsStatus === RequestStatus.LOADING
             || this.state.searchBooksStatus === RequestStatus.LOADING
         );
+        const loading = (this.state.searchBooksStatus === RequestStatus.LOADING || this.state.searchAuthorsStatus === RequestStatus.LOADING);
+        const error = (this.state.searchBooksStatus === RequestStatus.ERROR || this.state.searchAuthorsStatus === RequestStatus.ERROR);
 
         return (
             <div>
@@ -105,29 +146,22 @@ class Header extends React.Component<any, HeaderState>{
                             <Typography onClick={this.handleHomeRedirect} variant='h6'>Book in</Typography>
                         </div>
                         <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
-                            {/* <InputBase
-                                placeholder="Buscar"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'search' }}
-                            /> */}
                             <SearchSelect
-                                value={this.state.searchInput}
+                                inputValue={this.state.searchInput}
                                 placeholder='Busca un autor un libro!'
                                 id='header-search-select'
-                                loading={searchInputLoading}
                                 loadingOptions={false}
-                                error={false}
+                                loading={loading}
+                                error={error}
                                 errorText={''}
                                 //  TODO falta manejar requests y darselas a search select
-                                bookOptions={[]}
-                                authorOptions={[]}
-                                onChange={(id, type, value) => console.log(id, type, value)}
+                                options={!searchInputLoading ?
+                                    this.state.books.map((book: any) => ({value: book, type: 'Libros'}))
+                                        .concat(this.state.authors.map((author: any) => ({value: author, type: 'Autores'}))) 
+                                    : []
+                                }
+                                onFocus={() => this._searchRequest('')}
+                                onQueryChange={() => console.log('cuak')}
                             />
                         </div>
                         <div className="grow" />

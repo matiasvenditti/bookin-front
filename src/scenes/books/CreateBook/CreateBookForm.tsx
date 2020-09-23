@@ -93,7 +93,6 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                 authors: { value: values, type: 'array', error: false, touched: true },
             }
         });
-        console.log(this.state)
     }
 
     readFile = (file: File) => {

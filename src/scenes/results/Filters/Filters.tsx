@@ -38,12 +38,12 @@ const Filters = (props: FiltersProps) => {
     const [mockData, setMockData] = useState(initialMockData);
     const {
         tags,
-        sortBy,
+        // sortBy,
         onlyBooks,
         onlyAuthors,
         countries,
         genres,
-        languages,
+        // languages,
     } = mockData;
 
     const handleTagChange = (value: string) => {
