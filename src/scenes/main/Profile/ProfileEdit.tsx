@@ -133,6 +133,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                     </div>,
                 ]);
             case EditVar.EMAIL:
+                //   TODO: Uncomment or change when change-email functionality is ready
                 // return ([
                 //     <Input
                 //         label='Mail'

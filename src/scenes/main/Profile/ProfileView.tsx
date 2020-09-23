@@ -72,7 +72,9 @@ export default class ProfileView extends Component<ProfileViewProps, ProfileView
                         ]))}
                     </List>
                     <div className='footer-buttons-container'>
-                        <Button onClick={this.props.onChangePassword}>Cambiar la contraseña</Button>
+                        {/*TODO: Uncomment when change password functionality is ready*/}
+                        {/*<Button onClick={this.props.onChangePassword}>Cambiar la contraseña</Button>*/}
+                        <Button onClick={this.props.onChangePassword}/>
                         <Button onClick={this.props.onDeleteUser}>Eliminar cuenta</Button>
                     </div>
                 </div>
