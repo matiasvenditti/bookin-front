@@ -11,7 +11,7 @@ import { formatDateTime } from "../../../../utils/formateDateTime";
 import { getCode } from "country-list";
 import { Book } from "../../../../model";
 import BookDisplay from "../../../../components/BookDisplay/BookDisplay";
-import classes from "./AuthoView.module.css";
+import classes from "./AuthorView.module.css";
 
 
 interface AuthorViewProps {
