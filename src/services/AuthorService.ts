@@ -2,7 +2,8 @@ import {NewAuthor} from "../model/NewAuthor";
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
-import {Book, UpdateAuthor} from "../model";
+import {UpdateAuthor} from "../model";
+import { Book } from "../model/Book"
 import { Author } from "../model/Author";
 
 

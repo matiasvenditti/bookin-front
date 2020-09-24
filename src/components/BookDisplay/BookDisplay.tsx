@@ -1,7 +1,7 @@
 import {Card, CardActionArea, CardContent, CardMedia, Typography} from "@material-ui/core";
 import {Rating} from "@material-ui/lab";
 import React, {Component} from "react";
-import {Book} from "../../model";
+import {Book} from "../../model/Book";
 import classes from './BookDisplay.module.css';
 import {Stars} from "@material-ui/icons";
 import photoUtils from "../../utils/photoUtils";

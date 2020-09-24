@@ -9,7 +9,7 @@ import { dummyAvatar } from "../../../../assets";
 import Flag from "react-world-flags";
 import { formatDateTime } from "../../../../utils/formateDateTime";
 import { getCode } from "country-list";
-import { Book } from "../../../../model";
+import { Book } from "../../../../model/Book";
 import BookDisplay from "../../../../components/BookDisplay/BookDisplay";
 import classes from "./AuthorView.module.css";
 
@@ -74,28 +74,29 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
             )
         } else {
             return (
-                <div className='container'>
-                    <div className='image-container'>
-                        <Badge
-                            color='primary'
-                            overlap='circle'
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}
-                            className={'avatar-image'}
-                        >
+                <div>
+                    <div className={classes.container} >
+                        <div className='image-container'>
+                            <Badge
+                                color='primary'
+                                overlap='circle'
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                className={'avatar-image'}
+                            >
                             <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar} />
+                            </Badge>
+                            </div>
+                            <div className='title-container'>
 
-                        </Badge>
-                    </div>
-                    <div className='title-container'>
+                                <Typography variant='h4' gutterBottom={true}>{firstName + ' ' + lastName} </Typography>
 
-                        <Typography variant='h4' gutterBottom={true}>{firstName + ' ' + lastName} </Typography>
-
-                        <Typography variant='subtitle2' className='nationality'><Flag code={getCode(nationality)}
-                            height="16" className='flag'/>{'    ' + formatDateTime(birthday)}
-                        </Typography>
+                                <Typography variant='subtitle2' className='nationality'><Flag code={getCode(nationality)}
+                                    height="16" className='flag'/>{'    ' + formatDateTime(birthday)}
+                                </Typography>
+                            </div>
                     </div>
                     <div className={classes.marginTop}>
                         <Grid alignItems='center' container spacing={2} >
