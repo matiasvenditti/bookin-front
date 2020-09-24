@@ -17,3 +17,17 @@
 .BookName{
     display: inline-block;
 }
+
+.media {
+    height: 140px;
+}
+.flex {
+    display: flex;
+    padding: 10px;
+}
+.stars {
+    margin-left: auto;
+}
+.fullHeight {
+    height: 100%;
+}

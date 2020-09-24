@@ -11,6 +11,7 @@ import { formatDateTime } from "../../../../utils/formateDateTime";
 import { getCode } from "country-list";
 import { Book } from "../../../../model";
 import BookDisplay from "../../../../components/BookDisplay/BookDisplay";
+import classes from "./AuthoView.module.css";
 
 
 interface AuthorViewProps {
@@ -57,9 +58,9 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
     render() {
         const { photo, firstName, lastName, nationality, birthday } = this.state.data;
         const { error } = this.props;
-        const books = this.props.books.sort((a, b) => b.rating - a.rating);
+        const books = this.props.books.sort((a, b) => b.stars - a.stars).slice(0, 4);
         const listBooks = books.map((books, index) =>
-            <Grid item xs={3}>
+            <Grid item xs={3} key={index}>
                 <BookDisplay book={books} crown={index === 0}/>
             </Grid> 
         );
@@ -95,7 +96,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                             height="16" />{'    ' + formatDateTime(birthday)}
                         </Typography>
                     </div>
-                    <div>
+                    <div className={classes.marginTop}>
                         <Grid alignItems='center' container spacing={2} >
                             {listBooks}
                         </Grid>
