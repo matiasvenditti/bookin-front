@@ -4,13 +4,14 @@ import React, {Component} from "react";
 import {Book} from "../../model";
 import classes from './BookDisplay.module.css';
 import {Stars} from "@material-ui/icons";
+import photoUtils from "../../utils/photoUtils";
 interface BookDisplayProps {
     book: Book
     crown: boolean
 }
 export default class BookDisplay extends Component<BookDisplayProps, any> {
     render() {
-        const photo: string = `data:image/jpeg;base64,${this.props.book.photo}`;
+        const photo: string = photoUtils.getPhotoFromBytearray(this.props.book.photo)
         const stars = this.props.crown ? <Stars color={"primary"}/>: null
         return(
                 <Card className={classes.fullHeight}>                
