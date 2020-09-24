@@ -4,6 +4,7 @@ import { UserEditFormModel } from '../../../model/Form/UserEditFormModel';
 import { EditVar } from '../../../model/consts/EditVar';
 import { Button, Input, RadioGroup } from '../../../components/Form';
 import { User } from '../../../model';
+import {Typography} from "@material-ui/core";
 
 
 interface ProfileEditProps {
@@ -132,18 +133,21 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                     </div>,
                 ]);
             case EditVar.EMAIL:
-                return ([
-                    <Input
-                        label='Mail'
-                        id='email'
-                        key='email'
-                        type='email'
-                        onChange={this.handleInput}
-                        value={this.state.values.email.value}
-                        error={this.state.values.email.error}
-                        errorText={this.state.values.email.error ? 'Mail inválido' : ''}
-                        required
-                    />
+                //   TODO: Uncomment or change when change-email functionality is ready
+                // return ([
+                //     <Input
+                //         label='Mail'
+                //         id='email'
+                //         key='email'
+                //         type='email'
+                //         onChange={this.handleInput}
+                //         value={this.state.values.email.value}
+                //         error={this.state.values.email.error}
+                //         errorText={this.state.values.email.error ? 'Mail inválido' : ''}
+                //         required
+                //     />
+                return([
+                    <Typography align='center' variant='h5'>Not implemented yet</Typography>
                 ]);
             case EditVar.GENDER:
                 return ([

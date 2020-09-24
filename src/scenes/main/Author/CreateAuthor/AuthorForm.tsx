@@ -71,7 +71,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
             this.readFile(file);
             this.handleInput('photo', 'photo', file);
         } else {
-            this.setState({ ...this.state, values: { ...this.state.values, photo: { value: null, type: 'photo', error: true, touched: true } } })
+            this.setState({ ...this.state, values: { ...this.state.values, photo: { value: null, type: 'photo', error: true, touched: true } }, formValid: false })
         }
     }
 

@@ -12,10 +12,10 @@ import {
     Typography,
     Box
 } from "@material-ui/core";
-import {dummyAvatar} from "../../../assets";
-import {Author} from "../../../model/Author";
+import {dummyAvatar} from "../../../../assets";
+import {Author} from "../../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
-import {formatDateTimeYears} from "../../../utils/formateDateTime";
+import {formatDateTimeYears} from "../../../../utils/formateDateTime";
 import {getCode} from "country-list";
 import Flag from "react-world-flags";
 
@@ -86,9 +86,10 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         direction="row"
                         justify="center"
                         alignItems="center"
+                        className='book-container'
                     >
                         <Grid container item xs={5}>
-                            <div className='book-container'>
+                            <div className='inner-book-container'>
                                 <Card
                                     style={
                                         {
@@ -98,17 +99,13 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                         }
                                     }
                                 >
-                                    <CardContent>
-                                        <Typography align='left' variant='h3'
-                                                    style={{
-                                                        marginBottom: 5,
-                                                        fontWeight: "bold"
-                                                    }}>{data.title} </Typography>
-                                        <Typography align='left' variant='h5'>Genero: <Box display="inline-block"
+                                    <CardContent className='custom-card-container' style={{paddingLeft : 0}}>
+                                        <Typography align='left' variant='h3' className='title'>{data.title} </Typography>
+                                        <Typography align='left' variant='h5'>Género: <Box display="inline-block"
                                                                                            fontWeight="fontWeightBold">{data.genre}</Box></Typography>
                                         <Typography align='left' variant='h5'>Idioma: <Box display="inline-block"
                                                                                            fontWeight="fontWeightBold">{data.language}</Box></Typography>
-                                        <Typography align='left' variant='h5'>Fecha de publicacion: <Box
+                                        <Typography align='left' variant='h5'>Fecha de publicación: <Box
                                             display="inline-block"
                                             fontWeight="fontWeightBold">{formatDateTimeYears(date)}</Box></Typography>
                                     </CardContent>
@@ -168,13 +165,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             </Grid>
                             <Grid item xs={12}>
                                 <div className='reviews-container'>
-                                    <Typography variant='h4' style={{
-                                        fontWeight: "bold",
-                                        color: "darkgray",
-                                        marginTop: 10,
-                                        marginBottom: 10
-                                    }}>Rating
-                                        en Promedio</Typography>
+                                    <Typography variant='h4' className='rating'> Rating </Typography>
                                     <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
                                 </div>
                             </Grid>
