@@ -61,7 +61,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         const books = this.props.books.sort((a, b) => b.stars - a.stars).slice(0, 4);
         const listBooks = books.map((books, index) =>
             <Grid item xs={3} key={index}>
-                <BookDisplay book={books} crown={index === 0}/>
+                <BookDisplay book={books} crown={index === 0} author={firstName + ' ' + lastName} />
             </Grid> 
         );
 

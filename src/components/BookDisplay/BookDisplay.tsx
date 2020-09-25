@@ -5,11 +5,14 @@ import {Book} from "../../model/Book";
 import classes from './BookDisplay.module.css';
 import {Stars} from "@material-ui/icons";
 import photoUtils from "../../utils/photoUtils";
-interface BookDisplayProps {
+import { RouteComponentProps, withRouter } from "react-router-dom";
+
+interface BookDisplayProps extends RouteComponentProps {
     book: Book
     crown: boolean
+    author: string
 }
-export default class BookDisplay extends Component<BookDisplayProps, any> {
+class BookDisplay extends Component<BookDisplayProps, any> {
     render() {
         const photo: string = photoUtils.getPhotoFromBytearray(this.props.book.photo)
         const stars = this.props.crown ? <Stars color={"primary"}/>: null
@@ -26,8 +29,7 @@ export default class BookDisplay extends Component<BookDisplayProps, any> {
                         <CardContent>
                             <Typography gutterBottom variant="h5">{this.props.book.title}</Typography>
                             <Typography variant="body2" color="textSecondary" component="p">
-                                Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-                                across all continents except Antarctica
+                               {this.props.author}
                             </Typography>
                         </CardContent>
                         <CardMedia src={photo} title={this.props.book.title}/>
@@ -36,6 +38,7 @@ export default class BookDisplay extends Component<BookDisplayProps, any> {
         )
     }
     handleClick = () => {
-        console.log("redirect");
+        this.props.history.push(`/books/${this.props.book.id}`);    
     }
 }
+export default withRouter(BookDisplay);
