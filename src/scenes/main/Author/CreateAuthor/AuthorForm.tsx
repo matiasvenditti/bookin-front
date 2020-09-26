@@ -4,7 +4,7 @@ import { AuthorFormModel } from '../../../../model/Form/AuthorFormModel';
 import { NewAuthor } from '../../../../model/NewAuthor';
 import Grid from '@material-ui/core/Grid';
 import { Button as MaterialButton, Typography } from '@material-ui/core';
-import './AuthorForm.css';
+import classes from './AuthorForm.module.css';
 import validateInput from '../../../../utils/validateInput';
 import { AccountCircle } from '@material-ui/icons';
 import { Select } from '../../../../components/Form/Select/Select';
@@ -117,7 +117,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         />
                     </Grid>
                     <Grid item xs>
-                        <div className="center">
+                        <div className={classes.center}>
                             {image}
                         </div>
                     </Grid>
@@ -167,7 +167,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div className='create-author-buttons-container'>
+                <div className={classes.createAuthorButtonsContainer}>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.props.onCancel} loading={loading} />
                     <Button title='Crear Autor' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} loading={loading} />
                 </div>

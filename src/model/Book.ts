@@ -5,6 +5,7 @@ export class Book {
     language: string;
     release: Date;
     photo: string;
+    stars: number;
 
     constructor(){
         this.id = 0;
@@ -13,6 +14,7 @@ export class Book {
         this.language = '';
         this.release = new Date();
         this.photo = '';
+        this.stars = 0;
     }
 
 }

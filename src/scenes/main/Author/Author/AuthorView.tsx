@@ -2,21 +2,20 @@ import React, { Component } from "react";
 import {
     Avatar,
     Badge,
+    Grid,
     Typography
 } from "@material-ui/core";
 import { dummyAvatar } from "../../../../assets";
 import Flag from "react-world-flags";
 import { formatDateTime } from "../../../../utils/formateDateTime";
 import { getCode } from "country-list";
+import { Book } from "../../../../model/Book";
+import BookDisplay from "../../../../components/BookDisplay/BookDisplay";
+import classes from "./AuthorView.module.css";
 
 
 interface AuthorViewProps {
-    books: {
-        book1: string,
-        book2: string,
-        book3: string,
-        book4: string,
-    },
+    books: Book[],
     data: {
         id: number,
         firstName: string,
@@ -29,7 +28,7 @@ interface AuthorViewProps {
 }
 
 interface AuthorViewState {
-    books: { key: string, value: string }[],
+    books: Book[],
     data: {
         id: number,
         firstName: string,
@@ -44,12 +43,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
     constructor(props: AuthorViewProps) {
         super(props);
         this.state = {
-            books: [
-                { key: 'Book1', value: props.books.book1 },
-                { key: 'Book2', value: props.books.book2 },
-                { key: 'Book3', value: props.books.book3 },
-                { key: 'Book4', value: props.books.book4 },
-            ],
+            books: this.props.books,
             data: {
                 id: props.data.id,
                 firstName: props.data.firstName,
@@ -62,9 +56,14 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
     }
 
     render() {
-        //const { books } = this.state;
         const { photo, firstName, lastName, nationality, birthday } = this.state.data;
         const { error } = this.props;
+        const books = this.props.books.sort((a, b) => b.stars - a.stars).slice(0, 4);
+        const listBooks = books.map((books, index) =>
+            <Grid item xs={3} key={index}>
+                <BookDisplay book={books} crown={index === 0} author={firstName + ' ' + lastName} />
+            </Grid> 
+        );
 
         if (error) {
             return (
@@ -75,28 +74,34 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
             )
         } else {
             return (
-                <div className='container'>
-                    <div className='image-container'>
-                        <Badge
-                            color='primary'
-                            overlap='circle'
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}
-                            className={'avatar-image'}
-                        >
+                <div>
+                    <div className={classes.container} >
+                        <div className='image-container'>
+                            <Badge
+                                color='primary'
+                                overlap='circle'
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                className={'avatar-image'}
+                            >
                             <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar} />
+                            </Badge>
+                            </div>
+                            <div className='title-container'>
 
-                        </Badge>
+                                <Typography variant='h4' gutterBottom={true}>{firstName + ' ' + lastName} </Typography>
+
+                                <Typography variant='subtitle2' className='nationality'><Flag code={getCode(nationality)}
+                                    height="16" className='flag'/>{'    ' + formatDateTime(birthday)}
+                                </Typography>
+                            </div>
                     </div>
-                    <div className='title-container'>
-
-                        <Typography variant='h4' gutterBottom={true}>{firstName + ' ' + lastName} </Typography>
-
-                        <Typography variant='subtitle2' className='nationality'><Flag code={getCode(nationality)}
-                            height="16" className='flag'/>{'    ' + formatDateTime(birthday)}
-                        </Typography>
+                    <div className={classes.marginTop}>
+                        <Grid alignItems='center' container spacing={2} >
+                            {listBooks}
+                        </Grid>
                     </div>
                 </div>
             )
