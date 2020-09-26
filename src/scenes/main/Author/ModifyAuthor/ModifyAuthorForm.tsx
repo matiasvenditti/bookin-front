@@ -3,7 +3,7 @@ import { Button, Input } from '../../../../components/Form';
 import { AuthorFormModel } from '../../../../model/Form/AuthorFormModel';
 import Grid from '@material-ui/core/Grid';
 import { Button as MaterialButton, FormControl, InputLabel, MenuItem, Select, Typography } from '@material-ui/core';
-import "./ModifyAuthorForm.css";
+import classes from "./ModifyAuthorForm.module.css";
 import { AccountCircle } from '@material-ui/icons';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
@@ -95,7 +95,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         />
                     </Grid>
                     <Grid item xs>
-                        <div className="center">
+                        <div className={classes.center}>
                             {image}
                         </div>
                     </Grid>
@@ -161,7 +161,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         {this.props.author.photo.error && <Typography color='error'>La foto no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div className='modify-author-buttons-container'>
+                <div className={classes.modifyAuthorButtonsContainer}>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.handleCancel} />
                     <Button title='Guardar' variant='contained' disabled={!this.props.formValid} onClick={this.handleSubmit} />
                 </div>

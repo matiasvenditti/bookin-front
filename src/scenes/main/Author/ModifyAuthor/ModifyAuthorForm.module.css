@@ -23,7 +23,7 @@
 .spacing {
   margin-top: 20px;
 }
-.route-container .profile-edit-form-container > form >.profile-edit-buttons-container > button {
+.routeContainer .profileEditFormContainer > form >.profileEditButtonsContainer > button {
   margin-right: 10px;
   margin-top: 10px;
 }
@@ -31,7 +31,7 @@
     text-align: center;
 }
 
-.modify-author-buttons-container {
+.modifyAuthorButtonsContainer {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -40,6 +40,6 @@
     width: 100%;
 }
 
-.modify-author-buttons-container > button:nth-child(1) {
+.modifyAuthorButtonsContainer > button:nth-child(1) {
     margin-right: 10px;
 }
