@@ -1,4 +1,4 @@
-import PhotoUtils from './PhotoUtils';
+import { PhotoUtils } from '.';
 
 
 export default function(type: string, value: any) {

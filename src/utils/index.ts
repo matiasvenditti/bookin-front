@@ -1,7 +1,7 @@
 import {allBookGenres, allCountries} from './consts';
-import ConstsUtils from './ConstsUtils';
+import ConstsUtils from './constsUtils';
 import DateUtils from './DateUtils';
-import PhotoUtils from './PhotoUtils';
+import PhotoUtils from './photoUtils';
 import {stringToGender, genderToString} from './translateGender';
 import validateInput from './validateInput';
 

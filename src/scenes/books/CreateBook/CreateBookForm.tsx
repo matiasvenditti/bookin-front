@@ -7,7 +7,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { Button, DatePicker, Input, Select } from '../../../components/Form';
 import { Autocomplete } from '@material-ui/lab';
 import { Author } from '../../../model/Author';
-import photoUtils from "../../../utils/PhotoUtils";
+import { PhotoUtils } from "../../../utils";
 import { allBookGenres } from '../../../utils';
 import { allLanguages } from '../../../utils/consts';
 import classes from './CreateBookForm.module.css';
@@ -77,7 +77,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
     handleChange = (event: any) => {
         const file: File = event.target.files[0];
         if (file === undefined) return;
-        const error: boolean = file.size >= photoUtils.MAX_PHOTO_SIZE;
+        const error: boolean = file.size >= PhotoUtils.MAX_PHOTO_SIZE;
         if (!error) {
             this.readFile(file);
             this.handleInput('photo', 'photo', file);

@@ -14,7 +14,7 @@ import ResponseUpdate from '../../model/responses/ResponseUpdate';
 import { SessionService, UserService } from '../../services';
 import HoverableAvatar from '../../components/HoverableAvatar/HoverableAvatar';
 import { dummyAvatar } from '../../assets';
-import photoUtils from '../../utils/PhotoUtils';
+import { PhotoUtils } from '../../utils';
 
 
 interface ProfileProps {
@@ -65,7 +65,7 @@ class Profile extends Component<any, ProfileState> {
                     getUserDataStatus: RequestStatus.SUCCESS,
                     data: {
                         ...response.data,
-                        photo: photoUtils.getPhotoFromBytearray(response.data.photo),
+                        photo: PhotoUtils.getPhotoFromBytearray(response.data.photo),
                     }
                 });
             })
