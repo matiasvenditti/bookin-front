@@ -149,7 +149,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         {this.props.author.photo.error && <Typography color='error'>La foto no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div className={classes.modifyAuthorButtonsContainer}></div>
+                <div className={classes.modifyAuthorButtonsContainer}>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.handleCancel} />
                     <Button title='Guardar' variant='contained' disabled={!this.props.formValid} onClick={this.handleSubmit} />
                 </div>

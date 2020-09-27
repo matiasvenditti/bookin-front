@@ -63,22 +63,20 @@ class Author extends React.Component<AuthorProps, AuthorState> {
 
     componentDidMount() {
         this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
-        AuthorsService.getAuthorData(this.state.data.id)
+        const result = Promise.all([
+            AuthorsService.getAuthorData(this.state.data.id),
+            BooksService.getBookAuthors(this.state.data.id)
+        ]);
+        console.log('author id', this.state.data.id);
+        result
             .then((response: any) => {
-                this.setState({...this.state,  data: response.data, getAuthorDataStatus: RequestStatus.SUCCESS });
+                this.setState({...this.state, data: response[0].data, books: response[1].data, getAuthorDataStatus: RequestStatus.SUCCESS });
             })
             .catch((error: any) => {
                 this.props.getAuthorDataErrorCallback();
-                this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error });
+                this.props.getAuthorDataErrorCallback();
+                this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR });
             });
-        BooksService.getBookAuthors(this.state.data.id)
-            .then((response: any) => {
-                this.setState({...this.state, books: response.data});
-            })
-            .catch((error: any) => {
-                this.props.getAuthorDataErrorCallback();
-                this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error})
-            })
     }
 
 
@@ -129,6 +127,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 </div>
             );
         }
+
         return (
             <AuthorView
                 data={data}

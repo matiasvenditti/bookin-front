@@ -11,31 +11,18 @@ import { Flag } from "../../../components";
 import { Book } from "../../../model";
 import BookDisplay from "../../../components/BookDisplay/BookDisplay";
 import classes from "./AuthorView.module.css";
+import { Author } from "../../../model/Author";
 
 
 interface AuthorViewProps {
     books: Book[],
-    data: {
-        id: number,
-        firstName: string,
-        lastName: string,
-        nationality: string,
-        birthday: any,
-        photo: any,
-    },
+    data: Author,
     error: boolean,
 }
 
 interface AuthorViewState {
     books: Book[],
-    data: {
-        id: number,
-        firstName: string,
-        lastName: string,
-        nationality: string,
-        birthday: any,
-        photo: any,
-    },
+    data: Author,
 }
 
 export default class AuthorView extends Component<AuthorViewProps, AuthorViewState> {
@@ -58,13 +45,13 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         //const { books } = this.state;
         const { photo, firstName, lastName, nationality, birthday } = this.state.data;
         const { error } = this.props;
-        const books = this.props.books.sort((a, b) => a.stars - a.stars).slice(0, 4);
+        const books = this.props.books.sort((a, b) => b.stars - a.stars).slice(0, 4);
         const listBooks = books.map((books, i) => (
             <Grid item xs={3} key={i}>
                 <BookDisplay book={books} crown={i === 0} author={`${firstName} ${lastName}`}/>
             </Grid>
         ));
-
+        console.log('rendering author view', books);
         if (error) {
             return (
                 <div>
@@ -104,7 +91,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                                         height="16" 
                                         // className='flag'
                                     />
-                                    {DateUtils.formatDateTime(birthday)}
+                                    {DateUtils.formatDateTime(birthday.toString())}
                                 </Typography>
                             </div>
                     </div>

@@ -1,0 +1,8 @@
+.marginTop{
+    margin-top: 60px;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+}
