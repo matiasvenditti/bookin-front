@@ -6,3 +6,17 @@
     display: flex;
     align-items: center;
 }
+
+.titleContainer h4 {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.titleContainer .birthdayContainer {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.titleContainer .birthdayContainer >:nth-child(1){
+    margin-right: 15px;
+}

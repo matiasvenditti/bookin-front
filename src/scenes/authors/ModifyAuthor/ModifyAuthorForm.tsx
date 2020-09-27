@@ -104,32 +104,12 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                             error={this.props.author.birthday.error}
                             helperText={this.props.author.birthday.error ? 'Nacimiento mayor a fecha actual' : null}
                             required
-                            id='date-picker-inline'
+                            id='birthday'
                             label='Nacimiento'
                             value={this.props.author.birthday.value}
                             onChange={this.handleInput}
                             maxDate={new Date()}
                         />
-                        {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                            <KeyboardDatePicker
-                                fullWidth
-                                error={this.props.author.birthday.error}
-                                helperText={this.props.author.birthday.error ? 'Nacimiento mayor a fecha actual' : null}
-                                color="secondary"
-                                disableToolbar
-                                required
-                                inputVariant="outlined"
-                                format="dd/MM/yyyy"
-                                margin="none"
-                                id="date-picker-inline"
-                                label="Nacimiento"
-                                value={this.props.author.birthday.value}
-                                onChange={this.handleDateChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                        </MuiPickersUtilsProvider> */}
                     </Grid>
                     <Grid item xs>
                         <MaterialButton

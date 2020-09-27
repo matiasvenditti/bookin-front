@@ -18,6 +18,7 @@ interface HeaderProps {
     getUserDataErrorCallback(): void,
     searchBooksErrorCallback(): void,
     searchAuthorsErrorCallback(): void,
+    redirectToBookAuthorCallback(query: string): void,
 }
 
 interface HeaderState {
@@ -161,7 +162,7 @@ class Header extends React.Component<any, HeaderState>{
                                     : []
                                 }
                                 onFocus={() => this._searchRequest('')}
-                                onQueryChange={() => console.log('cuak')}
+                                onQueryChange={() => console.log('onQueryChange search select to header')}
                             />
                         </div>
                         <div className="grow" />

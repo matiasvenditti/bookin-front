@@ -51,7 +51,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                 <BookDisplay book={books} crown={i === 0} author={`${firstName} ${lastName}`}/>
             </Grid>
         ));
-        console.log('rendering author view', books);
+
         if (error) {
             return (
                 <div>
@@ -81,18 +81,12 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                             <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar} />
                             </Badge>
                             </div>
-                            <div className='title-container'>
-
-                                <Typography variant='h4' gutterBottom={true}>{firstName + ' ' + lastName} </Typography>
-
-                                <Typography variant='subtitle2' className='nationality'>
-                                    <Flag 
-                                        code={nationality}
-                                        height="16" 
-                                        // className='flag'
-                                    />
-                                    {DateUtils.formatDateTime(birthday.toString())}
-                                </Typography>
+                            <div className={classes.titleContainer}>
+                                <Typography variant='h4'>{firstName + ' ' + lastName} </Typography>
+                                <div className={classes.birthdayContainer}>
+                                    <Flag code={nationality} height='24' />
+                                    <Typography className='nationality'>{DateUtils.formatDateTime(birthday.toString())}</Typography>
+                                </div>
                             </div>
                     </div>
                     <div className={classes.marginTop}>

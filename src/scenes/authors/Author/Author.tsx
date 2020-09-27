@@ -46,7 +46,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             getAuthorDataStatus: RequestStatus.NONE,
             isAdmin: AuthService.isAuthorized(["ROLE_ADMIN"]),
             data: {
-                id: parseInt(this.props.match.params.id),
+                id: -1,
                 firstName: '',
                 lastName: '',
                 nationality: '',
@@ -62,12 +62,23 @@ class Author extends React.Component<AuthorProps, AuthorState> {
     }
 
     componentDidMount() {
+        this._authorDataRequest();
+    }
+
+    componentDidUpdate(prevProps: any) {
+        if (prevProps.match.params.id !== this.props.match.params.id) {
+            // re-render
+            this._authorDataRequest();
+        }
+    }
+
+    _authorDataRequest() {
+        const id = parseInt(this.props.match.params.id);
         this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
         const result = Promise.all([
-            AuthorsService.getAuthorData(this.state.data.id),
-            BooksService.getBookAuthors(this.state.data.id)
+            AuthorsService.getAuthorData(id),
+            BooksService.getBookAuthors(id)
         ]);
-        console.log('author id', this.state.data.id);
         result
             .then((response: any) => {
                 this.setState({...this.state, data: response[0].data, books: response[1].data, getAuthorDataStatus: RequestStatus.SUCCESS });
@@ -78,7 +89,6 @@ class Author extends React.Component<AuthorProps, AuthorState> {
                 this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR });
             });
     }
-
 
     handleEdit = () => {
         this.props.history.push(`/authors/edit/${this.state.data.id}`);

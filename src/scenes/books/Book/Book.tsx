@@ -41,7 +41,7 @@ class Book extends React.Component<BookProps, BookState> {
             getBookDataStatus: RequestStatus.NONE,
             isAdmin: AuthService.isAuthorized([UserRoles.RoleAdmin]),
             data: {
-                id: parseInt(this.props.match.params.id),
+                id: -1,
                 title: '',
                 genre: '',
                 date: new Date(),
@@ -58,14 +58,24 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     componentDidMount() {
-        this.setState({...this.state, getBookDataStatus: RequestStatus.LOADING});
-        this.getData();
+        this._bookDataRequest();
     }
 
-    getData = () => {
+    componentDidUpdate(prevProps: any) {
+        console.log('component did update', 'prevProps', prevProps.match.params.id, 'props', this.props.match.params.id, prevProps.match.params.id !== this.props.match.params.id)
+        if (prevProps.match.params.id !== this.props.match.params.id) {
+            
+            this._bookDataRequest();
+        }
+    }
+
+    _bookDataRequest = () => {
+        const id = parseInt(this.props.match.params.id);
+        this.setState({...this.state, getBookDataStatus: RequestStatus.LOADING});
+        
         const result: Promise<any> = Promise.all([
-            BooksService.getBookData(this.state.data.id),
-            BooksService.getBookAuthors(this.state.data.id)
+            BooksService.getBookData(id),
+            BooksService.getBookAuthors(id)
         ]);
         result
             .then((response) => this.setState({
@@ -80,10 +90,7 @@ class Book extends React.Component<BookProps, BookState> {
     };
 
 
-    handleEdit = () => {
-        const id = this.state.data.id;
-        this.props.history.push(`/books/edit/${id}`)
-    }
+    handleEdit = () => this.props.history.push(`/books/edit/${this.state.data.id}`);
 
     handleDelete = () => this.setState({showDelete: true});
     handleConfirmDelete = () => this.deleteBook(this.state.data.id);

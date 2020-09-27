@@ -37,7 +37,6 @@ const SearchSelect = (props: SearchSelectProps) => {
         errorText,
         options,
     } = props;
-    console.log(props);
 
     const getOptionValue = (option: ValueType) => {
         if (option.type === 'Libros') {
@@ -48,11 +47,10 @@ const SearchSelect = (props: SearchSelectProps) => {
     }
 
     const handleRedirect = (option: ValueType) => {
-        console.log('HANDLE REDIRECT');
         if (option.type === 'Libros') {
-            props.history.push('/books/' + option.value.id);
+            props.history.push(`/books/${option.value.id}`);
         } else {
-            props.history.push('/authors/' + option.value.id);
+            props.history.push(`/authors/${option.value.id}`);
         }
     }
 

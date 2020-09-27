@@ -44,9 +44,10 @@ interface RouterState {
     deleteBookStatus: RequestStatus,
     updateBookStatus: RequestStatus,
     getModifyBookDataError: boolean,
+    redirectReload: boolean,
 }
 
-class Router extends React.Component<RouterProps, RouterState> {
+class Router extends React.Component<any, RouterState> {
     constructor(props: RouterProps) {
         super(props);
         this.state = {
@@ -70,6 +71,7 @@ class Router extends React.Component<RouterProps, RouterState> {
             deleteBookStatus: RequestStatus.NONE,
             updateBookStatus: RequestStatus.NONE,
             getModifyBookDataError: false,
+            redirectReload: false,
         };
     }
 

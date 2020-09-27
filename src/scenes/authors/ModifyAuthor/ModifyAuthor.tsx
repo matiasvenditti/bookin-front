@@ -47,7 +47,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         }
     }
 
-    componentDidMount() {
+    _authorDataRequest() {
         this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
         AuthorsService.getAuthorData(this.state.id)
             .then((response: AxiosResponse<Author>) => {
@@ -66,13 +66,19 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
             });
     }
 
+    componentDidMount() {
+        this._authorDataRequest();
+    }
+
     handleSubmit = (values: UpdateAuthor, photo: File) => {
+        console.log('submit', values);
         this.setState({ ...this.state, updateAuthorStatus: RequestStatus.LOADING });
         AuthorsService.changeAuthorData(values, photo)
             .then((response: AxiosResponse<Author>) => {
                 this.props.updateCallback(RequestStatus.SUCCESS);
                 this.setState({ ...this.state, updateAuthorStatus: RequestStatus.SUCCESS });
                 this.props.history.push('/authors/' + this.state.id);
+                this._authorDataRequest();
             })
             .catch((e) => {
                 this.props.updateCallback(RequestStatus.ERROR);
@@ -85,13 +91,12 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
-        let error = false;
+        let error = !validateInput(type, value);
         if (type === 'date') {
             error = value ? value > new Date() : false;
-        } else {
-            error = !validateInput(type, value);
         }
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
+        console.log(id, type, value, error, anyErrors);
         this.setState({
             values: {
                 ...this.state.values,
