@@ -28,6 +28,7 @@ class CreateBook extends Component<CreateBookProps, CreateBookState> {
             status: RequestStatus.NONE
         }
     }
+
     handleSubmit = (values: NewBook, photo: File) => {
         BooksService.createBook(values, photo)
             .then((response: AxiosResponse<Book>) => {
@@ -38,31 +39,36 @@ class CreateBook extends Component<CreateBookProps, CreateBookState> {
             .catch((e) => { 
                 this.props.createBookCallback(RequestStatus.ERROR);
                 this.setState({ ...this.state, status: RequestStatus.SUCCESS});
-            })
+            });
     }
+
     componentDidMount(){
         AuthorsService.getAuthors()
-        .then((response: AxiosResponse<Author[]>) => {            
-            this.setState((prevState: CreateBookState) => ({
-                ...prevState,
-                authors: response.data
-            }))
-        })
-        .catch((e: any) => console.error(e))
+            .then((response: AxiosResponse<Author[]>) => {            
+                this.setState((prevState: CreateBookState) => ({
+                    ...prevState,
+                    authors: response.data
+                }))
+            })
+            .catch((e: any) => console.error(e));
     }
+
     render() {
         return (
             <div className='route-container' >
                 <div className='form-container'>
                     <Typography align='center' variant='h5'>Creá un libro</Typography>
                     <CreateBookForm 
-                    onSubmit={this.handleSubmit}
-                    authors={this.state.authors}
-                    onCancel={this.props.history.goBack}
-                    loading={this.state.status === RequestStatus.LOADING}                    />
+                        onSubmit={this.handleSubmit}
+                        authors={this.state.authors}
+                        onCancel={this.props.history.goBack}
+                        loading={this.state.status === RequestStatus.LOADING}
+                    />
                 </div>
             </div>
-        )
+        );
     }
- }
- export default withRouter(CreateBook);
+}
+
+
+export default withRouter(CreateBook);

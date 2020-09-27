@@ -4,17 +4,19 @@ import {BookID} from "../../../model";
 import {Button, Typography} from "@material-ui/core";
 import Loader from "../../../components/Loader/Loader";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import SweetAlert from "react-bootstrap-sweetalert";
 import {RouteComponentProps, withRouter} from "react-router";
 import {Author} from "../../../model/Author";
+import {Book as BookModel} from '../../../model/Book';
 import BookView from "./BookView";
 import "./Book.css"
 import {UserRoles} from "../../../model/consts/Roles";
 import { AuthService, BooksService } from "../../../services";
+import { DeleteBookModal } from "./DeleteBookModal";
 
 
 interface BookProps extends RouteComponentProps<MatchParams> {
-
+    deleteBookCallback(deleteBookStatus: RequestStatus): void,
+    getBookDataErrorCallback():void,
 }
 
 interface BookState {
@@ -23,16 +25,7 @@ interface BookState {
     updateStatus: any,
     deleteStatus: any,
     showDelete: boolean,
-    data: {
-        id: string,
-        title: string,
-        genre: string,
-        date: string,
-        photo: string,
-        language: string,
-        stars: number,
-
-    },
+    data: BookModel,
     authors: Author[],
     error: any,
 }
@@ -48,14 +41,13 @@ class Book extends React.Component<BookProps, BookState> {
             getBookDataStatus: RequestStatus.NONE,
             isAdmin: AuthService.isAuthorized([UserRoles.RoleAdmin]),
             data: {
-                id: this.props.match.params.id,
+                id: parseInt(this.props.match.params.id),
                 title: '',
                 genre: '',
-                date: '',
+                date: new Date(),
                 photo: '',
                 language: '',
                 stars: 0,
-
             },
             authors: [],
             showDelete: false,
@@ -71,49 +63,45 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     getData = () => {
-        const result: Promise<any> = Promise.all([BooksService.getBookData({id: this.state.data.id}), BooksService.getBookAuthors({id: this.state.data.id})]);
+        const result: Promise<any> = Promise.all([
+            BooksService.getBookData(this.state.data.id),
+            BooksService.getBookAuthors(this.state.data.id)
+        ]);
         result
             .then((response) => this.setState({
                 data: response[0].data,
                 authors: response[1].data,
                 getBookDataStatus: RequestStatus.SUCCESS
             }))
-            .catch((error: any) => this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error}));
+            .catch((error: any) => {
+                this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error})
+                this.props.getBookDataErrorCallback();
+            });
     };
 
-    handleCancel = () => {
-        this.setState({showDelete: false})
-    };
 
     handleEdit = () => {
         const id = this.state.data.id;
         this.props.history.push(`/books/edit/${id}`)
     }
 
-    handleDelete = () => {
-        this.setState({showDelete: true})
-    }
-
-    handleConfirmDelete = () => {
-        this.deleteBook({id: this.state.data.id});
-    }
-
-
-    deleteBook = (values: BookID) => {
+    handleDelete = () => this.setState({showDelete: true});
+    handleConfirmDelete = () => this.deleteBook(this.state.data.id);
+    handleDeleteCancel  = () => this.setState({showDelete: false});
+    deleteBook = (id: number) => {
         this.setState({deleteStatus: RequestStatus.LOADING, error: null});
-        BooksService.deleteBook(values)
+        BooksService.deleteBook(id)
             .then(() => {
+                this.props.deleteBookCallback(RequestStatus.SUCCESS);
                 this.setState({deleteStatus: RequestStatus.SUCCESS, error: null});
-                this.props.history.push("/") //Push to home?
-
+                this.props.history.push("/");
             })
             .catch((error: any) => {
+                this.props.deleteBookCallback(RequestStatus.ERROR);
                 this.setState({deleteStatus: RequestStatus.ERROR, error});
-                //console.log("Error deleting", error)
             });
-        this.handleCancel()
+        this.handleDeleteCancel();
     }
-
 
     render() {
         return (
@@ -124,8 +112,6 @@ class Book extends React.Component<BookProps, BookState> {
                     {this.renderDelete()}
                 </div>
             </div>
-
-
         );
     }
 
@@ -165,20 +151,14 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     renderDelete() {
-        const {showDelete} = this.state;
+        const {showDelete, deleteStatus} = this.state;
         if (showDelete) return (
-            <SweetAlert
-                danger
-                showCancel
-                confirmBtnText="Yes, delete it!"
-                confirmBtnBsStyle="danger"
-                title="Are you sure?"
+            <DeleteBookModal
+                open={showDelete}
+                loading={deleteStatus === RequestStatus.LOADING}
                 onConfirm={this.handleConfirmDelete}
-                onCancel={this.handleCancel}
-                focusCancelBtn
-            >
-                Author will be permanently deleted
-            </SweetAlert>
+                onCancel={this.handleDeleteCancel}
+            />
         )
     }
 

@@ -2,20 +2,19 @@ import React, { Component } from "react";
 import {
     Avatar,
     Badge,
+    Grid,
     Typography
 } from "@material-ui/core";
 import { dummyAvatar } from "../../../assets";
 import { DateUtils } from "../../../utils";
 import { Flag } from "../../../components";
+import { Book } from "../../../model";
+import BookDisplay from "../../../components/BookDisplay/BookDisplay";
+import classes from "./AuthorView.module.css";
 
 
 interface AuthorViewProps {
-    books: {
-        book1: string,
-        book2: string,
-        book3: string,
-        book4: string,
-    },
+    books: Book[],
     data: {
         id: number,
         firstName: string,
@@ -28,7 +27,7 @@ interface AuthorViewProps {
 }
 
 interface AuthorViewState {
-    books: { key: string, value: string }[],
+    books: Book[],
     data: {
         id: number,
         firstName: string,
@@ -43,12 +42,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
     constructor(props: AuthorViewProps) {
         super(props);
         this.state = {
-            books: [
-                { key: 'Book1', value: props.books.book1 },
-                { key: 'Book2', value: props.books.book2 },
-                { key: 'Book3', value: props.books.book3 },
-                { key: 'Book4', value: props.books.book4 },
-            ],
+            books: this.props.books,
             data: {
                 id: props.data.id,
                 firstName: props.data.firstName,
@@ -64,36 +58,60 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         //const { books } = this.state;
         const { photo, firstName, lastName, nationality, birthday } = this.state.data;
         const { error } = this.props;
+        const books = this.props.books.sort((a, b) => a.stars - a.stars).slice(0, 4);
+        const listBooks = books.map((books, i) => (
+            <Grid item xs={3} key={i}>
+                <BookDisplay book={books} crown={i === 0} author={`${firstName} ${lastName}`}/>
+            </Grid>
+        ));
 
         if (error) {
             return (
                 <div>
-                    <Typography align='center' color='error' variant='h6'>Hubo un error al obtener los datos del
-                        Autor</Typography>
+                    <Typography
+                        align='center'
+                        color='error'
+                        variant='h6'
+                    >
+                        Hubo un error al obtener los datos del Autor
+                    </Typography>
                 </div>
-            )
+            );
         } else {
             return (
-                <div className='container'>
-                    <div className='image-container'>
-                        <Badge
-                            color='primary'
-                            overlap='circle'
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right',
-                            }}
-                            className={'avatar-image'}
-                        >
+                <div>
+                    <div className={classes.container} >
+                        <div className='image-container'>
+                            <Badge
+                                color='primary'
+                                overlap='circle'
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right',
+                                }}
+                                className={'avatar-image'}
+                            >
                             <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar} />
-                        </Badge>
+                            </Badge>
+                            </div>
+                            <div className='title-container'>
+
+                                <Typography variant='h4' gutterBottom={true}>{firstName + ' ' + lastName} </Typography>
+
+                                <Typography variant='subtitle2' className='nationality'>
+                                    <Flag 
+                                        code={nationality}
+                                        height="16" 
+                                        // className='flag'
+                                    />
+                                    {DateUtils.formatDateTime(birthday)}
+                                </Typography>
+                            </div>
                     </div>
-                    <div className='subtitle-container'>
-                        <Typography className='name' align='center' variant='h4'>{firstName + ' ' + lastName} </Typography>
-                        <div className='birthday'>
-                            <Flag code={nationality} height="28" />
-                            <Typography>{DateUtils.formatDateTime(birthday)}</Typography>
-                        </div>
+                    <div className={classes.marginTop}>
+                        <Grid alignItems='center' container spacing={2} >
+                            {listBooks}
+                        </Grid>
                     </div>
                 </div>
             )

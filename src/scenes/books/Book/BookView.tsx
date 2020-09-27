@@ -17,34 +17,17 @@ import {Author} from "../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
 import { DateUtils, ConstsUtils } from "../../../utils";
 import Flag from 'react-world-flags';
+import { Book } from "../../../model";
 
 
 interface BookViewProps {
-    data: {
-        id: string,
-        title: string,
-        genre: string,
-        date: string,
-        photo: string,
-        language: string,
-        stars: number,
-    },
+    data: Book,
     authors: Author[],
     error: boolean,
 }
 
 interface BookViewState {
-
-    data: {
-        id: string,
-        title: string,
-        genre: string,
-        date: string,
-        photo: string,
-        language: string,
-        stars: number,
-
-    },
+    data: Book,
     authors: Author[],
 }
 
@@ -107,7 +90,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                                                            fontWeight="fontWeightBold">{data.language}</Box></Typography>
                                         <Typography align='left' variant='h5'>Fecha de publicación: <Box
                                             display="inline-block"
-                                            fontWeight="fontWeightBold">{DateUtils.formatDateTimeYears(date)}</Box></Typography>
+                                            fontWeight="fontWeightBold">{DateUtils.formatDateTimeYears(date.toString())}</Box></Typography>
                                     </CardContent>
                                     <CardMedia
                                         title={data.title}

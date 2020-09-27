@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { Button, Input, CountriesSelect } from '../../../components/Form';
+import { Button, Input, CountriesSelect, DatePicker } from '../../../components/Form';
 import Grid from '@material-ui/core/Grid';
 import { Button as MaterialButton, Typography } from '@material-ui/core';
-import "./ModifyAuthorForm.css";
+import classes from "./ModifyAuthorForm.module.css";
 import { AccountCircle } from '@material-ui/icons';
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
 import { AuthorFormModel } from '../../../model/Form/AuthorFormModel';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
 import { EditAuthorFormModel } from '../../../model/Form/EditAuthorFormModel';
@@ -19,10 +17,7 @@ interface AuthorFormProps {
     onSubmit(values: UpdateAuthor, photo: File): void,
     onCancel(): void,
     onInput(id: keyof AuthorFormModel, type: string, value: any): void,
-    onDateChange(date: Date | null): void,
-    onInputSelect(object: any): void,
     onChange(event: any): void,
-    onReadFile(file: File): void,
     updateAuthorStatus: RequestStatus,
     getAuthorDataStatus: RequestStatus,
 }
@@ -43,16 +38,8 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
         this.props.onInput(id, type, value);
     }
 
-    handleDateChange = (date: Date | null) => {
-        this.props.onDateChange(date)
-    }
-
     handleChange = (event: any) => {
         this.props.onChange(event)
-    }
-
-    readFile = (file: File) => {
-        this.props.onReadFile(file)
     }
 
     handleCancel = () => {
@@ -95,7 +82,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         />
                     </Grid>
                     <Grid item xs>
-                        <div className="center">
+                        <div className={classes.center}>
                             {image}
                         </div>
                     </Grid>
@@ -113,7 +100,17 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         />
                     </Grid>
                     <Grid item xs>
-                        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <DatePicker
+                            error={this.props.author.birthday.error}
+                            helperText={this.props.author.birthday.error ? 'Nacimiento mayor a fecha actual' : null}
+                            required
+                            id='date-picker-inline'
+                            label='Nacimiento'
+                            value={this.props.author.birthday.value}
+                            onChange={this.handleInput}
+                            maxDate={new Date()}
+                        />
+                        {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
                             <KeyboardDatePicker
                                 fullWidth
                                 error={this.props.author.birthday.error}
@@ -132,7 +129,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                                     'aria-label': 'change date',
                                 }}
                             />
-                        </MuiPickersUtilsProvider>
+                        </MuiPickersUtilsProvider> */}
                     </Grid>
                     <Grid item xs>
                         <MaterialButton
@@ -152,7 +149,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         {this.props.author.photo.error && <Typography color='error'>La foto no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div className='modify-author-buttons-container'>
+                <div className={classes.modifyAuthorButtonsContainer}></div>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.handleCancel} />
                     <Button title='Guardar' variant='contained' disabled={!this.props.formValid} onClick={this.handleSubmit} />
                 </div>

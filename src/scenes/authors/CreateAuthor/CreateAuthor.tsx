@@ -35,7 +35,7 @@ class CreateAuthor extends Component<any, CreateAuthorState> {
             .catch((error: any) => {
                 this.props.createAuthorCallback(RequestStatus.ERROR);
                 this.setState({ ...this.state, createAuthorStatus: RequestStatus.SUCCESS, error });
-            })
+            });
     }
 
     render() {

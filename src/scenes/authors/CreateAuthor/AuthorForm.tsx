@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, Input, DatePicker, CountriesSelect } from '../../../components/Form';
 import Grid from '@material-ui/core/Grid';
 import { Button as MaterialButton, Typography } from '@material-ui/core';
-import './AuthorForm.css';
+import classes from './AuthorForm.module.css';
 import { AccountCircle } from '@material-ui/icons';
 import { AuthorFormModel } from '../../../model/Form/AuthorFormModel';
 import { NewAuthor } from '../../../model/NewAuthor';
@@ -33,7 +33,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                 photo: { value: null, type: 'photo', error: true, touched: false },
             },
             bytearray: null,
-            formValid: false
+            formValid: false,
         }
     }
 
@@ -114,7 +114,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         />
                     </Grid>
                     <Grid item xs>
-                        <div className="center">
+                        <div className={classes.center}>
                             {image}
                         </div>
                     </Grid>
@@ -165,7 +165,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div className='create-author-buttons-container'>
+                <div className={classes.createAuthorButtonsContainer}>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.props.onCancel} loading={loading} />
                     <Button title='Crear Autor' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} loading={loading} />
                 </div>

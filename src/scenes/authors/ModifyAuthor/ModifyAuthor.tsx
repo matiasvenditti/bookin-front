@@ -85,7 +85,12 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
     }
 
     handleInput = (id: keyof AuthorFormModel, type: string, value: any) => {
-        const error = !validateInput(type, value);
+        let error = false;
+        if (type === 'date') {
+            error = value ? value > new Date() : false;
+        } else {
+            error = !validateInput(type, value);
+        }
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
         this.setState({
             values: {
@@ -96,20 +101,6 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
         });
     }
 
-
-    handleDateChange = (date: Date | null) => {
-        const error: boolean = date ? date > new Date() : false;
-        const birthday = this.state.values.birthday;
-
-        const anyErrors = Object.values(this.state.values).some(value => value.type === birthday.type ? error : value.error);
-        this.setState({
-            values: {
-                ...this.state.values,
-                birthday: { value: date, type: birthday.type, error: error }
-            },
-            formValid: !anyErrors,
-        });
-    }
 
     handleInputSelect = (object: any) => {
         const nacionalidad = object.target.value as string;
@@ -171,10 +162,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
                             onSubmit={this.handleSubmit}
                             onCancel={this.handleCancel}
                             onInput={this.handleInput}
-                            onDateChange={this.handleDateChange}
-                            onInputSelect={this.handleInputSelect}
                             onChange={this.handleChange}
-                            onReadFile={this.readFile}
                             updateAuthorStatus={this.state.updateAuthorStatus}
                             getAuthorDataStatus={this.state.getAuthorDataStatus}
                         />
@@ -183,6 +171,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
             </div>
         )
     }
-
 }
+
+
 export default withRouter(ModifyAuthor);

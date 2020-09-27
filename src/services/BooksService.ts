@@ -5,6 +5,7 @@ import { baseURL } from "./EnvironmentService";
 import { Book } from "../model/Book";
 import { BookID } from "../model/BookID";
 import { Author } from "../model/Author";
+import { UpdateBook } from "../model/UpdateBook";
 
 
 class BooksService {
@@ -21,16 +22,28 @@ class BooksService {
         return instance.post<Book>(`${baseURL}/books`, createBookForm, config)
     }
     
-    static getBookData = (bookID: BookID): Promise<AxiosResponse<Book>> => {
-        return instance.get<Book>(`${baseURL}/books/${bookID.id}`)
+    static getBookData = (id: number): Promise<AxiosResponse<Book>> => {
+        return instance.get<Book>(`${baseURL}/books/${id}`)
     }
     
-    static getBookAuthors = (bookID: BookID): Promise<AxiosResponse<Author[]>> => {
-        return instance.get<Author[]>(`${baseURL}/books/${bookID.id}/authors`)
+    static getBookAuthors = (id: number): Promise<AxiosResponse<Author[]>> => {
+        return instance.get<Author[]>(`${baseURL}/books/${id}/authors`)
     }
     
-    static deleteBook = (bookID: BookID): Promise<AxiosResponse<Book>> => {
-        return instance.delete<Book>(`${baseURL}/books/${bookID.id}`)
+    static updateBook = (book: UpdateBook, photo: File): Promise<AxiosResponse<Book>> => {
+        const updateBookForm = new FormData();
+        updateBookForm.append("book", new Blob([JSON.stringify(book)], {type: 'application/json'}));
+        updateBookForm.append("photo", photo);
+        const config: AxiosRequestConfig = {
+            headers: {
+                'Content-Type': undefined,
+            }
+        }
+        return instance.put<Book>(`${baseURL}/books/${book.id}`, updateBookForm, config)
+    }
+
+    static deleteBook = (id: number): Promise<AxiosResponse<Book>> => {
+        return instance.delete<Book>(`${baseURL}/books/${id}`)
     }
 
     // TODO: finish request to work

@@ -6,7 +6,8 @@ import './Author.css'
 import Loader from "../../../components/Loader/Loader";
 import DeleteAuthorModal from "./DeleteAuthorModal";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
-import {AuthorsService, AuthService} from "../../../services";
+import {AuthorsService, AuthService, BooksService} from "../../../services";
+import { Book } from "../../../model";
 
 
 interface AuthorProps extends RouteComponentProps<MatchParams> {
@@ -31,7 +32,7 @@ interface AuthorState {
         photo: any,
     },
     error: any,
-    books: any
+    books: Book[],
 }
 
 interface MatchParams {
@@ -56,12 +57,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
             error: null,
-            books: { //BOOKTYPE etc. for later.
-                book1: null,
-                book2: null,
-                book3: null,
-                book4: null,
-            },
+            books: [],
         }
     }
 
@@ -69,17 +65,25 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
         AuthorsService.getAuthorData(this.state.data.id)
             .then((response: any) => {
-                this.setState({ data: response.data, getAuthorDataStatus: RequestStatus.SUCCESS });
+                this.setState({...this.state,  data: response.data, getAuthorDataStatus: RequestStatus.SUCCESS });
             })
             .catch((error: any) => {
                 this.props.getAuthorDataErrorCallback();
                 this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR, error });
             });
+        BooksService.getBookAuthors(this.state.data.id)
+            .then((response: any) => {
+                this.setState({...this.state, books: response.data});
+            })
+            .catch((error: any) => {
+                this.props.getAuthorDataErrorCallback();
+                this.setState({...this.state, getAuthorDataStatus: RequestStatus.ERROR, error})
+            })
     }
 
 
     handleEdit = () => {
-        this.props.history.push(`/authors/edit/${this.state.data.id}`); //Push to home?
+        this.props.history.push(`/authors/edit/${this.state.data.id}`);
     }
 
     /* Delete author */
@@ -91,12 +95,12 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         AuthorsService.deleteAuthor(id)
             .then(() => {
                 this.props.deleteAuthorCallback(RequestStatus.SUCCESS);
-                this.setState({ deleteStatus: RequestStatus.SUCCESS, error: null, showDelete: false });
+                this.setState({...this.state, deleteStatus: RequestStatus.SUCCESS, error: null, showDelete: false });
                 this.props.history.push("/");
             })
             .catch((error: any) => {
                 this.props.deleteAuthorCallback(RequestStatus.ERROR);
-                this.setState({ deleteStatus: RequestStatus.ERROR, error, showDelete: false });
+                this.setState({...this.state, deleteStatus: RequestStatus.ERROR, error, showDelete: false });
             });
     }
 

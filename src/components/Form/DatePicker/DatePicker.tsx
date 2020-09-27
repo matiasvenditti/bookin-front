@@ -6,7 +6,7 @@ import DateFnsUtils from '@date-io/date-fns'
 interface DatePickerProps {
     error: boolean,
     helperText: string | null,
-    required: boolean,
+    required?: boolean,
     id: string,
     label: string,
     value: any,

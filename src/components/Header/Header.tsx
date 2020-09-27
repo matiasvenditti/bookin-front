@@ -9,7 +9,6 @@ import { withRouter } from "react-router-dom";
 import { AuthorsService, AuthService, BooksService, SessionService, UserService } from "../../services";
 import SearchSelect from "./SearchSelect/SearchSelect";
 import { RequestStatus } from "../../model/consts/RequestStatus";
-// import { SearchSelect } from "../Form/SearchSelect/SearchSelect";
 
 
 interface HeaderProps {
@@ -49,6 +48,7 @@ class Header extends React.Component<any, HeaderState>{
             authors: [],
             searchAuthorsStatus: RequestStatus.NONE,
         };
+
         this.handleMenu = this.handleMenu.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
@@ -99,7 +99,7 @@ class Header extends React.Component<any, HeaderState>{
     }
 
     _searchRequest = (value: string) => {
-        console.log('searching request', value)
+        // console.log('searching request', value)
         this.setState({...this.state, searchBooksStatus: RequestStatus.LOADING, searchAuthorsStatus: RequestStatus.LOADING});
         BooksService.searchBooks(value)
             .then((response) => {
@@ -191,16 +191,18 @@ class Header extends React.Component<any, HeaderState>{
                         anchorOrigin={{vertical: 'top', horizontal: 'right'}}
                         transformOrigin={{vertical: 'top', horizontal: 'right'}}
                         keepMounted
-                        open={Boolean(this.state.anchorEl)}>
+                        open={Boolean(this.state.anchorEl)}
+                    >
                         <MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
                         {/* TODO: Uncomment when reviews are implemented */ }
                         {/*<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>*/}                        
-                        {authorized
-                            ?<div>
+                        {authorized ?
+                            <div>
                                 <MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
                                 <MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>                            
                             </div>
-                            :null
+                            :
+                            null
                         }
                         <MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
                     </Menu>
