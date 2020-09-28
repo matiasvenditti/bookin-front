@@ -3,7 +3,7 @@ import {Button as Buttons, TextField, Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { Autocomplete } from '@material-ui/lab';
-import "./ModifyBookForm.css"
+import classes from "./ModifyBookForm.module.css";
 import { allBookGenres, PhotoUtils, validateInput } from '../../../utils';
 import { Button, DatePicker, Input, Select } from '../../../components/Form';
 import { BookFormModel } from '../../../model/Form/BookFormModel';
@@ -134,63 +134,73 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
             <form>
                 <Grid alignItems='center' container spacing={2}>
                     <Grid item xs>
-                        <Input
-                            label='Titulo'
-                            id='title'
-                            type='alphanumeric'
-                            onChange={this.handleInput}
-                            value={this.state.values.title.value}
-                            error={this.state.values.title.touched && this.state.values.title.error}
-                            errorText={this.state.values.title.touched && this.state.values.title.error ? 'Titulo inválido' : ''}
-                            required
-                        />
-                        <Select
-                            label='Género'
-                            id='genre'
-                            value={this.state.values.genre.value}
-                            options={allBookGenres}
-                            onChange={this.handleInput}
-                        />
-                        <Select
-                            label='Idioma'
-                            id='language'
-                            value={this.state.values.language.value}
-                            options={['Español', 'Inglés']}
-                            onChange={this.handleInput}
-                        />
-                        <DatePicker
-                            error={this.state.values.date.touched && this.state.values.date.error}
-                            helperText={this.state.values.date.touched && this.state.values.date.error ? 'Lanzamiento mayor a fecha actual' : null}
-                            id='date'
-                            required
-                            label='Fecha de Publicación'
-                            value={this.state.values.date.value}
-                            onChange={this.handleInput}
-                            maxDate={this.state.maxDate}
-                        />
-                        <Autocomplete
-                            multiple
-                            id="tags-outlined"
-                            options={this.props.allAuthors}
-                            value={this.state.values.authors.value as Author[]}
-                            getOptionSelected={(option, value) => option.id === value.id}
-                            getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
-                            defaultValue={this.state.values.authors.value}
-                            onChange={this.handleChangeAutocomplete}
-                            filterSelectedOptions
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="outlined"
-                                    label="Autores"
-                                    placeholder="Autor/es"
-                                    color="secondary"
-                                />
-                            )}
-                        />
+                        <div className={classes.spacing}>
+                            <Input
+                                label='Titulo'
+                                id='title'
+                                type='alphanumeric'
+                                onChange={this.handleInput}
+                                value={this.state.values.title.value}
+                                error={this.state.values.title.touched && this.state.values.title.error}
+                                errorText={this.state.values.title.touched && this.state.values.title.error ? 'Titulo inválido' : ''}
+                                required
+                            />
+                            </div>
+                        <div className={classes.spacing}>
+                            <Select
+                                label='Género'
+                                id='genre'
+                                value={this.state.values.genre.value}
+                                options={allBookGenres}
+                                onChange={this.handleInput}
+                            />
+                        </div>
+                        <div className={classes.spacing}>
+                            <Select
+                                label='Idioma'
+                                id='language'
+                                value={this.state.values.language.value}
+                                options={['Español', 'Inglés']}
+                                onChange={this.handleInput}
+                            />
+                        </div>
+                        <div className={classes.spacing}>
+                            <DatePicker
+                                error={this.state.values.date.touched && this.state.values.date.error}
+                                helperText={this.state.values.date.touched && this.state.values.date.error ? 'Lanzamiento mayor a fecha actual' : null}
+                                id='date'
+                                required
+                                label='Fecha de Publicación'
+                                value={this.state.values.date.value}
+                                onChange={this.handleInput}
+                                maxDate={this.state.maxDate}
+                            />
+                        </div>
+                        <div className={classes.spacing}>
+                            <Autocomplete
+                                multiple
+                                id="tags-outlined"
+                                options={this.props.allAuthors}
+                                value={this.state.values.authors.value as Author[]}
+                                getOptionSelected={(option, value) => option.id === value.id}
+                                getOptionLabel={(option) => option.firstName + ' ' + option.lastName}
+                                defaultValue={this.state.values.authors.value}
+                                onChange={this.handleChangeAutocomplete}
+                                filterSelectedOptions
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        variant="outlined"
+                                        label="Autores"
+                                        placeholder="Autor/es"
+                                        color="secondary"
+                                    />
+                                )}
+                            />
+                        </div>
                     </Grid>
                     <Grid item xs>
-                        <div className='photo'>
+                        <div className={classes.photo}>
                             {image}
                         </div>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handlePhotoChange}
@@ -205,7 +215,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                         {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
                     </Grid>
                 </Grid>
-                <div className='create-author-buttons-container'>
+                <div className={classes.createAuthorButtonsContainer}>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.props.onCancel} />
                     <Button title='Actualizar' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} />
                 </div>

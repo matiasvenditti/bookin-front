@@ -1,7 +1,9 @@
 form > fieldset {
     margin-top: 15px !important;
 }
-.form-container {
+
+.formContainer {
     border-radius: 10px;
     padding: 20px 65px 15px;
+    width: 600px;
 }

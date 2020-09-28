@@ -6,7 +6,7 @@ import './Author.css'
 import Loader from "../../../components/Loader/Loader";
 import DeleteAuthorModal from "./DeleteAuthorModal";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
-import {AuthorsService, AuthService, BooksService} from "../../../services";
+import {AuthorsService, AuthService} from "../../../services";
 import { Book } from "../../../model";
 
 
@@ -77,7 +77,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
         const result = Promise.all([
             AuthorsService.getAuthorData(id),
-            BooksService.getBookAuthors(id)
+            AuthorsService.getAuthorBooks(id),
         ]);
         result
             .then((response: any) => {

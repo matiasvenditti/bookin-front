@@ -17,16 +17,16 @@
 .button{
   width: 100px;
 }
-.spacingw{
+.spacing {
   width: 89px;
 }
 .spacing {
   margin-top: 10px;
   margin-bottom: 10px;
-    width: 250px !important;
+    width: auto;
 
 }
-.route-container .profile-edit-form-container > form >.profile-edit-buttons-container > button {
+.routeContainer .profileEditFormContainer > form >.profileEditButtonsContainer > button {
   margin-right: 10px;
   margin-top: 10px;
 }
@@ -36,7 +36,7 @@
 .photo{
   text-align: center;
 }
-.create-author-buttons-container {
+.createAuthorButtonsContainer {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -45,6 +45,6 @@
   width: 100%;
 }
 
-.create-author-buttons-container > button:nth-child(1) {
+.createAuthorButtonsContainer > button:nth-child(1) {
   margin-right: 10px;
 }

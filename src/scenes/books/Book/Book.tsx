@@ -1,6 +1,5 @@
 import React from "react";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
-import {BookID} from "../../../model";
 import {Button, Typography} from "@material-ui/core";
 import Loader from "../../../components/Loader/Loader";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
@@ -62,9 +61,7 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     componentDidUpdate(prevProps: any) {
-        console.log('component did update', 'prevProps', prevProps.match.params.id, 'props', this.props.match.params.id, prevProps.match.params.id !== this.props.match.params.id)
         if (prevProps.match.params.id !== this.props.match.params.id) {
-            
             this._bookDataRequest();
         }
     }

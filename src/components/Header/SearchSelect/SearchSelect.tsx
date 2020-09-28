@@ -3,6 +3,8 @@ import { Autocomplete } from '@material-ui/lab';
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import classes from './SearchSelect.module.css';
+// import parse from 'autosuggest-highlight/parse';
+// import match from 'autosuggest-highlight/match';
 
 
 // TODO: pasar a modelos correctamente
@@ -18,10 +20,10 @@ interface SearchSelectProps extends RouteComponentProps {
     disabled?: boolean
     loadingOptions?: boolean,
     loading: boolean
-    error: boolean
-    errorText: string,
+    // error: boolean
+    // errorText: string,
     options: ValueType[],
-    onFocus(): void,
+    // onFocus(): void,
     onQueryChange(value: string): void,
 }
 
@@ -67,7 +69,6 @@ const SearchSelect = (props: SearchSelectProps) => {
                 value={null}
                 inputValue={inputValue}
                 loading={loading}
-                // error={error}
                 options={options}
                 groupBy={(option) => option.type}
                 getOptionLabel={getOptionValue}
@@ -76,10 +77,26 @@ const SearchSelect = (props: SearchSelectProps) => {
                         <Typography>{getOptionValue(option)}</Typography>
                     </div>
                 )}
+                // TODO: highlighted render of options
+                // renderOption={(option, { inputValue }) => {
+                //     const matches = match(option, inputValue);
+                //     const parts = parse(option, matches);
+            
+                //     return (
+                //         <div>
+                //             {items.map((item, i) => (
+                //             <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
+                //                 {part.text}
+                //             </span>
+                //             ))}
+                //         </div>
+                //     );
+                // }}
                 renderInput={(params) => <TextField {...params} label={placeholder || ''} variant='outlined'/>}
-                onFocus={props.onFocus}
-                selectOnFocus
-                onInputChange={(e, value: any) => {console.log('HANDLE CHANGE'); props.onQueryChange(value)}}
+                // selectOnFocus
+                loadingText='Cargando'
+                noOptionsText='No hay resultados'
+                onInputChange={(e, value: any) => props.onQueryChange(value)}
                 onChange={(e, value: any) => handleRedirect(value)}
             />
             <Typography color='error'>{errorText}</Typography>

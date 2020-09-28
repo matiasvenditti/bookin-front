@@ -66,7 +66,6 @@ class Header extends React.Component<any, HeaderState>{
                 .catch((error) => {
                     this.setState({ ...this.state, getUserDataStatus: RequestStatus.ERROR })
                     this.props.getUserDataErrorCallback();
-                    console.log(error);
                 });
     }
 
@@ -100,23 +99,20 @@ class Header extends React.Component<any, HeaderState>{
     }
 
     _searchRequest = (value: string) => {
-        // console.log('searching request', value)
+        if (value === '') return;
         this.setState({...this.state, searchBooksStatus: RequestStatus.LOADING, searchAuthorsStatus: RequestStatus.LOADING});
-        BooksService.searchBooks(value)
-            .then((response) => {
-                this.setState({...this.state, searchBooksStatus: RequestStatus.SUCCESS, books: response.data});
+        const result = Promise.all([
+            BooksService.searchBooks(value),
+            AuthorsService.searchAuthors(value),
+        ]);
+        result
+            .then((responses) => {
+                this.setState({...this.state, searchBooksStatus: RequestStatus.SUCCESS, searchAuthorsStatus: RequestStatus.SUCCESS, books: responses[0].data, authors: responses[1].data});
             })
             .catch((error: any) => {
                 this.props.searchBooksErrorCallback();
-                this.setState({...this.state, searchBooksStatus: RequestStatus.ERROR});
-            });
-        AuthorsService.searchAuthors(value)
-            .then((response) => {
-                this.setState({...this.state, searchAuthorsStatus: RequestStatus.SUCCESS, authors: response.data});
-            })
-            .catch((error: any) => {
                 this.props.searchAuthorsErrorCallback();
-                this.setState({...this.state, searchAuthorsStatus: RequestStatus.ERROR});
+                this.setState({...this.state, searchBooksStatus: RequestStatus.ERROR, searchAuthorsStatus: RequestStatus.ERROR});
             });
     }
 
@@ -125,6 +121,7 @@ class Header extends React.Component<any, HeaderState>{
         this.setState({
             ...this.state,
             userIsTyping: false,
+            searchInput: value,
             typingTimeout: setTimeout(() => {
                 this._searchRequest(value);
             }, 1000),
@@ -153,16 +150,12 @@ class Header extends React.Component<any, HeaderState>{
                                 id='header-search-select'
                                 loadingOptions={false}
                                 loading={loading}
-                                error={error}
-                                errorText={''}
-                                //  TODO falta manejar requests y darselas a search select
                                 options={!searchInputLoading ?
                                     this.state.books.map((book: any) => ({value: book, type: 'Libros'}))
                                         .concat(this.state.authors.map((author: any) => ({value: author, type: 'Autores'}))) 
                                     : []
                                 }
-                                onFocus={() => this._searchRequest('')}
-                                onQueryChange={() => console.log('onQueryChange search select to header')}
+                                onQueryChange={(value: any) => this.handleSearchChange(value)}
                             />
                         </div>
                         <div className="grow" />
