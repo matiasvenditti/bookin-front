@@ -35,7 +35,7 @@ interface FiltersProps {
 }
 
 const Filters = (props: FiltersProps) => {
-    const [mockData] = useState(initialMockData);
+    const [mockData, setMockData] = useState(initialMockData);
     const {
         tags,
         // sortBy,

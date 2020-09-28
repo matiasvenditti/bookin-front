@@ -71,6 +71,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
     }
 
     handleSubmit = (values: UpdateAuthor, photo: File) => {
+        console.log('submit', values);
         this.setState({ ...this.state, updateAuthorStatus: RequestStatus.LOADING });
         AuthorsService.changeAuthorData(values, photo)
             .then((response: AxiosResponse<Author>) => {
@@ -95,6 +96,7 @@ class ModifyAuthor extends Component<ModifyaAuthorProp, ModifyAuthorState> {
             error = value ? value > new Date() : false;
         }
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
+        console.log(id, type, value, error, anyErrors);
         this.setState({
             values: {
                 ...this.state.values,

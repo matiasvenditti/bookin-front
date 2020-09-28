@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {AxiosResponse} from "axios";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Typography} from "@material-ui/core";
-import classes from "./ModifyBook.module.css";
+import "./ModifyBook.css"
 import { Author } from "../../../model/Author";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
 import { AuthorsService, BooksService } from "../../../services";
@@ -22,6 +22,7 @@ interface ModifyBookState {
 
 interface ModifyBookProps extends RouteComponentProps<MatchParams> {
     updateCallback(r: RequestStatus): void,
+
     getBookDataErrorCallback(): void,
 }
 
@@ -103,7 +104,7 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
         
         return (
             <div className='route-container'>
-                <div className={classes.formContainer}>
+                <div className='form-container'>
                     <Typography align='center' variant='h5'>Modificacion de libro</Typography>
                     <ModifyBookForm
                         onSubmit={this.handleSubmit}

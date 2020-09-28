@@ -3,6 +3,7 @@ import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { instance } from "../utils/Interceptors/Inerceptors";
 import { baseURL } from "./EnvironmentService";
 import { Book } from "../model/Book";
+import { BookID } from "../model/BookID";
 import { Author } from "../model/Author";
 import { UpdateBook } from "../model/UpdateBook";
 
@@ -45,8 +46,9 @@ class BooksService {
         return instance.delete<Book>(`${baseURL}/books/${id}`)
     }
 
+    // TODO: finish request to work
     static searchBooks = (query: string): Promise<AxiosResponse<Book[]>> => {
-        return instance.get<Book[]>(`${baseURL}/books/search?key=${query}`);
+        return instance.get<Book[]>(`${baseURL}/books/search`)
     }
 }
 
