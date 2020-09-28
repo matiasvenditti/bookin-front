@@ -126,6 +126,13 @@ class Router extends React.Component<any, RouterState> {
                         />
                     </PrivateRoute>
 
+                    <PrivateRoute path='/books/edit/:id' roles={[UserRoles.RoleAdmin]}>
+                        <ModifyBook
+                            updateCallback={(updateBookStatus: RequestStatus) => this.setState({ ...this.state, updateBookStatus })}
+                            getBookDataErrorCallback={() => this.setState({ ...this.state, getModifyBookDataError: true })}
+                        />
+                    </PrivateRoute>
+
                     <Route path='/books/:id' roles={[]} >
                         <Book
                             getBookDataErrorCallback={() => this.setState({ ...this.state, getBookDataError: true })}
@@ -136,13 +143,6 @@ class Router extends React.Component<any, RouterState> {
                     <PrivateRoute path='/books' roles={[UserRoles.RoleAdmin]}>
                         <CreateBook
                             createBookCallback={(createBookStatus: RequestStatus) => this.setState({ ...this.state, createBookStatus })}
-                        />
-                    </PrivateRoute>
-
-                    <PrivateRoute path='/books/edit/:id' roles={[UserRoles.RoleAdmin]}>
-                        <ModifyBook
-                            updateCallback={(updateBookStatus: RequestStatus) => this.setState({ ...this.state, updateBookStatus })}
-                            getBookDataErrorCallback={() => this.setState({ ...this.state, getModifyBookDataError: true })}
                         />
                     </PrivateRoute>
 
@@ -180,34 +180,34 @@ class Router extends React.Component<any, RouterState> {
         
         return (
             <div>
-                {this.renderAToast(getUserDataError, 'error', 'Hubo un error al obtener los datos del usuario, intente más tard', () => this.setState({...this.state, getUserDataError: false}))}
-                {this.renderAToast(searchBooksError, 'error', 'Hubo un error al buscar libros, intente más tarde', () => this.setState({...this.state, searchBooksError: false}))}
-                {this.renderAToast(searchAuthorsError, 'error', 'Hubo un error al buscar autores, intente más tarde', () => this.setState({...this.state, searchAuthorsError: false}))}
-                {this.renderAToast(registerStatus === RequestStatus.SUCCESS, 'success', 'Te has registrado correctamente!', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
-                {this.renderAToast(registerStatus === RequestStatus.ERROR, 'error', 'Hubo un error al registrarse, intente más tarde', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
-                {this.renderAToast(loginStatus === RequestStatus.SUCCESS, 'success', 'No se ha podido ingresar, intente más tarde', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
-                {this.renderAToast(loginStatus === RequestStatus.ERROR, 'error', '', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
-                {this.renderAToast(editProfileStatus === RequestStatus.SUCCESS, 'success', 'Se han actualizado los datos del usuario correctamente', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
-                {this.renderAToast(editProfileStatus === RequestStatus.ERROR, 'error', 'Hubo un error al actualizar los datos, intente más tarde', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
-                {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS, 'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
-                {this.renderAToast(deleteProfileStatus === RequestStatus.ERROR, 'error', 'Hubo un error al eliminar al cuenta, intente más tarde', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
-                {this.renderAToast(loadAvatarError, 'error', 'La imagen pesa mas de 100KB, seleccione una mas pequeña', () => this.setState({...this.state, loadAvatarError: false}))}
-                {this.renderAToast(createAuthorStatus === RequestStatus.SUCCESS, 'success', 'Se ha creado el autor exitosamente', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
-                {this.renderAToast(createAuthorStatus === RequestStatus.ERROR, 'error', 'Hubo un error al crear el autor, intente más tarde', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
-                {this.renderAToast(updateAuthorStatus === RequestStatus.SUCCESS, 'success', 'Se ha modificado el autor exitosamente', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}
-                {this.renderAToast(updateAuthorStatus === RequestStatus.ERROR, 'error', 'Hubo un error al modificar el autor, intente más tarde', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}
-                {this.renderAToast(getAuthorDataError, 'error', 'Hubo un error al obtener los datos del autor, intente más tarde', () => this.setState({...this.state, getAuthorDataError: false}))}
-                {this.renderAToast(getModifyAuthorDataError, 'error', 'Hubo un error al obtener los datos del autor, intente más tarde', () => this.setState({...this.state, getModifyAuthorDataError}))}
-                {this.renderAToast(deleteAuthorStatus === RequestStatus.SUCCESS, 'success', 'Se ha eliminado el autor exitosamente', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
-                {this.renderAToast(deleteAuthorStatus === RequestStatus.ERROR, 'error', 'Hubo un error al eliminar el autor, intente más tarde', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
-                {this.renderAToast(createBookStatus === RequestStatus.SUCCESS, 'success', 'Se ha creado el libro exitosamente', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
-                {this.renderAToast(createBookStatus === RequestStatus.ERROR, 'error', 'Hubo un error al crear el libro, intente más tarde', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
-                {this.renderAToast(getBookDataError, 'error', 'Hubo un error al obtener los datos del libro, intente más tarde', () => this.setState({...this.state, getBookDataError: false}))}
-                {this.renderAToast(deleteBookStatus === RequestStatus.SUCCESS, 'success', 'Se ha eliminado el libro exitosamente', () => this.setState({...this.state, deleteBookStatus: RequestStatus.NONE}))}
-                {this.renderAToast(deleteBookStatus === RequestStatus.ERROR, 'error', 'Hubo un error al eliminar el libro, intente más tarde', () => this.setState({...this.state, deleteBookStatus: RequestStatus.NONE}))}
-                {this.renderAToast(updateBookStatus === RequestStatus.SUCCESS, 'success', 'Se actualizaron los datos del libro exitosamente', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
-                {this.renderAToast(updateBookStatus === RequestStatus.ERROR, 'error', 'Hubo un error al actualizar los datos del libro, intente más tarde', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
-                {this.renderAToast(getModifyBookDataError, 'error', '', () => this.setState({...this.state, getModifyBookDataError: false}))}
+                {this.renderAToast(getUserDataError,                                 'error', 'Hubo un error al obtener los datos del usuario, intente más tard', () => this.setState({...this.state, getUserDataError: false}))}
+                {this.renderAToast(searchBooksError,                                 'error', 'Hubo un error al buscar libros, intente más tarde', () => this.setState({...this.state, searchBooksError: false}))}
+                {this.renderAToast(searchAuthorsError,                               'error', 'Hubo un error al buscar autores, intente más tarde', () => this.setState({...this.state, searchAuthorsError: false}))}
+                {this.renderAToast(registerStatus === RequestStatus.SUCCESS,        'success', 'Te has registrado correctamente!', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
+                {this.renderAToast(registerStatus === RequestStatus.ERROR,          'error', 'Hubo un error al registrarse, intente más tarde', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
+                {this.renderAToast(loginStatus === RequestStatus.SUCCESS,           'success', 'No se ha podido ingresar, intente más tarde', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
+                {this.renderAToast(loginStatus === RequestStatus.ERROR,             'error', '', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
+                {this.renderAToast(editProfileStatus === RequestStatus.SUCCESS,     'success', 'Se han actualizado los datos del usuario correctamente', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(editProfileStatus === RequestStatus.ERROR,       'error', 'Hubo un error al actualizar los datos, intente más tarde', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS,   'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteProfileStatus === RequestStatus.ERROR,     'error', 'Hubo un error al eliminar al cuenta, intente más tarde', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(loadAvatarError,                                  'error', 'La imagen pesa mas de 100KB, seleccione una mas pequeña', () => this.setState({...this.state, loadAvatarError: false}))}
+                {this.renderAToast(createAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha creado el autor exitosamente', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(createAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al crear el autor, intente más tarde', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha modificado el autor exitosamente', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al modificar el autor, intente más tarde', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(getAuthorDataError,                               'error', 'Hubo un error al obtener los datos del autor, intente más tarde', () => this.setState({...this.state, getAuthorDataError: false}))}
+                {this.renderAToast(getModifyAuthorDataError,                         'error', 'Hubo un error al obtener los datos del autor, intente más tarde', () => this.setState({...this.state, getModifyAuthorDataError}))}
+                {this.renderAToast(deleteAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha eliminado el autor exitosamente', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar el autor, intente más tarde', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(createBookStatus === RequestStatus.SUCCESS,      'success', 'Se ha creado el libro exitosamente', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(createBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al crear el libro, intente más tarde', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(getBookDataError,                                 'error', 'Hubo un error al obtener los datos del libro, intente más tarde', () => this.setState({...this.state, getBookDataError: false}))}
+                {this.renderAToast(deleteBookStatus === RequestStatus.SUCCESS,      'success', 'Se ha eliminado el libro exitosamente', () => this.setState({...this.state, deleteBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al eliminar el libro, intente más tarde', () => this.setState({...this.state, deleteBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateBookStatus === RequestStatus.SUCCESS,      'success', 'Se actualizaron los datos del libro exitosamente', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al actualizar los datos del libro, intente más tarde', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(getModifyBookDataError,                           'error', '', () => this.setState({...this.state, getModifyBookDataError: false}))}
             </div>
         );
     }

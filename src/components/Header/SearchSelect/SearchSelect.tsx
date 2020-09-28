@@ -34,7 +34,6 @@ const SearchSelect = (props: SearchSelectProps) => {
         loading,
         // error,
         // loadingOptions,
-        errorText,
         options,
     } = props;
 
@@ -82,7 +81,6 @@ const SearchSelect = (props: SearchSelectProps) => {
                 onInputChange={(e, value: any) => {console.log('HANDLE CHANGE'); props.onQueryChange(value)}}
                 onChange={(e, value: any) => handleRedirect(value)}
             />
-            <Typography color='error'>{errorText}</Typography>
         </FormControl>
     )
 }
