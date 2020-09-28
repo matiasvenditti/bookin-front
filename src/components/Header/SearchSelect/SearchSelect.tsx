@@ -18,10 +18,9 @@ interface SearchSelectProps extends RouteComponentProps {
     disabled?: boolean
     loadingOptions?: boolean,
     loading: boolean
-    error: boolean
-    errorText: string,
+    // error: boolean
+    // errorText: string,
     options: ValueType[],
-    onFocus(): void,
     onQueryChange(value: string): void,
 }
 
@@ -66,7 +65,6 @@ const SearchSelect = (props: SearchSelectProps) => {
                 value={null}
                 inputValue={inputValue}
                 loading={loading}
-                // error={error}
                 options={options}
                 groupBy={(option) => option.type}
                 getOptionLabel={getOptionValue}
@@ -76,9 +74,9 @@ const SearchSelect = (props: SearchSelectProps) => {
                     </div>
                 )}
                 renderInput={(params) => <TextField {...params} label={placeholder || ''} variant='outlined'/>}
-                onFocus={props.onFocus}
-                selectOnFocus
-                onInputChange={(e, value: any) => {console.log('HANDLE CHANGE'); props.onQueryChange(value)}}
+                loadingText='Cargando...'
+                noOptionsText='No hay resultados'
+                onInputChange={(e, value: any) => props.onQueryChange(value)}
                 onChange={(e, value: any) => handleRedirect(value)}
             />
         </FormControl>

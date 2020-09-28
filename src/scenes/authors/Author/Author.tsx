@@ -77,7 +77,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
         this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.LOADING });
         const result = Promise.all([
             AuthorsService.getAuthorData(id),
-            BooksService.getBookAuthors(id)
+            AuthorsService.getAuthorBooks(id)
         ]);
         result
             .then((response: any) => {

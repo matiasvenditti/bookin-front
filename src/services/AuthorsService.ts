@@ -55,7 +55,7 @@ class AuthorsService {
 
     // TODO: finish request to work
     static searchAuthors = (query: string): Promise<AxiosResponse<Author[]>> => {
-        return instance.get<Author[]>(`${baseURL}/authors/search`)
+        return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`)
     }
 }
 

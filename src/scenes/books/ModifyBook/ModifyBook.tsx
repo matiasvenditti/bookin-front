@@ -2,7 +2,7 @@ import React, {Component} from "react";
 import {AxiosResponse} from "axios";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Typography} from "@material-ui/core";
-import "./ModifyBook.css"
+import classes from "./ModifyBook.module.css";
 import { Author } from "../../../model/Author";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
 import { AuthorsService, BooksService } from "../../../services";
@@ -104,7 +104,7 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
         
         return (
             <div className='route-container'>
-                <div className='form-container'>
+                <div className={classes.formContainer}>
                     <Typography align='center' variant='h5'>Modificacion de libro</Typography>
                     <ModifyBookForm
                         onSubmit={this.handleSubmit}

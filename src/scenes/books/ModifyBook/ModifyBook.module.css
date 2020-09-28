@@ -1,0 +1,12 @@
+form > fieldset {
+    margin-top: 15px !important;
+}
+
+.formContainer {
+    padding: 30px 65px 15px;
+    max-width: 600px;
+}
+
+.formContainer h5 {
+    margin-bottom: 15px;
+}

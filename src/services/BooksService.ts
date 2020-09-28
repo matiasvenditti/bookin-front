@@ -48,7 +48,7 @@ class BooksService {
 
     // TODO: finish request to work
     static searchBooks = (query: string): Promise<AxiosResponse<Book[]>> => {
-        return instance.get<Book[]>(`${baseURL}/books/search`)
+        return instance.get<Book[]>(`${baseURL}/books/search?key=${query}`)
     }
 }
 

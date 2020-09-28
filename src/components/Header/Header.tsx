@@ -100,7 +100,7 @@ class Header extends React.Component<any, HeaderState>{
     }
 
     _searchRequest = (value: string) => {
-        // console.log('searching request', value)
+        if (value === '') return;
         this.setState({...this.state, searchBooksStatus: RequestStatus.LOADING, searchAuthorsStatus: RequestStatus.LOADING});
         BooksService.searchBooks(value)
             .then((response) => {
@@ -125,6 +125,7 @@ class Header extends React.Component<any, HeaderState>{
         this.setState({
             ...this.state,
             userIsTyping: false,
+            searchInput: value,
             typingTimeout: setTimeout(() => {
                 this._searchRequest(value);
             }, 1000),
@@ -153,16 +154,12 @@ class Header extends React.Component<any, HeaderState>{
                                 id='header-search-select'
                                 loadingOptions={false}
                                 loading={loading}
-                                error={error}
-                                errorText={''}
-                                //  TODO falta manejar requests y darselas a search select
                                 options={!searchInputLoading ?
                                     this.state.books.map((book: any) => ({value: book, type: 'Libros'}))
                                         .concat(this.state.authors.map((author: any) => ({value: author, type: 'Autores'}))) 
                                     : []
                                 }
-                                onFocus={() => this._searchRequest('')}
-                                onQueryChange={() => console.log('onQueryChange search select to header')}
+                                onQueryChange={(value: any) => this.handleSearchChange(value)}
                             />
                         </div>
                         <div className="grow" />

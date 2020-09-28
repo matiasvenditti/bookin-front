@@ -3,7 +3,7 @@ import {Button as Buttons, TextField, Typography} from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { Autocomplete } from '@material-ui/lab';
-import "./ModifyBookForm.css"
+import classes from "./ModifyBookForm.module.css";
 import { allBookGenres, PhotoUtils, validateInput } from '../../../utils';
 import { Button, DatePicker, Input, Select } from '../../../components/Form';
 import { BookFormModel } from '../../../model/Form/BookFormModel';
@@ -132,8 +132,8 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
 
         return(
             <form>
-                <Grid alignItems='center' container spacing={2}>
-                    <Grid item xs>
+                <div className={classes.formContainer}>
+                    <div className={classes.leftContainer}>
                         <Input
                             label='Titulo'
                             id='title'
@@ -188,9 +188,9 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                                 />
                             )}
                         />
-                    </Grid>
-                    <Grid item xs>
-                        <div className='photo'>
+                    </div>
+                    <div className={classes.rightContainer}>
+                        <div className={classes.photo}>
                             {image}
                         </div>
                         <Buttons fullWidth variant="contained" component="label" onChange={this.handlePhotoChange}
@@ -203,9 +203,9 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                             />
                         </Buttons>
                         {this.state.values.photo.error && this.state.values.photo.touched && <Typography color='error'>El tamaño de la imagen no puede superar los 100Kb</Typography>}
-                    </Grid>
-                </Grid>
-                <div className='create-author-buttons-container'>
+                    </div>
+                </div>
+                <div className={classes.createAuthorButtonsContainer}>
                     <Button title="Cancelar" variant='outlined' disabled={false} onClick={this.props.onCancel} />
                     <Button title='Actualizar' variant='contained' disabled={!this.state.formValid} onClick={this.handleSubmit} />
                 </div>
