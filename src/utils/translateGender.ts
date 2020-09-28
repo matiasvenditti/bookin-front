@@ -1,5 +1,6 @@
 import Gender from "../model/Gender";
 
+
 const stringToGender = function(gender: string) {
     switch (gender) {
         case 'Hombre': return Gender.M;
@@ -17,6 +18,7 @@ const genderToString = function(gender: string) {
         default: return 'Anónimo';
     }
 };
+
 
 export {
     stringToGender,

@@ -11,7 +11,7 @@ interface SelectProps {
     onChange(id: string, type: string, value: string): void,
 }
 
-export const Select = (props: SelectProps) => {
+const Select = (props: SelectProps) => {
     const {
         label,
         id,
@@ -39,3 +39,6 @@ export const Select = (props: SelectProps) => {
         </FormControl>
     )
 }
+
+
+export default Select;

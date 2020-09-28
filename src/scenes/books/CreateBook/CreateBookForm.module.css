@@ -1,0 +1,32 @@
+.formContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.leftContainer {
+    margin-right: 50px;
+}
+
+.leftContainer > div {
+    margin-bottom: 15px;
+}
+
+.rightContainer {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+
+/* temporary once the photo component is created correctly (see todo in form component) */
+.photo {
+
+}
+
+.buttonsContainer {
+    padding: 25px;
+}
+
+.buttonsContainer > button:first-child {
+    margin-right: 10px;
+}

@@ -1,32 +1,55 @@
 import React from "react";
 import AppBar from '@material-ui/core/AppBar';
-import { InputBase, fade, Theme, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
+import { fade, Theme, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import SearchIcon from '@material-ui/icons/Search';
 import "./Header.css";
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import { withRouter } from "react-router-dom";
-import { logout } from "../../services/SessionService";
-import { getUserData } from "../../services/UserService";
-import { isAuthorized, isLoggedIn } from "../../services/AuthService";
+import { AuthorsService, AuthService, BooksService, SessionService, UserService } from "../../services";
+import SearchSelect from "./SearchSelect/SearchSelect";
+import { RequestStatus } from "../../model/consts/RequestStatus";
 
 
-
-type State = {
-    firstName: string,
-    anchorEl: Element | null,
+interface HeaderProps {
+    nowIsLogged: boolean,
+    roles: string[],
+    logoutCallback(): void,
+    getUserDataErrorCallback(): void,
+    searchBooksErrorCallback(): void,
+    searchAuthorsErrorCallback(): void,
+    redirectToBookAuthorCallback(query: string): void,
 }
 
+interface HeaderState {
+    firstName: string,
+    anchorEl: Element | null,
+    getUserDataStatus: RequestStatus,
+    searchInput: string,
+    userIsTyping: boolean,
+    typingTimeout: any,
+    books: any[],
+    searchBooksStatus: RequestStatus,
+    authors: any[],
+    searchAuthorsStatus: RequestStatus,
+}
 
-
-class Header extends React.Component<any, State>{
+class Header extends React.Component<any, HeaderState>{
     constructor(props: any) {
         super(props);
         this.state = {
             firstName: '',
             anchorEl: null,
+            getUserDataStatus: RequestStatus.NONE,
+            searchInput: '',
+            userIsTyping: false,
+            typingTimeout: 0,
+            books: [],
+            searchBooksStatus: RequestStatus.NONE,
+            authors: [],
+            searchAuthorsStatus: RequestStatus.NONE,
         };
+
         this.handleMenu = this.handleMenu.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.setAnchorEl = this.setAnchorEl.bind(this);
@@ -34,16 +57,23 @@ class Header extends React.Component<any, State>{
 
     // on reload the page
     componentDidMount() {
-        if (isLoggedIn())
-            getUserData()
-                .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
-                .catch((error) => console.log(error));
+        this.setState({...this.state, getUserDataStatus: RequestStatus.LOADING});
+        if (AuthService.isLoggedIn())
+            UserService.getUserData()
+                .then((response) => {
+                    this.setState({ ...this.state, firstName: response.data.firstName, getUserDataStatus: RequestStatus.SUCCESS })
+                })
+                .catch((error) => {
+                    this.setState({ ...this.state, getUserDataStatus: RequestStatus.ERROR })
+                    this.props.getUserDataErrorCallback();
+                    console.log(error);
+                });
     }
 
     // on not logged to logged
     componentDidUpdate(prevProps: any) {
-        if (!prevProps.nowIsLogged && this.props.nowIsLogged && isLoggedIn()) {
-            getUserData()
+        if (!prevProps.nowIsLogged && this.props.nowIsLogged && AuthService.isLoggedIn()) {
+            UserService.getUserData()
                 .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
                 .catch((error) => console.log(error));
         }
@@ -52,14 +82,14 @@ class Header extends React.Component<any, State>{
     handleMenu(event: React.MouseEvent<HTMLElement>) { this.setAnchorEl(event.currentTarget); }
     handleClose() { this.setAnchorEl(null); }
     setAnchorEl(anchorEl: Element | null) {
-        this.setState((prevState: State) => ({
+        this.setState((prevState: HeaderState) => ({
             ...prevState,
             anchorEl: anchorEl
         }))
     }
 
     handleLogout = () => {
-        logout();
+        SessionService.logout();
         this.props.history.push('/login');
         this.props.logoutCallback();
         this.handleClose();
@@ -69,8 +99,47 @@ class Header extends React.Component<any, State>{
         this.props.history.push('/');
     }
 
+    _searchRequest = (value: string) => {
+        if (value === '') return;
+        this.setState({...this.state, searchBooksStatus: RequestStatus.LOADING, searchAuthorsStatus: RequestStatus.LOADING});
+        BooksService.searchBooks(value)
+            .then((response) => {
+                this.setState({...this.state, searchBooksStatus: RequestStatus.SUCCESS, books: response.data});
+            })
+            .catch((error: any) => {
+                this.props.searchBooksErrorCallback();
+                this.setState({...this.state, searchBooksStatus: RequestStatus.ERROR});
+            });
+        AuthorsService.searchAuthors(value)
+            .then((response) => {
+                this.setState({...this.state, searchAuthorsStatus: RequestStatus.SUCCESS, authors: response.data});
+            })
+            .catch((error: any) => {
+                this.props.searchAuthorsErrorCallback();
+                this.setState({...this.state, searchAuthorsStatus: RequestStatus.ERROR});
+            });
+    }
+
+    handleSearchChange = (value: string) => {
+        if (this.state.typingTimeout) clearTimeout(this.state.typingTimeout);
+        this.setState({
+            ...this.state,
+            userIsTyping: false,
+            searchInput: value,
+            typingTimeout: setTimeout(() => {
+                this._searchRequest(value);
+            }, 1000),
+        })
+    }
+
     render() {
         const { classes } = this.props;
+        const searchInputLoading = (this.state.searchAuthorsStatus === RequestStatus.LOADING
+            || this.state.searchBooksStatus === RequestStatus.LOADING
+        );
+        const loading = (this.state.searchBooksStatus === RequestStatus.LOADING || this.state.searchAuthorsStatus === RequestStatus.LOADING);
+        const error = (this.state.searchBooksStatus === RequestStatus.ERROR || this.state.searchAuthorsStatus === RequestStatus.ERROR);
+
         return (
             <div>
                 <AppBar position='static' color='primary' className={classes.title}>
@@ -79,16 +148,18 @@ class Header extends React.Component<any, State>{
                             <Typography onClick={this.handleHomeRedirect} variant='h6'>Book in</Typography>
                         </div>
                         <div className={classes.search}>
-                            <div className={classes.searchIcon}>
-                                <SearchIcon />
-                            </div>
-                            <InputBase
-                                placeholder="Buscar"
-                                classes={{
-                                    root: classes.inputRoot,
-                                    input: classes.inputInput,
-                                }}
-                                inputProps={{ 'aria-label': 'search' }}
+                            <SearchSelect
+                                inputValue={this.state.searchInput}
+                                placeholder='Busca un autor un libro!'
+                                id='header-search-select'
+                                loadingOptions={false}
+                                loading={loading}
+                                options={!searchInputLoading ?
+                                    this.state.books.map((book: any) => ({value: book, type: 'Libros'}))
+                                        .concat(this.state.authors.map((author: any) => ({value: author, type: 'Autores'}))) 
+                                    : []
+                                }
+                                onQueryChange={(value: any) => this.handleSearchChange(value)}
                             />
                         </div>
                         <div className="grow" />
@@ -100,8 +171,8 @@ class Header extends React.Component<any, State>{
     }
 
     renderButtons() {
-        const logged = isLoggedIn();
-        const authorized = isAuthorized(this.props.roles);
+        const logged = AuthService.isLoggedIn();
+        const authorized = AuthService.isAuthorized(this.props.roles);
         if (logged) {
             return (
                 <div>
@@ -115,27 +186,22 @@ class Header extends React.Component<any, State>{
                         id="menu-appbar"
                         anchorEl={this.state.anchorEl}
                         onClose={this.handleClose}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
+                        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+                        transformOrigin={{vertical: 'top', horizontal: 'right'}}
                         keepMounted
-                        transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right',
-                        }}
-                        open={Boolean(this.state.anchorEl)}>
+                        open={Boolean(this.state.anchorEl)}
+                    >
                         <MenuItem onClick={() => { this.props.history.push('/profile'); this.handleClose() }}>Ver Perfil</MenuItem>
                         {/* TODO: Uncomment when reviews are implemented */ }
                         {/*<MenuItem onClick={() => { this.props.history.push('/'); this.handleClose() }}>Ver Reseñas</MenuItem>*/}                        
-                        {authorized
-                            ?<div>
+                        {authorized ?
+                            <div>
                                 <MenuItem onClick={() => { this.props.history.push('/books'); this.handleClose() }}>Crear Libro</MenuItem>
                                 <MenuItem onClick={() => { this.props.history.push('/authors'); this.handleClose() }}>Crear Autor</MenuItem>                            
                             </div>
-                            :null
+                            :
+                            null
                         }
-
                         <MenuItem onClick={this.handleLogout}>Cerrar Sesión</MenuItem>
                     </Menu>
                 </div>

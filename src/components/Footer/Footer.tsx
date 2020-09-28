@@ -3,7 +3,7 @@ import "./Footer.css"
 import {Typography} from "@material-ui/core";
 
 
-export class Footer extends React.Component<{}, {}>{
+class Footer extends React.Component<{}, {}>{
     render() {
         return (
             <div color='secondary' className='main-footer'>
@@ -13,7 +13,7 @@ export class Footer extends React.Component<{}, {}>{
             </div>
         )
     }
-
 }
 
-export default Footer
+
+export default Footer;

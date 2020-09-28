@@ -7,6 +7,7 @@ import {Stars} from "@material-ui/icons";
 import photoUtils from "../../utils/photoUtils";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 
+
 interface BookDisplayProps extends RouteComponentProps {
     book: Book
     crown: boolean

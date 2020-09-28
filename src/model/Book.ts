@@ -1,9 +1,9 @@
 export class Book {
     id: number;
-    title: string;   
+    title: string;
     genre: string;
     language: string;
-    release: Date;
+    date: Date;
     photo: string;
     stars: number;
 
@@ -12,10 +12,8 @@ export class Book {
         this.title = '';
         this.genre = '';
         this.language = '';
-        this.release = new Date();
+        this.date = new Date();
         this.photo = '';
         this.stars = 0;
     }
-
 }
-

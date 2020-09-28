@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import './Register.css';
 import { Typography } from '@material-ui/core';
 import { NewUser } from '../../../model';
-import { register, login } from '../../../services/SessionService';
 import { withRouter } from 'react-router-dom';
-import { saveLoginResponse } from '../../../services/AuthService';
 import { AxiosResponse } from 'axios';
-import { ResponseLogin } from '../../../services/SessionService';
+import { AuthService, SessionService } from '../../../services/';
 import RegisterForm from './RegisterForm';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
+import ResponseLogin from '../../../model/responses/ResponseLogin';
 
 
 export interface RegisterState {
@@ -27,12 +26,12 @@ class Register extends Component<any, RegisterState> {
 
     handleSubmit = (values: NewUser) => {
         this.setState({ registerStatus: RequestStatus.LOADING, error: null });
-        register(values)
+        SessionService.register(values)
             .then(() => {
                 this.setState({ registerStatus: RequestStatus.SUCCESS, error: null });
-                login({ email: values.email, password: values.password })
+                SessionService.login({ email: values.email, password: values.password })
                     .then((response: AxiosResponse<ResponseLogin>) => {
-                        saveLoginResponse(response);
+                        AuthService.saveLoginResponse(response);
                         this.props.registerCallback(RequestStatus.SUCCESS, RequestStatus.SUCCESS);
                         this.props.history.push('/');
                         this.setState({ ...this.state, registerStatus: RequestStatus.SUCCESS });
@@ -63,5 +62,6 @@ class Register extends Component<any, RegisterState> {
         )
     }
 }
+
 
 export default withRouter(Register);

@@ -1,23 +1,22 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import React from "react";
 import PrivateRoute from './PrivateRoute';
-import Home from "../../scenes/main/Home/Home";
+import Home from "../../scenes/home/Home";
 import Register from "../../scenes/session/Register/Register";
 import Login from '../../scenes/session/Login/Login';
-import Profile from '../../scenes/main/Profile/Profile';
-import Menu from "../Menu/Menu";
+import Profile from '../../scenes/profile/Profile';
 import Footer from "../Footer/Footer";
 import { Snackbar } from "@material-ui/core";
 import { Alert } from '@material-ui/lab';
 import { RequestStatus } from "../../model/consts/RequestStatus";
-import CreateAuthor from "../../scenes/main/Author/CreateAuthor/CreateAuthor";
+import CreateAuthor from "../../scenes/authors/CreateAuthor/CreateAuthor";
 import { UserRoles } from "../../model/consts/Roles";
-import CreateBook from "../../scenes/main/Book/CreateBook/CreateBook";
-import Book from "../../scenes/main/Book/Book/Book";
-import Author from "../../scenes/main/Author/Author/Author";
-import ModifyAuthor from "../../scenes/main/Author/ModifyAuthor/ModifyAuthor";
-import { ResultsMenu } from "../../scenes/main/Results/ResultsMenu/ResultsMenu";
-import ModifyBook from "../../scenes/main/Book/ModifyBook/ModifyBook";
+import Author from "../../scenes/authors/Author/Author";
+import ModifyAuthor from "../../scenes/authors/ModifyAuthor/ModifyAuthor";
+import { Book, CreateBook } from "../../scenes/books";
+import ResultsMenu from "../../scenes/results/ResultsMenu/ResultsMenu";
+import { Header } from "..";
+import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
 
 
 interface RouterProps {
@@ -25,7 +24,10 @@ interface RouterProps {
 }
 
 interface RouterState {
-    reload: boolean,
+    logoutStatus: boolean,
+    getUserDataError: boolean,
+    searchBooksError: boolean,
+    searchAuthorsError: boolean,
     registerStatus: RequestStatus,
     loginStatus: RequestStatus,
     loadAvatarError: boolean,
@@ -35,20 +37,24 @@ interface RouterState {
     createAuthorStatus: RequestStatus,
     createBookStatus: RequestStatus,
     updateAuthorStatus: RequestStatus,
-    updateBookStatus: RequestStatus,
     getAuthorDataError: boolean,
     getModifyAuthorDataError: boolean,
-    getModifyBookDataError: boolean,
-    getBookDataError: boolean,
     deleteAuthorStatus: RequestStatus,
+    getBookDataError: boolean,
     deleteBookStatus: RequestStatus,
+    updateBookStatus: RequestStatus,
+    getModifyBookDataError: boolean,
+    redirectReload: boolean,
 }
 
-class Router extends React.Component<RouterProps, RouterState> {
+class Router extends React.Component<any, RouterState> {
     constructor(props: RouterProps) {
         super(props);
         this.state = {
-            reload: false,
+            logoutStatus: false,
+            getUserDataError: false,
+            searchBooksError: false,
+            searchAuthorsError: false,
             registerStatus: RequestStatus.NONE,
             loginStatus: RequestStatus.NONE,
             loadAvatarError: false,
@@ -58,20 +64,28 @@ class Router extends React.Component<RouterProps, RouterState> {
             createAuthorStatus: RequestStatus.NONE,
             createBookStatus: RequestStatus.NONE,
             updateAuthorStatus: RequestStatus.NONE,
-            updateBookStatus: RequestStatus.NONE,
             getAuthorDataError: false,
             getModifyAuthorDataError: false,
-            getModifyBookDataError: false,
             deleteAuthorStatus: RequestStatus.NONE,
-            deleteBookStatus: RequestStatus.NONE,
             getBookDataError: false,
+            deleteBookStatus: RequestStatus.NONE,
+            updateBookStatus: RequestStatus.NONE,
+            getModifyBookDataError: false,
+            redirectReload: false,
         };
     }
 
     render() {
         return (
             <BrowserRouter>
-                <Menu logoutCallback={() => this.setState({ reload: true })} nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} roles={[UserRoles.RoleAdmin]}/>
+                <Header 
+                    nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} 
+                    roles={[UserRoles.RoleAdmin]}
+                    logoutCallback={() => this.setState({...this.state, logoutStatus: true })}  // only one to trigger re-render
+                    getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
+                    searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
+                    searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
+                />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
                     <Route path='/register' >
@@ -112,13 +126,6 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </PrivateRoute>
 
-                    <Route path='/books/:id' roles={[]} exact={true}>
-                        <Book
-                            getBookDataErrorCallback={() => this.setState({ ...this.state, getBookDataError: true })}
-                            deleteBookCallback={(deleteBookStatus: RequestStatus) => this.setState({ ...this.state, deleteBookStatus })}
-                        />
-                    </Route>
-
                     <PrivateRoute path='/books/edit/:id' roles={[UserRoles.RoleAdmin]}>
                         <ModifyBook
                             updateCallback={(updateBookStatus: RequestStatus) => this.setState({ ...this.state, updateBookStatus })}
@@ -126,7 +133,14 @@ class Router extends React.Component<RouterProps, RouterState> {
                         />
                     </PrivateRoute>
 
-                    <PrivateRoute path='/books' roles={[UserRoles.RoleAdmin]} >
+                    <Route path='/books/:id' roles={[]} >
+                        <Book
+                            getBookDataErrorCallback={() => this.setState({ ...this.state, getBookDataError: true })}
+                            deleteBookCallback={(deleteBookStatus: RequestStatus) => this.setState({ ...this.state, deleteBookStatus })}
+                        />
+                    </Route>
+
+                    <PrivateRoute path='/books' roles={[UserRoles.RoleAdmin]}>
                         <CreateBook
                             createBookCallback={(createBookStatus: RequestStatus) => this.setState({ ...this.state, createBookStatus })}
                         />
@@ -144,6 +158,9 @@ class Router extends React.Component<RouterProps, RouterState> {
 
     renderToasts() {
         const {
+            getUserDataError,
+            searchBooksError,
+            searchAuthorsError,
             registerStatus,
             loginStatus,
             editProfileStatus,
@@ -155,81 +172,54 @@ class Router extends React.Component<RouterProps, RouterState> {
             getAuthorDataError,
             getModifyAuthorDataError,
             deleteAuthorStatus,
-            getModifyBookDataError,
             getBookDataError,
             deleteBookStatus,
             updateBookStatus,
+            getModifyBookDataError,
         } = this.state;
+        
         return (
             <div>
-                <Snackbar open={registerStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, registerStatus: RequestStatus.NONE })}>
-                    <Alert severity='success'>Te has registrado correctamente!</Alert>
-                </Snackbar>
-                <Snackbar open={registerStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, registerStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>Hubo un error al registrarse, intente mas tarde</Alert>
-                </Snackbar>
-                <Snackbar open={loginStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, loginStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>No se ha podido ingresar, intente mas tarde</Alert>
-                </Snackbar>
-                <Snackbar open={editProfileStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, editProfileStatus: RequestStatus.NONE })}>
-                    <Alert severity='success'>Se han actualizado los datos del usuario correctamente</Alert>
-                </Snackbar>
-                <Snackbar open={editProfileStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, editProfileStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>No se han podido actualizar los datos correctamente, intente mas tarde</Alert>
-                </Snackbar>
-                <Snackbar open={deleteProfileStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteProfileStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>No se ha podido eliminar al cuenta, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={loadAvatarError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, loadAvatarError: false })}>
-                    <Alert severity='error'>La imagen pesa mas de 100KB, seleccione una mas pequeña</Alert>
-                </Snackbar>
-                <Snackbar open={createAuthorStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createAuthorStatus: RequestStatus.NONE })}>
-                    <Alert severity='success'>Se ha creado el autor exitosamente</Alert>
-                </Snackbar>
-                <Snackbar open={createAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createAuthorStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>Hubo un error al crear el autor, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={updateAuthorStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateAuthorStatus: RequestStatus.NONE })}>
-                    <Alert severity='success'>Se ha modificado el autor exitosamente</Alert>
-                </Snackbar>
-                <Snackbar open={updateAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateAuthorStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>Hubo un error al modificar el autor, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={getAuthorDataError || getModifyAuthorDataError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, getAuthorDataError: false, getModifyAuthorDataError: false })}>
-                    <Alert severity='error'>Hubo un error al obtener los datos del autor, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={deleteAuthorStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteAuthorStatus: RequestStatus.NONE })}>
-                    <Alert severity='success'>Se ha eliminado el autor exitosamente</Alert>
-                </Snackbar>
-                <Snackbar open={deleteAuthorStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteAuthorStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>Hubo un error al eliminar el autor, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={createBookStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createBookStatus: RequestStatus.NONE })} >
-                    <Alert severity='success'>Se ha creado el libro exitosamente</Alert>
-                </Snackbar>
-                <Snackbar open={createBookStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, createBookStatus: RequestStatus.NONE })} >
-                    <Alert severity='error'>Hubo un error al crear el libro, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={deleteBookStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteBookStatus: RequestStatus.NONE })}>
-                    <Alert severity='success'>Se ha eliminado el libro exitosamente</Alert>
-                </Snackbar>
-                <Snackbar open={deleteBookStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, deleteBookStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>Hubo un error al eliminar el libro, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={updateBookStatus === RequestStatus.SUCCESS} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateBookStatus: RequestStatus.NONE })}>
-                    <Alert severity='success'>Se ha modificado el libro exitosamente</Alert>
-                </Snackbar>
-                <Snackbar open={updateBookStatus === RequestStatus.ERROR} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, updateBookStatus: RequestStatus.NONE })}>
-                    <Alert severity='error'>Hubo un error al modificar el libro, intente más tarde</Alert>
-                </Snackbar>
-                <Snackbar open={getBookDataError || getModifyBookDataError} autoHideDuration={2000} onClose={() => this.setState({ ...this.state, getBookDataError: false, getModifyBookDataError: false })}>
-                    <Alert severity='error'>Hubo un error al obtener los datos del libro, intente más tarde</Alert>
-                </Snackbar>
-
-
+                {this.renderAToast(getUserDataError,                                 'error', 'Hubo un error al obtener los datos del usuario, intente más tard', () => this.setState({...this.state, getUserDataError: false}))}
+                {this.renderAToast(searchBooksError,                                 'error', 'Hubo un error al buscar libros, intente más tarde', () => this.setState({...this.state, searchBooksError: false}))}
+                {this.renderAToast(searchAuthorsError,                               'error', 'Hubo un error al buscar autores, intente más tarde', () => this.setState({...this.state, searchAuthorsError: false}))}
+                {this.renderAToast(registerStatus === RequestStatus.SUCCESS,        'success', 'Te has registrado correctamente!', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
+                {this.renderAToast(registerStatus === RequestStatus.ERROR,          'error', 'Hubo un error al registrarse, intente más tarde', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
+                {this.renderAToast(loginStatus === RequestStatus.SUCCESS,           'success', 'No se ha podido ingresar, intente más tarde', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
+                {this.renderAToast(loginStatus === RequestStatus.ERROR,             'error', '', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
+                {this.renderAToast(editProfileStatus === RequestStatus.SUCCESS,     'success', 'Se han actualizado los datos del usuario correctamente', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(editProfileStatus === RequestStatus.ERROR,       'error', 'Hubo un error al actualizar los datos, intente más tarde', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS,   'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteProfileStatus === RequestStatus.ERROR,     'error', 'Hubo un error al eliminar al cuenta, intente más tarde', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
+                {this.renderAToast(loadAvatarError,                                  'error', 'La imagen pesa mas de 100KB, seleccione una mas pequeña', () => this.setState({...this.state, loadAvatarError: false}))}
+                {this.renderAToast(createAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha creado el autor exitosamente', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(createAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al crear el autor, intente más tarde', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha modificado el autor exitosamente', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al modificar el autor, intente más tarde', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(getAuthorDataError,                               'error', 'Hubo un error al obtener los datos del autor, intente más tarde', () => this.setState({...this.state, getAuthorDataError: false}))}
+                {this.renderAToast(getModifyAuthorDataError,                         'error', 'Hubo un error al obtener los datos del autor, intente más tarde', () => this.setState({...this.state, getModifyAuthorDataError}))}
+                {this.renderAToast(deleteAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha eliminado el autor exitosamente', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar el autor, intente más tarde', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
+                {this.renderAToast(createBookStatus === RequestStatus.SUCCESS,      'success', 'Se ha creado el libro exitosamente', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(createBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al crear el libro, intente más tarde', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(getBookDataError,                                 'error', 'Hubo un error al obtener los datos del libro, intente más tarde', () => this.setState({...this.state, getBookDataError: false}))}
+                {this.renderAToast(deleteBookStatus === RequestStatus.SUCCESS,      'success', 'Se ha eliminado el libro exitosamente', () => this.setState({...this.state, deleteBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(deleteBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al eliminar el libro, intente más tarde', () => this.setState({...this.state, deleteBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateBookStatus === RequestStatus.SUCCESS,      'success', 'Se actualizaron los datos del libro exitosamente', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al actualizar los datos del libro, intente más tarde', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
+                {this.renderAToast(getModifyBookDataError,                           'error', '', () => this.setState({...this.state, getModifyBookDataError: false}))}
             </div>
         );
     }
+
+    renderAToast = (open: boolean, severity: 'success' | 'error', text: string, onClose: any) => {
+        return (
+            <Snackbar open={open} autoHideDuration={2000} onClose={onClose} >
+                <Alert severity={severity}>{text}</Alert>
+            </Snackbar>
+        )
+    };
 }
+
 
 export default Router;
