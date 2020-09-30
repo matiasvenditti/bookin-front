@@ -17,6 +17,8 @@ import { Book, CreateBook } from "../../scenes/books";
 import ResultsMenu from "../../scenes/results/ResultsMenu/ResultsMenu";
 import { Header } from "..";
 import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
+import { Book as BookModel, } from "../../model";
+import { Author as AuthorModel, } from "../../model/Author";
 
 
 interface RouterProps {
@@ -45,6 +47,11 @@ interface RouterState {
     updateBookStatus: RequestStatus,
     getModifyBookDataError: boolean,
     redirectReload: boolean,
+    search: {
+        data: {books: BookModel[], authors: AuthorModel[]}
+        searchInput: string,
+        updateStatus: RequestStatus,
+    }
 }
 
 class Router extends React.Component<any, RouterState> {
@@ -72,10 +79,39 @@ class Router extends React.Component<any, RouterState> {
             updateBookStatus: RequestStatus.NONE,
             getModifyBookDataError: false,
             redirectReload: false,
+            search: {
+                data: {books: [], authors: []},
+                searchInput: '',
+                updateStatus: RequestStatus.NONE,
+            }
         };
     }
 
     render() {
+        const {search} = this.state;
+        return (
+            <div>
+                <Header 
+                    nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} 
+                    roles={[UserRoles.RoleAdmin]}
+                    logoutCallback={() => this.setState({...this.state, logoutStatus: true })}  // only one to trigger re-render
+                    getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
+                    searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
+                    searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
+                    onSearch={
+                        (data: {books: BookModel[], authors: AuthorModel[]}, searchInput: string, updateStatus: RequestStatus) => (
+                            this.setState({...this.state, search: {data, searchInput, updateStatus}})
+                        )
+                    }
+                />
+                <ResultsMenu
+                    data={search.data}
+                    searchInput={search.searchInput}
+                    updateStatus={search.updateStatus}
+                />
+            </div>
+
+        );
         return (
             <BrowserRouter>
                 <Header 

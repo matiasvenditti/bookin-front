@@ -19,6 +19,7 @@ interface HeaderProps {
     searchBooksErrorCallback(): void,
     searchAuthorsErrorCallback(): void,
     redirectToBookAuthorCallback(query: string): void,
+    onSearch(): void,
 }
 
 interface HeaderState {

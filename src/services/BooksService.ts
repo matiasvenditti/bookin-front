@@ -6,6 +6,7 @@ import { Book } from "../model/Book";
 import { BookID } from "../model/BookID";
 import { Author } from "../model/Author";
 import { UpdateBook } from "../model/UpdateBook";
+import { Filters, initialFilters } from "../model/results/Filters";
 
 
 class BooksService {
@@ -18,16 +19,16 @@ class BooksService {
             headers: {
                 'Content-Type': undefined,
             }
-        }
-        return instance.post<Book>(`${baseURL}/books`, createBookForm, config)
+        };
+        return instance.post<Book>(`${baseURL}/books`, createBookForm, config);
     }
     
     static getBookData = (id: number): Promise<AxiosResponse<Book>> => {
-        return instance.get<Book>(`${baseURL}/books/${id}`)
+        return instance.get<Book>(`${baseURL}/books/${id}`);
     }
     
     static getBookAuthors = (id: number): Promise<AxiosResponse<Author[]>> => {
-        return instance.get<Author[]>(`${baseURL}/books/${id}/authors`)
+        return instance.get<Author[]>(`${baseURL}/books/${id}/authors`);
     }
     
     static updateBook = (book: UpdateBook, photo: File): Promise<AxiosResponse<Book>> => {
@@ -39,16 +40,20 @@ class BooksService {
                 'Content-Type': undefined,
             }
         }
-        return instance.put<Book>(`${baseURL}/books/${book.id}`, updateBookForm, config)
+        return instance.put<Book>(`${baseURL}/books/${book.id}`, updateBookForm, config);
     }
 
     static deleteBook = (id: number): Promise<AxiosResponse<Book>> => {
-        return instance.delete<Book>(`${baseURL}/books/${id}`)
+        return instance.delete<Book>(`${baseURL}/books/${id}`);
     }
 
-    // TODO: finish request to work
-    static searchBooks = (query: string): Promise<AxiosResponse<Book[]>> => {
-        return instance.get<Book[]>(`${baseURL}/books/search?key=${query}`)
+    static searchBooks = (query: string | Filters): Promise<AxiosResponse<Book[]>> => {
+        if (typeof query === 'string') {
+            return instance.get<Book[]>(`${baseURL}/books/search?key=${query}`);
+        } else {
+            // TODO endpoint for filters
+            return instance.get<Book[]>(`${baseURL}/books/search?key=${query.text}`);
+        }
     }
 }
 
