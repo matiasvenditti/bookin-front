@@ -6,6 +6,7 @@ import { UpdateAuthor } from './UpdateAuthor';
 import { Book } from './Book';
 import { BookID } from './BookID';
 import { NameCode } from './NameCode';
+import { NewReview } from './NewReview';
 
 
 export type {
@@ -17,4 +18,5 @@ export type {
     Book,
     BookID,
     NameCode,
+    NewReview,
 }
