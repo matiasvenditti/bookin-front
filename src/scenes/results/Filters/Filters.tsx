@@ -33,19 +33,20 @@ const Filters = (props: FiltersProps) => {
     };
 
     const getTags = () => {
-        let results: {id: keyof FiltersModel, value: string}[] = [
-            {id: 'text', value: props.filters.text},
-            {id: 'sortBy', value: props.filters.sortBy},
+        let results: {id: keyof FiltersModel, value: string}[] = [];
+        if (props.filters.text) results.push({id: 'text', value: props.filters.text});
+        results.push({id: 'text', value: 'asdasd'});
+        results = results.concat(
             ...props.filters.nationalities.map((nationality: string) => ({id: 'nationalities',  value: nationality})) as {id: keyof FiltersModel, value: string}[],
             ...props.filters.bookGenres.map((bookGenre: string) => ({id: 'bookGenres',  value: bookGenre})) as {id: keyof FiltersModel, value: string}[],
             ...props.filters.languages.map((language: string) => ({id: 'languages',  value: language})) as {id: keyof FiltersModel, value: string}[],
-        ];
+        )
         return results;
     };
 
     return (
-        <div className='filters-container'>
-            <div className='tags-container'>
+        <div className={classes.filtersContainer}>
+            <div className={classes.tagsContainer}>
                 {getTags().map((tag) => (
                     <Tag
                         onClose={() => handleChangeFilters(tag.id, tag.value)}

@@ -107,9 +107,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
     }
 
     render() {
-        const image = this.state.bytearray ?
-            <img src={this.state.bytearray} width='100' alt='avatar' /> :
-            <MenuBookIcon color='secondary' style={{ height: 150, width: 100 }} />
+        
         return (
             <form>
                 <div className={classes.formContainer}>

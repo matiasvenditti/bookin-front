@@ -12,7 +12,7 @@ import { User } from '../../model';
 import Gender from '../../model/Gender';
 import ResponseUpdate from '../../model/responses/ResponseUpdate';
 import { SessionService, UserService } from '../../services';
-import HoverableAvatar from '../../components/HoverableAvatar/HoverableAvatar';
+import HoverableAvatar from '../../components/Photo/HoverableAvatar/HoverableAvatar';
 import { dummyAvatar } from '../../assets';
 import { PhotoUtils } from '../../utils';
 

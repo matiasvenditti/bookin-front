@@ -48,11 +48,11 @@ const ResultsMenu = (props: ResultsMenuProps) => {
                 props.searchRequestErrorCallback();
                 setGetDataStatus(RequestStatus.ERROR)
             });
-    }
+    };
 
     const handleSubmit = (filters: FiltersModel) => {
         _searchRequest(filters);
-    }
+    };
 
     return (
         <div className='results-menu-container'>

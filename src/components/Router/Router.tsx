@@ -51,6 +51,7 @@ interface RouterState {
         data: {books: BookModel[], authors: AuthorModel[]}
         searchInput: string,
         updateStatus: RequestStatus,
+        searchRequestError: boolean,
     }
 }
 
@@ -83,35 +84,13 @@ class Router extends React.Component<any, RouterState> {
                 data: {books: [], authors: []},
                 searchInput: '',
                 updateStatus: RequestStatus.NONE,
+                searchRequestError: false,
             }
         };
     }
 
     render() {
         const {search} = this.state;
-        return (
-            <div>
-                <Header 
-                    nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} 
-                    roles={[UserRoles.RoleAdmin]}
-                    logoutCallback={() => this.setState({...this.state, logoutStatus: true })}  // only one to trigger re-render
-                    getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
-                    searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
-                    searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
-                    onSearch={
-                        (data: {books: BookModel[], authors: AuthorModel[]}, searchInput: string, updateStatus: RequestStatus) => (
-                            this.setState({...this.state, search: {data, searchInput, updateStatus}})
-                        )
-                    }
-                />
-                <ResultsMenu
-                    data={search.data}
-                    searchInput={search.searchInput}
-                    updateStatus={search.updateStatus}
-                />
-            </div>
-
-        );
         return (
             <BrowserRouter>
                 <Header 
@@ -121,6 +100,11 @@ class Router extends React.Component<any, RouterState> {
                     getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
                     searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
                     searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
+                    onSearch={
+                        (data: {books: BookModel[], authors: AuthorModel[]}, searchInput: string, updateStatus: RequestStatus) => (
+                            this.setState({...this.state, search: {...this.state.search, data, searchInput, updateStatus}})
+                        )
+                    }
                 />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
@@ -181,10 +165,13 @@ class Router extends React.Component<any, RouterState> {
                             createBookCallback={(createBookStatus: RequestStatus) => this.setState({ ...this.state, createBookStatus })}
                         />
                     </PrivateRoute>
-
-                    <Route path='/results' roles={[]}>
-                        <ResultsMenu />
-                    </Route>
+                    
+                    <ResultsMenu
+                        data={search.data}
+                        searchInput={search.searchInput}
+                        updateStatus={search.updateStatus}
+                        searchRequestErrorCallback={() => this.setState({...this.state, search: {...this.state.search, searchRequestError: true}})}
+                    />
                 </Switch>
                 <Footer />
                 {this.renderToasts()}
@@ -221,8 +208,7 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(searchAuthorsError,                               'error', 'Hubo un error al buscar autores, intente más tarde', () => this.setState({...this.state, searchAuthorsError: false}))}
                 {this.renderAToast(registerStatus === RequestStatus.SUCCESS,        'success', 'Te has registrado correctamente!', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
                 {this.renderAToast(registerStatus === RequestStatus.ERROR,          'error', 'Hubo un error al registrarse, intente más tarde', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
-                {this.renderAToast(loginStatus === RequestStatus.SUCCESS,           'success', 'No se ha podido ingresar, intente más tarde', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
-                {this.renderAToast(loginStatus === RequestStatus.ERROR,             'error', '', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
+                {this.renderAToast(loginStatus === RequestStatus.ERROR,             'error', 'Hubo un error al ingresar, intente más tarde', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
                 {this.renderAToast(editProfileStatus === RequestStatus.SUCCESS,     'success', 'Se han actualizado los datos del usuario correctamente', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(editProfileStatus === RequestStatus.ERROR,       'error', 'Hubo un error al actualizar los datos, intente más tarde', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS,   'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}

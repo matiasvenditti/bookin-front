@@ -101,23 +101,31 @@ class Header extends React.Component<any, HeaderState>{
     }
 
     _searchRequest = (value: string) => {
-        if (value === '') return;
+        if (value === '') {
+            // !! probablemente no sea correcto el feedback que se tiene
+            // porque aparenta ser una request nueva cuando no lo es?
+            this.setState({...this.state, books: [], authors: []});
+            return;
+        }
         this.setState({...this.state, searchBooksStatus: RequestStatus.LOADING, searchAuthorsStatus: RequestStatus.LOADING});
-        BooksService.searchBooks(value)
+        const results = Promise.all([
+            BooksService.searchBooks(value),
+            AuthorsService.searchAuthors(value),
+        ])
+        results
             .then((response) => {
-                this.setState({...this.state, searchBooksStatus: RequestStatus.SUCCESS, books: response.data});
+                this.setState({
+                    ...this.state,
+                    searchBooksStatus: RequestStatus.SUCCESS,
+                    searchAuthorsStatus: RequestStatus.SUCCESS,
+                    books: response[0].data,
+                    authors: response[1].data,
+                });
             })
             .catch((error: any) => {
+                this.setState({...this.state, searchBooksStatus: RequestStatus.ERROR, searchAuthorsStatus: RequestStatus.ERROR});
                 this.props.searchBooksErrorCallback();
-                this.setState({...this.state, searchBooksStatus: RequestStatus.ERROR});
-            });
-        AuthorsService.searchAuthors(value)
-            .then((response) => {
-                this.setState({...this.state, searchAuthorsStatus: RequestStatus.SUCCESS, authors: response.data});
-            })
-            .catch((error: any) => {
                 this.props.searchAuthorsErrorCallback();
-                this.setState({...this.state, searchAuthorsStatus: RequestStatus.ERROR});
             });
     }
 
@@ -129,7 +137,7 @@ class Header extends React.Component<any, HeaderState>{
             searchInput: value,
             typingTimeout: setTimeout(() => {
                 this._searchRequest(value);
-            }, 1000),
+            }, 200),
         })
     }
 

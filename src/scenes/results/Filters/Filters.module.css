@@ -7,14 +7,14 @@
     border-right: 1px solid #c2c2c2;
 }
 
-.filters-container .tagsContainer {
+.filtersContainer .tagsContainer {
     padding: 10px;
     display: flex;
     flex-flow: row wrap;
 }
 
 
-.filters-container  .subtitle {
+.filtersContainer  .subtitle {
     font-weight: 500;
     margin: 15px 10px 10px;
 }
@@ -30,7 +30,7 @@
     margin: 0 0 5px 5px;
 }
 
-.filtersContainer .countryCheckboxContainer {
+/* .filtersContainer .countryCheckboxContainer {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -50,4 +50,4 @@
 
 .formCheckboxContainer {
     margin-bottom: 0 !important;
-}
+} */

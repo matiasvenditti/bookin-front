@@ -6,13 +6,14 @@ import './Loader.css';
 interface LoaderProps {
     disabled?: boolean,
     mini?: boolean,
+    color?: 'primary' | 'secondary'
 }
 
 const Loader = (props: LoaderProps) => {
-    const { disabled, mini } = props;
+    const { disabled, mini, color } = props;
     return (
         <div className='loader-container'>
-            {!disabled && <CircularProgress size={mini ? 20 : 50} />}
+            {!disabled && <CircularProgress color={color || 'primary'} size={mini ? 20 : 50} />}
         </div>
     )
 };
