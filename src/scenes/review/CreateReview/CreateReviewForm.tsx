@@ -6,6 +6,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { NewReview } from "../../../model";
 import { ReviewFormModel } from "../../../model/Form/ReviewFormModel";
 import { validateInput } from "../../../utils";
+import { TheatersOutlined } from "@material-ui/icons";
 
 
 interface CreateReviewFormProps {
@@ -32,7 +33,14 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
     }
 
     handleSubmit = () => {
-
+        let values: NewReview = {
+            comment: this.state.values.message.value,
+            stars: this.state.values.rating.value,
+            createdAt: new Date,
+            userId: this.props.userId,
+            bookId: this.props.bookId
+        }
+        this.props.onSubmit(values);
     }
 
     handleInput = (value: string, type: string) => {

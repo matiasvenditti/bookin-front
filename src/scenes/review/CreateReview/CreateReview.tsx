@@ -59,8 +59,8 @@ export default class CreateReview extends React.Component<CreateReviewProps, Cre
             });
     }
 
-    handleSubmit = (values: NewReview, userId: string, bookId: string ) => {
-        ReviewService.createReview(values, userId, bookId)
+    handleSubmit = (values: NewReview) => {
+        ReviewService.createReview(values)
     }
 
     render() {

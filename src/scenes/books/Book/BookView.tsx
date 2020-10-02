@@ -18,6 +18,7 @@ import Rating from "@material-ui/lab/Rating";
 import { DateUtils, ConstsUtils } from "../../../utils";
 import Flag from 'react-world-flags';
 import { Book } from "../../../model";
+import CreateReview from "../../review/CreateReview/CreateReview";
 
 
 interface BookViewProps {
@@ -167,6 +168,9 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             </Grid>
                         </Grid>
                     </Grid>
+                    <div>
+                        <CreateReview/>
+                    </div>
                 </div>
             )
         }
