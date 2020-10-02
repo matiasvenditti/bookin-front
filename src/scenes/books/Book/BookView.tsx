@@ -89,6 +89,16 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         lastName: "Poni",
                     }
                 },
+                {
+                    id: 7,
+                    stars: 2,
+                    comment: "W0in6VlHmCFHSOmYT4TAiNHOE5e0bZkBvyf7tkJBSbteX23mPTyj4YtuKlTSGQ5nBhWxbFdcEr7wg69PaQqubvYVGlY2ou6o9K2KAAQgqwAdzPe78N8iyxEp59BoLshaikNNJVTE1gE4N2ZlBgx65Z7nbAUs7EtBVTmKCF52fQ1Kqx56zvNKobSE93mWnE66vfivVr0453WwFNxY1XuVj625UcEFybk0R18IdNuaVBbivAyluu4EyCtsnOuQRQ2TRQuFhOgotHasYVLI5RdyK1ls9fKT1iu01Jq7AiMrpMT2swXb8jAfMyWmMXriOpNzN9v1HNsf16vl3WsHWudtONQMCXvFzKEaiTXNf5wmZH8N7f1asXdV35TWT7PM2swgKJIG3n9nZ7t2PcgaTXCkR9iUzMa4tNgoWZEfwbe0ZCzippZLDCiP7O6c4zSoKOMauYto99PeubIyXpmcrlALrDBaD3d6YKiaKxuZuitx9qApTqbf9brnlDcxOy7wHrcwtkZHv9MCNeNoFlVHm15XJtqFGZ7lLi6375xaokCqZsKLuSYzsYgDBFTlyp6INwp0dHV9K11XKiWAcC3jlxYJer6bjmoPrdOEM2OOA1mSlrvEfVvr34cXlXN17pfggdRVara14H2WHaJkx59lq4gWEksEafq0WR66W4LnwiMvEzXz0qF4qwIozZGC6h3GV1IWO4HEzq8rXq8I12nY6l4I2FEn9SybDSeJOkAOHK9kNYZWl39HLzkp1RsrSJYaj2xVbSUf5iXzM7xcDG9qJOc2AWKxPpT8Zg9S6hIZws6OIkMHklOhwYixiBosgALnZBrogZAcoOWP2lzuoAg5j7fGAye8jiiqWOmZ7VLDnyoL58Tok4faGLcFac0rGhXeBXnToqLI3bAhCd9Eev9HcnXCZ230ZclHV4XiCeJWG4mCIHkWDxhAAjSDvmTOQ9wC9Da05vuGba62Fq521kUkHtklRwFuBFKg2V1yOIYN8zs0",
+                    user: {
+                        id: 2,
+                        firstName: "Mateov2",
+                        lastName: "Poni",
+                    }
+                },
             ],
 
         }
@@ -221,7 +231,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         container
                         direction="row"
                         justify="space-evenly"
-                        alignItems="center"
+                        alignItems="flex-start"
                         spacing={3}
                         className='reviews-container'
                     >
@@ -238,7 +248,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                 </Typography>
                             );
                             return (
-                                <Grid item xs={12} sm={6}>
+                                <Grid item xs sm={6}>
                                     <div key={'review-view-item-' + j}>
                                         <Card className={'review-item' + j}
                                               style={{borderStyle: 'solid', padding: '5'}}>
