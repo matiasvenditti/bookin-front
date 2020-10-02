@@ -10,25 +10,28 @@ import {
     ListItem,
     ListItemText,
     Typography,
-    Box
+    Box, CardHeader
 } from "@material-ui/core";
 import {dummyAvatar} from "../../../assets";
 import {Author} from "../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
-import { DateUtils, ConstsUtils } from "../../../utils";
+import {DateUtils, ConstsUtils} from "../../../utils";
 import Flag from 'react-world-flags';
-import { Book } from "../../../model";
+import {Book} from "../../../model";
+import {ReviewFromSpecificBook} from "../../../model/ReviewFromSpecificBook";
 
 
 interface BookViewProps {
     data: Book,
     authors: Author[],
+    reviews: ReviewFromSpecificBook[],
     error: boolean,
 }
 
 interface BookViewState {
     data: Book,
     authors: Author[],
+    reviews: ReviewFromSpecificBook[],
 }
 
 export default class BookView extends Component<BookViewProps, BookViewState> {
@@ -45,12 +48,55 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                 language: props.data.language,
             },
             authors: props.authors,
+            reviews: [
+                {
+                    id: 1,
+                    stars: 4,
+                    comment: "So fun",
+                    user: {
+                        id: 1,
+                        firstName: "Pepito",
+                        lastName: "Gardel",
+                    }
+                },
+                {
+                    id: 2,
+                    stars: 2,
+                    comment: "So lame",
+                    user: {
+                        id: 2,
+                        firstName: "Mateo",
+                        lastName: "Poni",
+                    }
+                },
+                {
+                    id: 5,
+                    stars: 4,
+                    comment: "So fun",
+                    user: {
+                        id: 1,
+                        firstName: "Pepitov2",
+                        lastName: "Gardel",
+                    }
+                },
+                {
+                    id: 6,
+                    stars: 2,
+                    comment: "So lame",
+                    user: {
+                        id: 2,
+                        firstName: "Mateov2",
+                        lastName: "Poni",
+                    }
+                },
+            ],
+
         }
     }
 
 
     render() {
-        const {data, authors} = this.state;
+        const {data, authors, reviews} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
@@ -82,8 +128,9 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                         }
                                     }
                                 >
-                                    <CardContent className='custom-card-container' style={{paddingLeft : 0}}>
-                                        <Typography align='left' variant='h3' className='title'>{data.title} </Typography>
+                                    <CardContent className='custom-card-container' style={{paddingLeft: 0}}>
+                                        <Typography align='left' variant='h3'
+                                                    className='title'>{data.title} </Typography>
                                         <Typography align='left' variant='h5'>Género: <Box display="inline-block"
                                                                                            fontWeight="fontWeightBold">{data.genre}</Box></Typography>
                                         <Typography align='left' variant='h5'>Idioma: <Box display="inline-block"
@@ -115,19 +162,19 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                     <List style={{backgroundColor: '#f6f6f7', padding: 0, margin: '8px 0'}}>
                                         {authors.map((item, i) => {
                                             const authorData = (
-                                                <Typography 
-                                                    variant="h6" 
+                                                <Typography
+                                                    variant="h6"
                                                     style={{color: 'black', display: 'flex', alignItems: 'center'}}
                                                 >
-                                                    {item.firstName + ' ' + item.lastName + ' ' }
-                                                    <Flag 
-                                                        style={{marginLeft: 10}} 
-                                                        code={ConstsUtils.getCountryName(item.nationality)} 
+                                                    {item.firstName + ' ' + item.lastName + ' '}
+                                                    <Flag
+                                                        style={{marginLeft: 10}}
+                                                        code={ConstsUtils.getCountryName(item.nationality)}
                                                         height="20"
                                                     />
                                                 </Typography>
                                             );
-                                            
+
                                             return (
                                                 <div key={'author-view-item-' + i}>
                                                     <ListItem button component={Link}
@@ -160,12 +207,62 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                 </div>
                             </Grid>
                             <Grid item xs={12}>
-                                <div className='reviews-container'>
+                                <div className='rating-container'>
                                     <Typography variant='h4' className='rating'> Rating </Typography>
                                     <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
+
                                 </div>
                             </Grid>
                         </Grid>
+
+                    </Grid>
+                    <Typography variant='h4' className='rating' style={{padding:5}}> Reseñas </Typography>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-evenly"
+                        alignItems="center"
+                        spacing={3}
+                        className='reviews-container'
+                    >
+
+
+                        {reviews.map((rev, j) => {
+                            const reviewData = (
+                                <Typography
+                                    variant="h6"
+                                    style={{color: 'black', display: 'flex', alignItems: 'center'}}
+                                >
+                                    {rev.user.firstName + ' ' + rev.user.lastName + ' '}
+
+                                </Typography>
+                            );
+                            return (
+                                <Grid item xs={12} sm={6}>
+                                    <div key={'review-view-item-' + j}>
+                                        <Card className={'review-item' + j}
+                                              style={{borderStyle: 'solid', padding: '5'}}>
+                                            <CardHeader
+                                                avatar={
+                                                    <Avatar aria-label="recipe" className={'review-item.avatar'}>
+                                                        R
+                                                    </Avatar>
+                                                }
+                                                title={reviewData}
+                                                subheader={<Rating name="read-only" value={rev.stars} precision={0.5}
+                                                                   readOnly/>}
+                                            />
+                                            <CardContent>
+                                                <Typography variant="body1" color="textPrimary"
+                                                            component="p">
+                                                    {rev.comment}
+                                                </Typography>
+                                            </CardContent>
+                                        </Card>
+                                    </div>
+                                </Grid>
+                            )
+                        })}
                     </Grid>
                 </div>
             )
