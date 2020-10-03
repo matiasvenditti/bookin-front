@@ -129,6 +129,7 @@ class Profile extends Component<any, ProfileState> {
                             src={this.state.data.photo || dummyAvatar}
                             id=''
                             maxSize={100000}
+                            loading={this.props.updateStatus === RequestStatus.LOADING}
                             onChange={this.handleUpdatePhoto}
                             onLoadError={this.props.onLoadErrorCallback}
                         />

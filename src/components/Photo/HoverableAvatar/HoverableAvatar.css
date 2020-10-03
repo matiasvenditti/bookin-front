@@ -36,7 +36,18 @@ span > span > button {
     background-color: green;
 }
 
-.modal-avatar-image {
+.dialog-content {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+}
+.dialog-content .dialog-content-text {
+    align-self: flex-start;
+}
+
+.dialog-content .modal-avatar-image {
     width: 125px;
     height: 125px;
+    margin: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
 }
