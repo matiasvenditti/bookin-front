@@ -146,6 +146,7 @@ class Router extends React.Component<any, RouterState> {
                         />
                     </PrivateRoute>
 
+
                     <Route path='/results' roles={[]}>
                         <ResultsMenu />
                     </Route>

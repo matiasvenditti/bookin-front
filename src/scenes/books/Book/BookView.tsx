@@ -2,36 +2,49 @@ import React, {Component} from "react";
 import {
     Avatar,
     Badge,
+    Box,
     Card,
     CardContent,
-    CardMedia, Divider,
+    CardMedia,
+    Divider,
     Grid,
-    Link, List,
+    Link,
+    List,
     ListItem,
     ListItemText,
     Typography,
-    Box, CardHeader
 } from "@material-ui/core";
 import {dummyAvatar} from "../../../assets";
 import {Author} from "../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
-import {DateUtils, ConstsUtils} from "../../../utils";
+import {ConstsUtils, DateUtils} from "../../../utils";
 import Flag from 'react-world-flags';
-import {Book} from "../../../model";
-import {ReviewFromSpecificBook} from "../../../model/ReviewFromSpecificBook";
+import {Book, User} from "../../../model";
+import {ReviewWithUser} from "../../../model/ReviewWithUser";
+import ReviewCard from "../../../components/Cards/ReviewCard/ReviewCard";
+import {RequestStatus} from "../../../model/consts/RequestStatus";
+import {DeleteReviewModal} from "../../review/DeleteReviewModal";
+import ReviewService from "../../../services/ReviewService";
 
 
 interface BookViewProps {
     data: Book,
     authors: Author[],
-    reviews: ReviewFromSpecificBook[],
+    reviews: ReviewWithUser[],
+    currentUser: User,
+    isAdmin: boolean,
     error: boolean,
 }
 
 interface BookViewState {
     data: Book,
     authors: Author[],
-    reviews: ReviewFromSpecificBook[],
+    reviews: ReviewWithUser[],
+    currentUser: User,
+    isAdmin: boolean,
+    showDelete: boolean,
+    currentId:number,
+    reviewDeleteStatus: RequestStatus,
 }
 
 export default class BookView extends Component<BookViewProps, BookViewState> {
@@ -47,63 +60,46 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                 stars: props.data.stars,
                 language: props.data.language,
             },
+            currentUser: props.currentUser,
             authors: props.authors,
-            reviews: [
-                {
-                    id: 1,
-                    stars: 4,
-                    comment: "So fun",
-                    user: {
-                        id: 1,
-                        firstName: "Pepito",
-                        lastName: "Gardel",
-                    }
-                },
-                {
-                    id: 2,
-                    stars: 2,
-                    comment: "So lame",
-                    user: {
-                        id: 2,
-                        firstName: "Mateo",
-                        lastName: "Poni",
-                    }
-                },
-                {
-                    id: 5,
-                    stars: 4,
-                    comment: "So fun",
-                    user: {
-                        id: 1,
-                        firstName: "Pepitov2",
-                        lastName: "Gardel",
-                    }
-                },
-                {
-                    id: 6,
-                    stars: 2,
-                    comment: "So lame",
-                    user: {
-                        id: 2,
-                        firstName: "Mateov2",
-                        lastName: "Poni",
-                    }
-                },
-                {
-                    id: 7,
-                    stars: 2,
-                    comment: "W0in6VlHmCFHSOmYT4TAiNHOE5e0bZkBvyf7tkJBSbteX23mPTyj4YtuKlTSGQ5nBhWxbFdcEr7wg69PaQqubvYVGlY2ou6o9K2KAAQgqwAdzPe78N8iyxEp59BoLshaikNNJVTE1gE4N2ZlBgx65Z7nbAUs7EtBVTmKCF52fQ1Kqx56zvNKobSE93mWnE66vfivVr0453WwFNxY1XuVj625UcEFybk0R18IdNuaVBbivAyluu4EyCtsnOuQRQ2TRQuFhOgotHasYVLI5RdyK1ls9fKT1iu01Jq7AiMrpMT2swXb8jAfMyWmMXriOpNzN9v1HNsf16vl3WsHWudtONQMCXvFzKEaiTXNf5wmZH8N7f1asXdV35TWT7PM2swgKJIG3n9nZ7t2PcgaTXCkR9iUzMa4tNgoWZEfwbe0ZCzippZLDCiP7O6c4zSoKOMauYto99PeubIyXpmcrlALrDBaD3d6YKiaKxuZuitx9qApTqbf9brnlDcxOy7wHrcwtkZHv9MCNeNoFlVHm15XJtqFGZ7lLi6375xaokCqZsKLuSYzsYgDBFTlyp6INwp0dHV9K11XKiWAcC3jlxYJer6bjmoPrdOEM2OOA1mSlrvEfVvr34cXlXN17pfggdRVara14H2WHaJkx59lq4gWEksEafq0WR66W4LnwiMvEzXz0qF4qwIozZGC6h3GV1IWO4HEzq8rXq8I12nY6l4I2FEn9SybDSeJOkAOHK9kNYZWl39HLzkp1RsrSJYaj2xVbSUf5iXzM7xcDG9qJOc2AWKxPpT8Zg9S6hIZws6OIkMHklOhwYixiBosgALnZBrogZAcoOWP2lzuoAg5j7fGAye8jiiqWOmZ7VLDnyoL58Tok4faGLcFac0rGhXeBXnToqLI3bAhCd9Eev9HcnXCZ230ZclHV4XiCeJWG4mCIHkWDxhAAjSDvmTOQ9wC9Da05vuGba62Fq521kUkHtklRwFuBFKg2V1yOIYN8zs0",
-                    user: {
-                        id: 2,
-                        firstName: "Mateov2",
-                        lastName: "Poni",
-                    }
-                },
-            ],
+            isAdmin: props.isAdmin,
+            reviews: props.reviews,
+            showDelete:false,
+            reviewDeleteStatus:RequestStatus.NONE,
+            currentId:0,
 
         }
     }
 
+    handleDelete = () => this.setState({showDelete: true});
+    handleConfirmDelete = () => this.deleteReview(this.state.currentId);
+    handleDeleteCancel = () => this.setState({showDelete: false});
+
+    deleteReview = (id: number) => {
+        this.setState({reviewDeleteStatus: RequestStatus.LOADING});
+        ReviewService.deleteReview(id)
+            .then(() => {
+                this.setState({reviewDeleteStatus: RequestStatus.SUCCESS});
+                window.location.reload();
+            })
+            .catch(() => {
+                this.setState({reviewDeleteStatus: RequestStatus.ERROR});
+            });
+        this.handleDeleteCancel();
+    }
+
+
+    renderReviewDelete() {
+        const {showDelete, reviewDeleteStatus} = this.state;
+        if (showDelete) return (
+            <DeleteReviewModal
+                open={showDelete}
+                loading={reviewDeleteStatus === RequestStatus.LOADING}
+                onConfirm={this.handleConfirmDelete}
+                onCancel={this.handleDeleteCancel}
+            />
+        )
+    }
 
     render() {
         const {data, authors, reviews} = this.state;
@@ -120,6 +116,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         } else {
             return (
                 <div>
+                    <Typography align='left' variant='h3'
+                                className='title'>{data.title} </Typography>
                     <Grid
                         container
                         direction="row"
@@ -139,8 +137,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                     }
                                 >
                                     <CardContent className='custom-card-container' style={{paddingLeft: 0}}>
-                                        <Typography align='left' variant='h3'
-                                                    className='title'>{data.title} </Typography>
+
                                         <Typography align='left' variant='h5'>Género: <Box display="inline-block"
                                                                                            fontWeight="fontWeightBold">{data.genre}</Box></Typography>
                                         <Typography align='left' variant='h5'>Idioma: <Box display="inline-block"
@@ -161,6 +158,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                         }
                                     />
                                 </Card>
+
                             </div>
                         </Grid>
                         <Grid container item xs={7}>
@@ -226,7 +224,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         </Grid>
 
                     </Grid>
-                    <Typography variant='h4' className='rating' style={{padding:5}}> Reseñas </Typography>
+                    <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container
                         direction="row"
@@ -238,43 +236,33 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
 
                         {reviews.map((rev, j) => {
-                            const reviewData = (
-                                <Typography
-                                    variant="h6"
-                                    style={{color: 'black', display: 'flex', alignItems: 'center'}}
-                                >
-                                    {rev.user.firstName + ' ' + rev.user.lastName + ' '}
-
-                                </Typography>
-                            );
+                            const {isAdmin,currentUser} = this.state;
                             return (
-                                <Grid item xs sm={6}>
+                                <Grid item xs sm={6} key={j}>
                                     <div key={'review-view-item-' + j}>
-                                        <Card className={'review-item' + j}
-                                              style={{borderStyle: 'solid', padding: '5'}}>
-                                            <CardHeader
-                                                avatar={
-                                                    <Avatar aria-label="recipe" className={'review-item.avatar'}>
-                                                        R
-                                                    </Avatar>
-                                                }
-                                                title={reviewData}
-                                                subheader={<Rating name="read-only" value={rev.stars} precision={0.5}
-                                                                   readOnly/>}
-                                            />
-                                            <CardContent>
-                                                <Typography variant="body1" color="textPrimary"
-                                                            component="p">
-                                                    {rev.comment}
-                                                </Typography>
-                                            </CardContent>
-                                        </Card>
+                                        <ReviewCard
+                                                    id={rev.id}
+                                                    stars={rev.stars}
+                                                    comment={rev.comment}
+                                                    reviewCreatorUserID={rev.userId}
+                                                    currentUser={currentUser}
+                                                    isAdmin={isAdmin}
+                                                    reviewCreatorFirstName={rev.userFirstName}
+                                                    reviewCreatorLastName={rev.userLastName}
+                                                    handleDelete={(reviewId:number) => {
+                                                        this.setState({ ...this.state, showDelete: true, currentId:reviewId, })
+                                                        }
+                                                    }
+                                                    handleEdit={() => null } //TODO
+                                        />
                                     </div>
                                 </Grid>
                             )
                         })}
                     </Grid>
+                    {this.renderReviewDelete()}
                 </div>
+
             )
         }
     }

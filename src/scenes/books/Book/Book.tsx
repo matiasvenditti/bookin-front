@@ -9,10 +9,11 @@ import {Book as BookModel} from '../../../model/Book';
 import BookView from "./BookView";
 import "./Book.css"
 import {UserRoles} from "../../../model/consts/Roles";
-import {AuthService, BooksService} from "../../../services";
+import {AuthService, BooksService, UserService} from "../../../services";
 import {DeleteBookModal} from "./DeleteBookModal";
-import {ReviewFromSpecificBook} from "../../../model/ReviewFromSpecificBook";
+import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewService from "../../../services/ReviewService";
+
 
 
 interface BookProps extends RouteComponentProps<MatchParams> {
@@ -23,13 +24,14 @@ interface BookProps extends RouteComponentProps<MatchParams> {
 
 interface BookState {
     isAdmin: boolean,
+    currentUser: any,
     getBookDataStatus: RequestStatus,
     updateStatus: any,
     deleteStatus: any,
     showDelete: boolean,
     data: BookModel,
     authors: Author[],
-    reviews: ReviewFromSpecificBook[],
+    reviews: ReviewWithUser[],
     error: any,
 }
 
@@ -53,28 +55,8 @@ class Book extends React.Component<BookProps, BookState> {
                 stars: 0,
             },
             authors: [],
-            reviews: [
-                {
-                    id: 1,
-                    stars: 4,
-                    comment: "So fun",
-                    user: {
-                        id: 1,
-                        firstName: "Pepito",
-                        lastName: "Gardel",
-                    }
-                },
-                {
-                    id: 2,
-                    stars: 2,
-                    comment: "So lame",
-                    user: {
-                        id: 2,
-                        firstName: "Mateo",
-                        lastName: "Poni",
-                    }
-                }
-            ],
+            reviews: [],
+            currentUser: [],
             showDelete: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
@@ -94,6 +76,7 @@ class Book extends React.Component<BookProps, BookState> {
         }
     }
 
+
     _bookDataRequest = () => {
         const id = parseInt(this.props.match.params.id);
         this.setState({...this.state, getBookDataStatus: RequestStatus.LOADING});
@@ -101,19 +84,23 @@ class Book extends React.Component<BookProps, BookState> {
         const result: Promise<any> = Promise.all([
             BooksService.getBookData(id),
             BooksService.getBookAuthors(id),
-            ReviewService.getReviews(id)
+            ReviewService.getReviews(id),
+            UserService.getUserData()
         ]);
         result
             .then((response) => this.setState({
                 data: response[0].data,
                 authors: response[1].data,
                 reviews: response[2].data,
-                getBookDataStatus: RequestStatus.SUCCESS
+                currentUser: response[3].data,
+                getBookDataStatus: RequestStatus.SUCCESS,
+
             }))
             .catch((error: any) => {
                 this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error})
                 this.props.getBookDataErrorCallback();
             });
+
     };
 
 
@@ -154,7 +141,7 @@ class Book extends React.Component<BookProps, BookState> {
      */
 
     renderBook() {
-        const {data, getBookDataStatus, authors, reviews} = this.state;
+        const {data, getBookDataStatus, authors, reviews, currentUser, isAdmin} = this.state;
         if (getBookDataStatus === RequestStatus.LOADING) {
             return (
                 <div>
@@ -165,6 +152,8 @@ class Book extends React.Component<BookProps, BookState> {
         return (
             <BookView
                 data={data}
+                currentUser={currentUser}
+                isAdmin={isAdmin}
                 authors={authors}
                 reviews={reviews}
                 error={getBookDataStatus === RequestStatus.ERROR}
