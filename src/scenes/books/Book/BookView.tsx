@@ -236,7 +236,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
 
                         {reviews.map((rev, j) => {
-                            const {isAdmin,currentUser} = this.state;
+                            const {isAdmin,currentUser,data} = this.state;
                             return (
                                 <Grid item xs sm={6} key={j}>
                                     <div key={'review-view-item-' + j}>
@@ -247,8 +247,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                     reviewCreatorUserID={rev.userId}
                                                     currentUser={currentUser}
                                                     isAdmin={isAdmin}
-                                                    reviewCreatorFirstName={rev.userFirstName}
-                                                    reviewCreatorLastName={rev.userLastName}
+                                                    reviewBookId={data.id}
+                                                    reviewDisplayString={rev.userFirstName + ' ' + rev.userLastName}
                                                     handleDelete={(reviewId:number) => {
                                                         this.setState({ ...this.state, showDelete: true, currentId:reviewId, })
                                                         }

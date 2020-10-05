@@ -1,9 +1,9 @@
-import {Avatar, Button, Card, CardContent, CardHeader, Typography} from '@material-ui/core';
+import {Avatar, Button, Card, CardContent, CardHeader, Link, Typography} from '@material-ui/core';
 import React from 'react';
-import './ReviewCard.css';
 import Rating from "@material-ui/lab/Rating";
 import {User} from "../../../model";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import './ReviewCard.css';
 
 
 interface ReviewCardProps {
@@ -11,8 +11,8 @@ interface ReviewCardProps {
     stars: number,
     comment: string,
     reviewCreatorUserID: number,
-    reviewCreatorFirstName: string,
-    reviewCreatorLastName: string,
+    reviewDisplayString: string,
+    reviewBookId:number,
     currentUser: User,
     isAdmin: boolean,
     handleEdit():void,
@@ -20,7 +20,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
-    const {isAdmin, reviewCreatorUserID, currentUser} = props;
+    const {isAdmin, reviewCreatorUserID, currentUser, reviewBookId,reviewDisplayString} = props;
 
     if (currentUser.id === reviewCreatorUserID || isAdmin) {
         return (
@@ -28,8 +28,8 @@ const ReviewCard = (props: ReviewCardProps) => {
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
                 <CardHeader
                     avatar={
-                        <Avatar aria-label="recipe" className={'review-item.avatar'}>
-                            {/*{props.reviewCreatorUser.photo}*/}
+                        <Avatar aria-label="recipe" className={'review-item-avatar'}>
+                            {reviewDisplayString.substr(0,2)}
                         </Avatar>
                     }
                     title={
@@ -37,7 +37,9 @@ const ReviewCard = (props: ReviewCardProps) => {
                             variant="h6"
                             style={{color: 'black', display: 'flex', alignItems: 'center'}}
                         >
-                            {props.reviewCreatorFirstName + ' ' + props.reviewCreatorLastName + ' '}
+                            <Link href={`/books/${reviewBookId}`} color="inherit">
+                            {props.reviewDisplayString}
+                            </Link>
 
                             <div className="button-container">
                                 <ButtonGroup variant="contained" color="secondary"
@@ -75,7 +77,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                             variant="h6"
                             style={{color: 'black', display: 'flex', alignItems: 'center'}}
                         >
-                            {props.reviewCreatorFirstName + ' ' + props.reviewCreatorLastName + ' '}
+                            {props.reviewDisplayString}
 
 
                         </Typography>}
@@ -93,6 +95,8 @@ const ReviewCard = (props: ReviewCardProps) => {
         )
     }
 }
+
+
 
 
 export default ReviewCard;

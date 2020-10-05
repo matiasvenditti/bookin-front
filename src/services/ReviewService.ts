@@ -4,7 +4,7 @@ import {instance} from "../utils/Interceptors/Inerceptors";
 import {baseURL} from "./EnvironmentService";
 import {ReviewWithUser} from "../model/ReviewWithUser";
 import ResponseDelete from "../model/responses/ResponseDelete";
-import {Review} from "../model/Review";
+import {ReviewWithBookDTO} from "../model/Review";
 
 
 class ReviewService {
@@ -13,8 +13,8 @@ class ReviewService {
         return instance.get<ReviewWithUser[]>(`${baseURL}/books/${bookID}/reviews`)
     }
 
-    static getReviewsFromUser = (userID: number): Promise<AxiosResponse<Review[]>> => {
-        return instance.get<ReviewWithUser[]>(`${baseURL}/users/${userID}/reviews`)
+    static getReviewsFromUser = (userID: number): Promise<AxiosResponse<ReviewWithBookDTO[]>> => {
+        return instance.get<ReviewWithBookDTO[]>(`${baseURL}/users/${userID}/reviews`)
     }
 
     static deleteReview = (reviewID: number): Promise<AxiosResponse<ResponseDelete>> => {

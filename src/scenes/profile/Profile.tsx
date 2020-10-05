@@ -3,14 +3,12 @@ import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
 import {Typography, Tabs, Tab, AppBar, Grid} from '@material-ui/core';
 import './Profile.css'
-import {AxiosResponse} from "axios";
 import {DeleteUserModal} from './DeleteUserModal';
 import {withRouter} from 'react-router-dom';
 import {RequestStatus} from '../../model/consts/RequestStatus';
 import {EditVar} from '../../model/consts/EditVar';
 import {User} from '../../model';
 import Gender from '../../model/Gender';
-import ResponseUpdate from '../../model/responses/ResponseUpdate';
 import {SessionService, UserService} from '../../services';
 import HoverableAvatar from '../../components/HoverableAvatar/HoverableAvatar';
 import {dummyAvatar} from '../../assets';
@@ -18,8 +16,8 @@ import {PhotoUtils} from '../../utils';
 import ReviewService from "../../services/ReviewService";
 import ReviewCard from "../../components/Cards/ReviewCard/ReviewCard";
 import {DeleteReviewModal} from "../review/DeleteReviewModal";
-import {Review} from "../../model/Review";
 import {RouteComponentProps} from "react-router";
+import {ReviewWithBookDTO} from "../../model/Review";
 
 
 interface ProfileProps extends RouteComponentProps {
@@ -37,7 +35,7 @@ interface ProfileState {
     deleteStatus: any,
     deleteModalShow: boolean,
     data: User,
-    reviews: Review[],
+    reviews: ReviewWithBookDTO[],
     showDelete:boolean,
     currentId: number,
     reviewDeleteStatus: RequestStatus,
@@ -116,7 +114,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     handleDeleteConfirm = () => {
         this.setState({...this.state, deleteStatus: RequestStatus.LOADING});
         UserService.deleteProfile(this.state.data.id)
-            .then((response: AxiosResponse<ResponseUpdate>) => {
+            .then(() => {
                 // TODO call ToastContainer (context feature to be implemented)
                 this.setState({...this.state, deleteStatus: RequestStatus.SUCCESS});
                 SessionService.logout();
@@ -135,7 +133,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     handleUpdate = (values: User, photo: File) => {
         this.setState({...this.state, updateStatus: RequestStatus.LOADING});
         UserService.updateProfile(this.state.data.id, values, photo)
-            .then((response: AxiosResponse<ResponseUpdate>) => {
+            .then(() => {
                 this.setState({...this.state, updateStatus: RequestStatus.SUCCESS, editProfileMode: false});
                 this.props.editProfileCallback(RequestStatus.SUCCESS);
                 this._getUserData();
@@ -263,11 +261,11 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                                         id={rev.id}
                                         stars={rev.stars}
                                         comment={rev.comment}
+                                        reviewBookId={rev.bookId}
                                         reviewCreatorUserID={data.id} // Es el creador el del perfil asi que le pasamos el mismo
                                         currentUser={data}
                                         isAdmin={true} //Le mandamos isAdmin true asi puede editar todas sus reviews, podes mandarle false tambien, total el chequeo que tiene reviewcard se fija si es una review de el.
-                                        reviewCreatorFirstName={data.firstName} // Es el creador el del perfil asi que le pasamos el mismo
-                                        reviewCreatorLastName={data.lastName}   // Es el creador el del perfil asi que le pasamos el mismo
+                                        reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
                                         handleDelete={(reviewId: number) => {
                                             this.setState({...this.state, showDelete: true, currentId: reviewId,})
                                         }
