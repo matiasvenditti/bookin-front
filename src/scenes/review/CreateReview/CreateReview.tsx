@@ -2,9 +2,10 @@ import { Typography } from "@material-ui/core";
 import { TheatersOutlined } from "@material-ui/icons";
 import { AxiosResponse } from "axios";
 import React from "react";
-import { RouteComponentProps } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import { Book, NewReview, User } from "../../../model";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
+import { Review } from "../../../model/Review";
 import { UserService } from "../../../services";
 import ReviewService from "../../../services/ReviewService";
 import CreateReviewForm from "./CreateReviewForm";
@@ -15,7 +16,6 @@ interface CreateReviewState{
 }
 
 interface CreateReviewProps extends RouteComponentProps<MatchParams> {
-    updateCallback(r: RequestStatus): void,
 
 }
 
@@ -23,7 +23,7 @@ interface MatchParams {
     id: string,
 }
 
-export default class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>{
+class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>{
 
     constructor(props: any){
         super(props);
@@ -37,7 +37,7 @@ export default class CreateReview extends React.Component<CreateReviewProps, Cre
                 gender: '',
                 photo: null,
             },
-            bookId: this.props.match.params.id
+            bookId: this.props.match.params.id,
         }
     }
     
@@ -60,6 +60,11 @@ export default class CreateReview extends React.Component<CreateReviewProps, Cre
 
     handleSubmit = (values: NewReview) => {
         ReviewService.createReview(values)
+        .then((response: AxiosResponse<Review>) => {
+            this.props.history.push('/book/' + this.state.bookId);
+        })
+        .catch((error: any) => {
+        });
     }
 
     render() {
@@ -79,3 +84,4 @@ export default class CreateReview extends React.Component<CreateReviewProps, Cre
         )
     }
 }
+export default withRouter(CreateReview);

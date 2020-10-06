@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Card, Typography } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import React from "react";
 import { Button, Input } from '../../../components/Form';
@@ -10,7 +10,7 @@ import { TheatersOutlined } from "@material-ui/icons";
 
 
 interface CreateReviewFormProps {
-    onSubmit(values: NewReview, userId: string, bookId: string): void,
+    onSubmit(revew: NewReview): void,
     userId: string,
     bookId: string,
 }
@@ -36,19 +36,19 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
         let values: NewReview = {
             comment: this.state.values.message.value,
             stars: this.state.values.rating.value,
-            createdAt: new Date,
-            userId: this.props.userId,
-            bookId: this.props.bookId
+            created_at: new Date,
+            user_id: this.props.userId,
+            book_id: this.props.bookId
         }
         this.props.onSubmit(values);
     }
 
-    handleInput = (value: string, type: string) => {
+    handleInput = (id: string, type: string, value: string) => {
         const error = !validateInput(type, value);
         this.setState({
             values: {
                 ...this.state.values,
-                message: { value, type, error, touched: true }
+                [id]: { value, type, error, touched: true }
             },
         });
     } 
@@ -61,32 +61,32 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
                 rating: {value, type: 'number', error, touched: true}
             }
         });
-
     }
 
     render() {
         return (
-            <form>
-                <Typography component="legend">Custom empty icon</Typography>
-                <Rating
-                    name="simple-controlled"
-                    value={this.state.values.rating.value}
-                    onChange={(event, newValue) => {
-                        this.handleRateChange(newValue);
-                    }}
-                />
-                <Input
-                    label='Nombre'
-                    id='firstName'
-                    type='text'
-                    onChange={this.handleInput}
-                    value={this.state.values.message.value}
-                    error={this.state.values.message.error}
-                    errorText={this.state.values.message.error ? 'Caracteres invalidos' : ''}
-                    required
-                />
-                <Button title='Crear Reseña' variant='contained' disabled={!(this.state.values.message.touched || this.state.values.rating.touched)} onClick={this.handleSubmit} />
-            </form>
+            <Card>
+                <form>
+                    <Rating
+                        name="simple-controlled"
+                        value={this.state.values.rating.value}
+                        onChange={(event, newValue) => {
+                            this.handleRateChange(newValue);
+                        }}
+                    />
+                    <Input
+                        label='Escriba aqui'
+                        id='message'
+                        type='text'
+                        value={this.state.values.message.value}
+                        onChange={this.handleInput}
+                        error={this.state.values.message.error}
+                        errorText={this.state.values.message.error ? 'Caracteres invalidos' : ''}
+                        required
+                    />
+                    <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.message.touched || this.state.values.rating.touched)} onClick={this.handleSubmit} />
+                </form>
+            </Card>
         )
     }
 }

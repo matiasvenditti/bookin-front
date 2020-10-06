@@ -1,7 +1,7 @@
 export interface NewReview {
     comment: string,
     stars: number,
-    createdAt: Date,
-    userId: string,
-    bookId: string
+    created_at: Date,
+    user_id: string,
+    book_id: string
 }
