@@ -3,3 +3,8 @@
     flex-flow: column nowrap;
     margin-bottom: 10px;
 }
+
+.MuiFormControlLabel-label {
+    margin-left: -5px !important;
+    margin-bottom: -2px !important;
+}

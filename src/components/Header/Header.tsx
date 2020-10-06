@@ -19,7 +19,7 @@ interface HeaderProps {
     searchBooksErrorCallback(): void,
     searchAuthorsErrorCallback(): void,
     redirectToBookAuthorCallback(query: string): void,
-    onSearch(): void,
+    onSearch(value: string): void,
 }
 
 interface HeaderState {
@@ -141,6 +141,11 @@ class Header extends React.Component<any, HeaderState>{
         })
     }
 
+    handleEnter = (value: string) => {
+        this.setState({...this.state, searchInput: ''});
+        this.props.onSearch(value);
+    }
+
     render() {
         const { classes } = this.props;
         const searchInputLoading = (this.state.searchAuthorsStatus === RequestStatus.LOADING
@@ -169,6 +174,7 @@ class Header extends React.Component<any, HeaderState>{
                                     : []
                                 }
                                 onQueryChange={(value: any) => this.handleSearchChange(value)}
+                                onEnter={(value: string) => this.handleEnter(value)}
                             />
                         </div>
                         <div className="grow" />

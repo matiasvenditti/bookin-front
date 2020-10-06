@@ -1,3 +1,4 @@
+import { FormControlLabel } from '@material-ui/core';
 import React from 'react';
 import { Checkbox } from '..';
 import Loader from '../../Loader/Loader';
@@ -10,6 +11,7 @@ interface MultiCheckboxProps {
     selected: string[],
     disabled?: boolean,
     loading?: boolean,
+    singleSelect?: boolean,
     // error: boolean,
     // errorText: string,
     onChange(id: string, type: string, value: string[]): void,
@@ -22,12 +24,15 @@ export const MultiCheckbox = (props: MultiCheckboxProps) => {
         selected,
         disabled,
         loading,
+        singleSelect,
         // error,
         // errorText,
     } = props;
 
     const handleChange = (value: string) => {
-        if (selected.includes(value)) { // includes value -> filter it out
+        if (singleSelect) {
+            props.onChange(id, 'multi-checkbox', [value]);
+        } else if (selected.includes(value)) { // includes value -> filter it out
             props.onChange(id, 'multi-checkbox', selected.filter((selOption) => selOption !== value));
         } else { // does not include value -> add it
             props.onChange(id, 'multi-checkbox', selected.concat(value));
@@ -44,17 +49,22 @@ export const MultiCheckbox = (props: MultiCheckboxProps) => {
         return (
             <div className={classes.container}>
                 {options.map((option: string, i: number) => (
-                    <div className={classes.checkboxContainer}>
-                        <Checkbox
-                            id={'checkbox-' + i}
-                            checked={selected.includes(option)}
-                            type='checkbox'
-                            error={false}
-                            errorText={''}
-                            disabled={disabled}
-                            onChange={(id, type, value) => handleChange(value)}
-                        />
-                    </div>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                id={'checkbox-' + i}
+                                checked={selected.includes(option)}
+                                type='checkbox'
+                                error={false}
+                                errorText={''}
+                                disabled={disabled}
+                                onChange={(id, type, value) => handleChange(value)}
+                                noStyle
+                            />
+                        }
+                        className={classes.checkboxContainer}
+                        label={option}
+                    />
                 ))}
             </div>
         );

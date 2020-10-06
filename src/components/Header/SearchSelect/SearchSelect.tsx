@@ -1,8 +1,10 @@
-import { FormControl, TextField, Typography } from '@material-ui/core';
+import { FormControl, IconButton, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import classes from './SearchSelect.module.css';
+import SearchIcon from '@material-ui/icons/Search';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 
 // TODO: pasar a modelos correctamente
@@ -22,6 +24,7 @@ interface SearchSelectProps extends RouteComponentProps {
     // errorText: string,
     options: ValueType[],
     onQueryChange(value: string): void,
+    onEnter(value: string): void,
 }
 
 const SearchSelect = (props: SearchSelectProps) => {
@@ -36,7 +39,7 @@ const SearchSelect = (props: SearchSelectProps) => {
         options,
     } = props;
     const [focused, setFocused] = useState(false);
-
+    console.log('render search select', focused);
     const getOptionValue = (option: ValueType) => {
         if (option.type === 'Libros') {
             return option.value.title;
@@ -51,6 +54,12 @@ const SearchSelect = (props: SearchSelectProps) => {
         } else {
             props.history.push(`/authors/${option.value.id}`);
         }
+    }
+
+    const handleEnter = (value: string) => {
+        console.log('handle enter', value);
+        props.onEnter(value);
+        props.history.push('/results');
     }
 
     return (
@@ -77,16 +86,39 @@ const SearchSelect = (props: SearchSelectProps) => {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label={focused ? '' : (placeholder || '')}
+                        InputProps={{
+                            ...params.InputProps,
+                            classes: {
+                                root: classes.textField,
+                                focused: classes.textField,
+                                notchedOutline: classes.textField
+                            }
+                        }}
+                        label={''}
                         variant='outlined'
+                        onKeyDown={(e: any) => {
+                            if (e.keyCode === 13 && e.target.value) {
+                                handleEnter(e.target.value);
+                            }
+                        }}
                     />
                 )}
                 loadingText='Cargando...'
                 noOptionsText='No hay resultados'
-                onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} // fix feo pero funciona
+                clearOnEscape // ESC empties value
+                clearOnBlur={false}
+                onFocus={() => setFocused(true)} onBlur={() => {console.log('on blur'); setFocused(false)}} // fix feo pero funciona
                 onInputChange={(e, value: any) => props.onQueryChange(value)}
                 onChange={(e, value: any) => handleRedirect(value)}
             />
+            {inputValue !== '' &&
+                <IconButton onClick={() => handleEnter(inputValue)}>
+                    <SearchIcon/>
+                </IconButton>
+            }
+            <IconButton onClick={() => handleEnter('')}>
+                <SettingsIcon/>
+            </IconButton>
         </FormControl>
     )
 }

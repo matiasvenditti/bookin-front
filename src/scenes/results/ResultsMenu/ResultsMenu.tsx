@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Book } from '../../../model';
 import { Author } from '../../../model/Author';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
 import { Filters as FiltersModel, initialFilters as initialFiltersModel } from '../../../model/results/Filters';
-import { SortBy } from '../../../model/results/SortBy';
 import { AuthorsService, BooksService } from '../../../services';
 import Filters from '../Filters/Filters';
 import Results from '../Results/Results';
@@ -17,7 +16,7 @@ type Data = {
 }
 
 interface ResultsMenuProps extends RouteComponentProps {
-    data: Data
+    // data: Data
     searchInput: string,
     updateStatus: RequestStatus,
     searchRequestErrorCallback(): void,
@@ -33,11 +32,19 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     const [data, setData] = useState<Data>({books: [], authors: []})
     const initialFilters: FiltersModel = {...initialFiltersModel, text: searchInput};
 
-    const _searchRequest = (fitlers: FiltersModel) => {
+    useEffect(() => {
+        if (searchInput !== '') _searchRequest(initialFilters);
+    }, []);
+
+    useEffect(() => {
+        if (searchInput !== '') _searchRequest(initialFilters);
+    }, [props.searchInput]);
+    
+    const _searchRequest = (filters: FiltersModel) => {
         setGetDataStatus(RequestStatus.LOADING)
         const results = Promise.all([
-            BooksService.searchBooks(fitlers),
-            AuthorsService.searchAuthors(fitlers.text),
+            BooksService.searchBooks(filters),
+            AuthorsService.searchAuthors(filters.text),
         ])
         results
             .then((response) => {
