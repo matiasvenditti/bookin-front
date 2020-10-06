@@ -17,7 +17,6 @@ interface CreateReviewState{
 interface CreateReviewProps extends RouteComponentProps<MatchParams> {
     updateCallback(r: RequestStatus): void,
 
-    getBookDataErrorCallback(): void,
 }
 
 interface MatchParams {
