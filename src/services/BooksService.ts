@@ -30,6 +30,10 @@ class BooksService {
     static getBookAuthors = (id: number): Promise<AxiosResponse<Author[]>> => {
         return instance.get<Author[]>(`${baseURL}/books/${id}/authors`);
     }
+
+    static getBookAuthorsSimple = (id: number): Promise<AxiosResponse<{id: number, firstName: string, lastName: string}[]>> => {
+        return instance.get<{id: number, firstName: string, lastName: string}[]>(`${baseURL}/books/${id}/authors`);
+    }
     
     static updateBook = (book: UpdateBook, photo: File): Promise<AxiosResponse<Book>> => {
         const updateBookForm = new FormData();

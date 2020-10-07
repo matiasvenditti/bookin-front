@@ -8,13 +8,16 @@ import { BookID } from './BookID';
 import { NameCode } from './NameCode';
 
 
+export {
+    Book,
+}
+
 export type {
     User,
     NewUser,
     RegisterFormModel,
     LoginFormModel,
     UpdateAuthor,
-    Book,
     BookID,
     NameCode,
 }

@@ -157,7 +157,7 @@ class Header extends React.Component<any, HeaderState>{
         return (
             <div>
                 <AppBar position='static' color='primary' className={classes.title}>
-                    <Toolbar>
+                    <Toolbar className={classes.toolbar}>
                         <div className={'right grow title'}>
                             <Typography onClick={this.handleHomeRedirect} variant='h6'>Book in</Typography>
                         </div>

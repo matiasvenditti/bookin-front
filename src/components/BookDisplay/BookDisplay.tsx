@@ -1,5 +1,5 @@
 import {Card, CardActionArea, CardContent, CardMedia, Typography} from "@material-ui/core";
-import {Rating} from "@material-ui/lab";
+import {Rating, Skeleton} from "@material-ui/lab";
 import React, {Component} from "react";
 import {Book} from "../../model/Book";
 import classes from './BookDisplay.module.css';
@@ -14,6 +14,8 @@ interface BookDisplayProps extends RouteComponentProps {
     crown?: boolean
     author: string,
     resultsVariant?: boolean,
+    loading?: boolean,
+    loadingAuthors?: boolean,
 }
 
 class BookDisplay extends Component<BookDisplayProps, any> {
@@ -45,37 +47,70 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                 stars,
             } = this.props.book;
             const author = this.props.author;
+            const {loading, loadingAuthors} = this.props;
 
-            console.log('render results vriat', this.props);
-            return (
-                <Card className={classes.resultsVariantCard}>
-                    <CardMedia
-                        className={classes.media}
-                        image={`data:image/jpeg;base64,${photo}`}
-                    />
-                    <div className={classes.info}>
-                        <Typography variant='h4'>{title}</Typography>
-                        <Typography>{author}</Typography>
-                        <div className={classes.infoSubitem}>
-                            <Typography>Género:</Typography>
-                            <Typography>{genre}</Typography>
+            // console.log('render results vriat', this.props.book);
+            if (loading) {
+                return (
+                    <Card className={classes.resultsVariantCard}>
+                        <Skeleton variant='rect' className={classes.media}/>
+                        <div className={classes.info}>
+                            <Skeleton variant='text' height={50} width={75}/>
+                            <Skeleton variant='text' height={25} width={50}/>
+                            <div className={classes.infoSubitem}>
+                                <Skeleton variant='text' height={25} width={50}/>
+                                <Skeleton variant='text' height={25} width={150}/>
+                            </div>
+                            <div className={classes.infoSubitem}>
+                                <Skeleton variant='text' height={25} width={50}/>
+                                <Skeleton variant='text' height={25} width={250}/>
+                            </div>
+                            <div className={classes.infoSubitem}>
+                                <Skeleton variant='text' height={25} width={50}/>
+                                <Skeleton variant='text' height={25} width={200}/>
+                            </div>
+                            <div className={classes.infoSubitem}>
+                                <Skeleton variant='text' height={25} width={50}/>
+                                <Skeleton variant='text' height={150} width={300}/>
+                            </div>
+    
                         </div>
-                        <div className={classes.infoSubitem}>
-                            <Typography>Idioma:</Typography>
-                            <Typography>{language}</Typography>
-                        </div>
-                        <div className={classes.infoSubitem}>
-                            <Typography>Fecha de publicación:</Typography>
-                            <Typography>{DateUtils.formatDateTimeYears(date.toString())}</Typography>
-                        </div>
-                        <div className={classes.infoSubitem}>
-                            <Typography>Sinópsis:</Typography>
-                            <Typography>(WIP) Sinópsis no existen aún!</Typography>
-                        </div>
-
-                    </div>
-                </Card>
-            );
+                    </Card>
+                );
+            } else {
+                return (
+                    <Card className={classes.resultsVariantCard}>
+                        <CardActionArea onClick={() => this.props.history.push('/books/' + id)}>
+                            <div className={classes.resultsVariantCardContainer}>
+                                <CardMedia
+                                    className={classes.media}
+                                    image={`data:image/jpeg;base64,${photo}`}
+                                />
+                                <div className={classes.info}>
+                                    <Typography variant='h4'>{title}</Typography>
+                                    {loadingAuthors ? <Skeleton variant='text'/> : <Typography>{author}</Typography>}
+                                    <div className={classes.infoSubitem}>
+                                        <Typography>Género:</Typography>
+                                        <Typography>{genre}</Typography>
+                                    </div>
+                                    <div className={classes.infoSubitem}>
+                                        <Typography>Idioma:</Typography>
+                                        <Typography>{language}</Typography>
+                                    </div>
+                                    <div className={classes.infoSubitem}>
+                                        <Typography>Fecha de publicación:</Typography>
+                                        <Typography>{DateUtils.formatDateTimeYears(date.toString())}</Typography>
+                                    </div>
+                                    <div className={classes.infoSubitem}>
+                                        <Typography>Sinópsis:</Typography>
+                                        <Typography>(WIP) Sinópsis no existen aún!</Typography>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardActionArea>
+                    </Card>
+                );
+            }
         } else {
             return (
                 <Card className={classes.fullHeight}>                

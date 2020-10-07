@@ -10,11 +10,12 @@ interface CountriesSelectProps {
     label?: string,
     placeholder?: string,
     id: string,
-    value: string,
+    value: string | string[],
     disabled?: boolean,
     error?: boolean,
     errorText?: string,
-    onChange(id: string, type: string, value: string): void,
+    multiple?: boolean,
+    onChange(id: string, type: string, value: string | string[]): void,
 }
 
 const CountriesSelect = (props: CountriesSelectProps) => {
@@ -26,6 +27,7 @@ const CountriesSelect = (props: CountriesSelectProps) => {
         disabled,
         error,
         errorText,
+        multiple,
     } = props;
 
     // value in AutoComplete is managed by 

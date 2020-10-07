@@ -14,7 +14,9 @@ import { allBookGenres, allLanguages } from '../../../utils/consts';
 interface FiltersProps {
     filters: FiltersModel,
     loading: boolean,
-    onSubmit(filters: FiltersModel): void,
+    onChangeFilters(filters: FiltersModel): void,
+    onChangeSortBy(value: SortBy): void,
+    onChangeFilterBy(value: string[]): void,
 }
 
 const Filters = (props: FiltersProps) => {
@@ -22,7 +24,6 @@ const Filters = (props: FiltersProps) => {
         filters,
         loading,
     } = props;
-    const [localFilters, setLocalFilters] = useState<FiltersModel>(filters);
     const [sortBy, setSortBy] = useState<string>(SortBy.alphabeticAsc);
     const [filterBy, setFilterBy] = useState<string[]>([]);
 
@@ -75,7 +76,7 @@ const Filters = (props: FiltersProps) => {
                 value={sortBy}
                 options={Object.values(SortBy)}
                 disabled={loading}
-                onChange={(id, type, value) => setSortBy(value)}
+                onChange={(id, type, value: SortBy) => {console.log('sortBy change', value); props.onChangeSortBy(value)}}
             />
             <Typography className={classes.subtitle} variant='h5'>Filtrar por</Typography>
             <MultiCheckbox
@@ -84,71 +85,33 @@ const Filters = (props: FiltersProps) => {
                 selected={filterBy}
                 singleSelect
                 disabled={loading}
-                onChange={(id, type, value) => setFilterBy(value)}
+                onChange={(id, type, value) => {console.log('filterBy change', value); props.onChangeFilterBy(value)}}
             />
             <Typography className={classes.subtitle} variant='h5'>Nacionalidad</Typography>
-            <CountriesSelect
-                value={localFilters.nationalities}
+            {/* TODO finish this */}
+            {/* <CountriesSelect
+                value={filters.nationalities}
                 placeholder='Nacionalidad'
                 id='nationalities-select'
-                onChange={(id, type, value) => null}
                 disabled={loading}
                 error={false}
                 errorText={''}
-            />
-            {/* {allCountries.map((country, i) => (
-                <div className='country-checkbox-container'>
-                    <Checkbox
-                        id={'country-checkbox-checkbox-' + i}
-                        checked={countries.some((c) => c === country)}
-                        type='checkbox'
-                        error={false}
-                        errorText=''
-                        onChange={(id, type, value) => handleChangeCountries(value)}
-                    />
-                    <Typography>{country}</Typography>
-                </div>
-            ))} */}
-            <Typography className='subtitle' variant='h5'>Géneros</Typography>
+                onChange={(id, type, value) => {console.log('nationality change', value); }}
+            /> */}
+            <Typography className={classes.subtitle} variant='h5'>Géneros</Typography>
             <MultiCheckbox
                 id='bookGenres'
                 options={allBookGenres}
-                selected={localFilters.bookGenres}
-                onChange={(id, type, value) => setLocalFilters({...localFilters, bookGenres: value})}
+                selected={filters.bookGenres}
+                onChange={(id, type, value) => {console.log('genre change', value);props.onChangeFilters({...filters, bookGenres: value})}}
             />
-            {/* {allGenres.map((genre, i) => (
-                <div className='genre-checkbox-container'>
-                    <Checkbox
-                        id={'genre-checkbox-checkbox-' + i}
-                        checked={genres.some((c) => c === genre)}
-                        type='checkbox'
-                        error={false}
-                        errorText=''
-                        onChange={(id, type, value) => handleChangeGenres(value)}
-                    />
-                    <Typography>{genre}</Typography>
-                </div>
-            ))} */}
             <Typography className={classes.subtitle} variant='h5'>Idiomas</Typography>
             <MultiCheckbox
                 id='languages'
                 options={allLanguages}
-                selected={localFilters.languages}
-                onChange={(id, type, value) => setLocalFilters({...localFilters, languages: value})}
+                selected={filters.languages}
+                onChange={(id, type, value) => {console.log('language change', value);props.onChangeFilters({...filters, languages: value})}}
             />
-            {/* {allLanguages.map((language, i) => (
-                <div className='language-checkbox-container'>
-                    <Checkbox
-                        id={'language-checkbox-checkbox-' + i}
-                        checked={countries.some((c) => c === language)}
-                        type='checkbox'
-                        error={false}
-                        errorText=''
-                        onChange={(id, type, value) => handleChangeLanguages(value)}
-                    />
-                    <Typography>{language}</Typography>
-                </div>
-            ))} */}
         </div>
     )
 }

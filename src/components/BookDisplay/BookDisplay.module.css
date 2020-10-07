@@ -19,8 +19,10 @@
 }
 
 .media {
-    height: 140px;
+    min-height: 240px !important;
+    min-width: 140px !important;
 }
+
 .flex {
     display: flex;
     padding: 10px;
@@ -34,9 +36,17 @@
 
 /* results media */
 .resultsVariantCard {
+    margin: 0 15px 15px;
+}
+
+/* .resultsVariantCardActionArea {
+    padding: 25px;
+} */
+
+.resultsVariantCardContainer {
     display: flex;
     flex-flow: row nowrap;
-    padding: 40px;
+    padding: 25px;
 }
 
 .resultsVariantCard .media {
