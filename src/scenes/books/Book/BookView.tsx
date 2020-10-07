@@ -169,7 +169,9 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         </Grid>
                     </Grid>
                     <div>
-                        <CreateReview/>
+                        <CreateReview
+                        book={this.state.data}
+                        />
                     </div>
                 </div>
             )

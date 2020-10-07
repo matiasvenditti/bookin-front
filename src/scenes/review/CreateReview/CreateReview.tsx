@@ -16,7 +16,7 @@ interface CreateReviewState{
 }
 
 interface CreateReviewProps extends RouteComponentProps<MatchParams> {
-
+    book: Book;
 }
 
 interface MatchParams {
@@ -61,7 +61,7 @@ class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>
     handleSubmit = (values: NewReview) => {
         ReviewService.createReview(values)
         .then((response: AxiosResponse<Review>) => {
-            this.props.history.push('/book/' + this.state.bookId);
+            this.props.history.push('/books/' + this.state.bookId);
         })
         .catch((error: any) => {
         });
@@ -76,8 +76,8 @@ class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>
                     <Typography align='left' >Escribí una riseña</Typography>
                     <CreateReviewForm
                         onSubmit={this.handleSubmit}
-                        userId={cheapToString}
-                        bookId={this.state.bookId}
+                        user={this.state.user}
+                        book={this.props.book}
                     />
                 </div>
             </div>

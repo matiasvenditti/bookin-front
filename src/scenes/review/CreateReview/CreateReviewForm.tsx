@@ -3,7 +3,7 @@ import { Rating } from "@material-ui/lab";
 import React from "react";
 import { Button, Input } from '../../../components/Form';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { NewReview } from "../../../model";
+import { Book, NewReview, User } from "../../../model";
 import { ReviewFormModel } from "../../../model/Form/ReviewFormModel";
 import { validateInput } from "../../../utils";
 import { TheatersOutlined } from "@material-ui/icons";
@@ -11,8 +11,8 @@ import { TheatersOutlined } from "@material-ui/icons";
 
 interface CreateReviewFormProps {
     onSubmit(revew: NewReview): void,
-    userId: string,
-    bookId: string,
+    user: User,
+    book: Book,
 }
 
 interface CreateReviewFormState{
@@ -37,8 +37,8 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
             comment: this.state.values.message.value,
             stars: this.state.values.rating.value,
             created_at: new Date,
-            user_id: this.props.userId,
-            book_id: this.props.bookId
+            user: this.props.user,
+            book: this.props.book
         }
         this.props.onSubmit(values);
     }
