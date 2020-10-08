@@ -7,6 +7,7 @@ import { Book, NewReview, User } from "../../../model";
 import { ReviewFormModel } from "../../../model/Form/ReviewFormModel";
 import { validateInput } from "../../../utils";
 import { TheatersOutlined } from "@material-ui/icons";
+import classes from "./CreateReviewForm.module.css";
 
 
 interface CreateReviewFormProps {
@@ -65,15 +66,17 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
 
     render() {
         return (
-            <Card>
+            <Card style={{backgroundColor: '#F6F6F7', padding: '5'}}>
                 <form>
-                    <Rating
-                        name="simple-controlled"
-                        value={this.state.values.rating.value}
-                        onChange={(event, newValue) => {
-                            this.handleRateChange(newValue);
-                        }}
-                    />
+                    <div className={classes.rating}> 
+                        <Rating
+                            name="simple-controlled"
+                            value={this.state.values.rating.value}
+                            onChange={(event, newValue) => {
+                                this.handleRateChange(newValue);
+                            }}
+                        />
+                    </div>
                     <Input
                         label='Escriba aqui'
                         id='message'
@@ -84,7 +87,9 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
                         errorText={this.state.values.message.error ? 'Caracteres invalidos' : ''}
                         required
                     />
-                    <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.message.touched || this.state.values.rating.touched)} onClick={this.handleSubmit} />
+                    <div className={classes.button}>
+                        <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.message.touched || this.state.values.rating.touched)} onClick={this.handleSubmit} />
+                    </div>
                 </form>
             </Card>
         )
