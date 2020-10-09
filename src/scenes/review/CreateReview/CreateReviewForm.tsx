@@ -26,7 +26,7 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
         super(props);
         this.state = {
             values: {
-                message: { value: '', type: 'alphanumeric', error: false, touched: false },
+                message: { value: '', type: '', error: false, touched: false },
                 rating: { value: 0, type: 'number', error: false, touched: false },
 
             }
@@ -45,21 +45,22 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
     }
 
     handleInput = (id: string, type: string, value: string) => {
-        const error = !validateInput(type, value);
-        this.setState({
-            values: {
-                ...this.state.values,
-                [id]: { value, type, error, touched: true }
-            },
-        });
+        if (value.length <= 10000){
+            this.setState({
+                values: {
+                    ...this.state.values,
+                    [id]: { value, type, error: false, touched: true }
+                },
+            });
+        }
+        console.log(this.state.values.message)
     } 
 
     handleRateChange = (value: number|null) => {
-        const error = !validateInput(this.state.values.rating.type, value);
         this.setState({
             values: {
                 ...this.state.values,
-                rating: {value, type: 'number', error, touched: true}
+                rating: {value, type: 'number', error: false, touched: true}
             }
         });
     }
@@ -78,10 +79,11 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
                         />
                     </div>
                     <Input
-                        label='Escriba aqui'
+                        label='Escriba aqui (max 1000 caracteres)'
                         id='message'
                         type='text'
                         value={this.state.values.message.value}
+                        length={1}
                         onChange={this.handleInput}
                         error={this.state.values.message.error}
                         errorText={this.state.values.message.error ? 'Caracteres invalidos' : ''}
