@@ -90,7 +90,7 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
                         required
                     />
                     <div className={classes.button}>
-                        <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.message.touched || this.state.values.rating.touched)} onClick={this.handleSubmit} />
+                        <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.rating.touched)} onClick={this.handleSubmit} />
                     </div>
                 </form>
             </Card>
