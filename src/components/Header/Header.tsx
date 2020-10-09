@@ -100,6 +100,7 @@ class Header extends React.Component<any, HeaderState>{
         this.props.history.push('/');
     }
 
+    // TODO change for search simple both books and authors
     _searchRequest = (value: string) => {
         if (value === '') {
             // !! probablemente no sea correcto el feedback que se tiene
@@ -152,7 +153,7 @@ class Header extends React.Component<any, HeaderState>{
             || this.state.searchBooksStatus === RequestStatus.LOADING
         );
         const loading = (this.state.searchBooksStatus === RequestStatus.LOADING || this.state.searchAuthorsStatus === RequestStatus.LOADING);
-        const error = (this.state.searchBooksStatus === RequestStatus.ERROR || this.state.searchAuthorsStatus === RequestStatus.ERROR);
+        // const error = (this.state.searchBooksStatus === RequestStatus.ERROR || this.state.searchAuthorsStatus === RequestStatus.ERROR);
 
         return (
             <div>

@@ -1,11 +1,11 @@
 import { Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { Loader } from '../../../components';
 import BookDisplay from '../../../components/BookDisplay/BookDisplay';
 import AuthorCard from '../../../components/Cards/AuthorCard/AuthorCard';
 import { Book } from '../../../model';
 import { Author } from '../../../model/Author';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
+import { FilterBy } from '../../../model/results';
 import { SortBy } from '../../../model/results/SortBy';
 import { BooksService } from '../../../services';
 import sortBooks from '../../../utils/sortBooks';
@@ -14,9 +14,10 @@ import classes from './Results.module.css';
 
 interface ResultsProps {
     sortBy: SortBy,
-    filterBy: string[],
+    filterBy: FilterBy,
     data: {books: Book[], authors: Author[]},
     loading: boolean,
+    emptySearch: boolean,
 }
 
 const Results = (props: ResultsProps) => {
@@ -25,6 +26,7 @@ const Results = (props: ResultsProps) => {
         sortBy,
         filterBy,
         loading,
+        emptySearch,
     } = props;
     const [sortedBooks, setSortedBooks] = useState<Book[]>(sortBooks(sortBy, data.books));
     const [booksAuthorsLoadingStatuses, setBooksAuthorsLoadingStatuses] = 
@@ -106,7 +108,8 @@ const Results = (props: ResultsProps) => {
                         loading
                     />
                 ))
-            );
+            );                
+        
         } else if (sortedBooks.length === 0) {
             return (
                 <div className={classes.resultsBooksContainer}>
@@ -120,7 +123,7 @@ const Results = (props: ResultsProps) => {
                         <BookDisplay
                             key={'bookdisplay-card-' + i}
                             book={book}
-                            author={'dfjhgkjdsfhg'}
+                            author={booksAuthors[i]}
                             resultsVariant
                             loading={loading}
                             loadingAuthors={booksAuthorsLoadingStatuses[i] === RequestStatus.LOADING}
@@ -128,26 +131,48 @@ const Results = (props: ResultsProps) => {
                     ))}
                 </div>
             );
-        }
-        
+        }    
     }
     
-    return (
-        <div className={classes.resultsContainer}>
-            {filterBy[0] !== 'Solo libros' &&
-                <div>
+    // console.log(Object.values(FilterBy), filterBy);
+    if (emptySearch) {
+        return (
+            <div className={classes.resultsContainer}>
+                <div className={classes.resultsBooksContainer}>
+                    <Typography className={classes.noResults}>Realiza una busqueda!</Typography>
+                </div>
+            </div>
+        );
+    }
+    switch (filterBy) {
+        case FilterBy.libros:
+            console.log('render results -> libros')
+            return (
+                <div className={classes.resultsContainer}>
                     <Typography className={classes.title} variant='h3'>Autores</Typography>
                     {renderAuthors()}
                 </div>
-            }
-            {filterBy[0] !== 'Solo autores' &&
-                <div>
+            );
+        case FilterBy.autores:
+            console.log('render results -> autores')
+            return (
+                <div className={classes.resultsContainer}>
                     <Typography className={classes.title} variant='h3'>Libros</Typography>
                     {renderBooks()}
                 </div>
-            }
-        </div>
-    )
+            );
+        case FilterBy.ambos:
+            console.log('render results -> ambos')
+            return (
+                <div className={classes.resultsContainer}>
+                    <Typography className={classes.title} variant='h3'>Autores</Typography>
+                    {renderAuthors()}
+                    <Typography className={classes.title} variant='h3'>Libros</Typography>
+                    {renderBooks()}
+                </div>
+            );
+        default: return null;
+    }
 }
 
 

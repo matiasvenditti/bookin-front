@@ -5,6 +5,7 @@ import { EditVar } from '../../model/consts/EditVar';
 import { Button, Input, RadioGroup } from '../../components/Form';
 import { User } from '../../model';
 import { Typography } from '@material-ui/core';
+import { Gender } from '../../model/Gender';
 
 
 interface ProfileEditProps {
@@ -49,6 +50,17 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             if (key === id) return value === this.props.data[id];
             else return this.state.values[key].value === this.props.data[key];
         });
+        if (id === 'gender') {
+            console.log('changing gneder', value, Gender, Gender[value]);
+            this.setState({
+                ...this.state,
+                values: {
+                    ...this.state.values,
+                    [id]: { value: Gender[value], type, error, touched: true },
+                },
+                formValid: !allInitialValue && allTouched && !anyErrors,
+            });
+        }
         this.setState({
             ...this.state,
             values: {
@@ -157,11 +169,11 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         key='gender'
                         type='radio-group'
                         onChange={this.handleInput}
-                        value={this.state.values.gender.value}
+                        valueId={this.state.values.gender.value}
                         options={[
-                            { id: 'M', value: 'Hombre' },
-                            { id: 'F', value: 'Mujer' },
-                            { id: 'A', value: 'Anónimo' },
+                            { id: 0, value: 'Hombre' },
+                            { id: 1, value: 'Mujer' },
+                            { id: 2, value: 'Anónimo' },
                         ]}
                         error={this.state.values.gender.error}
                         errorText={'Elige un género'}

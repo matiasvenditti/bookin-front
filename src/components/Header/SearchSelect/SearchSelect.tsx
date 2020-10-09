@@ -30,7 +30,7 @@ interface SearchSelectProps extends RouteComponentProps {
 const SearchSelect = (props: SearchSelectProps) => {
     const {
         inputValue,
-        placeholder,
+        // placeholder,
         id,
         disabled,
         loading,
@@ -39,7 +39,7 @@ const SearchSelect = (props: SearchSelectProps) => {
         options,
     } = props;
     const [focused, setFocused] = useState(false);
-    console.log('render search select', focused);
+    // console.log('render search select', focused);
     const getOptionValue = (option: ValueType) => {
         if (option.type === 'Libros') {
             return option.value.title;
@@ -57,7 +57,6 @@ const SearchSelect = (props: SearchSelectProps) => {
     }
 
     const handleEnter = (value: string) => {
-        console.log('handle enter', value);
         props.onEnter(value);
         props.history.push('/results');
     }
@@ -99,15 +98,17 @@ const SearchSelect = (props: SearchSelectProps) => {
                         onKeyDown={(e: any) => {
                             if (e.keyCode === 13 && e.target.value) {
                                 handleEnter(e.target.value);
+                                setFocused(false);
                             }
                         }}
                     />
                 )}
+                open={focused}
                 loadingText='Cargando...'
                 noOptionsText='No hay resultados'
                 clearOnEscape // ESC empties value
                 clearOnBlur={false}
-                onFocus={() => setFocused(true)} onBlur={() => {console.log('on blur'); setFocused(false)}} // fix feo pero funciona
+                onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} // fix feo pero funciona
                 onInputChange={(e, value: any) => props.onQueryChange(value)}
                 onChange={(e, value: any) => handleRedirect(value)}
             />

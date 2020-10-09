@@ -6,8 +6,8 @@ interface RadioGroupProps {
     title: string,
     id: string,
     type: string,
-    value: string,
-    options: { id: string, value: string }[],
+    valueId: number, // id of element
+    options: { id: number, value: string }[],
     error: boolean,
     errorText: string,
     disabled?: boolean,
@@ -20,18 +20,23 @@ interface RadioGroupState {
 
 export default class RadioGroup extends Component<RadioGroupProps, RadioGroupState> {
     render() {
-        const { title, id, type, value, options, error, errorText, disabled } = this.props;
+        const { title, id, type, valueId, options, error, errorText, disabled } = this.props;
         return (
             <FormControl component='fieldset' className='radio-group-form-control-container' disabled={disabled}>
                 <FormLabel component='legend' color='secondary'>{title}</FormLabel>
                 <MaterialRadioGroup
                     className='radio-group-container'
                     aria-label="gender"
-                    value={value}
-                    onChange={(e) => this.props.onChange(id, type, e.target.value)}
+                    value={valueId}
+                    onChange={(e) => this.props.onChange(id, type, parseInt(e.target.value))}
                 >
                     {options.map((option, i) => (
-                        <FormControlLabel key={'radio-group-form-control-label-' + i} value={option.id} control={<Radio />} label={option.value} />
+                        <FormControlLabel
+                            key={'radio-group-form-control-label-' + i}
+                            value={option.id}
+                            label={option.value}
+                            control={<Radio />}
+                        />
                     ))}
                 </MaterialRadioGroup>
                 <FormLabel component='legend' error={error}>{error && errorText}</FormLabel>

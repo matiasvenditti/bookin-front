@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 import { RequestStatus } from '../../model/consts/RequestStatus';
 import { EditVar } from '../../model/consts/EditVar';
 import { User } from '../../model';
-import Gender from '../../model/Gender';
+import {Gender} from '../../model/Gender';
 import ResponseUpdate from '../../model/responses/ResponseUpdate';
 import { SessionService, UserService } from '../../services';
 import HoverableAvatar from '../../components/Photo/HoverableAvatar/HoverableAvatar';
@@ -47,7 +47,7 @@ class Profile extends Component<any, ProfileState> {
                 lastName: '',
                 email: '',
                 password: '',
-                gender: Gender.A,
+                gender: Gender[0],
                 photo: null,
             },
             deleteModalShow: false,

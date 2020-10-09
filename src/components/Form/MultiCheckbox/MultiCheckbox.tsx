@@ -11,7 +11,6 @@ interface MultiCheckboxProps {
     selected: string[],
     disabled?: boolean,
     loading?: boolean,
-    singleSelect?: boolean,
     // error: boolean,
     // errorText: string,
     onChange(id: string, type: string, value: string[]): void,
@@ -24,15 +23,12 @@ export const MultiCheckbox = (props: MultiCheckboxProps) => {
         selected,
         disabled,
         loading,
-        singleSelect,
         // error,
         // errorText,
     } = props;
 
     const handleChange = (value: string) => {
-        if (singleSelect) {
-            props.onChange(id, 'multi-checkbox', [value]);
-        } else if (selected.includes(value)) { // includes value -> filter it out
+        if (selected.includes(value)) { // includes value -> filter it out
             props.onChange(id, 'multi-checkbox', selected.filter((selOption) => selOption !== value));
         } else { // does not include value -> add it
             props.onChange(id, 'multi-checkbox', selected.concat(value));
@@ -58,7 +54,7 @@ export const MultiCheckbox = (props: MultiCheckboxProps) => {
                                 error={false}
                                 errorText={''}
                                 disabled={disabled}
-                                onChange={(id, type, value) => handleChange(value)}
+                                onChange={(id, type, value) => handleChange(option)}
                                 noStyle
                             />
                         }

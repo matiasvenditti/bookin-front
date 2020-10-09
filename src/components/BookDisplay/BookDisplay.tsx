@@ -88,7 +88,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                                 />
                                 <div className={classes.info}>
                                     <Typography variant='h4'>{title}</Typography>
-                                    {loadingAuthors ? <Skeleton variant='text'/> : <Typography>{author}</Typography>}
+                                    {loadingAuthors ? <Skeleton variant='text' height={25}/> : <Typography>{author}</Typography>}
                                     <div className={classes.infoSubitem}>
                                         <Typography>Género:</Typography>
                                         <Typography>{genre}</Typography>

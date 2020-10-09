@@ -103,11 +103,11 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     id='gender'
                     type='radio-group'
                     onChange={this.handleInput}
-                    value={this.state.values.gender.value}
+                    valueId={this.state.values.gender.value}
                     options={[
-                        { id: 'M', value: 'Hombre' },
-                        { id: 'F', value: 'Mujer' },
-                        { id: 'A', value: 'Anónimo' },
+                        { id: 0, value: 'Hombre' },
+                        { id: 1, value: 'Mujer' },
+                        { id: 2, value: 'Anónimo' },
                     ]}
                     error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}

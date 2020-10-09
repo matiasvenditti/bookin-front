@@ -3,12 +3,13 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Book } from '../../../model';
 import { Author } from '../../../model/Author';
 import { RequestStatus } from '../../../model/consts/RequestStatus';
+import { FilterBy } from '../../../model/results';
 import { Filters as FiltersModel, initialFilters as initialFiltersModel } from '../../../model/results/Filters';
 import { SortBy } from '../../../model/results/SortBy';
 import { AuthorsService, BooksService } from '../../../services';
 import Filters from '../Filters/Filters';
 import Results from '../Results/Results';
-import './ResultsMenu.css';
+import classes from './ResultsMenu.module.css';
 
 
 type Data = {
@@ -32,6 +33,7 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     const [getDataStatus, setGetDataStatus] = useState(RequestStatus.NONE);
     const [data, setData] = useState<Data>({books: [], authors: []})
     const [filters, setFilters] = useState<FiltersModel>({...initialFiltersModel, text: searchInput});
+    const [emptySearch, setEmptySearch] = useState(searchInput === '');
 
     useEffect(() => {
         if (searchInput !== '') _searchRequest(filters);
@@ -41,16 +43,35 @@ const ResultsMenu = (props: ResultsMenuProps) => {
         if (searchInput !== '') _searchRequest(filters);
     }, [props.searchInput]);
     
-    const _searchRequest = (filters: FiltersModel) => {
+    const checkSearchIsEmpty = (newFilters: FiltersModel) => {
+        return (
+            searchInput === '' &&
+            // filters.sortBy !== SortBy.alphabeticAsc ||
+            // filters.filterBy !== FilterBy.ambos ||
+            newFilters.bookGenres.length === 0 &&
+            newFilters.languages.length === 0 &&
+            newFilters.nationalities.length === 0
+        )
+    }
+
+    const _searchRequest = (newFilters: FiltersModel) => {
+        console.log('search request', newFilters)
+        if (checkSearchIsEmpty(newFilters)) {
+            console.log('search is empty')
+            setEmptySearch(true);
+            return;
+        }
+        console.log('search is NOT empty')
+        setEmptySearch(false);
+        setFilters(newFilters);
         setGetDataStatus(RequestStatus.LOADING);
         const results = Promise.all([
-            BooksService.searchBooks(filters),
-            AuthorsService.searchAuthors(filters.text),
+            BooksService.searchBooks(newFilters),
+            AuthorsService.searchAuthors(newFilters.text),
         ])
         results
             .then((responses) => {
                 setData({...data, books: responses[0].data, authors: responses[1].data});
-                setFilters(filters);
                 setGetDataStatus(RequestStatus.SUCCESS);
             })
             .catch((error: any) => {
@@ -59,17 +80,18 @@ const ResultsMenu = (props: ResultsMenuProps) => {
             });
     };
 
-
+    console.log('render results menu', props, getDataStatus, data, filters, emptySearch);
     return (
-        <div className='results-menu-container'>
+        <div className={classes.resultsMenuContainer}>
             <Filters
                 filters={filters}
                 loading={updateStatus === RequestStatus.LOADING}
                 onChangeFilters={(filters: FiltersModel) => _searchRequest(filters)}
                 onChangeSortBy={(sortBy: SortBy) => _searchRequest({...filters, sortBy})}
-                onChangeFilterBy={(filterBy: string[]) => _searchRequest({...filters, filterBy})}
+                onChangeFilterBy={(filterBy: FilterBy) => _searchRequest({...filters, filterBy})}
             />
             <Results
+                emptySearch={emptySearch}
                 sortBy={filters.sortBy}
                 filterBy={filters.filterBy}
                 data={data}
