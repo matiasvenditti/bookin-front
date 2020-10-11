@@ -83,6 +83,7 @@ const Filters = (props: FiltersProps) => {
                                     avatar={<Flag code={tag.value} />}
                                     label={ConstsUtils.getCountryName(tag.value)}
                                     onDelete={() => handleClickTag(tag.id, tag.value)}
+                                    style={{marginRight: '8px'}}
                                 />
                             );
                         } else {
@@ -91,6 +92,7 @@ const Filters = (props: FiltersProps) => {
                                     key={'tags-chip-' + tag.id}
                                     label={tag.value}
                                     onDelete={() => handleClickTag(tag.id, tag.value)}
+                                    style={{marginRight: '8px'}}
                                 />
                             );
                         }
@@ -124,14 +126,6 @@ const Filters = (props: FiltersProps) => {
                 error={false}
                 errorText={''}
             />
-            {/* <MultiCheckbox
-                id='filter-by'
-                options={['Solo libros', 'Solo autores']}
-                selected={[filters.filterBy]}
-                singleSelect
-                disabled={loading}
-                onChange={(id, type, value) => {console.log('filterBy change', value); props.onChangeFilterBy(value[0])}}
-            /> */}
             <Typography className={classes.subtitle} variant='h5'>Nacionalidad</Typography>
             <CountriesSelect
                 value={filters.nationalities}

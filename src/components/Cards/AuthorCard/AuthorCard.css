@@ -3,9 +3,6 @@
     flex-flow: column nowrap;
     align-items: center;
     margin-right: 15px;
-}
-
-.author-card-container-padding {
     padding: 15px !important;
 }
 

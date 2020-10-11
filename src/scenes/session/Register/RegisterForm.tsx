@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
 import { NewUser } from '../../../model';
 import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
+import { Gender, GenderList, getIndexGender, getLetterGender } from '../../../model/Gender';
 import validateInput from '../../../utils/validateInput';
 
 
@@ -23,7 +24,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                 firstName: { value: '', type: 'text', error: true, touched: false },
                 lastName: { value: '', type: 'text', error: true, touched: false },
                 email: { value: '', type: 'email', error: true, touched: false },
-                gender: { value: null, type: 'radio-group', error: true, touched: false },
+                gender: { value: Gender.A, type: 'radio-group', error: true, touched: false },
                 password: { value: '', type: 'password', error: true, touched: false },
                 acceptTerms: { value: false, type: 'accept-terms', error: true, touched: false },
             },
@@ -49,7 +50,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             email: this.state.values.email.value,
-            gender: this.state.values.gender.value,
+            gender: getLetterGender(this.state.values.gender.value),
             password: this.state.values.password.value,
         });
     }
@@ -103,12 +104,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     id='gender'
                     type='radio-group'
                     onChange={this.handleInput}
-                    valueId={this.state.values.gender.value}
-                    options={[
-                        { id: 0, value: 'Hombre' },
-                        { id: 1, value: 'Mujer' },
-                        { id: 2, value: 'Anónimo' },
-                    ]}
+                    valueId={getIndexGender(this.state.values.gender.value)}
+                    options={GenderList}
                     error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}
                     disabled={loading}

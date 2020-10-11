@@ -53,27 +53,28 @@ class BookDisplay extends Component<BookDisplayProps, any> {
             if (loading) {
                 return (
                     <Card className={classes.resultsVariantCard}>
-                        <Skeleton variant='rect' className={classes.media}/>
-                        <div className={classes.info}>
-                            <Skeleton variant='text' height={50} width={75}/>
-                            <Skeleton variant='text' height={25} width={50}/>
-                            <div className={classes.infoSubitem}>
+                        <div className={classes.resultsVariantCardContainer}>
+                            <Skeleton variant='rect' className={classes.media}/>
+                            <div className={classes.info}>
+                                <Skeleton variant='text' height={50} width={75}/>
                                 <Skeleton variant='text' height={25} width={50}/>
-                                <Skeleton variant='text' height={25} width={150}/>
-                            </div>
-                            <div className={classes.infoSubitem}>
-                                <Skeleton variant='text' height={25} width={50}/>
-                                <Skeleton variant='text' height={25} width={250}/>
-                            </div>
-                            <div className={classes.infoSubitem}>
-                                <Skeleton variant='text' height={25} width={50}/>
-                                <Skeleton variant='text' height={25} width={200}/>
-                            </div>
-                            <div className={classes.infoSubitem}>
-                                <Skeleton variant='text' height={25} width={50}/>
-                                <Skeleton variant='text' height={150} width={300}/>
-                            </div>
-    
+                                <div className={classes.infoSubitem}>
+                                    <Skeleton variant='text' height={25} width={50}/>
+                                    <Skeleton variant='text' height={25} width={150}/>
+                                </div>
+                                <div className={classes.infoSubitem}>
+                                    <Skeleton variant='text' height={25} width={50}/>
+                                    <Skeleton variant='text' height={25} width={250}/>
+                                </div>
+                                <div className={classes.infoSubitem}>
+                                    <Skeleton variant='text' height={25} width={50}/>
+                                    <Skeleton variant='text' height={25} width={200}/>
+                                </div>
+                                <div className={classes.infoSubitem}>
+                                    <Skeleton variant='text' height={25} width={50}/>
+                                    <Skeleton variant='text' height={150} width={300}/>
+                                </div>
+                            </div>    
                         </div>
                     </Card>
                 );

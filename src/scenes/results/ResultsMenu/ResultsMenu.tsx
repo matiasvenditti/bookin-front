@@ -87,8 +87,8 @@ const ResultsMenu = (props: ResultsMenuProps) => {
                 filters={filters}
                 loading={updateStatus === RequestStatus.LOADING}
                 onChangeFilters={(filters: FiltersModel) => _searchRequest(filters)}
-                onChangeSortBy={(sortBy: SortBy) => _searchRequest({...filters, sortBy})}
-                onChangeFilterBy={(filterBy: FilterBy) => _searchRequest({...filters, filterBy})}
+                onChangeSortBy={(sortBy: SortBy) => setFilters({...filters, sortBy})}
+                onChangeFilterBy={(filterBy: FilterBy) => setFilters    ({...filters, filterBy})}
             />
             <Results
                 emptySearch={emptySearch}

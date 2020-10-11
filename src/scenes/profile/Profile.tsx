@@ -47,7 +47,7 @@ class Profile extends Component<any, ProfileState> {
                 lastName: '',
                 email: '',
                 password: '',
-                gender: Gender[0],
+                gender: Gender.A    ,
                 photo: null,
             },
             deleteModalShow: false,

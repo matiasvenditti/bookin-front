@@ -12,9 +12,9 @@ const stringToGender = function(gender: string) {
 
 const genderToString = function(gender: string) {
     switch (gender) {
-        case Gender[0]: return 'Hombre';
-        case Gender[1]: return 'Mujer';
-        case Gender[2]: return 'Anónimo';
+        case Gender.M: return 'Hombre';
+        case Gender.F: return 'Mujer';
+        case Gender.A: return 'Anónimo';
         default: return 'Anónimo';
     }
 };

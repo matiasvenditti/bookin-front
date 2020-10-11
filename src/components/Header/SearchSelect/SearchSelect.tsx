@@ -112,11 +112,10 @@ const SearchSelect = (props: SearchSelectProps) => {
                 onInputChange={(e, value: any) => props.onQueryChange(value)}
                 onChange={(e, value: any) => handleRedirect(value)}
             />
-            {inputValue !== '' &&
-                <IconButton onClick={() => handleEnter(inputValue)}>
-                    <SearchIcon/>
-                </IconButton>
-            }
+            <IconButton
+                disabled={inputValue === ''}
+                onClick={() => handleEnter(inputValue)}
+            ><SearchIcon/></IconButton>
             <IconButton onClick={() => handleEnter('')}>
                 <SettingsIcon/>
             </IconButton>

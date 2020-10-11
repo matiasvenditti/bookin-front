@@ -27,17 +27,15 @@ const AuthorCard = (props: AuthorCardProps) => {
     if (loading) {
         return (
             <Card className='author-card-container' key={props.key + '-' + id}>
-                <div className='author-card-container-padding'>
-                    <Skeleton variant="circle" width={100} height={100}/>
-                    <Skeleton variant="text" width={100} height={25}/>
-                    <Skeleton variant="text" width={100} height={25}/>
-                </div>
+                <Skeleton variant="circle" width={100} height={100}/>
+                <Skeleton variant="text" width={100} height={25}/>
+                <Skeleton variant="text" width={100} height={25}/>
             </Card>
         );
     } else {
         return (
             <Card className='author-card-container' key={props.key + '-' + id}>
-                <CardActionArea onClick={() => props.history.push('/authors/' + id)} className='author-card-container-padding'>
+                <CardActionArea onClick={() => props.history.push('/authors/' + id)}>
                     <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar}/>
                     <Typography>{firstName}</Typography>
                     <Typography>{lastName}</Typography>

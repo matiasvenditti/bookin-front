@@ -105,7 +105,6 @@ const Results = (props: ResultsProps) => {
                         book={new Book()}
                         author={''}
                         resultsVariant
-                        loading
                     />
                 ))
             );                
