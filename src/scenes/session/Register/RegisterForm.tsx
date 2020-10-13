@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
 import { NewUser } from '../../../model';
 import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
-import { Gender, GenderList, getIndexGender, getLetterGender } from '../../../model/Gender';
+import { Gender } from '../../../model/Gender';
+import { allGenders } from '../../../utils/consts';
 import validateInput from '../../../utils/validateInput';
 
 
@@ -50,7 +51,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             email: this.state.values.email.value,
-            gender: getLetterGender(this.state.values.gender.value),
+            gender: this.state.values.gender.value,
             password: this.state.values.password.value,
         });
     }
@@ -104,8 +105,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     id='gender'
                     type='radio-group'
                     onChange={this.handleInput}
-                    valueId={getIndexGender(this.state.values.gender.value)}
-                    options={GenderList}
+                    valueId={this.state.values.gender.value}
+                    options={allGenders}
                     error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}
                     disabled={loading}

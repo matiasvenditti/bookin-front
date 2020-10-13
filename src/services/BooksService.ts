@@ -3,10 +3,9 @@ import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { instance } from "../utils/Interceptors/Inerceptors";
 import { baseURL } from "./EnvironmentService";
 import { Book } from "../model/Book";
-import { BookID } from "../model/BookID";
 import { Author } from "../model/Author";
 import { UpdateBook } from "../model/UpdateBook";
-import { Filters, initialFilters } from "../model/results/Filters";
+import { Filters } from "../model/results/Filters";
 
 
 class BooksService {
@@ -51,13 +50,16 @@ class BooksService {
         return instance.delete<Book>(`${baseURL}/books/${id}`);
     }
 
-    static searchBooks = (query: string | Filters): Promise<AxiosResponse<Book[]>> => {
-        if (typeof query === 'string') {
-            return instance.get<Book[]>(`${baseURL}/books/search?key=${query}`);
-        } else {
-            // TODO endpoint for filters
-            return instance.get<Book[]>(`${baseURL}/books/search?key=${query.text}`);
-        }
+    static searchBooks = (query: Filters): Promise<AxiosResponse<Book[]>> => {
+        // TODO: back missing another parameters
+        // &nationality=${}
+        return instance.get<Book[]>(`${baseURL}/books/search?title=${query.text}`);
+        // return instance.get<Book[]>(`${baseURL}/books/search?title=${query.text}`);
+    }
+
+    // TODO: back missing simple search
+    static searchBooksSimple = (query: string): Promise<AxiosResponse<Book[]>> => {
+        return instance.get<Book[]>(`${baseURL}/books/search?title=${query}`);
     }
 }
 

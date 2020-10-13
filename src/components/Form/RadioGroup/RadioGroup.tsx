@@ -1,13 +1,14 @@
 import React, { Component } from 'react'
 import { FormControl, FormLabel, RadioGroup as MaterialRadioGroup, FormControlLabel, Radio } from '@material-ui/core'
 import './RadioGroup.css';
+import { KeyValue } from '../../../model';
 
 interface RadioGroupProps {
     title: string,
     id: string,
     type: string,
-    valueId: number, // id of element
-    options: { id: number, value: string }[],
+    valueId: any, // id of element
+    options: KeyValue[],
     error: boolean,
     errorText: string,
     disabled?: boolean,
@@ -28,12 +29,12 @@ export default class RadioGroup extends Component<RadioGroupProps, RadioGroupSta
                     className='radio-group-container'
                     aria-label="gender"
                     value={valueId}
-                    onChange={(e) => this.props.onChange(id, type, parseInt(e.target.value))}
+                    onChange={(e) => this.props.onChange(id, type, e.target.value)} // e.target.value = option.key
                 >
                     {options.map((option, i) => (
                         <FormControlLabel
                             key={'radio-group-form-control-label-' + i}
-                            value={option.id}
+                            value={option.key}
                             label={option.value}
                             control={<Radio />}
                         />

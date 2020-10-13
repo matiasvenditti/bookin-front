@@ -32,7 +32,6 @@ const Results = (props: ResultsProps) => {
     const [booksAuthorsLoadingStatuses, setBooksAuthorsLoadingStatuses] = 
         useState<RequestStatus[]>(sortedBooks.map(() => RequestStatus.NONE));
     const [booksAuthors, setBooksAuthors] = useState<any[]>(sortedBooks.map(() => []));
-    // console.log(props);
 
     const updateBooksFromProps = (newBooks: Book[]) => {
         setSortedBooks(newBooks);
@@ -41,13 +40,11 @@ const Results = (props: ResultsProps) => {
     }
 
     useEffect(() => {
-        console.log('sorting effect initial');
         updateBooksFromProps(sortBooks(sortBy, data.books));
         _requestAllBooksAuthors()
     }, []);
 
     useEffect(() => {
-        console.log('sorting effect props changed');
         updateBooksFromProps(sortBooks(sortBy, data.books));
         _requestAllBooksAuthors();
     }, [sortBy, data.books]);
@@ -145,23 +142,23 @@ const Results = (props: ResultsProps) => {
     }
     switch (filterBy) {
         case FilterBy.libros:
-            console.log('render results -> libros')
-            return (
-                <div className={classes.resultsContainer}>
-                    <Typography className={classes.title} variant='h3'>Autores</Typography>
-                    {renderAuthors()}
-                </div>
-            );
-        case FilterBy.autores:
-            console.log('render results -> autores')
+            // console.log('render results -> libros')
             return (
                 <div className={classes.resultsContainer}>
                     <Typography className={classes.title} variant='h3'>Libros</Typography>
                     {renderBooks()}
                 </div>
             );
+        case FilterBy.autores:
+            // console.log('render results -> autores')
+            return (
+                <div className={classes.resultsContainer}>
+                    <Typography className={classes.title} variant='h3'>Autores</Typography>
+                    {renderAuthors()}
+                </div>
+            );
         case FilterBy.ambos:
-            console.log('render results -> ambos')
+            // console.log('render results -> ambos')
             return (
                 <div className={classes.resultsContainer}>
                     <Typography className={classes.title} variant='h3'>Autores</Typography>

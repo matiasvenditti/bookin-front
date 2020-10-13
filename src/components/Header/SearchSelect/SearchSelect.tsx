@@ -69,7 +69,7 @@ const SearchSelect = (props: SearchSelectProps) => {
                 color='primary'
                 disabled={disabled}
                 id={id}
-                // value note: empty NameCode to avoid undefined value and react 
+                // value note: empty KeyValue to avoid undefined value and react 
                 // giving controlled error
                 value={null}
                 inputValue={inputValue}

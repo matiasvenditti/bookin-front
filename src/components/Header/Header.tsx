@@ -110,11 +110,12 @@ class Header extends React.Component<any, HeaderState>{
         }
         this.setState({...this.state, searchBooksStatus: RequestStatus.LOADING, searchAuthorsStatus: RequestStatus.LOADING});
         const results = Promise.all([
-            BooksService.searchBooks(value),
-            AuthorsService.searchAuthors(value),
+            BooksService.searchBooksSimple(value),
+            AuthorsService.searchAuthorsSimple(value),
         ])
         results
             .then((response) => {
+                console.log('books and authors', response);
                 this.setState({
                     ...this.state,
                     searchBooksStatus: RequestStatus.SUCCESS,

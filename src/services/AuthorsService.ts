@@ -54,18 +54,18 @@ class AuthorsService {
         return instance.get<Book[]>(`${baseURL}/authors/${id}/books`)
     }
 
-    static searchAuthors = (query: string): Promise<AxiosResponse<Author[]>> => {
-        return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`)
-    }
     // filters wont be used for author searching, only text query
-    // static searchAuthors = (query: string | Filters): Promise<AxiosResponse<Author[]>> => {
-    //     if (typeof query === 'string') {
-    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
-    //     } else {
-    //         // TODO endpoint for filters
-    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
-    //     }
-    // }
+    static searchAuthors = (query: Filters): Promise<AxiosResponse<Author[]>> => {
+        // TODO: back missing another parameters
+        // &genre=${}&language=${} 
+        return instance.get<Author[]>(`${baseURL}/authors/search?name=${query.text}`)
+        // return instance.get<Author[]>(`${baseURL}/authors/search?fullName=${query.text}`)
+    }
+    
+    // TODO: back missing simple search
+    static searchAuthorsSimple = (query: string): Promise<AxiosResponse<Author[]>> => {
+        return instance.get<Author[]>(`${baseURL}/authors/search?name=${query}`)
+    }
 }
 
 

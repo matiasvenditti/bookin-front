@@ -1,4 +1,4 @@
-import { FilterBy, FilterByList } from './FilterBy';
+import { FilterBy } from './FilterBy';
 import { Filters } from './Filters';
 import { SortBy } from './SortBy';
 
@@ -9,5 +9,4 @@ export type {
 export {
     FilterBy,
     SortBy,
-    FilterByList,
 }

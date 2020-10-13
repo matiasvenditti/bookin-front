@@ -8,9 +8,10 @@ import { SortBy } from '../../../model/results/SortBy';
 import { CountriesSelect, RadioGroup, Select } from '../../../components/Form';
 import { ConstsUtils } from '../../../utils';
 import Flag from 'react-world-flags';
-import { FilterBy, FilterByList } from '../../../model/results/FilterBy';
+import { FilterBy } from '../../../model/results/FilterBy';
 import { MultiCheckbox } from '../../../components/Form/MultiCheckbox/MultiCheckbox';
-import { allBookGenres, allLanguages } from '../../../utils/consts';
+import { allBookGenres, allFilterBys, allLanguages } from '../../../utils/consts';
+
 
 
 interface FiltersProps {
@@ -39,6 +40,7 @@ const Filters = (props: FiltersProps) => {
                     ...filters,
                     nationalities: filters.nationalities.filter((nationality) => nationality !== value)
                 });
+                // console.log('clicked nationality', id, value, filters.nationalities);
                 break;
             case 'bookGenres':
                 props.onChangeFilters({
@@ -122,7 +124,7 @@ const Filters = (props: FiltersProps) => {
                 type='radio-group'
                 onChange={(id, type, value) => {console.log('filterBy change', value); props.onChangeFilterBy(value)}}
                 valueId={filters.filterBy}
-                options={FilterByList}
+                options={allFilterBys}
                 error={false}
                 errorText={''}
             />
