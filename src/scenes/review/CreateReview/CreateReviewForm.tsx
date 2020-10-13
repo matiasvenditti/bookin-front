@@ -83,7 +83,6 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
                         id='message'
                         type='text'
                         value={this.state.values.message.value}
-                        length={1}
                         onChange={this.handleInput}
                         error={this.state.values.message.error}
                         errorText={this.state.values.message.error ? 'Caracteres invalidos' : ''}
