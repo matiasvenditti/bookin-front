@@ -1,6 +1,6 @@
 import { FormControl, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import React from 'react';
+import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import classes from './SearchSelect.module.css';
 
@@ -35,6 +35,7 @@ const SearchSelect = (props: SearchSelectProps) => {
         // loadingOptions,
         options,
     } = props;
+    const [focused, setFocused] = useState(false);
 
     const getOptionValue = (option: ValueType) => {
         if (option.type === 'Libros') {
@@ -73,9 +74,16 @@ const SearchSelect = (props: SearchSelectProps) => {
                         <Typography>{getOptionValue(option)}</Typography>
                     </div>
                 )}
-                renderInput={(params) => <TextField {...params} label={placeholder || ''} variant='outlined'/>}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        label={focused ? '' : (placeholder || '')}
+                        variant='outlined'
+                    />
+                )}
                 loadingText='Cargando...'
                 noOptionsText='No hay resultados'
+                onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} // fix feo pero funciona
                 onInputChange={(e, value: any) => props.onQueryChange(value)}
                 onChange={(e, value: any) => handleRedirect(value)}
             />

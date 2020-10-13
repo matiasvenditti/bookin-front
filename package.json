@@ -23,6 +23,7 @@
         "jwt-decode": "^2.2.0",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "react-image-file-resizer": "^0.3.8",
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.2",
         "react-world-flags": "^1.4.0",

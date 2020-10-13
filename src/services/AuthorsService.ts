@@ -4,6 +4,7 @@ import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
 import {Book, UpdateAuthor} from "../model";
 import { Author } from "../model/Author";
+import { Filters } from "../model/results/Filters";
 
 
 class AuthorsService {
@@ -53,10 +54,18 @@ class AuthorsService {
         return instance.get<Book[]>(`${baseURL}/authors/${id}/books`)
     }
 
-    // TODO: finish request to work
     static searchAuthors = (query: string): Promise<AxiosResponse<Author[]>> => {
         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`)
     }
+    // filters wont be used for author searching, only text query
+    // static searchAuthors = (query: string | Filters): Promise<AxiosResponse<Author[]>> => {
+    //     if (typeof query === 'string') {
+    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
+    //     } else {
+    //         // TODO endpoint for filters
+    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
+    //     }
+    // }
 }
 
 

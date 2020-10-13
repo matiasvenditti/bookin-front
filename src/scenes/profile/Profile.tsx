@@ -10,7 +10,7 @@ import {EditVar} from '../../model/consts/EditVar';
 import {User} from '../../model';
 import Gender from '../../model/Gender';
 import {SessionService, UserService} from '../../services';
-import HoverableAvatar from '../../components/HoverableAvatar/HoverableAvatar';
+import HoverableAvatar from '../../components/Photo/HoverableAvatar/HoverableAvatar';
 import {dummyAvatar} from '../../assets';
 import {PhotoUtils} from '../../utils';
 import ReviewService from "../../services/ReviewService";
@@ -155,6 +155,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                             src={this.state.data.photo || dummyAvatar}
                             id=''
                             maxSize={100000}
+                            loading={this.state.updateStatus === RequestStatus.LOADING}
                             onChange={this.handleUpdatePhoto}
                             onLoadError={this.props.onLoadErrorCallback}
                         />

@@ -2,6 +2,8 @@ import { Typography } from '@material-ui/core';
 import React from 'react';
 import AuthorCard from '../../../components/Cards/AuthorCard/AuthorCard';
 import BookCard from '../../../components/Cards/BookCard/BookCard';
+import { Book } from '../../../model';
+import { Author } from '../../../model/Author';
 import './Results.css';
 
 
@@ -16,7 +18,12 @@ const mockBooks = [
     { photo: null, title: 'Titulo del libro 2', author: 'Autor del libro 2', genre: 'Romance', language: 'Español', date: 1995, summary: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin id enim pretium, bibendum quam sed, mollis sapien. Nam et sem posuere, viverra turpis sed, eleifend nunc. Ut erat est, gravida sed semper nec, dapibus vitae ipsum. Ut maximus erat dolor, a pharetra dui convallis a. In sodales, nulla sit amet lacinia pretium, felis sapien pharetra quam, eu ornare sapien nunc id sapien. Maecenas consectetur interdum libero hendrerit ultrices. Quisque sagittis ante quam, id sagittis urna facilisis vitae.' },
 ]
 
-const Results = () => {
+
+interface ResultsProps {
+    data: {books: Book[], authors: Author[]},
+}
+
+const Results = (props: ResultsProps) => {
     return (
         <div className='results-container'>
             <Typography className='title' variant='h3'>Autores</Typography>
