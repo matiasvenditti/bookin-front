@@ -25,6 +25,7 @@ import ReviewCard from "../../../components/Cards/ReviewCard/ReviewCard";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
+import CreateReview from "../../review/CreateReview/CreateReview";
 
 
 interface BookViewProps {
@@ -260,6 +261,11 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         </Grid>
 
                     </Grid>
+                    <div>
+                        <CreateReview
+                        book={this.state.data}
+                        />
+                    </div>
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container

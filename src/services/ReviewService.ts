@@ -5,7 +5,8 @@ import {baseURL} from "./EnvironmentService";
 import {ReviewWithUser} from "../model/ReviewWithUser";
 import ResponseDelete from "../model/responses/ResponseDelete";
 import {ReviewWithBookDTO} from "../model/Review";
-
+import { NewReview } from "../model"
+import { Review } from "../model/Review"
 
 class ReviewService {
 
@@ -19,6 +20,10 @@ class ReviewService {
 
     static deleteReview = (reviewID: number): Promise<AxiosResponse<ResponseDelete>> => {
         return instance.delete<ResponseDelete>(`${baseURL}/reviews/${reviewID}`)
+    }
+
+    static createReview = (review: NewReview): Promise<AxiosResponse<Review>> =>{
+        return instance.post<Review>(`${baseURL}/reviews`, review)
     }
 
 
