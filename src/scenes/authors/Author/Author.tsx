@@ -6,7 +6,7 @@ import './Author.css'
 import Loader from "../../../components/Loader/Loader";
 import DeleteAuthorModal from "./DeleteAuthorModal";
 import { RequestStatus } from "../../../model/consts/RequestStatus";
-import {AuthorsService, AuthService, BooksService} from "../../../services";
+import {AuthorsService, AuthService} from "../../../services";
 import { Book } from "../../../model";
 
 
@@ -83,7 +83,7 @@ class Author extends React.Component<AuthorProps, AuthorState> {
             .then((response: any) => {
                 this.setState({...this.state, data: response[0].data, books: response[1].data, getAuthorDataStatus: RequestStatus.SUCCESS });
             })
-            .catch((error: any) => {
+            .catch(() => {
                 this.props.getAuthorDataErrorCallback();
                 this.props.getAuthorDataErrorCallback();
                 this.setState({ ...this.state, getAuthorDataStatus: RequestStatus.ERROR });
