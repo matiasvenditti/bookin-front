@@ -147,6 +147,7 @@ class Book extends React.Component<BookProps, BookState> {
                 <div>
                     <Typography align='center' variant='subtitle1'> <Loader/> </Typography>
                 </div>
+
             );
         }
         return (
@@ -162,8 +163,9 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     renderButtons() {
-        const {isAdmin} = this.state;
+        const {isAdmin, authors} = this.state;
         if (isAdmin)
+            console.log(authors.length);
             return (
                 <div className="button-container">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">

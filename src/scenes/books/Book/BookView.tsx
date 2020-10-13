@@ -43,7 +43,7 @@ interface BookViewState {
     currentUser: User,
     isAdmin: boolean,
     showDelete: boolean,
-    currentId:number,
+    currentId: number,
     reviewDeleteStatus: RequestStatus,
 }
 
@@ -64,14 +64,13 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             authors: props.authors,
             isAdmin: props.isAdmin,
             reviews: props.reviews,
-            showDelete:false,
-            reviewDeleteStatus:RequestStatus.NONE,
-            currentId:0,
+            showDelete: false,
+            reviewDeleteStatus: RequestStatus.NONE,
+            currentId: 0,
 
         }
     }
 
-    handleDelete = () => this.setState({showDelete: true});
     handleConfirmDelete = () => this.deleteReview(this.state.currentId);
     handleDeleteCancel = () => this.setState({showDelete: false});
 
@@ -105,6 +104,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         const {data, authors, reviews} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
+
 
         if (error) {
             return (
@@ -168,7 +168,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                 variant='h4'
                                                 style={{fontWeight: "bold", color: "darkgray"}}>Autores </Typography>
                                     <List style={{backgroundColor: '#f6f6f7', padding: 0, margin: '8px 0'}}>
-                                        {authors.map((item, i) => {
+
+                                        {authors.length > 0 ? authors.map((item, i) => {
                                             const authorData = (
                                                 <Typography
                                                     variant="h6"
@@ -183,34 +184,69 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                 </Typography>
                                             );
 
+                                            const authorList = (
+                                                <ListItem button component={Link}
+                                                          href={`/authors/${item.id}`}>
+                                                    <Badge
+                                                        color='primary'
+                                                        overlap='circle'
+                                                        anchorOrigin={{
+                                                            vertical: 'bottom',
+                                                            horizontal: 'right',
+                                                        }}
+                                                        style={{
+                                                            marginRight: 15,
+                                                        }}
+                                                        className={'avatar-image'}
+                                                    >
+                                                        <Avatar
+                                                            src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
+                                                    </Badge>
+                                                    <ListItemText
+                                                        primary={authorData}
+                                                        key={'text-' + i}
+                                                    />
+                                                </ListItem>
+                                            )
+
                                             return (
                                                 <div key={'author-view-item-' + i}>
-                                                    <ListItem button component={Link}
-                                                              href={`/authors/${item.id}`}>
-                                                        <Badge
-                                                            color='primary'
-                                                            overlap='circle'
-                                                            anchorOrigin={{
-                                                                vertical: 'bottom',
-                                                                horizontal: 'right',
-                                                            }}
-                                                            style={{
-                                                                marginRight: 15,
-                                                            }}
-                                                            className={'avatar-image'}
-                                                        >
-                                                            <Avatar
-                                                                src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
-                                                        </Badge>
-                                                        <ListItemText
-                                                            primary={authorData}
-                                                            key={'text-' + i}
-                                                        />
-                                                    </ListItem>
+                                                    {authorList}
                                                     {(i !== authors.length - 1) && <Divider key={'divider-' + i}/>}
                                                 </div>
                                             )
-                                        })}
+                                        }) : <div key={'author-view-item'}>
+                                            <ListItem button>
+                                                <Badge
+                                                    color='primary'
+                                                    overlap='circle'
+                                                    anchorOrigin={{
+                                                        vertical: 'bottom',
+                                                        horizontal: 'right',
+                                                    }}
+                                                    style={{
+                                                        marginRight: 15,
+                                                    }}
+                                                    className={'avatar-image'}
+                                                >
+                                                    <Avatar
+                                                        src={dummyAvatar}/>
+                                                </Badge>
+                                                <ListItemText
+                                                    primary={
+                                                        <Typography
+                                                            variant="h6"
+                                                            style={{
+                                                                color: 'black',
+                                                                display: 'flex',
+                                                                alignItems: 'center'
+                                                            }}
+                                                        >
+                                                            Autor Anonimo
+                                                        </Typography>}
+                                                />
+                                            </ListItem>
+                                        </div>}
                                     </List>
                                 </div>
                             </Grid>
@@ -236,24 +272,24 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
 
                         {reviews.map((rev, j) => {
-                            const {isAdmin,currentUser,data} = this.state;
+                            const {isAdmin, currentUser, data} = this.state;
                             return (
                                 <Grid item xs sm={6} key={j}>
                                     <div key={'review-view-item-' + j}>
                                         <ReviewCard
-                                                    id={rev.id}
-                                                    stars={rev.stars}
-                                                    comment={rev.comment}
-                                                    reviewCreatorUserID={rev.userId}
-                                                    currentUser={currentUser}
-                                                    isAdmin={isAdmin}
-                                                    reviewBookId={data.id}
-                                                    reviewDisplayString={rev.userFirstName + ' ' + rev.userLastName}
-                                                    handleDelete={(reviewId:number) => {
-                                                        this.setState({ ...this.state, showDelete: true, currentId:reviewId, })
-                                                        }
-                                                    }
-                                                    handleEdit={() => null } //TODO
+                                            id={rev.id}
+                                            stars={rev.stars}
+                                            comment={rev.comment}
+                                            reviewCreatorUserID={rev.userId}
+                                            currentUser={currentUser}
+                                            isAdmin={isAdmin}
+                                            reviewBookId={data.id}
+                                            reviewDisplayString={rev.userFirstName + ' ' + rev.userLastName}
+                                            handleDelete={(reviewId: number) => {
+                                                this.setState({...this.state, showDelete: true, currentId: reviewId,})
+                                            }
+                                            }
+                                            handleEdit={() => null} //TODO
                                         />
                                     </div>
                                 </Grid>
