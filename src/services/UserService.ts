@@ -15,7 +15,7 @@ class UserService {
     
     // User API calls to our server separated from component logic.
     static getUserData(): Promise<AxiosResponse<User>> {
-        return instance.get(`${baseURL}/users/me`)
+        return instance.get<User>(`${baseURL}/users/me`)
     }
     
     /* Update User  */
