@@ -46,11 +46,19 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         const { photo, firstName, lastName, nationality, birthday } = this.state.data;
         const { error } = this.props;
         const books = this.props.books.sort((a, b) => b.stars - a.stars).slice(0, 4);
-        const listBooks = books.map((books, i) => (
+        const listBooks = books.length > 0 ? books.map((books, i) => (
             <Grid item xs={3} key={i}>
                 <BookDisplay book={books} crown={i === 0} author={`${firstName} ${lastName}`}/>
             </Grid>
-        ));
+        )) : <div>
+            <Typography
+                align='center'
+                color='primary'
+                variant='h6'
+            >
+                Este Autor no posee libros
+            </Typography>
+        </div>;
 
         if (error) {
             return (

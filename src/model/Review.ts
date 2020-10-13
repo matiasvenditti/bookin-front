@@ -6,12 +6,20 @@ export class Review {
     userId: number;
     bookId: number;
 
-    constructor(){
+    constructor() {
         this.id = 0;
         this.comment = '';
         this.stars = 0;
-        this.createdAt = new Date;
+        this.createdAt = new Date();
         this.userId = 0;
         this.bookId = 0;
     }
+}
+export interface ReviewWithBookDTO {
+    id: number,
+    stars: number,
+    comment: string,
+    bookId:number,
+    bookTitle:string,
+
 }

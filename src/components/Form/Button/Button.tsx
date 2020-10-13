@@ -13,15 +13,26 @@ interface ButtonProps {
 }
 
 export default class Button extends Component<ButtonProps> {
+
+    renderValue = () => {
+        const { title, loading, color } = this.props;
+        if (loading) {
+            if (color === 'primary') return <Loader mini color='secondary'/>
+            else return <Loader mini/>
+        } else {
+            return title;
+        }
+    }
+
     render() {
-        const { title, disabled, loading, variant, color } = this.props;
+        const { disabled, variant, color } = this.props;
         return (
             <MaterialButton
                 color={color || 'secondary'}
                 disabled={disabled}
                 onClick={this.props.onClick}
                 variant={variant}
-            >{loading ? <Loader mini /> : title}</MaterialButton>
+            >{this.renderValue()}</MaterialButton>
         )
     }
 }

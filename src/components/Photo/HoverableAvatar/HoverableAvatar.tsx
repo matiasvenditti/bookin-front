@@ -9,6 +9,7 @@ interface HoverableAvatarProps {
     src: any,
     id: string,
     maxSize: number,
+    loading: boolean,
     onChange(file: File): void,
     onLoadError(): void,
 }
@@ -40,25 +41,31 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         event.preventDefault();
         const { maxSize } = this.props;
         const file: File = event.target.files[0];
-        this.setState({ ...this.state, photoFile: file });
+        if (file === undefined) return;
         if (file.size > maxSize) {
             this.props.onLoadError();
         } else {
             let reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = () => this.setState({ ...this.state, photo: reader.result, modalOpen: true });
+            reader.onload = () => this.setState({
+                ...this.state,
+                photo: reader.result,
+                photoFile: file,
+                modalOpen: true
+            });
         }
-    }
+    };
 
     handleModalConfirm = () => {
         this.props.onChange(this.state.photoFile);
-        this.setState({ ...this.state, modalOpen: false });
+        this.setState({...this.state, modalOpen: false});
     }
 
     render() {
         const {
             src,
             id,
+            loading,
         } = this.props;
 
         return ([
@@ -92,6 +99,7 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
                 key={id + '-modal'}
                 open={this.state.modalOpen}
                 photo={this.state.photo}
+                loading={loading}
                 handleCancel={() => this.setState({ ...this.state, modalOpen: false })}
                 handleConfirm={this.handleModalConfirm}
             />,

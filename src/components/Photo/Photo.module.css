@@ -1,0 +1,15 @@
+.hoverableContainer {
+
+}
+
+.container {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;    
+}
+
+.container .photo {
+    width: 125px;
+    height: 125px;
+    margin-bottom: 16px;
+}

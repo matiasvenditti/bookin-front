@@ -1,6 +1,5 @@
 import React from "react";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
-import {BookID} from "../../../model";
 import {Button, Typography} from "@material-ui/core";
 import Loader from "../../../components/Loader/Loader";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
@@ -10,23 +9,29 @@ import {Book as BookModel} from '../../../model/Book';
 import BookView from "./BookView";
 import "./Book.css"
 import {UserRoles} from "../../../model/consts/Roles";
-import { AuthService, BooksService } from "../../../services";
-import { DeleteBookModal } from "./DeleteBookModal";
+import {AuthService, BooksService, UserService} from "../../../services";
+import {DeleteBookModal} from "./DeleteBookModal";
+import {ReviewWithUser} from "../../../model/ReviewWithUser";
+import ReviewService from "../../../services/ReviewService";
+
 
 
 interface BookProps extends RouteComponentProps<MatchParams> {
     deleteBookCallback(deleteBookStatus: RequestStatus): void,
-    getBookDataErrorCallback():void,
+
+    getBookDataErrorCallback(): void,
 }
 
 interface BookState {
     isAdmin: boolean,
+    currentUser: any,
     getBookDataStatus: RequestStatus,
     updateStatus: any,
     deleteStatus: any,
     showDelete: boolean,
     data: BookModel,
     authors: Author[],
+    reviews: ReviewWithUser[],
     error: any,
 }
 
@@ -50,6 +55,8 @@ class Book extends React.Component<BookProps, BookState> {
                 stars: 0,
             },
             authors: [],
+            reviews: [],
+            currentUser: [],
             showDelete: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
@@ -64,29 +71,36 @@ class Book extends React.Component<BookProps, BookState> {
     componentDidUpdate(prevProps: any) {
         console.log('component did update', 'prevProps', prevProps.match.params.id, 'props', this.props.match.params.id, prevProps.match.params.id !== this.props.match.params.id)
         if (prevProps.match.params.id !== this.props.match.params.id) {
-            
+
             this._bookDataRequest();
         }
     }
 
+
     _bookDataRequest = () => {
         const id = parseInt(this.props.match.params.id);
         this.setState({...this.state, getBookDataStatus: RequestStatus.LOADING});
-        
+
         const result: Promise<any> = Promise.all([
             BooksService.getBookData(id),
-            BooksService.getBookAuthors(id)
+            BooksService.getBookAuthors(id),
+            ReviewService.getReviews(id),
+            UserService.getUserData()
         ]);
         result
             .then((response) => this.setState({
                 data: response[0].data,
                 authors: response[1].data,
-                getBookDataStatus: RequestStatus.SUCCESS
+                reviews: response[2].data,
+                currentUser: response[3].data,
+                getBookDataStatus: RequestStatus.SUCCESS,
+
             }))
             .catch((error: any) => {
                 this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error})
                 this.props.getBookDataErrorCallback();
             });
+
     };
 
 
@@ -94,7 +108,7 @@ class Book extends React.Component<BookProps, BookState> {
 
     handleDelete = () => this.setState({showDelete: true});
     handleConfirmDelete = () => this.deleteBook(this.state.data.id);
-    handleDeleteCancel  = () => this.setState({showDelete: false});
+    handleDeleteCancel = () => this.setState({showDelete: false});
     deleteBook = (id: number) => {
         this.setState({deleteStatus: RequestStatus.LOADING, error: null});
         BooksService.deleteBook(id)
@@ -127,26 +141,31 @@ class Book extends React.Component<BookProps, BookState> {
      */
 
     renderBook() {
-        const {data, getBookDataStatus, authors} = this.state;
+        const {data, getBookDataStatus, authors, reviews, currentUser, isAdmin} = this.state;
         if (getBookDataStatus === RequestStatus.LOADING) {
             return (
                 <div>
                     <Typography align='center' variant='subtitle1'> <Loader/> </Typography>
                 </div>
+
             );
         }
         return (
             <BookView
                 data={data}
+                currentUser={currentUser}
+                isAdmin={isAdmin}
                 authors={authors}
+                reviews={reviews}
                 error={getBookDataStatus === RequestStatus.ERROR}
             />
         );
     }
 
     renderButtons() {
-        const {isAdmin} = this.state;
+        const {isAdmin, authors} = this.state;
         if (isAdmin)
+            console.log(authors.length);
             return (
                 <div className="button-container">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">

@@ -1,101 +1,78 @@
 // filters
-import React, { useState } from 'react';
+import React from 'react';
 import { IconButton, Typography } from '@material-ui/core';
-import './Filters.css';
+import classes from './Filters.module.css';
 // tag
 import CloseIcon from '@material-ui/icons/Close';
-import { Checkbox, Select } from '../../../components/Form';
+import { Filters as FiltersModel } from '../../../model/results/Filters';
+import { MultiCheckbox } from '../../../components/Form/MultiCheckbox/MultiCheckbox';
+import { SortBy } from '../../../model/results/SortBy';
+import { RequestStatus } from '../../../model/consts/RequestStatus';
+import { Select } from '../../../components/Form';
 
-
-
-const allSortBy = [
-    'Alfabético - A-Z',
-    'Alfabético - Z-A',
-    'Fecha de publicación - viejo primero',
-    'Fecha de publicación - nuevo primero',
-    'Estrellas - mayor primero',
-    'Estrellas - menor primero'
-];
-const allCountries = ['Argentino', 'Español', 'Uruguayo', 'Peruano'];
-const allGenres = ['Fiction', 'Romance'];
-const allLanguages = ['Español', 'Inglés', 'Japonés', 'Italiano'];
-
-const initialMockData = {
-    tags: ['or', 'Español'],
-    sortBy: 'Alfabético - A-Z',
-    onlyBooks: false,
-    onlyAuthors: false,
-    countries: ['Argentino', 'Peruano'],
-    genres: ['Fiction', 'Romance'],
-    languages: ['Español', 'Japonés'],
-}
 
 interface FiltersProps {
-
+    filters: FiltersModel,
+    loading: boolean,
+    onSubmit(filters: FiltersModel): void,
 }
 
 const Filters = (props: FiltersProps) => {
-    const [mockData, setMockData] = useState(initialMockData);
     const {
-        tags,
-        // sortBy,
-        onlyBooks,
-        onlyAuthors,
-        countries,
-        genres,
-        // languages,
-    } = mockData;
+        filters,
+        loading,
+    } = props;
 
-    const handleTagChange = (value: string) => {
-        console.log('handle tag', value)
-        // props.onChangeFilters() // -> re-sends request to update results
-    }
+    const handleChangeFilters = (id: keyof FiltersModel, value: any) => {
+        // const key = Object.keys(filters).find((key) => key === id) || 'query';
+        if (filters[id].includes(value)) {
+            console.log(id, value, '[-]');
+        } else {
+            console.log(id, value, '[+]');
+        }
+    };
 
-    const handleChangeSortBy = (value: string) => {
-        console.log('changing sort by', value);
-        // props.onChangeFilters() // -> re-sends request to update results
-    }
-
-    const handleCheckboxChange = (onlyBooks: boolean, onlyAuthors: boolean) => {
-        console.log('changing checkboxes', onlyBooks, onlyAuthors);
-        // props.onChangeFilters() // -> re-sends request to update results
-    }
-
-    const handleChangeCountries = (value: string) => {
-        console.log('changing countries', value);
-        // props.onChangeFilters() // -> re-sends request to update results
-    }
-
-    const handleChangeGenres = (value: string) => {
-        console.log('changing countries', value);
-        // props.onChangeFilters() // -> re-sends request to update results
-    }
-
-    const handleChangeLanguages = (value: string) => {
-        console.log('changing countries', value);
-        // props.onChangeFilters() // -> re-sends request to update results
-    }
+    const getTags = () => {
+        let results: {id: keyof FiltersModel, value: string}[] = [];
+        if (props.filters.text) results.push({id: 'text', value: props.filters.text});
+        results.push({id: 'text', value: 'asdasd'});
+        results = results.concat(
+            ...props.filters.nationalities.map((nationality: string) => ({id: 'nationalities',  value: nationality})) as {id: keyof FiltersModel, value: string}[],
+            ...props.filters.bookGenres.map((bookGenre: string) => ({id: 'bookGenres',  value: bookGenre})) as {id: keyof FiltersModel, value: string}[],
+            ...props.filters.languages.map((language: string) => ({id: 'languages',  value: language})) as {id: keyof FiltersModel, value: string}[],
+        )
+        return results;
+    };
 
     return (
-        <div className='filters-container'>
-            <div className='tags-container'>
-                {tags.map((tag: string, i: number) => (
+        <div className={classes.filtersContainer}>
+            <div className={classes.tagsContainer}>
+                {getTags().map((tag) => (
                     <Tag
-                        onClose={() => handleTagChange(tag)}
-                        id={'tags-tag' + i}
-                        value={tag}
+                        onClose={() => handleChangeFilters(tag.id, tag.value)}
+                        id={tag.id}
+                        value={tag.value}
+                        loading={loading}
                     />
                 ))}
             </div>
             <Typography className='subtitle' variant='h5'>Ordenar por</Typography>
             <Select
-                id='sort-by-select'
-                value='Alfabético - A-Z'
-                options={allSortBy}
-                onChange={(id, type, value) => handleChangeSortBy(value)}
+                label=''
+                id='sortBy'
+                value={filters.sortBy}
+                options={Object.values(SortBy)}
+                disabled={loading}
+                onChange={(id, type, value) => handleChangeFilters('sortBy', value)}
             />
             <Typography className='subtitle' variant='h5'>Filtrar por</Typography>
-            <Checkbox
+            {/* <Select
+                id='sort-by-select'
+                value='Alfabético - A-Z'
+                options={Object.values(SortBy)}
+                onChange={(id, type, value) => handleChangeSortBy(value)}
+            /> */}
+            {/* <Checkbox
                 id='only-books-checkbox'
                 label='Solo libros'
                 checked={onlyBooks}
@@ -112,9 +89,9 @@ const Filters = (props: FiltersProps) => {
                 error={false}
                 errorText={''}
                 onChange={(id, type, value) => handleCheckboxChange(onlyBooks, value)}
-            />
+            /> */}
             <Typography className='subtitle' variant='h5'>Nacionalidad</Typography>
-            {allCountries.map((country, i) => (
+            {/* {allCountries.map((country, i) => (
                 <div className='country-checkbox-container'>
                     <Checkbox
                         id={'country-checkbox-checkbox-' + i}
@@ -140,9 +117,9 @@ const Filters = (props: FiltersProps) => {
                     />
                     <Typography>{genre}</Typography>
                 </div>
-            ))}
+            ))} */}
             <Typography className='subtitle' variant='h5'>Idiomas</Typography>
-            {allLanguages.map((language, i) => (
+            {/* {allLanguages.map((language, i) => (
                 <div className='language-checkbox-container'>
                     <Checkbox
                         id={'language-checkbox-checkbox-' + i}
@@ -154,7 +131,7 @@ const Filters = (props: FiltersProps) => {
                     />
                     <Typography>{language}</Typography>
                 </div>
-            ))}
+            ))} */}
 
         </div>
     )
@@ -165,15 +142,16 @@ interface TagProps {
     onClose(): void,
     id: string,
     value: string,
+    loading: boolean,
 }
 
 const Tag = (props: TagProps) => {
-    const { id, value } = props
+    const { id, value, loading } = props
     return (
-        <div className='tag-container' key={id}>
+        <div className={classes.tagContainer} key={id}>
             <Typography>{value}</Typography>
             <IconButton size='small'>
-                <CloseIcon onClick={props.onClose} />
+                <CloseIcon onClick={loading ? undefined : props.onClose} />
             </IconButton>
         </div>
     );
