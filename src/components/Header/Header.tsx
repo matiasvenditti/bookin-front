@@ -115,7 +115,6 @@ class Header extends React.Component<any, HeaderState>{
         ])
         results
             .then((response) => {
-                console.log('books and authors', response);
                 this.setState({
                     ...this.state,
                     searchBooksStatus: RequestStatus.SUCCESS,

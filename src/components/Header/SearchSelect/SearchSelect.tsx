@@ -39,7 +39,7 @@ const SearchSelect = (props: SearchSelectProps) => {
         options,
     } = props;
     const [focused, setFocused] = useState(false);
-    // console.log('render search select', focused);
+    
     const getOptionValue = (option: ValueType) => {
         if (option.type === 'Libros') {
             return option.value.title;

@@ -66,6 +66,15 @@ class AuthorsService {
     static searchAuthorsSimple = (query: string): Promise<AxiosResponse<Author[]>> => {
         return instance.get<Author[]>(`${baseURL}/authors/search?name=${query}`)
     }
+    // filters wont be used for author searching, only text query
+    // static searchAuthors = (query: string | Filters): Promise<AxiosResponse<Author[]>> => {
+    //     if (typeof query === 'string') {
+    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
+    //     } else {
+    //         // TODO endpoint for filters
+    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
+    //     }
+    // }
 }
 
 

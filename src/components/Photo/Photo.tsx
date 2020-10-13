@@ -42,7 +42,7 @@ export const Photo = (props: PhotoProps) => {
         // }
         resizeFileBlob(file)
             .then((response) => {
-                // console.log(response);
+                console.log(response);
             })
     };
 
