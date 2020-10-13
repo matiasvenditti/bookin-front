@@ -35,6 +35,7 @@ interface BookViewProps {
     currentUser: User,
     isAdmin: boolean,
     error: boolean,
+    updateCallback(r: RequestStatus): void,
 }
 
 interface BookViewState {
@@ -264,6 +265,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                     <div>
                         <CreateReview
                         book={this.state.data}
+                        updateCallback={this.props.updateCallback}
                         />
                     </div>
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>

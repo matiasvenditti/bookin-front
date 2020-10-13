@@ -18,7 +18,7 @@ import ReviewService from "../../../services/ReviewService";
 
 interface BookProps extends RouteComponentProps<MatchParams> {
     deleteBookCallback(deleteBookStatus: RequestStatus): void,
-
+    updateCallback(r: RequestStatus): void,
     getBookDataErrorCallback(): void,
 }
 
@@ -158,6 +158,7 @@ class Book extends React.Component<BookProps, BookState> {
                 authors={authors}
                 reviews={reviews}
                 error={getBookDataStatus === RequestStatus.ERROR}
+                updateCallback={this.props.updateCallback}
             />
         );
     }
