@@ -78,15 +78,11 @@ class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>
         // const id = this.state.user.id;
         // const cheapToString = '' + id;
         return (
-            <div>
-                <div>
-                    <CreateReviewForm
-                        onSubmit={this.handleSubmit}
-                        user={this.state.user}
-                        book={this.props.book}
-                    />
-                </div>
-            </div>
+            <CreateReviewForm
+                onSubmit={this.handleSubmit}
+                user={this.state.user}
+                book={this.props.book}
+            />
         )
     }
 }

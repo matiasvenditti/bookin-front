@@ -1,9 +1,10 @@
-.button {
-    position: relative;
-    margin-left: 91.95%;
-}
-
 .rating {
     position: relative;
-    margin-right: 93%
+    width: 100%;
+    display: block;  
+    margin-bottom: 16px;  
+}
+
+.padding{
+    padding: 8px 16px;
 }
