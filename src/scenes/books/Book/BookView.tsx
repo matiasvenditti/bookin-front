@@ -116,12 +116,14 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         const date = data.date ? data.date : new Date().toString();
 
         const createReview = !this.hasReview() ?
-        <div>
-            <CreateReview
-            book={this.state.data}
-            updateCallback={this.props.updateCallback}
-            />
-        </div> :
+        <Grid item xs sm={6}>    
+            <div>
+                <CreateReview
+                book={this.state.data}
+                updateCallback={this.props.updateCallback}
+                />
+            </div>
+        </Grid>:
         null;
 
         if (error) {
@@ -278,7 +280,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         </Grid>
 
                     </Grid>
-                    {createReview}
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container
@@ -289,6 +290,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         className='reviews-container'
                     >
 
+                        {createReview}
 
                         {reviews.map((rev, j) => {
                             const {isAdmin, currentUser, data} = this.state;

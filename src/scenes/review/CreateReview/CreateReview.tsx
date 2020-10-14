@@ -80,7 +80,6 @@ class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>
         return (
             <div>
                 <div>
-                    <Typography align='left' >Escribí una reseña</Typography>
                     <CreateReviewForm
                         onSubmit={this.handleSubmit}
                         user={this.state.user}
