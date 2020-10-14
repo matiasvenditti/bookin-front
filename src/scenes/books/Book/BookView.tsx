@@ -26,8 +26,6 @@ import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
 import CreateReview from "../../review/CreateReview/CreateReview";
-import { UserService } from "../../../services";
-import { AxiosResponse } from "axios";
 
 
 interface BookViewProps {
@@ -105,11 +103,11 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         )
     }
     
-    findReview() {
+    hasReview() {
         const reviews = this.props.reviews;
         console.log(this.props.user)
         console.log(this.props.reviews)
-        return reviews.some(review => review.userId == this.props.user.id);
+        return reviews.some(review => review.userId === this.props.user.id);
     }
     
     render() {
@@ -117,14 +115,14 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
-        const createReview = this.findReview() ?
+        const createReview = !this.hasReview() ?
         <div>
             <CreateReview
             book={this.state.data}
             updateCallback={this.props.updateCallback}
             />
         </div> :
-        <div></div>;
+        null;
 
         if (error) {
             return (
