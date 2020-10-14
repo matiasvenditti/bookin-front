@@ -18,6 +18,8 @@ interface CreateReviewFormState{
 }
 
 export default class CreateReviewForm extends React.Component<CreateReviewFormProps, CreateReviewFormState>{
+
+    MAX_CHARACTERS: number = 1000;
     
     constructor(props: CreateReviewFormProps){
         super(props);
@@ -42,15 +44,13 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
     }
 
     handleInput = (id: string, type: string, value: string) => {
-        if (value.length <= 10000){
-            this.setState({
-                values: {
-                    ...this.state.values,
-                    [id]: { value, type, error: false, touched: true }
-                },
-            });
-        }
-        console.log(this.state.values.message)
+        const error = value.length > this.MAX_CHARACTERS;
+        this.setState({
+            values: {
+            ...this.state.values,
+            [id]: { value, type, error: error, touched: true }
+            },
+        });    
     } 
 
     handleRateChange = (value: number|null) => {
@@ -82,11 +82,11 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
                         value={this.state.values.message.value}
                         onChange={this.handleInput}
                         error={this.state.values.message.error}
-                        errorText={this.state.values.message.error ? 'Caracteres invalidos' : ''}
+                        errorText={this.state.values.message.error ? 'Excede el limite de caracteres' : ''}
                         required
                     />
                     <div className={classes.button}>
-                        <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.rating.touched)} onClick={this.handleSubmit} />
+                        <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.rating.touched) && !(this.state.values.message.error)} onClick={this.handleSubmit} />
                     </div>
                 </form>
             </Card>
