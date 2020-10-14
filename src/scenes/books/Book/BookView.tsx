@@ -26,6 +26,8 @@ import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
 import CreateReview from "../../review/CreateReview/CreateReview";
+import { UserService } from "../../../services";
+import { AxiosResponse } from "axios";
 
 
 interface BookViewProps {
@@ -36,6 +38,7 @@ interface BookViewProps {
     isAdmin: boolean,
     error: boolean,
     updateCallback(r: RequestStatus): void,
+    user: any,
 }
 
 interface BookViewState {
@@ -101,12 +104,27 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             />
         )
     }
-
+    
+    findReview() {
+        const reviews = this.props.reviews;
+        console.log(this.props.user)
+        console.log(this.props.reviews)
+        return reviews.some(review => review.userId == this.props.user.id);
+    }
+    
     render() {
         const {data, authors, reviews} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
+        const createReview = this.findReview() ?
+        <div>
+            <CreateReview
+            book={this.state.data}
+            updateCallback={this.props.updateCallback}
+            />
+        </div> :
+        <div></div>;
 
         if (error) {
             return (
@@ -262,12 +280,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         </Grid>
 
                     </Grid>
-                    <div>
-                        <CreateReview
-                        book={this.state.data}
-                        updateCallback={this.props.updateCallback}
-                        />
-                    </div>
+                    {createReview}
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container

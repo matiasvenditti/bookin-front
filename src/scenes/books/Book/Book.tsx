@@ -152,6 +152,7 @@ class Book extends React.Component<BookProps, BookState> {
         }
         return (
             <BookView
+                user={this.state.currentUser}
                 data={data}
                 currentUser={currentUser}
                 isAdmin={isAdmin}
