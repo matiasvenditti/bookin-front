@@ -69,7 +69,6 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     componentDidUpdate(prevProps: any) {
-        console.log('component did update', 'prevProps', prevProps.match.params.id, 'props', this.props.match.params.id, prevProps.match.params.id !== this.props.match.params.id)
         if (prevProps.match.params.id !== this.props.match.params.id) {
 
             this._bookDataRequest();
@@ -163,9 +162,8 @@ class Book extends React.Component<BookProps, BookState> {
     }
 
     renderButtons() {
-        const {isAdmin, authors} = this.state;
+        const {isAdmin  } = this.state;
         if (isAdmin)
-            console.log(authors.length);
             return (
                 <div className="button-container">
                     <ButtonGroup variant="contained" color="secondary" aria-label="contained primary button group">

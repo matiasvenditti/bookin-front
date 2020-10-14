@@ -5,6 +5,7 @@ import { EditVar } from '../../model/consts/EditVar';
 import { Button, Input, RadioGroup } from '../../components/Form';
 import { User } from '../../model';
 import { Typography } from '@material-ui/core';
+import { allGenders } from '../../utils/consts';
 
 
 interface ProfileEditProps {
@@ -157,12 +158,8 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         key='gender'
                         type='radio-group'
                         onChange={this.handleInput}
-                        value={this.state.values.gender.value}
-                        options={[
-                            { id: 'M', value: 'Hombre' },
-                            { id: 'F', value: 'Mujer' },
-                            { id: 'A', value: 'Anónimo' },
-                        ]}
+                        valueId={this.state.values.gender.value}
+                        options={allGenders}
                         error={this.state.values.gender.error}
                         errorText={'Elige un género'}
                     />

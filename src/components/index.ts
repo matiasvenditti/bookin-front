@@ -1,4 +1,4 @@
-import { AuthorCard, BookCard } from './Cards';
+import { AuthorCard } from './Cards';
 import Flag from './Flag/Flag';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
@@ -10,7 +10,6 @@ import Loader from './Loader/Loader';
 
 export {
     AuthorCard,
-    BookCard,
     Flag,
     Footer,
     Header,
