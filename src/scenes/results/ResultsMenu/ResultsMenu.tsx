@@ -60,13 +60,10 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     }
 
     const _searchRequest = (newFilters: FiltersModel) => {
-        // console.log('search request', newFilters)
         if (checkSearchIsEmpty(newFilters)) {
-            // console.log('search is empty')
             setEmptySearch(true);
             return;
         }
-        // console.log('search is NOT empty')
         setEmptySearch(false);
         setFilters(newFilters);
         setGetDataStatus(RequestStatus.LOADING);
@@ -85,7 +82,6 @@ const ResultsMenu = (props: ResultsMenuProps) => {
             });
     };
 
-    // console.log('render results menu', searchInput);
     return (
         <div className={classes.resultsMenuContainer}>
             <Filters

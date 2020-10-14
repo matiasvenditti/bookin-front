@@ -34,7 +34,6 @@ const CountriesSelect = (props: CountriesSelectProps) => {
     useEffect(() => {}, [value])
 
     if (multiple) {
-        // console.log('multiple country select', props);
         // value in AutoComplete is managed by 
         const myValue = allCountries.filter(country => value.includes(country.key) && country.key);
         return (
@@ -57,7 +56,6 @@ const CountriesSelect = (props: CountriesSelectProps) => {
                     )}                    
                     renderInput={(params) => <TextField {...params} label={placeholder || ''} variant='outlined'/>}
                     renderTags={(values: KeyValue[], getTagProps: any) => {
-                        console.log('tags', value);
                         return (
                             <div className=''>
                                 {values.map((item, i) => (

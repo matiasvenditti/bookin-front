@@ -93,7 +93,6 @@ const Results = (props: ResultsProps) => {
     }
 
     const renderBooks = () => {
-        // console.log('rendering books', props, sortedBooks.map((book, i) => ({book: book, status: booksAuthorsLoadingStatuses[i], authors: booksAuthors[i]})));
         if (loading) {
             return (
                 [1, 2, 3].map((i) => (
@@ -130,7 +129,6 @@ const Results = (props: ResultsProps) => {
         }    
     }
     
-    // console.log(Object.values(FilterBy), filterBy);
     if (emptySearch) {
         return (
             <div className={classes.resultsContainer}>
@@ -142,7 +140,6 @@ const Results = (props: ResultsProps) => {
     }
     switch (filterBy) {
         case FilterBy.libros:
-            // console.log('render results -> libros')
             return (
                 <div className={classes.resultsContainer}>
                     <Typography className={classes.title} variant='h3'>Libros</Typography>
@@ -150,7 +147,6 @@ const Results = (props: ResultsProps) => {
                 </div>
             );
         case FilterBy.autores:
-            // console.log('render results -> autores')
             return (
                 <div className={classes.resultsContainer}>
                     <Typography className={classes.title} variant='h3'>Autores</Typography>
@@ -158,7 +154,6 @@ const Results = (props: ResultsProps) => {
                 </div>
             );
         case FilterBy.ambos:
-            // console.log('render results -> ambos')
             return (
                 <div className={classes.resultsContainer}>
                     <Typography className={classes.title} variant='h3'>Autores</Typography>

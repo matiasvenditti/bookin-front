@@ -40,7 +40,6 @@ const Filters = (props: FiltersProps) => {
                     ...filters,
                     nationalities: filters.nationalities.filter((nationality) => nationality !== value)
                 });
-                // console.log('clicked nationality', id, value, filters.nationalities);
                 break;
             case 'bookGenres':
                 props.onChangeFilters({
@@ -114,7 +113,7 @@ const Filters = (props: FiltersProps) => {
                 value={filters.sortBy}
                 options={Object.values(SortBy)}
                 disabled={loading}
-                onChange={(id, type, value: SortBy) => {console.log('sortBy change', value); props.onChangeSortBy(value)}}
+                onChange={(id, type, value: SortBy) => props.onChangeSortBy(value)}
             />
             <Typography className={classes.subtitle} variant='h5'>Filtrar por</Typography>
             <RadioGroup
@@ -122,7 +121,7 @@ const Filters = (props: FiltersProps) => {
                 id='filter-by-radio-group'
                 key='filter-by-radio-group'
                 type='radio-group'
-                onChange={(id, type, value) => {console.log('filterBy change', value); props.onChangeFilterBy(value)}}
+                onChange={(id, type, value) => props.onChangeFilterBy(value)}
                 valueId={filters.filterBy}
                 options={allFilterBys}
                 error={false}
@@ -136,7 +135,7 @@ const Filters = (props: FiltersProps) => {
                 disabled={loading}
                 error={false}
                 errorText={''}
-                onChange={(id, type, value) => {console.log('nationality change', value); props.onChangeFilters({...filters, nationalities: value})}}
+                onChange={(id, type, value) => props.onChangeFilters({...filters, nationalities: value})}
                 multiple
             />
             <Typography className={classes.subtitle} variant='h5'>Géneros</Typography>
@@ -144,14 +143,14 @@ const Filters = (props: FiltersProps) => {
                 id='bookGenres'
                 options={allBookGenres}
                 selected={filters.bookGenres}
-                onChange={(id, type, value) => {console.log('genre change', value);props.onChangeFilters({...filters, bookGenres: value})}}
+                onChange={(id, type, value) => props.onChangeFilters({...filters, bookGenres: value})}
             />
             <Typography className={classes.subtitle} variant='h5'>Idiomas</Typography>
             <MultiCheckbox
                 id='languages'
                 options={allLanguages}
                 selected={filters.languages}
-                onChange={(id, type, value) => {console.log('language change', value);props.onChangeFilters({...filters, languages: value})}}
+                onChange={(id, type, value) => props.onChangeFilters({...filters, languages: value})}
             />
         </div>
     )

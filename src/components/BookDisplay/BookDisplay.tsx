@@ -44,12 +44,11 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                 language,
                 date,
                 photo,
-                stars,
+                // stars,
             } = this.props.book;
             const author = this.props.author;
             const {loading, loadingAuthors} = this.props;
 
-            // console.log('render results vriat', this.props.book);
             if (loading) {
                 return (
                     <Card className={classes.resultsVariantCard}>

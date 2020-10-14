@@ -18,8 +18,8 @@ const AuthorCard = (props: AuthorCardProps) => {
         id,
         firstName,
         lastName,
-        nationality,
-        birthday,
+        // nationality,
+        // birthday,
         photo,
     } = props.author;
     const { loading } = props;
