@@ -1,8 +1,10 @@
-import { FormControl, TextField, Typography } from '@material-ui/core';
+import { FormControl, IconButton, TextField, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import classes from './SearchSelect.module.css';
+import SearchIcon from '@material-ui/icons/Search';
+import SettingsIcon from '@material-ui/icons/Settings';
 
 
 // TODO: pasar a modelos correctamente
@@ -22,12 +24,13 @@ interface SearchSelectProps extends RouteComponentProps {
     // errorText: string,
     options: ValueType[],
     onQueryChange(value: string): void,
+    onEnter(value: string): void,
 }
 
 const SearchSelect = (props: SearchSelectProps) => {
     const {
         inputValue,
-        placeholder,
+        // placeholder,
         id,
         disabled,
         loading,
@@ -36,7 +39,7 @@ const SearchSelect = (props: SearchSelectProps) => {
         options,
     } = props;
     const [focused, setFocused] = useState(false);
-
+    
     const getOptionValue = (option: ValueType) => {
         if (option.type === 'Libros') {
             return option.value.title;
@@ -53,6 +56,11 @@ const SearchSelect = (props: SearchSelectProps) => {
         }
     }
 
+    const handleEnter = (value: string) => {
+        props.onEnter(value);
+        props.history.push('/results');
+    }
+
     return (
         <FormControl fullWidth color='secondary' variant='outlined' className={classes.searchSelectFormControl} >
             {/* TODO: InputLabel no anda correctamente, se renderiza superpuesto a Autocomplete */}
@@ -61,7 +69,7 @@ const SearchSelect = (props: SearchSelectProps) => {
                 color='primary'
                 disabled={disabled}
                 id={id}
-                // value note: empty NameCode to avoid undefined value and react 
+                // value note: empty KeyValue to avoid undefined value and react 
                 // giving controlled error
                 value={null}
                 inputValue={inputValue}
@@ -77,16 +85,40 @@ const SearchSelect = (props: SearchSelectProps) => {
                 renderInput={(params) => (
                     <TextField
                         {...params}
-                        label={focused ? '' : (placeholder || '')}
+                        InputProps={{
+                            ...params.InputProps,
+                            classes: {
+                                root: classes.textField,
+                                focused: classes.textField,
+                                notchedOutline: classes.textField
+                            }
+                        }}
+                        label={''}
                         variant='outlined'
+                        onKeyDown={(e: any) => {
+                            if (e.keyCode === 13 && e.target.value) {
+                                handleEnter(e.target.value);
+                                setFocused(false);
+                            }
+                        }}
                     />
                 )}
+                open={focused}
                 loadingText='Cargando...'
                 noOptionsText='No hay resultados'
+                clearOnEscape // ESC empties value
+                clearOnBlur={false}
                 onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} // fix feo pero funciona
                 onInputChange={(e, value: any) => props.onQueryChange(value)}
                 onChange={(e, value: any) => handleRedirect(value)}
             />
+            <IconButton
+                disabled={inputValue === ''}
+                onClick={() => handleEnter(inputValue)}
+            ><SearchIcon/></IconButton>
+            <IconButton onClick={() => handleEnter('')}>
+                <SettingsIcon/>
+            </IconButton>
         </FormControl>
     )
 }

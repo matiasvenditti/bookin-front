@@ -1,4 +1,4 @@
-import Gender from "../model/Gender";
+import {Gender} from "../model/Gender";
 
 
 const stringToGender = function(gender: string) {

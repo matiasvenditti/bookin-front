@@ -4,11 +4,12 @@
     height: 100%;
     max-width: 400px;
     padding: 20px;
+    padding-left: 40px;
     border-right: 1px solid #c2c2c2;
 }
 
 .filtersContainer .tagsContainer {
-    padding: 10px;
+    padding: 25px 10px 15px;
     display: flex;
     flex-flow: row wrap;
 }
@@ -16,7 +17,7 @@
 
 .filtersContainer  .subtitle {
     font-weight: 500;
-    margin: 15px 10px 10px;
+    margin: 25px -10px 10px;
 }
 
 .tagContainer {
@@ -27,10 +28,15 @@
     border: 1px solid #c2c2c2;
     border-radius: 10px;
     padding: 4px 15px;
-    margin: 0 0 5px 5px;
+    margin: 5px 0 5px 5px;
 }
 
-/* .filtersContainer .countryCheckboxContainer {
+.noTags {
+    font-weight: 100;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.filtersContainer .countryCheckboxContainer {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -50,4 +56,8 @@
 
 .formCheckboxContainer {
     margin-bottom: 0 !important;
-} */
+}
+
+.nationalitiesContainer {
+    
+}

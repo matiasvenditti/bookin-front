@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Checkbox, Input, RadioGroup, Button } from '../../../components/Form';
 import { NewUser } from '../../../model';
 import { RegisterFormModel } from '../../../model/Form/RegisterFormModel';
+import { Gender } from '../../../model/Gender';
+import { allGenders } from '../../../utils/consts';
 import validateInput from '../../../utils/validateInput';
 
 
@@ -23,7 +25,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                 firstName: { value: '', type: 'text', error: true, touched: false },
                 lastName: { value: '', type: 'text', error: true, touched: false },
                 email: { value: '', type: 'email', error: true, touched: false },
-                gender: { value: null, type: 'radio-group', error: true, touched: false },
+                gender: { value: Gender.A, type: 'radio-group', error: true, touched: false },
                 password: { value: '', type: 'password', error: true, touched: false },
                 acceptTerms: { value: false, type: 'accept-terms', error: true, touched: false },
             },
@@ -103,12 +105,8 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                     id='gender'
                     type='radio-group'
                     onChange={this.handleInput}
-                    value={this.state.values.gender.value}
-                    options={[
-                        { id: 'M', value: 'Hombre' },
-                        { id: 'F', value: 'Mujer' },
-                        { id: 'A', value: 'Anónimo' },
-                    ]}
+                    valueId={this.state.values.gender.value}
+                    options={allGenders}
                     error={this.state.values.gender.touched && this.state.values.gender.error}
                     errorText={'Elige un género'}
                     disabled={loading}

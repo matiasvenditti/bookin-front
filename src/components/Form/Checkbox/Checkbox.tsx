@@ -10,14 +10,15 @@ interface CheckboxProps {
     error: boolean,
     errorText: string,
     disabled?: boolean,
+    noStyle?: boolean,
     onChange(id: string, type: string, value: any): void,
 }
 
 export default class Checkbox extends Component<CheckboxProps> {
     render() {
-        const { id, label, checked, type, error, errorText, disabled } = this.props;
+        const { id, label, checked, type, error, errorText, disabled, noStyle } = this.props;
         return (
-            <div className='form-checkbox-container'>
+            <div className={noStyle ? '' : 'form-checkbox-container'}>
                 <FormControlLabel
                     label={label}
                     disabled={disabled}

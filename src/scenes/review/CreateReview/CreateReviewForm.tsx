@@ -1,12 +1,9 @@
-import { Card, Typography } from "@material-ui/core";
+import { Card } from "@material-ui/core";
 import { Rating } from "@material-ui/lab";
 import React from "react";
 import { Button, Input } from '../../../components/Form';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
 import { Book, NewReview, User } from "../../../model";
 import { ReviewFormModel } from "../../../model/Form/ReviewFormModel";
-import { validateInput } from "../../../utils";
-import { TheatersOutlined } from "@material-ui/icons";
 import classes from "./CreateReviewForm.module.css";
 
 
@@ -37,7 +34,7 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
         let values: NewReview = {
             comment: this.state.values.message.value,
             stars: this.state.values.rating.value,
-            created_at: new Date,
+            created_at: new Date(),
             user: this.props.user,
             book: this.props.book
         }

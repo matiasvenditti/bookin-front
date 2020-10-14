@@ -1,0 +1,10 @@
+.container {
+    display: flex;
+    flex-flow: column nowrap;
+    padding-left: 20px;
+}
+
+.checkboxContainer {
+    display: flex;
+    flex-flow: row nowrap;
+}

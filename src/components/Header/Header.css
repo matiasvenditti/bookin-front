@@ -37,7 +37,6 @@
     position: relative;
     left: 32px;
     border-radius: 5%;
-    box-shadow: 1px 2px 3px rgba(0,0,0,.5);
 }
 .inputInput {
     padding: auto;
@@ -70,6 +69,7 @@ div.buttons{
     align-items: center;
     text-align: center;
 }
+
 .title:hover {
     cursor: pointer;
 }

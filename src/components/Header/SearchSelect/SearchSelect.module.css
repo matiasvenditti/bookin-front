@@ -1,3 +1,15 @@
 .searchSelectFormControl {
     min-width: 400px !important;
+    display: flex !important;
+    flex-flow: row nowrap !important;
+    justify-content: space-between;
+}
+
+.searchSelectFormControl > div {
+    flex-grow: 1;
+}
+
+.searchSelectFormControl .textField {
+    border: none;
+    outline: none;
 }

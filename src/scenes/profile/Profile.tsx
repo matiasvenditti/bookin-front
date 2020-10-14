@@ -8,7 +8,7 @@ import {withRouter} from 'react-router-dom';
 import {RequestStatus} from '../../model/consts/RequestStatus';
 import {EditVar} from '../../model/consts/EditVar';
 import {User} from '../../model';
-import Gender from '../../model/Gender';
+import {Gender} from '../../model/Gender';
 import {SessionService, UserService} from '../../services';
 import HoverableAvatar from '../../components/Photo/HoverableAvatar/HoverableAvatar';
 import {dummyAvatar} from '../../assets';
@@ -55,7 +55,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 lastName: '',
                 email: '',
                 password: '',
-                gender: Gender.A,
+                gender: Gender.A    ,
                 photo: null,
             },
             deleteModalShow: false,

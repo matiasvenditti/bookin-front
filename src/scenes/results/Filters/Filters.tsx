@@ -1,20 +1,25 @@
 // filters
 import React from 'react';
-import { IconButton, Typography } from '@material-ui/core';
+import { Chip, Typography } from '@material-ui/core';
 import classes from './Filters.module.css';
 // tag
-import CloseIcon from '@material-ui/icons/Close';
 import { Filters as FiltersModel } from '../../../model/results/Filters';
-import { MultiCheckbox } from '../../../components/Form/MultiCheckbox/MultiCheckbox';
 import { SortBy } from '../../../model/results/SortBy';
-import { RequestStatus } from '../../../model/consts/RequestStatus';
-import { Select } from '../../../components/Form';
+import { CountriesSelect, RadioGroup, Select } from '../../../components/Form';
+import { ConstsUtils } from '../../../utils';
+import Flag from 'react-world-flags';
+import { FilterBy } from '../../../model/results/FilterBy';
+import { MultiCheckbox } from '../../../components/Form/MultiCheckbox/MultiCheckbox';
+import { allBookGenres, allFilterBys, allLanguages } from '../../../utils/consts';
+
 
 
 interface FiltersProps {
     filters: FiltersModel,
     loading: boolean,
-    onSubmit(filters: FiltersModel): void,
+    onChangeFilters(filters: FiltersModel): void,
+    onChangeSortBy(value: SortBy): void,
+    onChangeFilterBy(value: FilterBy): void,
 }
 
 const Filters = (props: FiltersProps) => {
@@ -23,139 +28,133 @@ const Filters = (props: FiltersProps) => {
         loading,
     } = props;
 
-    const handleChangeFilters = (id: keyof FiltersModel, value: any) => {
-        // const key = Object.keys(filters).find((key) => key === id) || 'query';
-        if (filters[id].includes(value)) {
-            console.log(id, value, '[-]');
-        } else {
-            console.log(id, value, '[+]');
+    const handleClickTag = (id: keyof FiltersModel, value: any) => {
+        switch (id) {
+            case 'text':
+                props.onChangeFilters({...filters, text: ''});
+                break;
+            // case sortBy: nope! passed with other props
+            // case filterBy: nope! passed with other props
+            case 'nationalities':
+                props.onChangeFilters({
+                    ...filters,
+                    nationalities: filters.nationalities.filter((nationality) => nationality !== value)
+                });
+                break;
+            case 'bookGenres':
+                props.onChangeFilters({
+                    ...filters,
+                    bookGenres: filters.bookGenres.filter((bookGenre) => bookGenre !== value)
+                });
+                break;
+            case 'languages':
+                props.onChangeFilters({
+                    ...filters,
+                    languages: filters.languages.filter((language) => language !== value)
+                });
+                break;
+            default: 
+                console.warn('handle change filters defaulted');
+                break; // do nothimg
         }
-    };
+    }
 
-    const getTags = () => {
-        let results: {id: keyof FiltersModel, value: string}[] = [];
-        if (props.filters.text) results.push({id: 'text', value: props.filters.text});
-        results.push({id: 'text', value: 'asdasd'});
-        results = results.concat(
+    const renderTags = () => {
+        let tags: {id: keyof FiltersModel, value: string}[] = [];
+        if (props.filters.text) tags.push({id: 'text', value: props.filters.text});
+        tags = tags.concat(
             ...props.filters.nationalities.map((nationality: string) => ({id: 'nationalities',  value: nationality})) as {id: keyof FiltersModel, value: string}[],
             ...props.filters.bookGenres.map((bookGenre: string) => ({id: 'bookGenres',  value: bookGenre})) as {id: keyof FiltersModel, value: string}[],
             ...props.filters.languages.map((language: string) => ({id: 'languages',  value: language})) as {id: keyof FiltersModel, value: string}[],
         )
-        return results;
+        if (tags.length === 0) {
+            return (
+                <div className={classes.tagsContainer}>
+                    <Typography className={classes.noTags}>No hay tags</Typography>
+                </div>
+            );
+        } else {
+            return (
+                <div className={classes.tagsContainer}>
+                    {tags.map((tag) => {
+                        if (tag.id === 'nationalities') {
+                            return (
+                                <Chip
+                                    key={'tags-chip-' + tag.id}
+                                    avatar={<Flag code={tag.value} />}
+                                    label={ConstsUtils.getCountryName(tag.value)}
+                                    onDelete={() => handleClickTag(tag.id, tag.value)}
+                                    style={{marginRight: '8px'}}
+                                />
+                            );
+                        } else {
+                            return (
+                                <Chip
+                                    key={'tags-chip-' + tag.id}
+                                    label={tag.value}
+                                    onDelete={() => handleClickTag(tag.id, tag.value)}
+                                    style={{marginRight: '8px'}}
+                                />
+                            );
+                        }
+                    })}
+                </div>
+            );
+        }
     };
 
     return (
         <div className={classes.filtersContainer}>
-            <div className={classes.tagsContainer}>
-                {getTags().map((tag) => (
-                    <Tag
-                        onClose={() => handleChangeFilters(tag.id, tag.value)}
-                        id={tag.id}
-                        value={tag.value}
-                        loading={loading}
-                    />
-                ))}
-            </div>
-            <Typography className='subtitle' variant='h5'>Ordenar por</Typography>
+            {renderTags()}
+            <Typography className={classes.subtitle} variant='h5'>Ordenar por</Typography>
             <Select
                 label=''
                 id='sortBy'
                 value={filters.sortBy}
                 options={Object.values(SortBy)}
                 disabled={loading}
-                onChange={(id, type, value) => handleChangeFilters('sortBy', value)}
+                onChange={(id, type, value: SortBy) => props.onChangeSortBy(value)}
             />
-            <Typography className='subtitle' variant='h5'>Filtrar por</Typography>
-            {/* <Select
-                id='sort-by-select'
-                value='Alfabético - A-Z'
-                options={Object.values(SortBy)}
-                onChange={(id, type, value) => handleChangeSortBy(value)}
-            /> */}
-            {/* <Checkbox
-                id='only-books-checkbox'
-                label='Solo libros'
-                checked={onlyBooks}
-                type='checkbox'
+            <Typography className={classes.subtitle} variant='h5'>Filtrar por</Typography>
+            <RadioGroup
+                title=''
+                id='filter-by-radio-group'
+                key='filter-by-radio-group'
+                type='radio-group'
+                onChange={(id, type, value) => props.onChangeFilterBy(value)}
+                valueId={filters.filterBy}
+                options={allFilterBys}
                 error={false}
                 errorText={''}
-                onChange={(id, type, value) => handleCheckboxChange(value, onlyAuthors)}
             />
-            <Checkbox
-                id='only-authors-checkbox'
-                label='Solo autores'
-                checked={onlyAuthors}
-                type='checkbox'
+            <Typography className={classes.subtitle} variant='h5'>Nacionalidad</Typography>
+            <CountriesSelect
+                value={filters.nationalities}
+                placeholder='Nacionalidad'
+                id='nationalities-select'
+                disabled={loading}
                 error={false}
                 errorText={''}
-                onChange={(id, type, value) => handleCheckboxChange(onlyBooks, value)}
-            /> */}
-            <Typography className='subtitle' variant='h5'>Nacionalidad</Typography>
-            {/* {allCountries.map((country, i) => (
-                <div className='country-checkbox-container'>
-                    <Checkbox
-                        id={'country-checkbox-checkbox-' + i}
-                        checked={countries.some((c) => c === country)}
-                        type='checkbox'
-                        error={false}
-                        errorText=''
-                        onChange={(id, type, value) => handleChangeCountries(value)}
-                    />
-                    <Typography>{country}</Typography>
-                </div>
-            ))}
-            <Typography className='subtitle' variant='h5'>Géneros</Typography>
-            {allGenres.map((genre, i) => (
-                <div className='genre-checkbox-container'>
-                    <Checkbox
-                        id={'genre-checkbox-checkbox-' + i}
-                        checked={genres.some((c) => c === genre)}
-                        type='checkbox'
-                        error={false}
-                        errorText=''
-                        onChange={(id, type, value) => handleChangeGenres(value)}
-                    />
-                    <Typography>{genre}</Typography>
-                </div>
-            ))} */}
-            <Typography className='subtitle' variant='h5'>Idiomas</Typography>
-            {/* {allLanguages.map((language, i) => (
-                <div className='language-checkbox-container'>
-                    <Checkbox
-                        id={'language-checkbox-checkbox-' + i}
-                        checked={countries.some((c) => c === language)}
-                        type='checkbox'
-                        error={false}
-                        errorText=''
-                        onChange={(id, type, value) => handleChangeLanguages(value)}
-                    />
-                    <Typography>{language}</Typography>
-                </div>
-            ))} */}
-
+                onChange={(id, type, value) => props.onChangeFilters({...filters, nationalities: value})}
+                multiple
+            />
+            <Typography className={classes.subtitle} variant='h5'>Géneros</Typography>
+            <MultiCheckbox
+                id='bookGenres'
+                options={allBookGenres}
+                selected={filters.bookGenres}
+                onChange={(id, type, value) => props.onChangeFilters({...filters, bookGenres: value})}
+            />
+            <Typography className={classes.subtitle} variant='h5'>Idiomas</Typography>
+            <MultiCheckbox
+                id='languages'
+                options={allLanguages}
+                selected={filters.languages}
+                onChange={(id, type, value) => props.onChangeFilters({...filters, languages: value})}
+            />
         </div>
     )
 }
-
-
-interface TagProps {
-    onClose(): void,
-    id: string,
-    value: string,
-    loading: boolean,
-}
-
-const Tag = (props: TagProps) => {
-    const { id, value, loading } = props
-    return (
-        <div className={classes.tagContainer} key={id}>
-            <Typography>{value}</Typography>
-            <IconButton size='small'>
-                <CloseIcon onClick={loading ? undefined : props.onClose} />
-            </IconButton>
-        </div>
-    );
-};
 
 
 export default Filters;

@@ -1,10 +1,8 @@
 import { Typography } from "@material-ui/core";
-import { TheatersOutlined } from "@material-ui/icons";
 import { AxiosResponse } from "axios";
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { Book, NewReview, User } from "../../../model";
-import { RequestStatus } from "../../../model/consts/RequestStatus";
 import { Review } from "../../../model/Review";
 import { UserService } from "../../../services";
 import ReviewService from "../../../services/ReviewService";
@@ -76,8 +74,8 @@ class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>
     }
 
     render() {
-        const id = this.state.user.id;
-        const cheapToString = '' + id
+        // const id = this.state.user.id;
+        // const cheapToString = '' + id;
         return (
             <div>
                 <div>

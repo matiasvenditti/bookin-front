@@ -102,11 +102,9 @@ class Router extends React.Component<any, RouterState> {
                     getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
                     searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
                     searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
-                    onSearch={
-                        (data: {books: BookModel[], authors: AuthorModel[]}, searchInput: string, updateStatus: RequestStatus) => (
-                            this.setState({...this.state, search: {...this.state.search, data, searchInput, updateStatus}})
-                        )
-                    }
+                    onSearch={(searchInput: string) => (
+                        this.setState({...this.state, search: {...this.state.search, searchInput}})
+                    )}
                 />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
@@ -170,7 +168,6 @@ class Router extends React.Component<any, RouterState> {
                     </PrivateRoute>
                     
                     <ResultsMenu
-                        data={search.data}
                         searchInput={search.searchInput}
                         updateStatus={search.updateStatus}
                         searchRequestErrorCallback={() => this.setState({...this.state, search: {...this.state.search, searchRequestError: true}})}
