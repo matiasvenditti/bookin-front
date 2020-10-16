@@ -47,6 +47,7 @@ interface RouterState {
     updateBookStatus: RequestStatus,
     getModifyBookDataError: boolean,
     redirectReload: boolean,
+    reviewStatus: RequestStatus,
     search: {
         data: {books: BookModel[], authors: AuthorModel[]}
         searchInput: string,
@@ -80,6 +81,7 @@ class Router extends React.Component<any, RouterState> {
             updateBookStatus: RequestStatus.NONE,
             getModifyBookDataError: false,
             redirectReload: false,
+            reviewStatus: RequestStatus.NONE,
             search: {
                 data: {books: [], authors: []},
                 searchInput: '',
@@ -155,6 +157,7 @@ class Router extends React.Component<any, RouterState> {
                         <Book
                             getBookDataErrorCallback={() => this.setState({ ...this.state, getBookDataError: true })}
                             deleteBookCallback={(deleteBookStatus: RequestStatus) => this.setState({ ...this.state, deleteBookStatus })}
+                            updateCallback={(reviewStatus: RequestStatus) => this.setState({ ...this.state, reviewStatus })}
                         />
                     </Route>
 
@@ -196,6 +199,7 @@ class Router extends React.Component<any, RouterState> {
             deleteBookStatus,
             updateBookStatus,
             getModifyBookDataError,
+            reviewStatus
         } = this.state;
         
         return (
@@ -227,6 +231,8 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(updateBookStatus === RequestStatus.SUCCESS,      'success', 'Se actualizaron los datos del libro exitosamente', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al actualizar los datos del libro, intente más tarde', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
                 {this.renderAToast(getModifyBookDataError,                           'error', '', () => this.setState({...this.state, getModifyBookDataError: false}))}
+                {this.renderAToast(reviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha creado la reseña exitosamente', () => this.setState({...this.state, reviewStatus: RequestStatus.NONE}))}
+                {this.renderAToast(reviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al crear la reseña', () => this.setState({...this.state, reviewStatus: RequestStatus.NONE}))}
             </div>
         );
     }

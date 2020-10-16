@@ -35,6 +35,8 @@ interface BookViewProps {
     currentUser: User,
     isAdmin: boolean,
     error: boolean,
+    updateCallback(r: RequestStatus): void,
+    user: any,
 }
 
 interface BookViewState {
@@ -100,12 +102,27 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             />
         )
     }
-
+    
+    hasReview() {
+        const reviews = this.props.reviews;
+        return reviews.some(review => review.userId === this.props.user.id);
+    }
+    
     render() {
         const {data, authors, reviews} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
+        const createReview = !this.hasReview() ?
+        <Grid item xs sm={6}>    
+            <div>
+                <CreateReview
+                book={this.state.data}
+                updateCallback={this.props.updateCallback}
+                />
+            </div>
+        </Grid>:
+        null;
 
         if (error) {
             return (
@@ -261,11 +278,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         </Grid>
 
                     </Grid>
-                    <div>
-                        <CreateReview
-                        book={this.state.data}
-                        />
-                    </div>
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container
@@ -276,6 +288,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         className='reviews-container'
                     >
 
+                        {createReview}
 
                         {reviews.map((rev, j) => {
                             const {isAdmin, currentUser, data} = this.state;
