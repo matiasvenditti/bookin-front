@@ -127,6 +127,7 @@ const Filters = (props: FiltersProps) => {
                 options={allFilterBys}
                 error={false}
                 errorText={''}
+                column
             />
             <Typography className={classes.subtitle} variant='h5'>Nacionalidad</Typography>
             <CountriesSelect

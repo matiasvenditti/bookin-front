@@ -84,21 +84,23 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     };
 
     return (
-        <div className={classes.resultsMenuContainer}>
-            <Filters
-                filters={filters}
-                loading={updateStatus === RequestStatus.LOADING}
-                onChangeFilters={(filters: FiltersModel) => _searchRequest(filters)}
-                onChangeSortBy={(sortBy: SortBy) => setFilters({...filters, sortBy})}
-                onChangeFilterBy={(filterBy: FilterBy) => setFilters({...filters, filterBy})}
-            />
-            <Results
-                emptySearch={emptySearch}
-                sortBy={filters.sortBy}
-                filterBy={filters.filterBy}
-                data={data}
-                loading={getDataStatus === RequestStatus.LOADING}
-            />
+        <div className='route-container'>
+            <div className={classes.resultsMenuContainer}>
+                <Filters
+                    filters={filters}
+                    loading={updateStatus === RequestStatus.LOADING}
+                    onChangeFilters={(filters: FiltersModel) => _searchRequest(filters)}
+                    onChangeSortBy={(sortBy: SortBy) => setFilters({...filters, sortBy})}
+                    onChangeFilterBy={(filterBy: FilterBy) => setFilters({...filters, filterBy})}
+                />
+                <Results
+                    emptySearch={emptySearch}
+                    sortBy={filters.sortBy}
+                    filterBy={filters.filterBy}
+                    data={data}
+                    loading={getDataStatus === RequestStatus.LOADING}
+                />
+            </div>
         </div>
     )
 }

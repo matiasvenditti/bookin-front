@@ -1,7 +1,5 @@
 .resultsMenuContainer {
-    /* width: 100%; */
-    min-height: calc(100vh - 64px - 44px);
+    width: 100%;
     display: flex;
-    /* flex: 1; */
     flex-flow: row nowrap;
 }
