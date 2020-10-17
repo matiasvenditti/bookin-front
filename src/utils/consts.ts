@@ -14,23 +14,37 @@ export const allFilterBys = [
     {key: FilterBy.ambos, value: 'Ambos'},
 ];
 
-export const allLanguages: string[] = ['Español', 'Inglés'];
-
-export const allBookGenres: string[] = [
-    'Aventura',
-    'Acción',
-    'Autoayuda',
-    'Biografías',
-    'Ciencia Ficción',
-    'Educativos',
-    'Fantasia',
-    'Infantiles',
-    'Novelas románticas',
-    'Poesías',
-    'Policiales',
-    'Terror',
+export const allSortBys = [
+    {key: 'alphabeticAsc', value: 'Alfabético - A-Z'},
+    {key: 'alphabeticDes', value: 'Alfabético - Z-A'},
+    {key: 'publicationDateAsc', value: 'Fecha de publicación - viejo primero'},
+    {key: 'publicationDateDes', value: 'Fecha de publicación - nuevo primero'},
+    {key: 'starsAsc', value: 'Estrellas - menor primero'},
+    {key: 'starsDes', value: 'Estrellas - mayor primero'},
 ];
 
+// Note: key follows ISO 639-1 Code
+export const allLanguages: KeyValue[] = [
+    {key: 'es', value: 'Español'},
+    {key: 'en', value: 'Inglés'},
+];
+
+export const allBookGenres: KeyValue[] = [
+    {key: 'adventure', value: 'Aventura'},
+    {key: 'action', value: 'Acción'},
+    {key: 'selfHelp', value: 'Autoayuda'},
+    {key: 'biography', value: 'Biografías'},
+    {key: 'scienceFiction', value: 'Ciencia Ficción'},
+    {key: 'educational', value: 'Educativos'},
+    {key: 'fantasy', value: 'Fantasia'},
+    {key: 'children', value: 'Infantiles'},
+    {key: 'romanticNovel', value: 'Novelas románticas'},
+    {key: 'poem', value: 'Poesías'},
+    {key: 'police', value: 'Policiales'},
+    {key: 'terror', value: 'Terror'},
+];
+
+// Note: no reason for inverted key and value
 export const allCountries: KeyValue[] = [
     {value: "Afganistán", key: "AF"},
     {value: "Albania", key: "AL"},

@@ -9,6 +9,7 @@ import { BookFormModel } from '../../../model/Form/BookFormModel';
 import { UpdateBook } from '../../../model/UpdateBook';
 import { Author } from '../../../model/Author';
 import { Book } from '../../../model';
+import { allLanguages } from '../../../utils/consts';
 
 
 interface BookFormState {
@@ -154,7 +155,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                             label='Idioma'
                             id='language'
                             value={this.state.values.language.value}
-                            options={['Español', 'Inglés']}
+                            options={allLanguages}
                             onChange={this.handleInput}
                         />
                         <DatePicker

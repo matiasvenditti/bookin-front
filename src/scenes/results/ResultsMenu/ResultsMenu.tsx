@@ -45,7 +45,7 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     const [emptySearch, setEmptySearch] = useState(searchInput === '');
 
     useEffect(() => {
-        if (searchInput !== '') _searchRequest({...filters, text: searchInput});
+        if (searchInput !== '') _searchRequest({...initialFilters, text: searchInput});
     }, [props.searchInput]);
     
     const checkSearchIsEmpty = (newFilters: FiltersModel) => {
@@ -62,6 +62,7 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     const _searchRequest = (newFilters: FiltersModel) => {
         if (checkSearchIsEmpty(newFilters)) {
             setEmptySearch(true);
+            setFilters(newFilters);
             return;
         }
         setEmptySearch(false);

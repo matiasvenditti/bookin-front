@@ -10,7 +10,8 @@ import { ConstsUtils } from '../../../utils';
 import Flag from 'react-world-flags';
 import { FilterBy } from '../../../model/results/FilterBy';
 import { MultiCheckbox } from '../../../components/Form/MultiCheckbox/MultiCheckbox';
-import { allBookGenres, allFilterBys, allLanguages } from '../../../utils/consts';
+import { allBookGenres, allFilterBys, allLanguages, allSortBys } from '../../../utils/consts';
+import { KeyValue } from '../../../model';
 
 
 
@@ -28,8 +29,8 @@ const Filters = (props: FiltersProps) => {
         loading,
     } = props;
 
-    const handleClickTag = (id: keyof FiltersModel, value: any) => {
-        switch (id) {
+    const handleClickTag = (key: string, value: any) => {
+        switch (key) {
             case 'text':
                 props.onChangeFilters({...filters, text: ''});
                 break;
@@ -55,18 +56,18 @@ const Filters = (props: FiltersProps) => {
                 break;
             default: 
                 console.warn('handle change filters defaulted');
-                break; // do nothimg
+                break; // do nothing
         }
     }
 
     const renderTags = () => {
-        let tags: {id: keyof FiltersModel, value: string}[] = [];
-        if (props.filters.text) tags.push({id: 'text', value: props.filters.text});
+        let tags: KeyValue[] = [];
+        if (props.filters.text) tags.push({key: 'text', value: props.filters.text});
         tags = tags.concat(
-            ...props.filters.nationalities.map((nationality: string) => ({id: 'nationalities',  value: nationality})) as {id: keyof FiltersModel, value: string}[],
-            ...props.filters.bookGenres.map((bookGenre: string) => ({id: 'bookGenres',  value: bookGenre})) as {id: keyof FiltersModel, value: string}[],
-            ...props.filters.languages.map((language: string) => ({id: 'languages',  value: language})) as {id: keyof FiltersModel, value: string}[],
-        )
+            ...props.filters.nationalities.map((nationality: string) => ({key: 'nationalities',  value: nationality})),
+            ...props.filters.bookGenres.map((bookGenre: string) => ({key: 'bookGenres',  value: ConstsUtils.getBookGenreValue(bookGenre)}),
+            ...props.filters.languages.map((language: string) => ({key: 'languages',  value: language})),
+        ));
         if (tags.length === 0) {
             return (
                 <div className={classes.tagsContainer}>
@@ -77,22 +78,22 @@ const Filters = (props: FiltersProps) => {
             return (
                 <div className={classes.tagsContainer}>
                     {tags.map((tag) => {
-                        if (tag.id === 'nationalities') {
+                        if (tag.key === 'nationalities') {
                             return (
                                 <Chip
-                                    key={'tags-chip-' + tag.id}
+                                    key={'tags-chip-' + tag.key}
                                     avatar={<Flag code={tag.value} />}
                                     label={ConstsUtils.getCountryName(tag.value)}
-                                    onDelete={() => handleClickTag(tag.id, tag.value)}
+                                    onDelete={() => handleClickTag(tag.key, tag.value)}
                                     style={{marginRight: '8px'}}
                                 />
                             );
                         } else {
                             return (
                                 <Chip
-                                    key={'tags-chip-' + tag.id}
+                                    key={'tags-chip-' + tag.key}
                                     label={tag.value}
-                                    onDelete={() => handleClickTag(tag.id, tag.value)}
+                                    onDelete={() => handleClickTag(tag.key, tag.value)}
                                     style={{marginRight: '8px'}}
                                 />
                             );
@@ -111,7 +112,7 @@ const Filters = (props: FiltersProps) => {
                 label=''
                 id='sortBy'
                 value={filters.sortBy}
-                options={Object.values(SortBy)}
+                options={allSortBys}
                 disabled={loading}
                 onChange={(id, type, value: SortBy) => props.onChangeSortBy(value)}
             />

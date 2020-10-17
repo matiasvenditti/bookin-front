@@ -10,21 +10,24 @@ interface CheckboxProps {
     error: boolean,
     errorText: string,
     disabled?: boolean,
+    className?: any,
     noStyle?: boolean,
     onChange(id: string, type: string, value: any): void,
 }
 
 export default class Checkbox extends Component<CheckboxProps> {
     render() {
-        const { id, label, checked, type, error, errorText, disabled, noStyle } = this.props;
+        const { id, label, checked, type, error, errorText, disabled, noStyle, className } = this.props;
         return (
             <div className={noStyle ? '' : 'form-checkbox-container'}>
                 <FormControlLabel
+                    name={id}
+                    checked={checked}
                     label={label}
                     disabled={disabled}
+                    className={className}
                     control={
                         <MaterialCheckbox
-                            value={checked}
                             color='secondary'
                             onChange={(e) => this.props.onChange(id, type, e.target.checked)}
                         />
