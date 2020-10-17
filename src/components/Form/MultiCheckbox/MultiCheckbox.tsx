@@ -1,4 +1,3 @@
-import { FormControlLabel } from '@material-ui/core';
 import React from 'react';
 import { Checkbox } from '..';
 import { KeyValue } from '../../../model';
@@ -47,7 +46,8 @@ export const MultiCheckbox = (props: MultiCheckboxProps) => {
             <div className={classes.container}>
                 {options.map((option: KeyValue, i: number) => (
                     <Checkbox
-                        id={'checkbox-' + i}
+                        id={`checkbox-${id}-${i}`}
+                        key={`checkbox-${id}-${i}`}
                         type='checkbox'
                         checked={selected.includes(option.key)}
                         error={false}

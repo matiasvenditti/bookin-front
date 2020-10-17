@@ -1,4 +1,3 @@
-import { Typography } from "@material-ui/core";
 import { AxiosResponse } from "axios";
 import React from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
