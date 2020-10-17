@@ -4,6 +4,7 @@
     align-items: center;
     margin-right: 15px;
     padding: 15px !important;
+    overflow: visible !important;
 }
 
 .author-card-container div {
