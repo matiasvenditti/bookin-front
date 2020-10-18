@@ -302,6 +302,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                             reviewCreatorUserID={rev.userId}
                                             currentUser={currentUser}
                                             isAdmin={isAdmin}
+                                            isProfile={false}
                                             reviewBookId={data.id}
                                             reviewDisplayString={rev.userFirstName + ' ' + rev.userLastName}
                                             handleDelete={(reviewId: number) => {

@@ -13,6 +13,7 @@ interface ReviewCardProps {
     reviewCreatorUserID: number,
     reviewDisplayString: string,
     reviewBookId:number,
+    isProfile:boolean,
     currentUser: User,
     isAdmin: boolean,
     handleEdit():void,
@@ -20,7 +21,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
-    const {isAdmin, reviewCreatorUserID, currentUser, reviewBookId, reviewDisplayString, comment} = props;
+    const {isAdmin, reviewCreatorUserID, currentUser, reviewBookId, reviewDisplayString, comment, isProfile} = props;
 
     if (currentUser.id === reviewCreatorUserID || isAdmin) {
         return (
@@ -37,9 +38,17 @@ const ReviewCard = (props: ReviewCardProps) => {
                             variant="h6"
                             style={{color: 'black', display: 'flex', alignItems: 'center'}}
                         >
+                            {isProfile &&
                             <Link href={`/books/${reviewBookId}`} color="inherit">
-                            {reviewDisplayString}
+                                {reviewDisplayString}
                             </Link>
+                            }
+                            {!isProfile &&
+                            <Link color="inherit">
+                                {reviewDisplayString}
+                            </Link>
+                            }
+
 
                             <div className="button-container">
                                 <ButtonGroup variant="contained" color="secondary"
