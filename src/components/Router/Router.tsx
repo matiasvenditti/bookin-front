@@ -128,6 +128,7 @@ class Router extends React.Component<any, RouterState> {
                         <ModifyAuthor
                             updateCallback={(updateAuthorStatus: RequestStatus) => this.setState({ ...this.state, updateAuthorStatus })}
                             getAuthorDataErrorCallback={() => this.setState({ ...this.state, getModifyAuthorDataError: true })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
 
@@ -143,6 +144,7 @@ class Router extends React.Component<any, RouterState> {
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}>
                         <CreateAuthor
                             createAuthorCallback={(createAuthorStatus: RequestStatus) => this.setState({ ...this.state, createAuthorStatus })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
 
@@ -150,6 +152,7 @@ class Router extends React.Component<any, RouterState> {
                         <ModifyBook
                             updateCallback={(updateBookStatus: RequestStatus) => this.setState({ ...this.state, updateBookStatus })}
                             getBookDataErrorCallback={() => this.setState({ ...this.state, getModifyBookDataError: true })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
 
@@ -164,6 +167,7 @@ class Router extends React.Component<any, RouterState> {
                     <PrivateRoute path='/books' roles={[UserRoles.RoleAdmin]}>
                         <CreateBook
                             createBookCallback={(createBookStatus: RequestStatus) => this.setState({ ...this.state, createBookStatus })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
                     

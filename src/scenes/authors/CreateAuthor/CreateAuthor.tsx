@@ -48,6 +48,7 @@ class CreateAuthor extends Component<any, CreateAuthorState> {
                         onSubmit={this.handleSubmit}
                         onCancel={this.props.history.goBack}
                         loading={createAuthorStatus === RequestStatus.LOADING}
+                        onLoadImageError={this.props.onLoadImageError}
                     />
                 </div>
             </div>
