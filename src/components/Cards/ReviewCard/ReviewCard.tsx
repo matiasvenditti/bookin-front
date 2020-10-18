@@ -20,7 +20,7 @@ interface ReviewCardProps {
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
-    const {isAdmin, reviewCreatorUserID, currentUser, reviewBookId,reviewDisplayString} = props;
+    const {isAdmin, reviewCreatorUserID, currentUser, reviewBookId, reviewDisplayString, comment} = props;
 
     if (currentUser.id === reviewCreatorUserID || isAdmin) {
         return (
@@ -38,7 +38,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                             style={{color: 'black', display: 'flex', alignItems: 'center'}}
                         >
                             <Link href={`/books/${reviewBookId}`} color="inherit">
-                            {props.reviewDisplayString}
+                            {reviewDisplayString}
                             </Link>
 
                             <div className="button-container">
@@ -57,7 +57,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                 <CardContent className={'review-card-body'}>
                     <Typography variant="body1" color="textPrimary"
                                 component="p">
-                        {props.comment}
+                        {comment || "Sin comentario"}
                     </Typography>
                 </CardContent>
             </Card>
@@ -77,7 +77,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                             variant="h6"
                             style={{color: 'black', display: 'flex', alignItems: 'center'}}
                         >
-                            {props.reviewDisplayString}
+                            {reviewDisplayString}
 
 
                         </Typography>}
@@ -88,7 +88,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                 <CardContent className={'review-card-body'}>
                     <Typography noWrap variant="body1" color="textPrimary"
                                 component="p">
-                        {props.comment}
+                        {comment || "Sin comentario"}
                     </Typography>
                 </CardContent>
             </Card>
