@@ -281,10 +281,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container
-                        direction="row"
-                        justify="space-evenly"
-                        alignItems="flex-start"
-                        spacing={3}
                         className='reviews-container'
                     >
 
@@ -293,7 +289,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         {reviews.map((rev, j) => {
                             const {isAdmin, currentUser, data} = this.state;
                             return (
-                                <Grid item xs sm={6} key={j}>
+                                <Grid item xs={4} key={j}>
                                     <div key={'review-view-item-' + j}>
                                         <ReviewCard
                                             id={rev.id}
