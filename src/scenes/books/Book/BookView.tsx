@@ -281,6 +281,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container
+                        spacing={3}
                         className='reviews-container'
                     >
 
