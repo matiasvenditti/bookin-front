@@ -5,4 +5,5 @@ export interface ReviewWithUser {
     userId: number,
     userFirstName: string,
     userLastName: string,
+    edit: Boolean,
 }

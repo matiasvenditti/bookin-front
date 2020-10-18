@@ -26,6 +26,7 @@ import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
 import CreateReview from "../../review/CreateReview/CreateReview";
+import EditCard from "../../../components/Cards/EditCard/EditCard";
 
 
 interface BookViewProps {
@@ -106,6 +107,12 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
     hasReview() {
         const reviews = this.props.reviews;
         return reviews.some(review => review.userId === this.props.user.id);
+    }
+
+    enableEdit = (j: number) =>{
+        var review = this.state.reviews[j];
+        review.edit = true;
+        this.state.reviews[j] = review;
     }
     
     render() {
@@ -295,6 +302,16 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             return (
                                 <Grid item xs sm={6} key={j}>
                                     <div key={'review-view-item-' + j}>
+                                        {rev.edit ? <EditCard
+                                                        id={rev.id}
+                                                       stars={rev.stars}
+                                                       comment={rev.comment}
+                                                       reviewCreatorUserID={rev.userId}
+                                                       currentUser={currentUser}
+                                                       isAdmin={isAdmin}
+                                                       reviewBookId={data.id}
+                                                       reviewDisplayString={rev.userFirstName + ' ' + rev.userLastName}
+                                                       editMode={() => this.enableEdit(j)}/> :
                                         <ReviewCard
                                             id={rev.id}
                                             stars={rev.stars}
@@ -309,7 +326,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                             }
                                             }
                                             handleEdit={() => null} //TODO
-                                        />
+                                            editMode={() => this.enableEdit(j)}
+                                        />}
                                     </div>
                                 </Grid>
                             )
