@@ -4,6 +4,7 @@ import DateUtils from './DateUtils';
 import PhotoUtils from './photoUtils';
 import {stringToGender, genderToString} from './translateGender';
 import validateInput from './validateInput';
+import ParserUtils from './ParserUtils';
 
 
 export {
@@ -12,6 +13,7 @@ export {
     ConstsUtils,
     DateUtils,
     PhotoUtils,
+    ParserUtils,
     stringToGender,
     genderToString,
     validateInput,
