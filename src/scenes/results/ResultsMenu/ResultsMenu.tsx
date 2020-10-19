@@ -70,7 +70,7 @@ const ResultsMenu = (props: ResultsMenuProps) => {
         setGetDataStatus(RequestStatus.LOADING);
         const results = Promise.all([
             BooksService.searchBooks(newFilters),
-            AuthorsService.searchAuthorsSimple(newFilters.text),
+            AuthorsService.searchAuthors(newFilters),
         ])
         results
             .then((responses) => {

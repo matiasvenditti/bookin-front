@@ -62,11 +62,11 @@ const Filters = (props: FiltersProps) => {
 
     const renderTags = () => {
         let tags: KeyValue[] = [];
-        if (props.filters.text) tags.push({key: 'text', value: props.filters.text});
+        if (filters.text) tags.push({key: 'text', value: props.filters.text});
         tags = tags.concat(
-            ...props.filters.nationalities.map((nationality: string) => ({key: 'nationalities',  value: nationality})),
-            ...props.filters.bookGenres.map((bookGenre: string) => ({key: 'bookGenres',  value: ConstsUtils.getBookGenreValue(bookGenre)}),
-            ...props.filters.languages.map((language: string) => ({key: 'languages',  value: language})),
+            ...filters.nationalities.map((nationality: string) => ({key: 'nationalities',  value: nationality})),
+            ...filters.bookGenres.map((bookGenre: string) => ({key: 'bookGenres',  value: ConstsUtils.getBookGenreValue(bookGenre)}),
+            ...filters.languages.map((language: string) => ({key: 'languages',  value: language})),
         ));
         if (tags.length === 0) {
             return (
@@ -77,24 +77,24 @@ const Filters = (props: FiltersProps) => {
         } else {
             return (
                 <div className={classes.tagsContainer}>
-                    {tags.map((tag) => {
+                    {tags.map((tag, i) => {
                         if (tag.key === 'nationalities') {
                             return (
                                 <Chip
-                                    key={'tags-chip-' + tag.key}
+                                    key={'tags-chip-' + tag.key + '-' + i}
                                     avatar={<Flag code={tag.value} />}
                                     label={ConstsUtils.getCountryName(tag.value)}
                                     onDelete={() => handleClickTag(tag.key, tag.value)}
-                                    style={{marginRight: '8px'}}
+                                    style={{marginRight: '8px', marginBottom: '8px'}}
                                 />
                             );
                         } else {
                             return (
                                 <Chip
-                                    key={'tags-chip-' + tag.key}
+                                    key={'tags-chip-' + tag.key + '-' + i}
                                     label={tag.value}
                                     onDelete={() => handleClickTag(tag.key, tag.value)}
-                                    style={{marginRight: '8px'}}
+                                    style={{marginRight: '8px', marginBottom: '8px'}}
                                 />
                             );
                         }

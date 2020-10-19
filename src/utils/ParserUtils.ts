@@ -1,32 +1,23 @@
+import { TagValueParams } from "../model";
+
 export default class ParserUtils {
 
     /**
      * @param object keys should be parameters keys
      */
-    static objectToRequestParams = (object: Object): string => {
+    static arrayToRequestParams = (array: TagValueParams[]): string => {
         let result = '';
-        const keys = Object.keys(object);
-        const values = Object.values(object);
-        let first = 0;
-        for (var i = 0; i < keys.length; i++) {
-            if (!values[i]) {
-                first++;
-            } else {
-                result += (first === 0) ? '?' : '&' 
-                result += `${keys[i]}=${values[i]}`;
+        let first = true;
+        for (var i = 0; i < array.length; i++) {
+            if (array[i].value !== '') {
+                if (first) {
+                    result += `?${array[i].tag}=${array[i].value}`;
+                    first = false;
+                }
+                else result += `&${array[i].tag}=${array[i].value}`;
             }
         }
-        console.log('objectToRequestParams', result);
-        return result;
-    }
-
-    static arrayToStringParam = (array: any[]): any => {
-        if (array.length === 0) return null;
-        let result = '';
-        array.forEach((lang, i) => {
-            if (i === 0) result += lang;
-            else result += `,${lang}`;
-        })
+        // console.log('objectToRequestParams', result);
         return result;
     }
 }
