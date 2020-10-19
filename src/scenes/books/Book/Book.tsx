@@ -13,7 +13,6 @@ import {AuthService, BooksService, UserService} from "../../../services";
 import {DeleteBookModal} from "./DeleteBookModal";
 import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewService from "../../../services/ReviewService";
-import {WarningDeleteModal} from "./WarningDeleteModal";
 
 
 
@@ -34,7 +33,6 @@ interface BookState {
     authors: Author[],
     reviews: ReviewWithUser[],
     error: any,
-    warning: boolean,
 }
 
 interface MatchParams {
@@ -63,7 +61,6 @@ class Book extends React.Component<BookProps, BookState> {
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
             error: null,
-            warning : false,
         }
     }
 
@@ -109,14 +106,8 @@ class Book extends React.Component<BookProps, BookState> {
     handleEdit = () => this.props.history.push(`/books/edit/${this.state.data.id}`);
 
     handleDelete = () => this.setState({showDelete: true});
-    handleCancelWarning = () => this.setState({warning: false});
     handleConfirmDelete = () => {
-        if(this.state.reviews.length === 0 ){ //Solo borramos si no hay ninguna review.
-            this.deleteBook(this.state.data.id);}
-        else{
-            this.handleDeleteCancel() //Cancelamos el popup
-            this.setState({warning:true})//Mandamos warning == True
-        }
+            this.deleteBook(this.state.data.id);
     }
     handleDeleteCancel = () => this.setState({showDelete: false});
     deleteBook = (id: number) => {
@@ -141,7 +132,6 @@ class Book extends React.Component<BookProps, BookState> {
                     {this.renderButtons()}
                     {this.renderBook()}
                     {this.renderDelete()}
-                    {this.renderWarning()}
                 </div>
             </div>
         );
@@ -196,15 +186,6 @@ class Book extends React.Component<BookProps, BookState> {
                 loading={deleteStatus === RequestStatus.LOADING}
                 onConfirm={this.handleConfirmDelete}
                 onCancel={this.handleDeleteCancel}
-            />
-        )
-    }
-    renderWarning(){
-        const {warning} = this.state;
-        if(warning) return(
-            <WarningDeleteModal
-            open={warning}
-            onCancel={this.handleCancelWarning}
             />
         )
     }

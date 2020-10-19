@@ -290,7 +290,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         {reviews.map((rev, j) => {
                             const {isAdmin, currentUser, data} = this.state;
                             return (
-                                <Grid item xs={4} key={j}>
+                                <Grid item xs={6} key={j}>
                                     <div key={'review-view-item-' + j}>
                                         <ReviewCard
                                             id={rev.id}
