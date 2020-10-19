@@ -240,6 +240,12 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         )
     }
 
+    enableEdit = (j: number) =>{
+        /**var review = this.state.reviews[j];
+        review.edit = true;
+        this.state.reviews[j] = review;*/
+        console.log(j);
+    }
 
     renderReviews() {
         const {data, reviews} = this.state;
@@ -272,7 +278,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                                         }
                                         }
                                         handleEdit={() => null} //TODO
-                                    />
+                                        editMode={() => this.enableEdit(j)}
+                                        />
                                 </div>
                             </Grid>
                         )

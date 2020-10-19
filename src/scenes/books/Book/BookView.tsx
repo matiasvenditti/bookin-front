@@ -106,6 +106,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
     
     hasReview() {
         const reviews = this.props.reviews;
+        console.log(reviews);
         return reviews.some(review => review.userId === this.props.user.id);
     }
 

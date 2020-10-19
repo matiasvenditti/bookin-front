@@ -1,9 +1,10 @@
-import {Avatar, Button, Card, CardContent, CardHeader, Link, Typography} from '@material-ui/core';
+import {Avatar, Button, Card, CardActions, CardContent, CardHeader, Link, Typography} from '@material-ui/core';
 import React from 'react';
 import Rating from "@material-ui/lab/Rating";
-import {User} from "../../../model";
-import './ReviewCard.css';
+import {Book, NewReview, User} from "../../../model";
+import './EditCard.css';
 import { ReviewFormModel } from '../../../model/Form/ReviewFormModel';
+import { NewEditReview } from '../../../model/NewEditReview';
 
 
 interface EditCardProps {
@@ -15,15 +16,16 @@ interface EditCardProps {
     reviewBookId:number,
     currentUser: User,
     isAdmin: boolean,
-    editMode(): void
+    editMode(): void,
+   // onSubmit(review: NewEditReview): void
 }
 
 interface EditCardState{
     values: ReviewFormModel,
-
 }
 
 class EditCard extends React.Component<EditCardProps, EditCardState> {
+    MAX_CHARACTERS: number = 1000;
 
     constructor(props: EditCardProps){
         super(props);
@@ -31,10 +33,28 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
             values: {
                 message: { value: '', type: '', error: false, touched: false },
                 rating: { value: 0, type: 'number', error: false, touched: false },
-
-            }
+            },
         }
     }
+
+    handleSubmit = () => {
+        let values: NewEditReview = {
+            id: this.props.id,
+            rating: this.state.values.rating.value,
+            comment: this.state.values.message.value,
+        }
+        //this.props.onSubmit(values);
+    }
+
+    handleInput = (id: string, type: string, value: string) => {
+        const error = value.length > this.MAX_CHARACTERS;
+        this.setState({
+            values: {
+            ...this.state.values,
+            [id]: { value, type, error: error, touched: true }
+            },
+        });    
+    } 
 
     handleRateChange = (value: number|null) => {
         this.setState({
@@ -48,71 +68,46 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
     render() {
     
         return (
-            (this.props.currentUser.id === this.props.reviewCreatorUserID || this.props.isAdmin) ?
             <Card className={'review-card-container'}
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
-                <CardHeader
-                    avatar={
-                        <Avatar aria-label="recipe" className={'review-item-avatar'}>
-                            {this.props.reviewDisplayString.substr(0,2)}
-                        </Avatar>
+                <form>
+                    <CardHeader
+                        avatar={
+                            <Avatar aria-label="recipe" className={'review-item.avatar'}>
+                                {/*{props.reviewCreatorUserID.photo}*/}
+                            </Avatar>
+                        }
+                        title={
+                            <Typography
+                                variant="h6"
+                                style={{color: 'black', display: 'flex', alignItems: 'center'}}
+                            >
+                                {this.props.reviewDisplayString}
+
+
+                            </Typography>}
+                        subheader={<Rating 
+                            name="simple-controlled"                        
+                            value={this.props.stars} 
+                            precision={0.5}                                 
+                            onChange={(event, newValue) => {
+                                this.handleRateChange(newValue);
+                            }}/>
                     }
-                    title={
-                        <Typography
-                            variant="h6"
-                            style={{color: 'black', display: 'flex', alignItems: 'center'}}
-                        >
-                            <Link href={`/books/${this.props.reviewBookId}`} color="inherit">
-                            {this.props.reviewDisplayString}
-                            </Link>
+
+                    />
+                    <CardContent className={'review-card-body'}>
+                        <Typography noWrap variant="body1" color="textPrimary"
+                                    component="p">
+                            {this.props.comment}
                         </Typography>
-                    }
-                    subheader={<Rating name="read-only" value={this.props.stars} precision={0.5}
-                                       readOnly/>}
-
-                />
-                <CardContent className={'review-card-body'}>
-                    <Typography variant="body1" color="textPrimary"
-                                component="p">
-                        {this.props.comment}
-                    </Typography>
-                </CardContent>
-            </Card>
-        
-        :
-            <Card className={'review-card-container'}
-                  style={{backgroundColor: '#F6F6F7', padding: '5'}}>
-                <CardHeader
-                    avatar={
-                        <Avatar aria-label="recipe" className={'review-item.avatar'}>
-                            {/*{props.reviewCreatorUserID.photo}*/}
-                        </Avatar>
-                    }
-                    title={
-                        <Typography
-                            variant="h6"
-                            style={{color: 'black', display: 'flex', alignItems: 'center'}}
-                        >
-                            {this.props.reviewDisplayString}
-
-
-                        </Typography>}
-                    subheader={<Rating 
-                        name="simple-controlled"                        
-                        value={this.props.stars} 
-                        precision={0.5}                                 
-                        onChange={(event, newValue) => {
-                            this.handleRateChange(newValue);
-                        }}/>
-                }
-
-                />
-                <CardContent className={'review-card-body'}>
-                    <Typography noWrap variant="body1" color="textPrimary"
-                                component="p">
-                        {this.props.comment}
-                    </Typography>
-                </CardContent>
+                    </CardContent>
+                </form>
+                <CardActions>
+                    <div className={'padding-edit'}>
+                        <Button title='Editar' color='primary' variant='contained' disabled={!(this.state.values.rating.touched) && !(this.state.values.message.error)} onClick={this.handleSubmit} />
+                    </div>
+                </CardActions>
             </Card>
             )        
     }       
