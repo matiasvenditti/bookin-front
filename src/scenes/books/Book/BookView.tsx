@@ -107,14 +107,18 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         const reviews = this.props.reviews;
         return reviews.some(review => review.userId === this.props.user.id);
     }
+
+    isAnonymous() {
+        return (this.props.user.id == null);
+    }
     
     render() {
         const {data, authors, reviews} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
-        const createReview = !this.hasReview() ?
-        <Grid item xs sm={6}>    
+        const createReview = (!this.hasReview() && !this.isAnonymous()) ?
+        <Grid item xs sm={6}>
             <div>
                 <CreateReview
                 book={this.state.data}
