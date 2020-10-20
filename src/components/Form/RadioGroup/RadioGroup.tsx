@@ -12,6 +12,7 @@ interface RadioGroupProps {
     error: boolean,
     errorText: string,
     disabled?: boolean,
+    column?: boolean,
     onChange(id: string, type: string, value: any): void,
 }
 
@@ -21,9 +22,14 @@ interface RadioGroupState {
 
 export default class RadioGroup extends Component<RadioGroupProps, RadioGroupState> {
     render() {
-        const { title, id, type, valueId, options, error, errorText, disabled } = this.props;
+        const { title, id, type, valueId, options, error, errorText, disabled, column } = this.props;
         return (
-            <FormControl component='fieldset' className='radio-group-form-control-container' disabled={disabled}>
+            <FormControl
+                component='fieldset'
+                className={column ? 'radio-group-form-control-container-column'
+                    : 'radio-group-form-control-container'}
+                disabled={disabled}
+            >
                 <FormLabel component='legend' color='secondary'>{title}</FormLabel>
                 <MaterialRadioGroup
                     className='radio-group-container'

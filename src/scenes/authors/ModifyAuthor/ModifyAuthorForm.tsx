@@ -121,7 +121,7 @@ export default class ModifyAuthorForm extends Component<AuthorFormProps, {}> {
                         >
                             Agrega una foto
                             <input
-                                accept="image/*"
+                                accept='.png, .jpg, .jpeg'
                                 type="file"
                                 style={{ display: "none" }}
                             />

@@ -99,7 +99,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                                     </div>
                                     <div className={classes.infoSubitem}>
                                         <Typography>Fecha de publicación:</Typography>
-                                        <Typography>{DateUtils.formatDateTimeYears(date.toString())}</Typography>
+                                        <Typography>{date ? DateUtils.formatDateTimeYears(date.toString()) : 'no date'}</Typography>
                                     </div>
                                     <div className={classes.infoSubitem}>
                                         <Typography>Sinópsis:</Typography>

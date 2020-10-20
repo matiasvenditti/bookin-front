@@ -281,9 +281,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 </Grid>
                 {this.renderReviewDelete()}
             </div>
-
         )
-
     }
 }
 

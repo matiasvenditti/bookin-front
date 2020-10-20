@@ -103,7 +103,7 @@ class Router extends React.Component<any, RouterState> {
                     searchBooksErrorCallback={() => this.setState({...this.state, searchBooksError: true})}
                     searchAuthorsErrorCallback={() => this.setState({...this.state, searchAuthorsError: true})}
                     onSearch={(searchInput: string) => (
-                        this.setState({...this.state, search: {...this.state.search, searchInput}})
+                            this.setState({...this.state, search: {...this.state.search, searchInput}})
                     )}
                 />
                 <Switch>
@@ -128,6 +128,7 @@ class Router extends React.Component<any, RouterState> {
                         <ModifyAuthor
                             updateCallback={(updateAuthorStatus: RequestStatus) => this.setState({ ...this.state, updateAuthorStatus })}
                             getAuthorDataErrorCallback={() => this.setState({ ...this.state, getModifyAuthorDataError: true })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
 
@@ -143,6 +144,7 @@ class Router extends React.Component<any, RouterState> {
                     <PrivateRoute path='/authors' roles={[UserRoles.RoleAdmin]}>
                         <CreateAuthor
                             createAuthorCallback={(createAuthorStatus: RequestStatus) => this.setState({ ...this.state, createAuthorStatus })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
 
@@ -150,6 +152,7 @@ class Router extends React.Component<any, RouterState> {
                         <ModifyBook
                             updateCallback={(updateBookStatus: RequestStatus) => this.setState({ ...this.state, updateBookStatus })}
                             getBookDataErrorCallback={() => this.setState({ ...this.state, getModifyBookDataError: true })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
 
@@ -164,6 +167,7 @@ class Router extends React.Component<any, RouterState> {
                     <PrivateRoute path='/books' roles={[UserRoles.RoleAdmin]}>
                         <CreateBook
                             createBookCallback={(createBookStatus: RequestStatus) => this.setState({ ...this.state, createBookStatus })}
+                            onLoadImageError={() => this.setState({...this.state, loadAvatarError: true})}
                         />
                     </PrivateRoute>
                     
@@ -214,7 +218,7 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(editProfileStatus === RequestStatus.ERROR,       'error', 'Hubo un error al actualizar los datos, intente más tarde', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS,   'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteProfileStatus === RequestStatus.ERROR,     'error', 'Hubo un error al eliminar al cuenta, intente más tarde', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
-                {this.renderAToast(loadAvatarError,                                  'error', 'La imagen pesa mas de 100KB, seleccione una mas pequeña', () => this.setState({...this.state, loadAvatarError: false}))}
+                {this.renderAToast(loadAvatarError,                                  'error', 'La imagen pesa mas de 100KB o tiene una resolución mayor a 480x480, seleccione una mas pequeña', () => this.setState({...this.state, loadAvatarError: false}))}
                 {this.renderAToast(createAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha creado el autor exitosamente', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
                 {this.renderAToast(createAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al crear el autor, intente más tarde', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha modificado el autor exitosamente', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}

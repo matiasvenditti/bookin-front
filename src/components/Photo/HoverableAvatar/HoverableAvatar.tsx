@@ -36,23 +36,36 @@ class HoverableAvatar extends Component<HoverableAvatarProps, HoverableAvatarSta
         this.state.fileUploaderRef.current.click();
     }
 
+    // does not cover when you upload another file with extension
+    // changed
     onChangeFile = (event: any) => {
         event.stopPropagation();
         event.preventDefault();
         const { maxSize } = this.props;
         const file: File = event.target.files[0];
         if (file === undefined) return;
-        if (file.size > maxSize) {
+        if (file.size > maxSize || !['jpg', 'jpeg', 'png'].some((ext) => `image/${ext}` === file.type)) {
             this.props.onLoadError();
         } else {
             let reader = new FileReader();
             reader.readAsDataURL(file);
-            reader.onload = () => this.setState({
-                ...this.state,
-                photo: reader.result,
-                photoFile: file,
-                modalOpen: true
-            });
+            reader.onload = () => {
+                // console.log('res', this.);
+                let image = new Image();
+                image.src = reader.result ? reader.result.toString() : '';
+                image.onload = () => {
+                    if (image.width <= 480 && image.height <= 480) {
+                        this.setState({
+                            ...this.state,
+                            photo: reader.result,
+                            photoFile: file,
+                            modalOpen: true
+                        });
+                    } else this.props.onLoadError();
+                }
+                image.onerror = () => {this.props.onLoadError()}
+            }
+            reader.onerror = () => {this.props.onLoadError()}
         }
     };
 
