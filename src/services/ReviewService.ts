@@ -7,6 +7,7 @@ import ResponseDelete from "../model/responses/ResponseDelete";
 import {ReviewWithBookDTO} from "../model/Review";
 import { NewReview } from "../model"
 import { Review } from "../model/Review"
+import { NewEditReview } from "../model/NewEditReview";
 
 class ReviewService {
 
@@ -26,6 +27,9 @@ class ReviewService {
         return instance.post<Review>(`${baseURL}/reviews`, review)
     }
 
+    static editReview = (review: NewEditReview, id: number): Promise<AxiosResponse<ReviewWithUser>> => {
+        return instance.put<ReviewWithUser>(`${baseURL}/reviews/${id}`, review)
+    }
 
 }
 

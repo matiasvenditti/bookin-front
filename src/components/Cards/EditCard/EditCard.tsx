@@ -5,6 +5,7 @@ import {Book, NewReview, User} from "../../../model";
 import './EditCard.css';
 import { ReviewFormModel } from '../../../model/Form/ReviewFormModel';
 import { NewEditReview } from '../../../model/NewEditReview';
+import Input from '../../Form/Input/Input';
 
 
 interface EditCardProps {
@@ -17,7 +18,7 @@ interface EditCardProps {
     currentUser: User,
     isAdmin: boolean,
     editMode(): void,
-   // onSubmit(review: NewEditReview): void
+    onSubmit(review: NewEditReview, id: number): void
 }
 
 interface EditCardState{
@@ -31,19 +32,18 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
         super(props);
         this.state = {
             values: {
-                message: { value: '', type: '', error: false, touched: false },
-                rating: { value: 0, type: 'number', error: false, touched: false },
+                message: { value: this.props.comment, type: '', error: false, touched: true },
+                rating: { value: this.props.stars, type: 'number', error: false, touched: true },
             },
         }
     }
 
     handleSubmit = () => {
         let values: NewEditReview = {
-            id: this.props.id,
             rating: this.state.values.rating.value,
             comment: this.state.values.message.value,
         }
-        //this.props.onSubmit(values);
+        this.props.onSubmit(values, this.props.id);
     }
 
     handleInput = (id: string, type: string, value: string) => {
@@ -97,15 +97,23 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
 
                     />
                     <CardContent className={'review-card-body'}>
-                        <Typography noWrap variant="body1" color="textPrimary"
-                                    component="p">
-                            {this.props.comment}
-                        </Typography>
+                    <Input
+                            label='Escriba aqui (max 1000 caracteres)'
+                            variant='filled'
+                            id='message'
+                            type='text'
+                            value={this.state.values.message.value}
+                            onChange={this.handleInput}
+                            error={this.state.values.message.error}
+                            multiline={true}
+                            errorText={this.state.values.message.error ? 'Excede el limite de caracteres' : ''}
+                        />
                     </CardContent>
                 </form>
                 <CardActions>
                     <div className={'padding-edit'}>
                         <Button title='Editar' color='primary' variant='contained' disabled={!(this.state.values.rating.touched) && !(this.state.values.message.error)} onClick={this.handleSubmit} />
+                        <Button title='Cancelar' color='primary' variant='contained' onClick={this.props.editMode} />
                     </div>
                 </CardActions>
             </Card>
