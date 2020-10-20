@@ -6,7 +6,7 @@ import classes from './BookDisplay.module.css';
 import {Stars} from "@material-ui/icons";
 import photoUtils from "../../utils/photoUtils";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import { DateUtils } from "../../utils";
+import { ConstsUtils, DateUtils } from "../../utils";
 
 
 interface BookDisplayProps extends RouteComponentProps {
@@ -27,25 +27,9 @@ class BookDisplay extends Component<BookDisplayProps, any> {
     render() {
         const photo: string = photoUtils.getPhotoFromBytearray(this.props.book.photo)
         const stars = this.props.crown ? <Stars color={"primary"}/>: null;
-        /* 
-            id
-            title
-            genre
-            language
-            date
-            photo
-            stars 
-        */
+        /*  id title genre language date photo stars */
         if (this.props.resultsVariant) {
-            const {
-                id,
-                title,
-                genre,
-                language,
-                date,
-                photo,
-                // stars,
-            } = this.props.book;
+            const { id, title, genre, language, date, photo, stars } = this.props.book;
             const author = this.props.author;
             const {loading, loadingAuthors} = this.props;
 
@@ -95,16 +79,20 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                                     </div>
                                     <div className={classes.infoSubitem}>
                                         <Typography>Idioma:</Typography>
-                                        <Typography>{language}</Typography>
+                                        <Typography>{ConstsUtils.getLanguageValue(language)}</Typography>
                                     </div>
                                     <div className={classes.infoSubitem}>
                                         <Typography>Fecha de publicación:</Typography>
                                         <Typography>{date ? DateUtils.formatDateTimeYears(date.toString()) : 'no date'}</Typography>
                                     </div>
                                     <div className={classes.infoSubitem}>
+                                        <Typography>Rating:</Typography>
+                                        <Rating name="read-only" value={stars} precision={0.5} readOnly/>
+                                    </div>
+                                    {/* <div className={classes.infoSubitem}>
                                         <Typography>Sinópsis:</Typography>
                                         <Typography>(WIP) Sinópsis no existen aún!</Typography>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </CardActionArea>

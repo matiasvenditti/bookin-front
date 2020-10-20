@@ -65,7 +65,7 @@ class AuthorsService {
     }
     
     static searchAuthorsSimple = (query: string): Promise<AxiosResponse<Author[]>> => {
-        return instance.get<Author[]>(`${baseURL}/authors/search${ParserUtils.arrayToRequestParams([{tag: 'name', value: query}])}`);
+        return instance.get<Author[]>(`${baseURL}/authors${ParserUtils.arrayToRequestParams([{tag: 'name', value: query}])}`);
     }
 }
 

@@ -64,7 +64,7 @@ class BooksService {
 
     // TODO: back missing simple search
     static searchBooksSimple = (query: string): Promise<AxiosResponse<Book[]>> => {
-        return instance.get<Book[]>(`${baseURL}/books/search${ParserUtils.arrayToRequestParams([{tag: 'title', value: query}])}`);
+        return instance.get<Book[]>(`${baseURL}/books${ParserUtils.arrayToRequestParams([{tag: 'title', value: query}])}`);
     }
 }
 
