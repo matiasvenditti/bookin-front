@@ -20,7 +20,6 @@ import Rating from "@material-ui/lab/Rating";
 import {ConstsUtils, DateUtils} from "../../../utils";
 import Flag from 'react-world-flags';
 import {Book, User} from "../../../model";
-import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewCard from "../../../components/Cards/ReviewCard/ReviewCard";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
@@ -322,7 +321,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         {createReview}
 
                         {reviews.map((rev, j) => {
-                            const {isAdmin, currentUser, data} = this.state;
+                            const {currentUser, data} = this.state;
                             return (
                                 <Grid item xs sm={6} key={j}>
                                     <div key={'review-view-item-' + j}>
@@ -333,7 +332,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                        comment={rev.review.comment}
                                                        reviewCreatorUserID={rev.review.userId}
                                                        currentUser={currentUser}
-                                                       isAdmin={isAdmin}
                                                        reviewBookId={data.id}
                                                        reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
                                                        editMode={() => this.enableEdit(j)}
@@ -345,7 +343,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                             comment={rev.review.comment}
                                             reviewCreatorUserID={rev.review.userId}
                                             currentUser={currentUser}
-                                            isAdmin={isAdmin}
                                             reviewBookId={data.id}
                                             reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
                                             handleDelete={(reviewId: number) => {

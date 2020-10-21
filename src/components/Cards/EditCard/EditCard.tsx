@@ -1,4 +1,4 @@
-import {Avatar, Button, Card, CardActions, CardContent, CardHeader, Link, Typography} from '@material-ui/core';
+import {Avatar, Button, Card, CardActions, CardContent, CardHeader, Typography} from '@material-ui/core';
 import React from 'react';
 import Rating from "@material-ui/lab/Rating";
 import {User} from "../../../model";
@@ -17,7 +17,6 @@ interface EditCardProps {
     reviewDisplayString: string,
     reviewBookId:number,
     currentUser: User,
-    isAdmin: boolean,
     editMode(): void,
     onSubmit(review: NewEditReview, id: number, key: number): void
 }

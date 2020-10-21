@@ -271,7 +271,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                                         reviewBookId={rev.bookId}
                                         reviewCreatorUserID={data.id} // Es el creador el del perfil asi que le pasamos el mismo
                                         currentUser={data}
-                                        isAdmin={true} //Le mandamos isAdmin true asi puede editar todas sus reviews, podes mandarle false tambien, total el chequeo que tiene reviewcard se fija si es una review de el.
                                         reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
                                         handleDelete={(reviewId: number) => {
                                             this.setState({...this.state, showDelete: true, currentId: reviewId,})

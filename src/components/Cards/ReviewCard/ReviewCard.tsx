@@ -4,7 +4,6 @@ import Rating from "@material-ui/lab/Rating";
 import {User} from "../../../model";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import './ReviewCard.css';
-import { EditAuthorFormModel } from '../../../model/Form/EditAuthorFormModel';
 
 
 interface ReviewCardProps {
@@ -15,17 +14,16 @@ interface ReviewCardProps {
     reviewDisplayString: string,
     reviewBookId:number,
     currentUser: User,
-    isAdmin: boolean,
     handleEdit():void,
     handleDelete(id:number):void,
     editMode(): void
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
-    const {isAdmin, reviewCreatorUserID, currentUser, reviewBookId,reviewDisplayString} = props;
+    const {reviewCreatorUserID, currentUser, reviewBookId,reviewDisplayString} = props;
 
  
-    if (currentUser.id === reviewCreatorUserID || isAdmin) {
+    if (currentUser.id === reviewCreatorUserID) {
         return (
             <Card className={'review-card-container'}
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
