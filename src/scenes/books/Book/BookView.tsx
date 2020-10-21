@@ -113,7 +113,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
     enableEdit = (j: number) =>{
         let reviews = this.state.reviews;
-        var review = this.state.reviews[j];
+        const review = this.state.reviews[j];
         review.editMode = !this.state.reviews[j].editMode;
         reviews[j] = review;
         this.setState({
