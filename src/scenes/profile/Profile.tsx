@@ -241,6 +241,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
 
 
+
     renderReviews() {
         const {data, reviews} = this.state;
         return (
@@ -257,7 +258,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     {reviews.map((rev, j) => {
                         return (
                             <Grid item xs sm={6} key={j}>
-                                <div key={'review-view-item-' + j}>
+                                <div key={'review-view-item-' + j} style={{paddingTop: 20}}>
                                     <ReviewCard
                                         id={rev.id}
                                         stars={rev.stars}
@@ -267,12 +268,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                                         currentUser={data}
                                         isProfile={true}
                                         reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
-                                        handleDelete={(reviewId: number) => {
-                                            this.setState({...this.state, showDelete: true, currentId: reviewId,})
-                                        }
-                                        }
-                                        handleEdit={() => null} //TODO
-                                    />
+                                        handleDelete={()=> null}
+                                        handleEdit={() => null}
+                                        />
                                 </div>
                             </Grid>
                         )
