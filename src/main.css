@@ -12,20 +12,22 @@ html, body {
     flex-flow: column nowrap;
     align-items: center;
     justify-items: center;
+
+    /* !! warning, 64px and 44px are header and footer heights
+    respectively, if they change, you should change here too */
+    min-height: calc(100vh - 64px - 44px);
 }
 
 .route-container .card-container {
     width: 600px;
     padding: 20px 65px 15px;
     margin-top: 20px;
-    /* background-color: #dddddd; */
 }
 
 .route-container .card-container-narrow {
     max-width: 350px;
     padding: 20px 65px 15px;
     margin-top: 20px;
-    /* background-color: #dddddd; */
 }
 
 html, body {

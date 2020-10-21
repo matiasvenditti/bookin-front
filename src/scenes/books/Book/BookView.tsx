@@ -36,7 +36,6 @@ interface BookViewProps {
     authors: Author[],
     reviews: EditableReview[],
     currentUser: User,
-    isAdmin: boolean,
     error: boolean,
     updateCallback(r: RequestStatus): void,
     user: any,
@@ -47,7 +46,6 @@ interface BookViewState {
     authors: Author[],
     reviews: EditableReview[],
     currentUser: User,
-    isAdmin: boolean,
     showDelete: boolean,
     currentId: number,
     reviewDeleteStatus: RequestStatus,
@@ -68,7 +66,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             },
             currentUser: props.currentUser,
             authors: props.authors,
-            isAdmin: props.isAdmin,
             reviews: props.reviews,
             showDelete: false,
             reviewDeleteStatus: RequestStatus.NONE,
@@ -120,7 +117,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             reviews
         })
     }
-    
+
     submitChanges = (review: NewEditReview, id: number, key: number) => {
         let reviews = this.state.reviews;
         ReviewService.editReview(review, id)
@@ -138,13 +135,18 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             })
     }
 
+    isAnonymous() {
+        return (this.props.user.id == null);
+    }
+
+
     render() {
         const {data, authors, reviews} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
-        const createReview = !this.hasReview() ?
-        <Grid item xs sm={6}>    
+        const createReview = (!this.hasReview() && !this.isAnonymous()) ?
+        <Grid item xs sm={6}>
             <div>
                 <CreateReview
                 book={this.state.data}
@@ -311,9 +313,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                     <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
                     <Grid
                         container
-                        direction="row"
-                        justify="space-evenly"
-                        alignItems="flex-start"
                         spacing={3}
                         className='reviews-container'
                     >
@@ -323,7 +322,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         {reviews.map((rev, j) => {
                             const {currentUser, data} = this.state;
                             return (
-                                <Grid item xs sm={6} key={j}>
+                                <Grid item xs={6} key={j}>
                                     <div key={'review-view-item-' + j}>
                                         {rev.editMode ? <EditCard
                                                        id={rev.review.id}
@@ -343,6 +342,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                             comment={rev.review.comment}
                                             reviewCreatorUserID={rev.review.userId}
                                             currentUser={currentUser}
+                                            isProfile={false}
                                             reviewBookId={data.id}
                                             reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
                                             handleDelete={(reviewId: number) => {

@@ -1,13 +1,13 @@
-import { FormControlLabel } from '@material-ui/core';
 import React from 'react';
 import { Checkbox } from '..';
+import { KeyValue } from '../../../model';
 import Loader from '../../Loader/Loader';
 import classes from './MultiCheckbox.module.css';
 
 
 interface MultiCheckboxProps {
     id: string,
-    options: string[],
+    options: KeyValue[],
     selected: string[],
     disabled?: boolean,
     loading?: boolean,
@@ -44,22 +44,18 @@ export const MultiCheckbox = (props: MultiCheckboxProps) => {
     } else {
         return (
             <div className={classes.container}>
-                {options.map((option: string, i: number) => (
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                id={'checkbox-' + i}
-                                checked={selected.includes(option)}
-                                type='checkbox'
-                                error={false}
-                                errorText={''}
-                                disabled={disabled}
-                                onChange={(id, type, value) => handleChange(option)}
-                                noStyle
-                            />
-                        }
+                {options.map((option: KeyValue, i: number) => (
+                    <Checkbox
+                        id={`checkbox-${id}-${i}`}
+                        key={`checkbox-${id}-${i}`}
+                        type='checkbox'
+                        checked={selected.includes(option.key)}
+                        error={false}
+                        errorText={''}
+                        disabled={disabled}
+                        onChange={(id, type, value) => handleChange(option.key)}
                         className={classes.checkboxContainer}
-                        label={option}
+                        label={option.value}
                     />
                 ))}
             </div>

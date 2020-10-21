@@ -6,6 +6,8 @@ import { Book } from "../model/Book";
 import { Author } from "../model/Author";
 import { UpdateBook } from "../model/UpdateBook";
 import { Filters } from "../model/results/Filters";
+import { ParserUtils } from "../utils";
+import { TagValueParams } from "../model";
 
 
 class BooksService {
@@ -51,15 +53,18 @@ class BooksService {
     }
 
     static searchBooks = (query: Filters): Promise<AxiosResponse<Book[]>> => {
-        // TODO: back missing another parameters
-        // &nationality=${}
-        return instance.get<Book[]>(`${baseURL}/books/search?title=${query.text}`);
-        // return instance.get<Book[]>(`${baseURL}/books/search?title=${query.text}`);
+        const arrayToParse: TagValueParams[] = [
+            {tag: 'title', value: query.text === '' ? '' : query.text},
+            ...query.bookGenres.map((bookG) => ({tag: 'genre', value: bookG})),
+            ...query.languages.map((lang) => ({tag: 'language', value: lang})),
+            {tag: 'date', value: ''},
+        ];
+        return instance.get<Book[]>(`${baseURL}/books/search${ParserUtils.arrayToRequestParams(arrayToParse)}`);
     }
 
     // TODO: back missing simple search
     static searchBooksSimple = (query: string): Promise<AxiosResponse<Book[]>> => {
-        return instance.get<Book[]>(`${baseURL}/books/search?title=${query}`);
+        return instance.get<Book[]>(`${baseURL}/books/search${ParserUtils.arrayToRequestParams([{tag: 'title', value: query}])}`);
     }
 }
 

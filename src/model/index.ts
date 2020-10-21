@@ -6,6 +6,7 @@ import { UpdateAuthor } from './UpdateAuthor';
 import { Book } from './Book';
 import { KeyValue } from './KeyValue';
 import { NewReview } from './NewReview';
+import { TagValueParams } from './TagValueParams';
 
 
 export {
@@ -20,4 +21,5 @@ export type {
     UpdateAuthor,
     KeyValue,
     NewReview,
+    TagValueParams,
 }

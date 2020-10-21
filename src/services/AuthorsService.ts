@@ -2,9 +2,10 @@ import {NewAuthor} from "../model/NewAuthor";
 import {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
-import {Book, UpdateAuthor} from "../model";
+import {Book, TagValueParams, UpdateAuthor} from "../model";
 import { Author } from "../model/Author";
 import { Filters } from "../model/results/Filters";
+import { ParserUtils } from "../utils";
 
 
 class AuthorsService {
@@ -54,27 +55,18 @@ class AuthorsService {
         return instance.get<Book[]>(`${baseURL}/authors/${id}/books`)
     }
 
-    // filters wont be used for author searching, only text query
     static searchAuthors = (query: Filters): Promise<AxiosResponse<Author[]>> => {
-        // TODO: back missing another parameters
-        // &genre=${}&language=${} 
-        return instance.get<Author[]>(`${baseURL}/authors/search?name=${query.text}`)
-        // return instance.get<Author[]>(`${baseURL}/authors/search?fullName=${query.text}`)
+        // console.log(query)
+        const arrayToParse: TagValueParams[] = [
+            {tag: 'name', value: query.text === '' ? '' : query.text},
+            ...query.nationalities.map((nat) => ({tag: 'nationality', value: nat})),
+        ];
+        return instance.get<Author[]>(`${baseURL}/authors/search${ParserUtils.arrayToRequestParams(arrayToParse)}`);
     }
     
-    // TODO: back missing simple search
     static searchAuthorsSimple = (query: string): Promise<AxiosResponse<Author[]>> => {
-        return instance.get<Author[]>(`${baseURL}/authors/search?name=${query}`)
+        return instance.get<Author[]>(`${baseURL}/authors/search${ParserUtils.arrayToRequestParams([{tag: 'name', value: query}])}`);
     }
-    // filters wont be used for author searching, only text query
-    // static searchAuthors = (query: string | Filters): Promise<AxiosResponse<Author[]>> => {
-    //     if (typeof query === 'string') {
-    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
-    //     } else {
-    //         // TODO endpoint for filters
-    //         return instance.get<Author[]>(`${baseURL}/authors/search?key=${query}`);
-    //     }
-    // }
 }
 
 

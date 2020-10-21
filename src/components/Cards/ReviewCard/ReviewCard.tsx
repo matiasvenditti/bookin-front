@@ -13,17 +13,16 @@ interface ReviewCardProps {
     reviewCreatorUserID: number,
     reviewDisplayString: string,
     reviewBookId:number,
+    isProfile:boolean,
     currentUser: User,
     handleEdit():void,
     handleDelete(id:number):void,
-    editMode(): void
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
-    const {reviewCreatorUserID, currentUser, reviewBookId,reviewDisplayString} = props;
+    const {reviewCreatorUserID, currentUser, reviewBookId, reviewDisplayString, comment, isProfile} = props;
 
- 
-    if (currentUser.id === reviewCreatorUserID) {
+    if (currentUser?.id === reviewCreatorUserID) {
         return (
             <Card className={'review-card-container'}
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
@@ -38,9 +37,17 @@ const ReviewCard = (props: ReviewCardProps) => {
                             variant="h6"
                             style={{color: 'black', display: 'flex', alignItems: 'center'}}
                         >
+                            {isProfile &&
                             <Link href={`/books/${reviewBookId}`} color="inherit">
-                            {props.reviewDisplayString}
+                                {reviewDisplayString}
                             </Link>
+                            }
+                            {!isProfile &&
+                            <Link color="inherit">
+                                {reviewDisplayString}
+                            </Link>
+                            }
+
 
                             <div className="button-container">
                                 <ButtonGroup variant="contained" color="secondary"
@@ -58,7 +65,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                 <CardContent className={'review-card-body'}>
                     <Typography variant="body1" color="textPrimary"
                                 component="p">
-                        {props.comment}
+                        {comment || "Sin comentario"}
                     </Typography>
                 </CardContent>
             </Card>
@@ -78,7 +85,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                             variant="h6"
                             style={{color: 'black', display: 'flex', alignItems: 'center'}}
                         >
-                            {props.reviewDisplayString}
+                            {reviewDisplayString}
 
 
                         </Typography>}
@@ -89,7 +96,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                 <CardContent className={'review-card-body'}>
                     <Typography noWrap variant="body1" color="textPrimary"
                                 component="p">
-                        {props.comment}
+                        {comment || "Sin comentario"}
                     </Typography>
                 </CardContent>
             </Card>

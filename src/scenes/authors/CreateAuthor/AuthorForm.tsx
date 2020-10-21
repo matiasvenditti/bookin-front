@@ -19,6 +19,7 @@ interface AuthorFormProps {
     loading: boolean,
     onSubmit(values: NewAuthor, photo: File): void;
     onCancel(): void;
+    onLoadImageError(): void,
 }
 
 export default class AuthorForm extends Component<AuthorFormProps, AuthorFormState> {
@@ -71,12 +72,31 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
             this.setState({ ...this.state, values: { ...this.state.values, photo: { value: null, type: 'photo', error: true, touched: true } }, formValid: false })
         }
     }
-
+    
     readFile = (file: File) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => this.setState({ ...this.state, bytearray: reader.result });
-    }
+        if (file === undefined) return;
+        if (file.size > PhotoUtils.MAX_PHOTO_SIZE || !['jpg', 'jpeg', 'png'].some((ext) => `image/${ext}` === file.type)) {
+            this.props.onLoadImageError();
+        } else {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                // console.log('res', this.);
+                let image = new Image();
+                image.src = reader.result ? reader.result.toString() : '';
+                image.onload = () => {
+                    if (image.width <= 480 && image.height <= 480) {
+                        this.setState({
+                            ...this.state,
+                            bytearray: reader.result
+                        });
+                    } else this.props.onLoadImageError();
+                }
+                image.onerror = () => {this.props.onLoadImageError()}
+            }
+            reader.onerror = () => {this.props.onLoadImageError()}
+        }
+    };
 
     render() {
         const { loading } = this.props;
@@ -157,7 +177,7 @@ export default class AuthorForm extends Component<AuthorFormProps, AuthorFormSta
                         >
                             Agrega una foto
                             <input
-                                accept="image/*"
+                                accept='.png, .jpg, .jpeg'
                                 type="file"
                                 style={{ display: "none" }}
                             />

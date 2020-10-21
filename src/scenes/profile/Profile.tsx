@@ -271,6 +271,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                                         reviewBookId={rev.bookId}
                                         reviewCreatorUserID={data.id} // Es el creador el del perfil asi que le pasamos el mismo
                                         currentUser={data}
+                                        isProfile={true}
                                         reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
                                         handleDelete={(reviewId: number) => {
                                             this.setState({...this.state, showDelete: true, currentId: reviewId,})
@@ -286,9 +287,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 </Grid>
                 {this.renderReviewDelete()}
             </div>
-
         )
-
     }
 }
 

@@ -9,6 +9,7 @@ import { BookFormModel } from '../../../model/Form/BookFormModel';
 import { UpdateBook } from '../../../model/UpdateBook';
 import { Author } from '../../../model/Author';
 import { Book } from '../../../model';
+import { allLanguages } from '../../../utils/consts';
 
 
 interface BookFormState {
@@ -25,6 +26,7 @@ interface BookFormProps {
     book: Book,
     onCancel(): void;
     loading: boolean,
+    onLoadImageError(): void,
 }
 
 export default class ModifyBookForm extends Component<BookFormProps, BookFormState> {
@@ -111,17 +113,31 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
             formValid: !anyErrors,
         });
     }
-
+    
     _readFile = (file: File) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            this.setState((prevState: BookFormState) => ({
-                ...prevState,
-                bytearray: reader.result
-            }));
+        if (file === undefined) return;
+        if (file.size > PhotoUtils.MAX_PHOTO_SIZE || !['jpg', 'jpeg', 'png'].some((ext) => `image/${ext}` === file.type)) {
+            this.props.onLoadImageError();
+        } else {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                // console.log('res', this.);
+                let image = new Image();
+                image.src = reader.result ? reader.result.toString() : '';
+                image.onload = () => {
+                    if (image.width <= 480 && image.height <= 480) {
+                        this.setState((prevState: BookFormState) => ({
+                            ...prevState,
+                            bytearray: reader.result
+                        }));
+                    } else this.props.onLoadImageError();
+                }
+                image.onerror = () => {this.props.onLoadImageError()}
+            }
+            reader.onerror = () => {this.props.onLoadImageError()}
         }
-    }
+    };
 
     render(){
 
@@ -154,7 +170,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                             label='Idioma'
                             id='language'
                             value={this.state.values.language.value}
-                            options={['Español', 'Inglés']}
+                            options={allLanguages}
                             onChange={this.handleInput}
                         />
                         <DatePicker
@@ -196,7 +212,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                                  color='secondary'>
                             Modifica la Foto
                             <input
-                                accept="image/*"
+                                accept='.png, .jpg, .jpeg'
                                 type="file"
                                 style={{ display: "none" }}
                             />

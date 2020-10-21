@@ -8,7 +8,7 @@ import classes from "./CreateReviewForm.module.css";
 
 
 interface CreateReviewFormProps {
-    onSubmit(revew: NewReview): void,
+    onSubmit(review: NewReview): void,
     user: User,
     book: Book,
 }
@@ -27,7 +27,6 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
             values: {
                 message: { value: '', type: '', error: false, touched: false },
                 rating: { value: 0, type: 'number', error: false, touched: false },
-
             }
         }
     }
@@ -51,13 +50,13 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
             [id]: { value, type, error: error, touched: true }
             },
         });    
-    } 
+    }
 
     handleRateChange = (value: number|null) => {
         this.setState({
             values: {
                 ...this.state.values,
-                rating: {value, type: 'number', error: false, touched: true}
+                rating: {value, type: 'number', error: false, touched: value != null}
             }
         });
     }
@@ -85,13 +84,13 @@ export default class CreateReviewForm extends React.Component<CreateReviewFormPr
                             onChange={this.handleInput}
                             error={this.state.values.message.error}
                             multiline={true}
-                            errorText={this.state.values.message.error ? 'Excede el limite de caracteres' : ''}
+                            errorText={this.state.values.message.error ? 'Excede el límite de caracteres' : ''}
                         />
                     </form>
                 </CardContent>
                 <CardActions>
                     <div className={classes.padding}>
-                        <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.rating.touched) && !(this.state.values.message.error)} onClick={this.handleSubmit} />
+                        <Button title='Crear Reseña' color='primary' variant='contained' disabled={!(this.state.values.rating.touched) || (this.state.values.message.error)} onClick={this.handleSubmit} />
                     </div>
                 </CardActions>
             </Card>

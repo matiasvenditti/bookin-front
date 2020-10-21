@@ -45,7 +45,7 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     const [emptySearch, setEmptySearch] = useState(searchInput === '');
 
     useEffect(() => {
-        if (searchInput !== '') _searchRequest({...filters, text: searchInput});
+        if (searchInput !== '') _searchRequest({...initialFilters, text: searchInput});
     }, [props.searchInput]);
     
     const checkSearchIsEmpty = (newFilters: FiltersModel) => {
@@ -62,6 +62,7 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     const _searchRequest = (newFilters: FiltersModel) => {
         if (checkSearchIsEmpty(newFilters)) {
             setEmptySearch(true);
+            setFilters(newFilters);
             return;
         }
         setEmptySearch(false);
@@ -69,7 +70,7 @@ const ResultsMenu = (props: ResultsMenuProps) => {
         setGetDataStatus(RequestStatus.LOADING);
         const results = Promise.all([
             BooksService.searchBooks(newFilters),
-            AuthorsService.searchAuthorsSimple(newFilters.text),
+            AuthorsService.searchAuthors(newFilters),
         ])
         results
             .then((responses) => {
@@ -83,21 +84,23 @@ const ResultsMenu = (props: ResultsMenuProps) => {
     };
 
     return (
-        <div className={classes.resultsMenuContainer}>
-            <Filters
-                filters={filters}
-                loading={updateStatus === RequestStatus.LOADING}
-                onChangeFilters={(filters: FiltersModel) => _searchRequest(filters)}
-                onChangeSortBy={(sortBy: SortBy) => setFilters({...filters, sortBy})}
-                onChangeFilterBy={(filterBy: FilterBy) => setFilters({...filters, filterBy})}
-            />
-            <Results
-                emptySearch={emptySearch}
-                sortBy={filters.sortBy}
-                filterBy={filters.filterBy}
-                data={data}
-                loading={getDataStatus === RequestStatus.LOADING}
-            />
+        <div className='route-container'>
+            <div className={classes.resultsMenuContainer}>
+                <Filters
+                    filters={filters}
+                    loading={updateStatus === RequestStatus.LOADING}
+                    onChangeFilters={(filters: FiltersModel) => _searchRequest(filters)}
+                    onChangeSortBy={(sortBy: SortBy) => setFilters({...filters, sortBy})}
+                    onChangeFilterBy={(filterBy: FilterBy) => setFilters({...filters, filterBy})}
+                />
+                <Results
+                    emptySearch={emptySearch}
+                    sortBy={filters.sortBy}
+                    filterBy={filters.filterBy}
+                    data={data}
+                    loading={getDataStatus === RequestStatus.LOADING}
+                />
+            </div>
         </div>
     )
 }

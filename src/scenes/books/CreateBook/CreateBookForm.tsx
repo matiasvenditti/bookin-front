@@ -26,6 +26,7 @@ interface BookFormProps {
     authors: Author[],
     onCancel(): void,
     loading: boolean,
+    onLoadImageError(): void,
 }
 
 export default class CreateBookForm extends Component<BookFormProps, BookFormState> {
@@ -94,17 +95,31 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
             }
         });
     }
-
+    
     readFile = (file: File) => {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-            this.setState((prevState: BookFormState) => ({
-                ...prevState,
-                bytearray: reader.result
-            }));
+        if (file === undefined) return;
+        if (file.size > PhotoUtils.MAX_PHOTO_SIZE || !['jpg', 'jpeg', 'png'].some((ext) => `image/${ext}` === file.type)) {
+            this.props.onLoadImageError();
+        } else {
+            let reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                // console.log('res', this.);
+                let image = new Image();
+                image.src = reader.result ? reader.result.toString() : '';
+                image.onload = () => {
+                    if (image.width <= 480 && image.height <= 480) {
+                        this.setState((prevState: BookFormState) => ({
+                            ...prevState,
+                            bytearray: reader.result
+                        }));
+                    } else this.props.onLoadImageError();
+                }
+                image.onerror = () => {this.props.onLoadImageError()}
+            }
+            reader.onerror = () => {this.props.onLoadImageError()}
         }
-    }
+    };
 
     render() {
         const image = this.state.bytearray ?
@@ -201,7 +216,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
                         >
                             Agrega una foto
                             <input
-                                accept="image/*"
+                                accept='.png, .jpg, .jpeg'
                                 type="file"
                                 style={{ display: "none" }}
                             />

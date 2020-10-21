@@ -22,8 +22,8 @@ interface ModifyBookState {
 
 interface ModifyBookProps extends RouteComponentProps<MatchParams> {
     updateCallback(r: RequestStatus): void,
-
     getBookDataErrorCallback(): void,
+    onLoadImageError(): void,
 }
 
 interface MatchParams {
@@ -113,6 +113,7 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
                         book={this.state.book}
                         onCancel={this.props.history.goBack}
                         loading={this.state.getBookDataStatus === RequestStatus.LOADING}
+                        onLoadImageError={this.props.onLoadImageError}
                     />
                 </div>
             </div>

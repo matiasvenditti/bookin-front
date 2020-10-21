@@ -17,7 +17,8 @@ interface CreateBookState {
 }
 
 interface CreateBookProps extends RouteComponentProps {
-    createBookCallback: (status: RequestStatus) => void
+    createBookCallback: (status: RequestStatus) => void,
+    onLoadImageError(): void,
 }
 
 class CreateBook extends Component<CreateBookProps, CreateBookState> {
@@ -63,6 +64,7 @@ class CreateBook extends Component<CreateBookProps, CreateBookState> {
                         authors={this.state.authors}
                         onCancel={this.props.history.goBack}
                         loading={this.state.status === RequestStatus.LOADING}
+                        onLoadImageError={this.props.onLoadImageError}
                     />
                 </div>
             </div>
