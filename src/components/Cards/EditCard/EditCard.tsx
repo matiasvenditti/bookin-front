@@ -1,4 +1,12 @@
-import {Avatar, Button, Card, CardActions, CardContent, CardHeader, Typography} from '@material-ui/core';
+import {
+    Avatar,
+    Button,
+    ButtonGroup,
+    Card,
+    CardContent,
+    CardHeader,
+    Typography
+} from '@material-ui/core';
 import React from 'react';
 import Rating from "@material-ui/lab/Rating";
 import {User} from "../../../model";
@@ -32,8 +40,8 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
         super(props);
         this.state = {
             values: {
-                message: { value: this.props.comment, type: '', error: false, touched: true },
-                rating: { value: this.props.stars, type: 'number', error: false, touched: true },
+                message: { value: this.props.comment, type: '', error: false, touched: false },
+                rating: { value: this.props.stars, type: 'number', error: false, touched: false },
             },
         }
     }
@@ -70,11 +78,11 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
         return (
             <Card className={classes.reviewCardContainer}
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
-                <form>
+
                     <CardHeader
                         avatar={
                             <Avatar aria-label="recipe" className={classes.reviewItemAvatar}>
-                                {/*{props.reviewCreatorUserID.photo}*/}
+                                {this.props.reviewDisplayString.substr(0,2)}
                             </Avatar>
                         }
                         title={
@@ -83,6 +91,13 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
                                 style={{color: 'black', display: 'flex', alignItems: 'center'}}
                             >
                                 {this.props.reviewDisplayString}
+                                <div className={classes.reviewButtonContainer}>
+                                    <ButtonGroup variant="contained" color="secondary"
+                                                 aria-label="contained primary button group">
+                                        <Button title='Editar'  disabled={!(this.state.values.rating.touched) && !(this.state.values.message.touched) &&  !(this.state.values.message.error)} onClick={this.handleSubmit}>Confirmar</Button>
+                                        <Button title='Cancelar'  onClick={this.props.editMode}>Cancelar</Button>
+                                    </ButtonGroup>
+                                </div>
 
 
                             </Typography>}
@@ -108,13 +123,6 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
                             errorText={this.state.values.message.error ? 'Excede el limite de caracteres' : ''}
                         />
                     </CardContent>
-                </form>
-                <CardActions>
-                    <div className={classes.paddingEdit}>
-                        <Button title='Editar' color='primary' variant='contained' disabled={!(this.state.values.rating.touched) && !(this.state.values.message.error)} onClick={this.handleSubmit} />
-                        <Button title='Cancelar' color='primary' variant='contained' onClick={this.props.editMode} />
-                    </div>
-                </CardActions>
             </Card>
             )        
     }       
