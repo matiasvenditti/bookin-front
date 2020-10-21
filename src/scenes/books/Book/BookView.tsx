@@ -349,8 +349,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                 this.setState({...this.state, showDelete: true, currentId: reviewId,})
                                             }
                                             }
-                                            handleEdit={() => null} //TODO
-                                            editMode={() => this.enableEdit(j)}
+                                            handleEdit={() => this.enableEdit(j)}
                                         />}
                                     </div>
                                 </Grid>

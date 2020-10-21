@@ -52,7 +52,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                             <div className="button-container">
                                 <ButtonGroup variant="contained" color="secondary"
                                              aria-label="contained primary button group" className={'button-group'}>
-                                    <Button onClick={() => props.editMode()}>Editar</Button>
+                                    <Button onClick={() => props.handleEdit()}>Editar</Button>
                                     <Button onClick={() => props.handleDelete(props.id)}>Eliminar</Button>
                                 </ButtonGroup>
                             </div>

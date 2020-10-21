@@ -277,8 +277,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                                             this.setState({...this.state, showDelete: true, currentId: reviewId,})
                                         }
                                         }
-                                        handleEdit={() => null} //TODO
-                                        editMode={() => this.enableEdit(j)}
+                                        handleEdit={() => this.enableEdit(j)}
                                         />
                                 </div>
                             </Grid>
