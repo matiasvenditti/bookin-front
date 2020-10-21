@@ -156,7 +156,6 @@ class Book extends React.Component<BookProps, BookState> {
                 user={this.state.currentUser}
                 data={data}
                 currentUser={currentUser}
-                isAdmin={isAdmin}
                 authors={authors}
                 reviews={reviews}
                 error={getBookDataStatus === RequestStatus.ERROR}
