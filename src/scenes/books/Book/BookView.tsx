@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import React, {Component, useState} from "react";
 import {
     Avatar,
     Badge,
@@ -26,6 +26,7 @@ import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
 import CreateReview from "../../review/CreateReview/CreateReview";
+import BooksService from "../../../services/BooksService";
 
 
 interface BookViewProps {
@@ -81,8 +82,10 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         this.setState({reviewDeleteStatus: RequestStatus.LOADING});
         ReviewService.deleteReview(id)
             .then(() => {
-                this.setState({reviewDeleteStatus: RequestStatus.SUCCESS});
-                window.location.reload();
+                const new_reviews = this.state.reviews.filter((review) => review.id !== id);
+                this.setState({reviewDeleteStatus: RequestStatus.SUCCESS, reviews: new_reviews});
+                this.updateBook();
+                this.render();
             })
             .catch(() => {
                 this.setState({reviewDeleteStatus: RequestStatus.ERROR});
@@ -104,14 +107,30 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
     }
     
     hasReview() {
-        const reviews = this.props.reviews;
+        const reviews = this.state.reviews;
         return reviews.some(review => review.userId === this.props.user.id);
+    }
+
+    updateReviews() {
+        ReviewService.getReviews(this.props.data.id)
+            .then((response) => {
+                this.setState({reviews: response.data})
+            });
+    }
+
+    updateBook() {
+        BooksService.getBookData(this.props.data.id)
+            .then((response) => {
+                this.setState({data: response.data})
+            })
     }
     
     render() {
-        const {data, authors, reviews} = this.state;
+        const {data, authors} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
+        const updateReviews = this.updateReviews();
+        const updateBook = this.updateBook();
 
         const createReview = !this.hasReview() ?
         <Grid item xs sm={6}>    
@@ -120,9 +139,13 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                 book={this.state.data}
                 updateCallback={this.props.updateCallback}
                 />
+                {updateReviews}
+                {updateBook}
             </div>
         </Grid>:
         null;
+
+        const {reviews} = this.state;
 
         if (error) {
             return (
@@ -271,7 +294,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             <Grid item xs={12}>
                                 <div className='rating-container'>
                                     <Typography variant='h4' className='rating'> Rating </Typography>
-                                    <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
+                                    <Rating name="read-only" value={this.state.data.stars} precision={0.5} readOnly/>
 
                                 </div>
                             </Grid>

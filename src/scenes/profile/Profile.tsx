@@ -218,8 +218,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         this.setState({reviewDeleteStatus: RequestStatus.LOADING});
         ReviewService.deleteReview(id)
             .then(() => {
-                this.setState({reviewDeleteStatus: RequestStatus.SUCCESS});
-                window.location.reload();
+                const new_reviews = this.state.reviews.filter((review) => review.id !== id);
+                this.setState({reviewDeleteStatus: RequestStatus.SUCCESS, reviews: new_reviews});
             })
             .catch(() => {
                 this.setState({reviewDeleteStatus: RequestStatus.ERROR});

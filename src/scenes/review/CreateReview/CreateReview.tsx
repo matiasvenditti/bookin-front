@@ -65,7 +65,6 @@ class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>
             this.props.updateCallback(RequestStatus.SUCCESS);
             this.setState({ ...this.state, reviewStatus: RequestStatus.SUCCESS });
             //this.props.history.push('/books/' + this.state.bookId);
-            window.location.reload(false); 
         })
         .catch((error: any) => {
             this.props.updateCallback(RequestStatus.ERROR);
