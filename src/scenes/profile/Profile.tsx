@@ -240,12 +240,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         )
     }
 
-    enableEdit = (j: number) =>{
-        /**var review = this.state.reviews[j];
-        review.edit = true;
-        this.state.reviews[j] = review;*/
-        console.log(j);
-    }
+
 
     renderReviews() {
         const {data, reviews} = this.state;
@@ -273,11 +268,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                                         currentUser={data}
                                         isProfile={true}
                                         reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
-                                        handleDelete={(reviewId: number) => {
-                                            this.setState({...this.state, showDelete: true, currentId: reviewId,})
-                                        }
-                                        }
-                                        handleEdit={() => this.enableEdit(j)}
+                                        handleDelete={()=> null}
+                                        handleEdit={() => null}
                                         />
                                 </div>
                             </Grid>

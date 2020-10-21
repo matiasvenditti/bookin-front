@@ -47,8 +47,7 @@ const ReviewCard = (props: ReviewCardProps) => {
                                 {reviewDisplayString}
                             </Link>
                             }
-
-
+                            {!isProfile &&
                             <div className="button-container">
                                 <ButtonGroup variant="contained" color="secondary"
                                              aria-label="contained primary button group" className={'button-group'}>
@@ -56,6 +55,9 @@ const ReviewCard = (props: ReviewCardProps) => {
                                     <Button onClick={() => props.handleDelete(props.id)}>Eliminar</Button>
                                 </ButtonGroup>
                             </div>
+                            }
+
+
                         </Typography>
                     }
                     subheader={<Rating name="read-only" value={props.stars} precision={0.5}
