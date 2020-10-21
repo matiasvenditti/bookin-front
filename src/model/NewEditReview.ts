@@ -1,4 +1,4 @@
 export interface NewEditReview {
     comment: string,
-    rating: number,
+    stars: number,
 }

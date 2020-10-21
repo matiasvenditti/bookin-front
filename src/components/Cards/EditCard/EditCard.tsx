@@ -10,6 +10,7 @@ import Input from '../../Form/Input/Input';
 
 interface EditCardProps {
     id: number,
+    index: number,
     stars: number,
     comment: string,
     reviewCreatorUserID: number,
@@ -18,7 +19,7 @@ interface EditCardProps {
     currentUser: User,
     isAdmin: boolean,
     editMode(): void,
-    onSubmit(review: NewEditReview, id: number): void
+    onSubmit(review: NewEditReview, id: number, key: number): void
 }
 
 interface EditCardState{
@@ -40,10 +41,10 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
 
     handleSubmit = () => {
         let values: NewEditReview = {
-            rating: this.state.values.rating.value,
+            stars: this.state.values.rating.value,
             comment: this.state.values.message.value,
         }
-        this.props.onSubmit(values, this.props.id);
+        this.props.onSubmit(values, this.props.id, this.props.index);
     }
 
     handleInput = (id: string, type: string, value: string) => {
@@ -87,8 +88,7 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
 
                             </Typography>}
                         subheader={<Rating 
-                            name="simple-controlled"                        
-                            value={this.props.stars} 
+                            value={this.state.values.rating.value} 
                             precision={0.5}                                 
                             onChange={(event, newValue) => {
                                 this.handleRateChange(newValue);

@@ -109,7 +109,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
     
     hasReview() {
         const reviews = this.props.reviews;
-        return reviews.some(review => review.review.id === this.props.user.id);
+        return reviews.some(review => review.review.userId === this.props.user.id);
     }
 
     enableEdit = (j: number) =>{
@@ -122,14 +122,19 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         })
     }
     
-    submitChanges = (review: NewEditReview, id: number) => {
+    submitChanges = (review: NewEditReview, id: number, key: number) => {
         let reviews = this.state.reviews;
         ReviewService.editReview(review, id)
-            .then((response: AxiosResponse<ReviewWithUser>) => {
-                reviews[id] = {review: response.data, editMode: false}              
+            .then((response: AxiosResponse<NewEditReview>) => {
+                console.log(response.data)
+                const editableReview: EditableReview = {...reviews[key], editMode: false, review: {...reviews[key].review, stars: response.data.stars, comment: response.data.comment}}
                 this.setState((prevState: BookViewState) => ({
                     ...prevState,
-                    reviews,
+                    reviews: [
+                        ...reviews.slice(0, key),
+                        editableReview,
+                        ...reviews.slice(key+1)
+                    ]
                 }))
             })
     }
@@ -322,7 +327,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                 <Grid item xs sm={6} key={j}>
                                     <div key={'review-view-item-' + j}>
                                         {rev.editMode ? <EditCard
-                                                        id={rev.review.id}
+                                                       id={rev.review.id}
+                                                       index={j}
                                                        stars={rev.review.stars}
                                                        comment={rev.review.comment}
                                                        reviewCreatorUserID={rev.review.userId}

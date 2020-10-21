@@ -27,8 +27,8 @@ class ReviewService {
         return instance.post<Review>(`${baseURL}/reviews`, review)
     }
 
-    static editReview = (review: NewEditReview, id: number): Promise<AxiosResponse<ReviewWithUser>> => {
-        return instance.put<ReviewWithUser>(`${baseURL}/reviews/${id}`, review)
+    static editReview = (review: NewEditReview, id: number): Promise<AxiosResponse<NewEditReview>> => {
+        return instance.put<NewEditReview>(`${baseURL}/reviews/${id}`, review)
     }
 
 }
