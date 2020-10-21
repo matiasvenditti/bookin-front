@@ -1,8 +1,8 @@
 import {Avatar, Button, Card, CardActions, CardContent, CardHeader, Link, Typography} from '@material-ui/core';
 import React from 'react';
 import Rating from "@material-ui/lab/Rating";
-import {Book, NewReview, User} from "../../../model";
-import './EditCard.css';
+import {User} from "../../../model";
+import classes from './EditCard.module.css';
 import { ReviewFormModel } from '../../../model/Form/ReviewFormModel';
 import { NewEditReview } from '../../../model/NewEditReview';
 import Input from '../../Form/Input/Input';
@@ -69,12 +69,12 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
     render() {
     
         return (
-            <Card className={'review-card-container'}
+            <Card className={classes.reviewCardContainer}
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
                 <form>
                     <CardHeader
                         avatar={
-                            <Avatar aria-label="recipe" className={'review-item.avatar'}>
+                            <Avatar aria-label="recipe" className={classes.reviewItemAvatar}>
                                 {/*{props.reviewCreatorUserID.photo}*/}
                             </Avatar>
                         }
@@ -96,7 +96,7 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
                     }
 
                     />
-                    <CardContent className={'review-card-body'}>
+                    <CardContent className={classes.reviewCardBody}>
                     <Input
                             label='Escriba aqui (max 1000 caracteres)'
                             variant='filled'
@@ -111,7 +111,7 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
                     </CardContent>
                 </form>
                 <CardActions>
-                    <div className={'padding-edit'}>
+                    <div className={classes.paddingEdit}>
                         <Button title='Editar' color='primary' variant='contained' disabled={!(this.state.values.rating.touched) && !(this.state.values.message.error)} onClick={this.handleSubmit} />
                         <Button title='Cancelar' color='primary' variant='contained' onClick={this.props.editMode} />
                     </div>
