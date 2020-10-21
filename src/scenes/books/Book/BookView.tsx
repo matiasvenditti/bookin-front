@@ -33,7 +33,6 @@ interface BookViewProps {
     authors: Author[],
     reviews: ReviewWithUser[],
     currentUser: User,
-    isAdmin: boolean,
     error: boolean,
     updateCallback(r: RequestStatus): void,
     user: any,
@@ -44,7 +43,6 @@ interface BookViewState {
     authors: Author[],
     reviews: ReviewWithUser[],
     currentUser: User,
-    isAdmin: boolean,
     showDelete: boolean,
     currentId: number,
     reviewDeleteStatus: RequestStatus,
@@ -65,7 +63,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             },
             currentUser: props.currentUser,
             authors: props.authors,
-            isAdmin: props.isAdmin,
             reviews: props.reviews,
             showDelete: false,
             reviewDeleteStatus: RequestStatus.NONE,
@@ -107,14 +104,18 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         const reviews = this.props.reviews;
         return reviews.some(review => review.userId === this.props.user.id);
     }
+
+    isAnonymous() {
+        return (this.props.user.id == null);
+    }
     
     render() {
         const {data, authors, reviews} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
-        const createReview = !this.hasReview() ?
-        <Grid item xs sm={6}>    
+        const createReview = (!this.hasReview() && !this.isAnonymous()) ?
+        <Grid item xs sm={6}>
             <div>
                 <CreateReview
                 book={this.state.data}
@@ -288,7 +289,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         {createReview}
 
                         {reviews.map((rev, j) => {
-                            const {isAdmin, currentUser, data} = this.state;
+                            const {currentUser, data} = this.state;
                             return (
                                 <Grid item xs={6} key={j}>
                                     <div key={'review-view-item-' + j}>
@@ -298,7 +299,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                             comment={rev.comment}
                                             reviewCreatorUserID={rev.userId}
                                             currentUser={currentUser}
-                                            isAdmin={isAdmin}
                                             isProfile={false}
                                             reviewBookId={data.id}
                                             reviewDisplayString={rev.userFirstName + ' ' + rev.userLastName}
