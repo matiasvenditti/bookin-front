@@ -15,15 +15,14 @@ interface ReviewCardProps {
     reviewBookId:number,
     isProfile:boolean,
     currentUser: User,
-    isAdmin: boolean,
     handleEdit():void,
     handleDelete(id:number):void,
 }
 
 const ReviewCard = (props: ReviewCardProps) => {
-    const {isAdmin, reviewCreatorUserID, currentUser, reviewBookId, reviewDisplayString, comment, isProfile} = props;
+    const {reviewCreatorUserID, currentUser, reviewBookId, reviewDisplayString, comment, isProfile} = props;
 
-    if (currentUser.id === reviewCreatorUserID || isAdmin) {
+    if (currentUser?.id === reviewCreatorUserID) {
         return (
             <Card className={'review-card-container'}
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
