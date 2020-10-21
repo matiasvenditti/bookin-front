@@ -263,7 +263,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     {reviews.map((rev, j) => {
                         return (
                             <Grid item xs sm={6} key={j}>
-                                <div key={'review-view-item-' + j}>
+                                <div key={'review-view-item-' + j} style={{paddingTop: 20}}>
                                     <ReviewCard
                                         id={rev.id}
                                         stars={rev.stars}
