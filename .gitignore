@@ -25,4 +25,4 @@ yarn.lock
 
 .idea
 
-.debug.log
+debug.log

@@ -30,18 +30,18 @@ export const allLanguages: KeyValue[] = [
 ];
 
 export const allBookGenres: KeyValue[] = [
-    {key: 'adventure', value: 'Aventura'},
-    {key: 'action', value: 'Acción'},
-    {key: 'selfHelp', value: 'Autoayuda'},
-    {key: 'biography', value: 'Biografías'},
-    {key: 'scienceFiction', value: 'Ciencia Ficción'},
-    {key: 'educational', value: 'Educativos'},
-    {key: 'fantasy', value: 'Fantasia'},
-    {key: 'children', value: 'Infantiles'},
-    {key: 'romanticNovel', value: 'Novelas románticas'},
-    {key: 'poem', value: 'Poesías'},
-    {key: 'police', value: 'Policiales'},
-    {key: 'terror', value: 'Terror'},
+    {key: 'Aventura', value: 'Aventura'},
+    {key: 'Acción', value: 'Acción'},
+    {key: 'Autoayuda', value: 'Autoayuda'},
+    {key: 'Biografías', value: 'Biografías'},
+    {key: 'Ciencia Ficción', value: 'Ciencia Ficción'},
+    {key: 'Educativos', value: 'Educativos'},
+    {key: 'Fantasia', value: 'Fantasia'},
+    {key: 'Infantiles', value: 'Infantiles'},
+    {key: 'Novelas románticas', value: 'Novelas románticas'},
+    {key: 'Poesías', value: 'Poesías'},
+    {key: 'Policiales', value: 'Policiales'},
+    {key: 'Terror', value: 'Terror'},
 ];
 
 // Note: no reason for inverted key and value

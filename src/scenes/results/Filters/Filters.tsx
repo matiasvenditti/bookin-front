@@ -65,9 +65,9 @@ const Filters = (props: FiltersProps) => {
         if (filters.text) tags.push({key: 'text', value: props.filters.text});
         tags = tags.concat(
             ...filters.nationalities.map((nationality: string) => ({key: 'nationalities',  value: nationality})),
-            ...filters.bookGenres.map((bookGenre: string) => ({key: 'bookGenres',  value: ConstsUtils.getBookGenreValue(bookGenre)}),
-            ...filters.languages.map((language: string) => ({key: 'languages',  value: language})),
-        ));
+            ...filters.bookGenres.map((bookGenre: string) => ({key: 'bookGenres',  value: ConstsUtils.getBookGenreValue(bookGenre)})),
+            ...filters.languages.map((language: string) => ({key: 'languages',  value: ConstsUtils.getLanguageValue(language)})),
+        );
         if (tags.length === 0) {
             return (
                 <div className={classes.tagsContainer}>
