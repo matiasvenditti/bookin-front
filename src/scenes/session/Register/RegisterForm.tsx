@@ -25,7 +25,7 @@ export default class RegisterForm extends Component<RegisterFormProps, RegisterF
                 firstName: { value: '', type: 'text', error: true, touched: false },
                 lastName: { value: '', type: 'text', error: true, touched: false },
                 email: { value: '', type: 'email', error: true, touched: false },
-                gender: { value: Gender.A, type: 'radio-group', error: true, touched: false },
+                gender: { value: Gender.A, type: 'radio-group', error: false, touched: true },
                 password: { value: '', type: 'password', error: true, touched: false },
                 acceptTerms: { value: false, type: 'accept-terms', error: true, touched: false },
             },
