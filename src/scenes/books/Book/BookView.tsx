@@ -20,18 +20,21 @@ import Rating from "@material-ui/lab/Rating";
 import {ConstsUtils, DateUtils} from "../../../utils";
 import Flag from 'react-world-flags';
 import {Book, User} from "../../../model";
-import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewCard from "../../../components/Cards/ReviewCard/ReviewCard";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
 import CreateReview from "../../review/CreateReview/CreateReview";
+import EditCard from "../../../components/Cards/EditCard/EditCard";
+import { EditableReview } from "../../../model/EditableReview";
+import { NewEditReview } from "../../../model/NewEditReview";
+import { AxiosResponse } from "axios";
 
 
 interface BookViewProps {
     data: Book,
     authors: Author[],
-    reviews: ReviewWithUser[],
+    reviews: EditableReview[],
     currentUser: User,
     error: boolean,
     updateCallback(r: RequestStatus): void,
@@ -41,7 +44,7 @@ interface BookViewProps {
 interface BookViewState {
     data: Book,
     authors: Author[],
-    reviews: ReviewWithUser[],
+    reviews: EditableReview[],
     currentUser: User,
     showDelete: boolean,
     currentId: number,
@@ -102,13 +105,41 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
     
     hasReview() {
         const reviews = this.props.reviews;
-        return reviews.some(review => review.userId === this.props.user.id);
+        return reviews.some(review => review.review.userId === this.props.user.id);
+    }
+
+    enableEdit = (j: number) =>{
+        let reviews = this.state.reviews;
+        const review = this.state.reviews[j];
+        review.editMode = !this.state.reviews[j].editMode;
+        reviews[j] = review;
+        this.setState({
+            reviews
+        })
+    }
+
+    submitChanges = (review: NewEditReview, id: number, key: number) => {
+        let reviews = this.state.reviews;
+        ReviewService.editReview(review, id)
+            .then((response: AxiosResponse<NewEditReview>) => {
+                console.log(response.data)
+                const editableReview: EditableReview = {...reviews[key], editMode: false, review: {...reviews[key].review, stars: response.data.stars, comment: response.data.comment}}
+                this.setState((prevState: BookViewState) => ({
+                    ...prevState,
+                    reviews: [
+                        ...reviews.slice(0, key),
+                        editableReview,
+                        ...reviews.slice(key+1)
+                    ]
+                }))
+            })
     }
 
     isAnonymous() {
         return (this.props.user.id == null);
     }
-    
+
+
     render() {
         const {data, authors, reviews} = this.state;
         const {error} = this.props
@@ -293,21 +324,33 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             return (
                                 <Grid item xs={6} key={j}>
                                     <div key={'review-view-item-' + j}>
+                                        {rev.editMode ? <EditCard
+                                                       id={rev.review.id}
+                                                       index={j}
+                                                       stars={rev.review.stars}
+                                                       comment={rev.review.comment}
+                                                       reviewCreatorUserID={rev.review.userId}
+                                                       currentUser={currentUser}
+                                                       reviewBookId={data.id}
+                                                       reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
+                                                       editMode={() => this.enableEdit(j)}
+                                                       onSubmit={this.submitChanges}
+                                                       /> :
                                         <ReviewCard
-                                            id={rev.id}
-                                            stars={rev.stars}
-                                            comment={rev.comment}
-                                            reviewCreatorUserID={rev.userId}
+                                            id={rev.review.id}
+                                            stars={rev.review.stars}
+                                            comment={rev.review.comment}
+                                            reviewCreatorUserID={rev.review.userId}
                                             currentUser={currentUser}
                                             isProfile={false}
                                             reviewBookId={data.id}
-                                            reviewDisplayString={rev.userFirstName + ' ' + rev.userLastName}
+                                            reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
                                             handleDelete={(reviewId: number) => {
                                                 this.setState({...this.state, showDelete: true, currentId: reviewId,})
                                             }
                                             }
-                                            handleEdit={() => null} //TODO
-                                        />
+                                            handleEdit={() => this.enableEdit(j)}
+                                        />}
                                     </div>
                                 </Grid>
                             )

@@ -13,6 +13,8 @@ import {AuthService, BooksService, UserService} from "../../../services";
 import {DeleteBookModal} from "./DeleteBookModal";
 import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewService from "../../../services/ReviewService";
+import { ReviewMapper } from "../../../utils/ReviewMapper";
+import { EditableReview } from "../../../model/EditableReview";
 
 
 
@@ -31,7 +33,7 @@ interface BookState {
     showDelete: boolean,
     data: BookModel,
     authors: Author[],
-    reviews: ReviewWithUser[],
+    reviews: EditableReview[],
     error: any,
 }
 
@@ -87,14 +89,15 @@ class Book extends React.Component<BookProps, BookState> {
             UserService.getUserData()
         ]);
         result
-            .then((response) => this.setState({
-                data: response[0].data,
-                authors: response[1].data,
-                reviews: response[2].data,
-                currentUser: response[3].data,
-                getBookDataStatus: RequestStatus.SUCCESS,
-
-            }))
+            .then((response) => {
+                this.setState({
+                    data: response[0].data,
+                    authors: response[1].data,
+                    reviews: ReviewMapper.toEditableReview(response[2].data),
+                    currentUser: response[3].data,
+                    getBookDataStatus: RequestStatus.SUCCESS,
+                })
+            })
             .catch((error: any) => {
                 this.setState({...this.state, getBookDataStatus: RequestStatus.ERROR, error})
                 this.props.getBookDataErrorCallback();

@@ -47,15 +47,17 @@ const ReviewCard = (props: ReviewCardProps) => {
                                 {reviewDisplayString}
                             </Link>
                             }
-
-
+                            {!isProfile &&
                             <div className="button-container">
                                 <ButtonGroup variant="contained" color="secondary"
                                              aria-label="contained primary button group" className={'button-group'}>
-                                    <Button>Editar</Button>
+                                    <Button onClick={() => props.handleEdit()}>Editar</Button>
                                     <Button onClick={() => props.handleDelete(props.id)}>Eliminar</Button>
                                 </ButtonGroup>
                             </div>
+                            }
+
+
                         </Typography>
                     }
                     subheader={<Rating name="read-only" value={props.stars} precision={0.5}
@@ -76,8 +78,8 @@ const ReviewCard = (props: ReviewCardProps) => {
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
                 <CardHeader
                     avatar={
-                        <Avatar aria-label="recipe" className={'review-item.avatar'}>
-                            {/*{props.reviewCreatorUserID.photo}*/}
+                        <Avatar aria-label="recipe" className={'review-item.avatar'} style={{width: 50,height: 50}}>
+                            {props.reviewDisplayString.substr(0,2)}
                         </Avatar>
                     }
                     title={
