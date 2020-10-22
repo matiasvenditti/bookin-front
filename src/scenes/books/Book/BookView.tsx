@@ -145,29 +145,38 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
-        const createReview = (!this.hasReview() && !this.isAnonymous()) ?
-        <Grid item xs sm={6}>
-            <div>
-                <CreateReview
-                book={this.state.data}
-                updateCallback={this.props.updateCallback}
-                />
-            </div>
-        </Grid>:
-        null;
+        const createReview = (
+            (!this.hasReview() && !this.isAnonymous()) ?
+                <Grid item xs sm={6}><div>
+                    <CreateReview
+                    book={this.state.data}
+                    updateCallback={this.props.updateCallback}
+                    />
+                </div></Grid>
+                :
+                null
+        );
 
         if (error) {
             return (
                 <div>
-                    <Typography align='center' color='error' variant='h6'>Hubo un error al obtener los datos del
-                        Libro</Typography>
+                    <Typography
+                        align='center'
+                        color='error'
+                        variant='h6'
+                    >
+                        {`Hubo un error al obtener los datos del Libro`}
+                    </Typography>
                 </div>
             )
         } else {
             return (
                 <div>
-                    <Typography align='left' variant='h3'
-                                className='title'>{data.title} </Typography>
+                    <Typography
+                        align='left'
+                        variant='h3'
+                        className='title'
+                    >{data.title} </Typography>
                     <Grid
                         container
                         direction="row"
@@ -177,48 +186,52 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                     >
                         <Grid container item xs={5}>
                             <div className='inner-book-container'>
-                                <Card
-                                    style={
-                                        {
-                                            maxWidth: 345,
-                                            border: "none",
-                                            boxShadow: "none",
-                                        }
-                                    }
-                                >
+                                <Card style={{
+                                    maxWidth: 345,
+                                    border: "none",
+                                    boxShadow: "none",
+                                }}>
                                     <CardContent className='custom-card-container' style={{paddingLeft: 0}}>
-
-                                        <Typography align='left' variant='h5'>Género: <Box display="inline-block"
-                                                                                           fontWeight="fontWeightBold">{data.genre}</Box></Typography>
-                                        <Typography align='left' variant='h5'>Idioma: <Box display="inline-block"
-                                                                                           fontWeight="fontWeightBold">{data.language}</Box></Typography>
-                                        <Typography align='left' variant='h5'>Fecha de publicación: <Box
-                                            display="inline-block"
-                                            fontWeight="fontWeightBold">{DateUtils.formatDateTimeYears(date.toString())}</Box></Typography>
+                                        <Typography align='left' variant='h5'>
+                                            {`Género: `}
+                                            <Box display="inline-block" fontWeight="fontWeightBold">
+                                                {data.genre}
+                                            </Box>
+                                        </Typography>
+                                        <Typography align='left' variant='h5'>
+                                            {`Idioma: `}
+                                            <Box display="inline-block" fontWeight="fontWeightBold">
+                                                {ConstsUtils.getLanguageValue(data.language)}
+                                            </Box>
+                                        </Typography>
+                                        <Typography align='left' variant='h5'>
+                                            {`Fecha de publicación: `}
+                                            <Box display="inline-block" fontWeight="fontWeightBold">
+                                                {DateUtils.formatDateTimeYears(date.toString())}
+                                            </Box>
+                                        </Typography>
                                     </CardContent>
                                     <CardMedia
                                         title={data.title}
                                         image={`data:image/jpeg;base64,${data.photo}`}
-                                        style={
-                                            {
-                                                height: 100,
-                                                paddingTop: '100%', // 16:9
-                                                boxShadow: '',
-                                            }
-                                        }
+                                        style={{
+                                            height: 100,
+                                            paddingTop: '100%', // 16:9
+                                            boxShadow: '',
+                                        }}
                                     />
                                 </Card>
-
                             </div>
                         </Grid>
                         <Grid container item xs={7}>
                             <Grid item xs={12}>
                                 <div className='author-container'>
-                                    <Typography align='left'
-                                                variant='h4'
-                                                style={{fontWeight: "bold", color: "darkgray"}}>Autores </Typography>
+                                    <Typography 
+                                        align='left'
+                                        variant='h4'
+                                        style={{fontWeight: "bold", color: "darkgray"}}
+                                    >{`Autores `}</Typography>
                                     <List style={{backgroundColor: '#f6f6f7', padding: 0, margin: '8px 0'}}>
-
                                         {authors.length > 0 ? authors.map((item, i) => {
                                             const authorData = (
                                                 <Typography
@@ -235,8 +248,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                             );
 
                                             const authorList = (
-                                                <ListItem button component={Link}
-                                                          href={`/authors/${item.id}`}>
+                                                <ListItem button component={Link} href={`/authors/${item.id}`}>
                                                     <Badge
                                                         color='primary'
                                                         overlap='circle'
@@ -244,20 +256,17 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                             vertical: 'bottom',
                                                             horizontal: 'right',
                                                         }}
-                                                        style={{
-                                                            marginRight: 15,
-                                                        }}
-                                                        className={'avatar-image'}
+                                                        style={{marginRight: 15}}
+                                                        className='avatar-image'
                                                     >
-                                                        <Avatar
-                                                            src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
+                                                        <Avatar src={`data:image/jpeg;base64,${item.photo}` || dummyAvatar}/>
                                                     </Badge>
                                                     <ListItemText
                                                         primary={authorData}
                                                         key={'text-' + i}
                                                     />
                                                 </ListItem>
-                                            )
+                                            );
 
                                             return (
                                                 <div key={'author-view-item-' + i}>
@@ -265,7 +274,9 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                     {(i !== authors.length - 1) && <Divider key={'divider-' + i}/>}
                                                 </div>
                                             )
-                                        }) : <div key={'author-view-item'}>
+                                        })
+                                        : 
+                                        <div key={'author-view-item'}>
                                             <ListItem button>
                                                 <Badge
                                                     color='primary'
@@ -274,27 +285,23 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                         vertical: 'bottom',
                                                         horizontal: 'right',
                                                     }}
-                                                    style={{
-                                                        marginRight: 15,
-                                                    }}
+                                                    style={{marginRight: 15}}
                                                     className={'avatar-image'}
                                                 >
-                                                    <Avatar
-                                                        src={dummyAvatar}/>
+                                                    <Avatar src={dummyAvatar}/>
                                                 </Badge>
-                                                <ListItemText
-                                                    primary={
-                                                        <Typography
-                                                            variant="h6"
-                                                            style={{
-                                                                color: 'black',
-                                                                display: 'flex',
-                                                                alignItems: 'center'
-                                                            }}
-                                                        >
-                                                            Autor Anonimo
-                                                        </Typography>}
-                                                />
+                                                <ListItemText primary={
+                                                    <Typography
+                                                        variant="h6"
+                                                        style={{
+                                                            color: 'black',
+                                                            display: 'flex',
+                                                            alignItems: 'center'
+                                                        }}
+                                                    >
+                                                        Autor Anonimo
+                                                    </Typography>
+                                                }/>
                                             </ListItem>
                                         </div>}
                                     </List>
@@ -302,63 +309,60 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             </Grid>
                             <Grid item xs={12}>
                                 <div className='rating-container'>
-                                    <Typography variant='h4' className='rating'> Rating </Typography>
+                                    <Typography variant='h4' className='rating'>{` Rating `}</Typography>
                                     <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
-
                                 </div>
                             </Grid>
                         </Grid>
-
                     </Grid>
-                    <Typography variant='h4' className='rating' style={{padding: 5}}> Reseñas </Typography>
-                    <Grid
-                        container
-                        spacing={3}
-                        className='reviews-container'
-                    >
-
+                    <Typography 
+                        variant='h4'
+                        className='rating'
+                        style={{padding: 5}}
+                    >{` Reseñas `}</Typography>
+                    <Grid container spacing={3} className='reviews-container'>
                         {createReview}
-
                         {reviews.map((rev, j) => {
                             const {currentUser, data} = this.state;
                             return (
                                 <Grid item xs={6} key={j}>
                                     <div key={'review-view-item-' + j}>
-                                        {rev.editMode ? <EditCard
-                                                       id={rev.review.id}
-                                                       index={j}
-                                                       stars={rev.review.stars}
-                                                       comment={rev.review.comment}
-                                                       reviewCreatorUserID={rev.review.userId}
-                                                       currentUser={currentUser}
-                                                       reviewBookId={data.id}
-                                                       reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
-                                                       editMode={() => this.enableEdit(j)}
-                                                       onSubmit={this.submitChanges}
-                                                       /> :
-                                        <ReviewCard
-                                            id={rev.review.id}
-                                            stars={rev.review.stars}
-                                            comment={rev.review.comment}
-                                            reviewCreatorUserID={rev.review.userId}
-                                            currentUser={currentUser}
-                                            isProfile={false}
-                                            reviewBookId={data.id}
-                                            reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
-                                            handleDelete={(reviewId: number) => {
-                                                this.setState({...this.state, showDelete: true, currentId: reviewId,})
-                                            }
-                                            }
-                                            handleEdit={() => this.enableEdit(j)}
-                                        />}
+                                        {rev.editMode ? 
+                                            <EditCard
+                                                id={rev.review.id}
+                                                index={j}
+                                                stars={rev.review.stars}
+                                                comment={rev.review.comment}
+                                                reviewCreatorUserID={rev.review.userId}
+                                                currentUser={currentUser}
+                                                reviewBookId={data.id}
+                                                reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
+                                                editMode={() => this.enableEdit(j)}
+                                                onSubmit={this.submitChanges}
+                                            />
+                                            :
+                                            <ReviewCard
+                                                id={rev.review.id}
+                                                stars={rev.review.stars}
+                                                comment={rev.review.comment}
+                                                reviewCreatorUserID={rev.review.userId}
+                                                currentUser={currentUser}
+                                                isProfile={false}
+                                                reviewBookId={data.id}
+                                                reviewDisplayString={rev.review.userFirstName + ' ' + rev.review.userLastName}
+                                                handleDelete={(reviewId: number) => {
+                                                    this.setState({...this.state, showDelete: true, currentId: reviewId,})
+                                                }}
+                                                handleEdit={() => this.enableEdit(j)}
+                                            />
+                                        }
                                     </div>
                                 </Grid>
-                            )
+                            );
                         })}
                     </Grid>
                     {this.renderReviewDelete()}
                 </div>
-
             )
         }
     }
