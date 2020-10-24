@@ -32,7 +32,6 @@ import {Review} from "../../../model/Review";
 import EditCard from "../../../components/Cards/EditCard/EditCard";
 import { EditableReview } from "../../../model/EditableReview";
 import { NewEditReview } from "../../../model/NewEditReview";
-import { AxiosResponse } from "axios";
 
 
 interface BookViewProps {
@@ -88,7 +87,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         this.setState({reviewDeleteStatus: RequestStatus.LOADING});
         ReviewService.deleteReview(id)
             .then(() => {
-                const new_reviews = this.state.reviews.filter((review) => review.id !== id);
+                const new_reviews = this.state.reviews.filter((review) => review.review.id !== id);
                 this.setState({reviewDeleteStatus: RequestStatus.SUCCESS, reviews: new_reviews});
                 this.updateBook();
                 this.props.deleteReviewCallback(RequestStatus.SUCCESS);
@@ -106,10 +105,11 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             .then((response: AxiosResponse<Review>) => {
                 const review: Review = response.data;
                 const reviewWithUser: ReviewWithUser = {id: review.id, stars: review.stars, comment: review.comment, userId: newReview.user.id, userFirstName: newReview.user.firstName, userLastName: newReview.user.lastName};
+                const editableReview: EditableReview = {review : reviewWithUser, editMode: false}
                 this.setState((prevState: BookViewState) => ({
                     ...prevState,
                     reviewCreateStatus: RequestStatus.SUCCESS,
-                    reviews: [...prevState.reviews, reviewWithUser]
+                    reviews: [...prevState.reviews, editableReview]
                 }))
                 this.updateBook();
                 this.props.updateCallback(RequestStatus.SUCCESS);
