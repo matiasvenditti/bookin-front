@@ -78,8 +78,8 @@ const ReviewCard = (props: ReviewCardProps) => {
                   style={{backgroundColor: '#F6F6F7', padding: '5'}}>
                 <CardHeader
                     avatar={
-                        <Avatar aria-label="recipe" className={'review-item.avatar'} style={{width: 50,height: 50}}>
-                            {props.reviewDisplayString.substr(0,2)}
+                        <Avatar aria-label="recipe" className={'review-item-avatar'}>
+                            {reviewDisplayString.substr(0,2)}
                         </Avatar>
                     }
                     title={
