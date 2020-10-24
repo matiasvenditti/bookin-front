@@ -16,7 +16,7 @@ interface CreateReviewState{
 
 interface CreateReviewProps extends RouteComponentProps<MatchParams> {
     book: Book;
-    updateCallback(r: RequestStatus): void,
+    handleSubmit(newReview: NewReview): void,
 }
 
 interface MatchParams {
@@ -59,26 +59,10 @@ class CreateReview extends React.Component<CreateReviewProps, CreateReviewState>
             });
     }
 
-    handleSubmit = (values: NewReview) => {
-        ReviewService.createReview(values)
-        .then((response: AxiosResponse<Review>) => {
-            this.props.updateCallback(RequestStatus.SUCCESS);
-            this.setState({ ...this.state, reviewStatus: RequestStatus.SUCCESS });
-            //this.props.history.push('/books/' + this.state.bookId);
-            window.location.reload(false); 
-        })
-        .catch((error: any) => {
-            this.props.updateCallback(RequestStatus.ERROR);
-            this.setState({ ...this.state, reviewStatus: RequestStatus.ERROR });
-        });
-    }
-
     render() {
-        // const id = this.state.user.id;
-        // const cheapToString = '' + id;
         return (
             <CreateReviewForm
-                onSubmit={this.handleSubmit}
+                onSubmit={this.props.handleSubmit}
                 user={this.state.user}
                 book={this.props.book}
             />

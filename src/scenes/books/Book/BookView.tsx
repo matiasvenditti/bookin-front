@@ -19,12 +19,16 @@ import {Author} from "../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
 import {ConstsUtils, DateUtils} from "../../../utils";
 import Flag from 'react-world-flags';
-import {Book, User} from "../../../model";
+import {Book, NewReview, User} from "../../../model";
+import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewCard from "../../../components/Cards/ReviewCard/ReviewCard";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
 import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
 import CreateReview from "../../review/CreateReview/CreateReview";
+import BooksService from "../../../services/BooksService";
+import {AxiosResponse} from "axios";
+import {Review} from "../../../model/Review";
 import EditCard from "../../../components/Cards/EditCard/EditCard";
 import { EditableReview } from "../../../model/EditableReview";
 import { NewEditReview } from "../../../model/NewEditReview";
@@ -38,6 +42,7 @@ interface BookViewProps {
     currentUser: User,
     error: boolean,
     updateCallback(r: RequestStatus): void,
+    deleteReviewCallback(r: RequestStatus): void,
     user: any,
 }
 
@@ -49,6 +54,7 @@ interface BookViewState {
     showDelete: boolean,
     currentId: number,
     reviewDeleteStatus: RequestStatus,
+    reviewCreateStatus: RequestStatus,
 }
 
 export default class BookView extends Component<BookViewProps, BookViewState> {
@@ -69,6 +75,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             reviews: props.reviews,
             showDelete: false,
             reviewDeleteStatus: RequestStatus.NONE,
+            reviewCreateStatus: RequestStatus.NONE,
             currentId: 0,
 
         }
@@ -81,15 +88,40 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         this.setState({reviewDeleteStatus: RequestStatus.LOADING});
         ReviewService.deleteReview(id)
             .then(() => {
-                this.setState({reviewDeleteStatus: RequestStatus.SUCCESS});
-                window.location.reload();
+                const new_reviews = this.state.reviews.filter((review) => review.id !== id);
+                this.setState({reviewDeleteStatus: RequestStatus.SUCCESS, reviews: new_reviews});
+                this.updateBook();
+                this.props.deleteReviewCallback(RequestStatus.SUCCESS);
             })
             .catch(() => {
                 this.setState({reviewDeleteStatus: RequestStatus.ERROR});
+                this.props.deleteReviewCallback(RequestStatus.ERROR);
             });
         this.handleDeleteCancel();
     }
 
+    createReview = (newReview: NewReview) => {
+        this.setState({reviewCreateStatus: RequestStatus.LOADING});
+        ReviewService.createReview(newReview)
+            .then((response: AxiosResponse<Review>) => {
+                const review: Review = response.data;
+                const reviewWithUser: ReviewWithUser = {id: review.id, stars: review.stars, comment: review.comment, userId: newReview.user.id, userFirstName: newReview.user.firstName, userLastName: newReview.user.lastName};
+                this.setState((prevState: BookViewState) => ({
+                    ...prevState,
+                    reviewCreateStatus: RequestStatus.SUCCESS,
+                    reviews: [...prevState.reviews, reviewWithUser]
+                }))
+                this.updateBook();
+                this.props.updateCallback(RequestStatus.SUCCESS);
+            })
+            .catch(() => {
+                this.setState((prevState: BookViewState) => ({
+                    ...prevState,
+                    reviewCreateStatus: RequestStatus.ERROR
+                }))
+                this.props.updateCallback(RequestStatus.ERROR);
+            });
+    }
 
     renderReviewDelete() {
         const {showDelete, reviewDeleteStatus} = this.state;
@@ -104,8 +136,9 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
     }
     
     hasReview() {
-        const reviews = this.props.reviews;
+        const reviews = this.state.reviews;
         return reviews.some(review => review.review.userId === this.props.user.id);
+
     }
 
     enableEdit = (j: number) =>{
@@ -117,6 +150,14 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             reviews
         })
     }
+
+    updateBook() {
+        BooksService.getBookData(this.props.data.id)
+            .then((response) => {
+                this.setState({data: response.data})
+            })
+    }
+
 
     submitChanges = (review: NewEditReview, id: number, key: number) => {
         let reviews = this.state.reviews;
@@ -141,21 +182,22 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
 
 
     render() {
-        const {data, authors, reviews} = this.state;
+        const {data, authors} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
 
-        const createReview = (
-            (!this.hasReview() && !this.isAnonymous()) ?
-                <Grid item xs sm={6}><div>
-                    <CreateReview
-                    book={this.state.data}
-                    updateCallback={this.props.updateCallback}
-                    />
-                </div></Grid>
-                :
-                null
-        );
+        const createReview = (!this.hasReview() && !this.isAnonymous()) ?
+        <Grid item xs sm={6}>    
+            <div>
+                <CreateReview
+                book={this.state.data}
+                handleSubmit={this.createReview}
+                />
+            </div>
+        </Grid>:
+        null;
+
+        const {reviews} = this.state;
 
         if (error) {
             return (
@@ -226,7 +268,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         <Grid container item xs={7}>
                             <Grid item xs={12}>
                                 <div className='author-container'>
-                                    <Typography 
+                                    <Typography
                                         align='left'
                                         variant='h4'
                                         style={{fontWeight: "bold", color: "darkgray"}}
@@ -275,7 +317,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                                                 </div>
                                             )
                                         })
-                                        : 
+                                        :
                                         <div key={'author-view-item'}>
                                             <ListItem button>
                                                 <Badge
@@ -310,12 +352,12 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             <Grid item xs={12}>
                                 <div className='rating-container'>
                                     <Typography variant='h4' className='rating'>{` Rating `}</Typography>
-                                    <Rating name="read-only" value={data.stars} precision={0.5} readOnly/>
+                                    <Rating name="read-only" value={this.state.data.stars} precision={0.5} readOnly/>
                                 </div>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Typography 
+                    <Typography
                         variant='h4'
                         className='rating'
                         style={{padding: 5}}
@@ -327,7 +369,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                             return (
                                 <Grid item xs={6} key={j}>
                                     <div key={'review-view-item-' + j}>
-                                        {rev.editMode ? 
+                                        {rev.editMode ?
                                             <EditCard
                                                 id={rev.review.id}
                                                 index={j}
