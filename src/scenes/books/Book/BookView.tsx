@@ -1,4 +1,4 @@
-import React, {Component, useState} from "react";
+import React, {Component} from "react";
 import {
     Avatar,
     Badge,
@@ -19,7 +19,7 @@ import {Author} from "../../../model/Author";
 import Rating from "@material-ui/lab/Rating";
 import {ConstsUtils, DateUtils} from "../../../utils";
 import Flag from 'react-world-flags';
-import {Book, User} from "../../../model";
+import {Book, NewReview, User} from "../../../model";
 import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewCard from "../../../components/Cards/ReviewCard/ReviewCard";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
@@ -27,6 +27,8 @@ import {DeleteReviewModal} from "../../review/DeleteReviewModal";
 import ReviewService from "../../../services/ReviewService";
 import CreateReview from "../../review/CreateReview/CreateReview";
 import BooksService from "../../../services/BooksService";
+import {AxiosResponse} from "axios";
+import {Review} from "../../../model/Review";
 
 
 interface BookViewProps {
@@ -37,6 +39,7 @@ interface BookViewProps {
     isAdmin: boolean,
     error: boolean,
     updateCallback(r: RequestStatus): void,
+    deleteReviewCallback(r: RequestStatus): void,
     user: any,
 }
 
@@ -49,6 +52,7 @@ interface BookViewState {
     showDelete: boolean,
     currentId: number,
     reviewDeleteStatus: RequestStatus,
+    reviewCreateStatus: RequestStatus,
 }
 
 export default class BookView extends Component<BookViewProps, BookViewState> {
@@ -70,6 +74,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
             reviews: props.reviews,
             showDelete: false,
             reviewDeleteStatus: RequestStatus.NONE,
+            reviewCreateStatus: RequestStatus.NONE,
             currentId: 0,
 
         }
@@ -85,14 +90,37 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                 const new_reviews = this.state.reviews.filter((review) => review.id !== id);
                 this.setState({reviewDeleteStatus: RequestStatus.SUCCESS, reviews: new_reviews});
                 this.updateBook();
-                this.render();
+                this.props.deleteReviewCallback(RequestStatus.SUCCESS);
             })
             .catch(() => {
                 this.setState({reviewDeleteStatus: RequestStatus.ERROR});
+                this.props.deleteReviewCallback(RequestStatus.ERROR);
             });
         this.handleDeleteCancel();
     }
 
+    createReview = (newReview: NewReview) => {
+        this.setState({reviewCreateStatus: RequestStatus.LOADING});
+        ReviewService.createReview(newReview)
+            .then((response: AxiosResponse<Review>) => {
+                const review: Review = response.data;
+                const reviewWithUser: ReviewWithUser = {id: review.id, stars: review.stars, comment: review.comment, userId: newReview.user.id, userFirstName: newReview.user.firstName, userLastName: newReview.user.lastName};
+                this.setState((prevState: BookViewState) => ({
+                    ...prevState,
+                    reviewCreateStatus: RequestStatus.SUCCESS,
+                    reviews: [...prevState.reviews, reviewWithUser]
+                }))
+                this.updateBook();
+                this.props.updateCallback(RequestStatus.SUCCESS);
+            })
+            .catch(() => {
+                this.setState((prevState: BookViewState) => ({
+                    ...prevState,
+                    reviewCreateStatus: RequestStatus.ERROR
+                }))
+                this.props.updateCallback(RequestStatus.ERROR);
+            });
+    }
 
     renderReviewDelete() {
         const {showDelete, reviewDeleteStatus} = this.state;
@@ -111,13 +139,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         return reviews.some(review => review.userId === this.props.user.id);
     }
 
-    updateReviews() {
-        ReviewService.getReviews(this.props.data.id)
-            .then((response) => {
-                this.setState({reviews: response.data})
-            });
-    }
-
     updateBook() {
         BooksService.getBookData(this.props.data.id)
             .then((response) => {
@@ -129,18 +150,14 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         const {data, authors} = this.state;
         const {error} = this.props
         const date = data.date ? data.date : new Date().toString();
-        const updateReviews = this.updateReviews();
-        const updateBook = this.updateBook();
 
         const createReview = !this.hasReview() ?
         <Grid item xs sm={6}>    
             <div>
                 <CreateReview
                 book={this.state.data}
-                updateCallback={this.props.updateCallback}
+                handleSubmit={this.createReview}
                 />
-                {updateReviews}
-                {updateBook}
             </div>
         </Grid>:
         null;
