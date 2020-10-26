@@ -66,11 +66,15 @@
     flex-flow: row wrap;
 }
 
-.resultsVariantCard .info .infoSubitem:nth-child(3)  {
-    margin-top: 20px;
-}
+/*.resultsVariantCard .info .infoSubitem:nth-child(3)  {*/
+/*    margin-top: 20px;*/
+/*}*/
 
 .resultsVariantCard .info .infoSubitem > :first-child  {
     font-weight: bold;
     margin-right: 5px;
+}
+
+.title {
+    margin-bottom: 20px !important;
 }

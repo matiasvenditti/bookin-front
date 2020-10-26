@@ -79,7 +79,7 @@ const Results = (props: ResultsProps) => {
             );
         } else {
             return (
-                <div className={classes.resultsAuthorsContainer}>
+                <div className={`${classes.resultsAuthorsContainer} ${classes.authorResults}`}>
                     {data.authors.map((author, i) => (
                         <AuthorCard
                             key={'results-author-card' + i}
@@ -103,8 +103,8 @@ const Results = (props: ResultsProps) => {
                         resultsVariant
                     />
                 ))
-            );                
-        
+            );
+
         } else if (sortedBooks.length === 0) {
             return (
                 <div className={classes.resultsBooksContainer}>

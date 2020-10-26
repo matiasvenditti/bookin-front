@@ -18,9 +18,12 @@
     flex-flow: row nowrap;
     align-items: flex-start;
     align-content: flex-start;
-    margin:0  30px;
     overflow-x: auto;
     overflow-y: hidden;
+}
+
+.authorResults {
+    margin:0  30px;
     padding: 15px;
 }
 
