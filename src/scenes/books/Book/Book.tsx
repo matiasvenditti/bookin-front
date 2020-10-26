@@ -1,6 +1,6 @@
 import React from "react";
 import {RequestStatus} from "../../../model/consts/RequestStatus";
-import {Button , Typography} from "@material-ui/core";
+import {Button, Typography} from "@material-ui/core";
 import Loader from "../../../components/Loader/Loader";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import {RouteComponentProps, withRouter} from "react-router";
@@ -11,11 +11,9 @@ import "./Book.css"
 import {UserRoles} from "../../../model/consts/Roles";
 import {AuthService, BooksService, UserService} from "../../../services";
 import {DeleteBookModal} from "./DeleteBookModal";
-import {ReviewWithUser} from "../../../model/ReviewWithUser";
 import ReviewService from "../../../services/ReviewService";
-import { ReviewMapper } from "../../../utils/ReviewMapper";
-import { EditableReview } from "../../../model/EditableReview";
-
+import {ReviewMapper} from "../../../utils/ReviewMapper";
+import {EditableReview} from "../../../model/EditableReview";
 
 
 interface BookProps extends RouteComponentProps<MatchParams> {
@@ -23,6 +21,7 @@ interface BookProps extends RouteComponentProps<MatchParams> {
     updateCallback(r: RequestStatus): void,
     getBookDataErrorCallback(): void,
     deleteReviewCallback(r: RequestStatus): void,
+    updateReviewCallback(r: RequestStatus): void,
 }
 
 interface BookState {
@@ -165,6 +164,7 @@ class Book extends React.Component<BookProps, BookState> {
                 error={getBookDataStatus === RequestStatus.ERROR}
                 updateCallback={this.props.updateCallback}
                 deleteReviewCallback={this.props.deleteReviewCallback}
+                updateReviewCallback={this.props.updateReviewCallback}
             />
         );
     }

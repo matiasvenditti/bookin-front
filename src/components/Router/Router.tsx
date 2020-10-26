@@ -49,6 +49,7 @@ interface RouterState {
     redirectReload: boolean,
     reviewStatus: RequestStatus,
     deleteReviewStatus: RequestStatus,
+    updateReviewStatus: RequestStatus,
     search: {
         data: {books: BookModel[], authors: AuthorModel[]}
         searchInput: string,
@@ -84,6 +85,7 @@ class Router extends React.Component<any, RouterState> {
             redirectReload: false,
             reviewStatus: RequestStatus.NONE,
             deleteReviewStatus: RequestStatus.NONE,
+            updateReviewStatus: RequestStatus.NONE,
             search: {
                 data: {books: [], authors: []},
                 searchInput: '',
@@ -164,6 +166,7 @@ class Router extends React.Component<any, RouterState> {
                             deleteBookCallback={(deleteBookStatus: RequestStatus) => this.setState({ ...this.state, deleteBookStatus })}
                             updateCallback={(reviewStatus: RequestStatus) => this.setState({ ...this.state, reviewStatus })}
                             deleteReviewCallback={(deleteReviewStatus: RequestStatus) => this.setState({...this.state, deleteReviewStatus})}
+                            updateReviewCallback={(updateReviewStatus: RequestStatus) => this.setState({...this.state, updateReviewStatus})}
                         />
                     </Route>
 
@@ -207,7 +210,8 @@ class Router extends React.Component<any, RouterState> {
             updateBookStatus,
             getModifyBookDataError,
             reviewStatus,
-            deleteReviewStatus
+            deleteReviewStatus,
+            updateReviewStatus
         } = this.state;
 
         return (
@@ -243,6 +247,8 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(reviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al crear la reseña', () => this.setState({...this.state, reviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteReviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha eliminado la reseña exitosamente', () => this.setState({...this.state, deleteReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar la reseña', () => this.setState({...this.state, deleteReviewStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateReviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha modificado la reseña exitosamente', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
+                {this.renderAToast(updateReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al modificar la reseña', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
             </div>
         );
     }

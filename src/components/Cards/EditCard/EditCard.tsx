@@ -94,7 +94,7 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
                                 <div className={classes.reviewButtonContainer}>
                                     <ButtonGroup variant="contained" color="secondary"
                                                  aria-label="contained primary button group">
-                                        <Button title='Editar'  disabled={!(this.state.values.rating.touched) && !(this.state.values.message.touched) &&  !(this.state.values.message.error)} onClick={this.handleSubmit}>Confirmar</Button>
+                                        <Button title='Editar'  disabled={(!this.state.values.rating.touched && !this.state.values.message.touched) || this.state.values.message.error} onClick={this.handleSubmit}>Confirmar</Button>
                                         <Button title='Cancelar'  onClick={this.props.editMode}>Cancelar</Button>
                                     </ButtonGroup>
                                 </div>
@@ -103,7 +103,7 @@ class EditCard extends React.Component<EditCardProps, EditCardState> {
                             </Typography>}
                         subheader={<Rating 
                             value={this.state.values.rating.value} 
-                            precision={0.5}                                 
+                            precision={1}
                             onChange={(event, newValue) => {
                                 this.handleRateChange(newValue);
                             }}/>

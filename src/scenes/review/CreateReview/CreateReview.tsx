@@ -1,11 +1,9 @@
-import { AxiosResponse } from "axios";
+import {AxiosResponse} from "axios";
 import React from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Book, NewReview, User } from "../../../model";
-import { RequestStatus } from "../../../model/consts/RequestStatus";
-import { Review } from "../../../model/Review";
-import { UserService } from "../../../services";
-import ReviewService from "../../../services/ReviewService";
+import {RouteComponentProps, withRouter} from "react-router-dom";
+import {Book, NewReview, User} from "../../../model";
+import {RequestStatus} from "../../../model/consts/RequestStatus";
+import {UserService} from "../../../services";
 import CreateReviewForm from "./CreateReviewForm";
 
 interface CreateReviewState{

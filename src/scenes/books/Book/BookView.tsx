@@ -30,8 +30,8 @@ import BooksService from "../../../services/BooksService";
 import {AxiosResponse} from "axios";
 import {Review} from "../../../model/Review";
 import EditCard from "../../../components/Cards/EditCard/EditCard";
-import { EditableReview } from "../../../model/EditableReview";
-import { NewEditReview } from "../../../model/NewEditReview";
+import {EditableReview} from "../../../model/EditableReview";
+import {NewEditReview} from "../../../model/NewEditReview";
 
 
 interface BookViewProps {
@@ -42,6 +42,7 @@ interface BookViewProps {
     error: boolean,
     updateCallback(r: RequestStatus): void,
     deleteReviewCallback(r: RequestStatus): void,
+    updateReviewCallback(r: RequestStatus): void,
     user: any,
 }
 
@@ -163,7 +164,6 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
         let reviews = this.state.reviews;
         ReviewService.editReview(review, id)
             .then((response: AxiosResponse<NewEditReview>) => {
-                console.log(response.data)
                 const editableReview: EditableReview = {...reviews[key], editMode: false, review: {...reviews[key].review, stars: response.data.stars, comment: response.data.comment}}
                 this.setState((prevState: BookViewState) => ({
                     ...prevState,
@@ -173,6 +173,11 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                         ...reviews.slice(key+1)
                     ]
                 }))
+                this.updateBook();
+                this.props.updateReviewCallback(RequestStatus.SUCCESS);
+            })
+            .catch(() => {
+                this.props.updateReviewCallback(RequestStatus.ERROR);
             })
     }
 

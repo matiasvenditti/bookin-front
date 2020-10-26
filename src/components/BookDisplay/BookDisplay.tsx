@@ -71,8 +71,8 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                                     image={`data:image/jpeg;base64,${photo}`}
                                 />
                                 <div className={classes.info}>
-                                    <Typography variant='h4'>{title}</Typography>
-                                    {loadingAuthors ? <Skeleton variant='text' height={25}/> : <Typography>{author}</Typography>}
+                                    <Typography className={classes.title} variant='h4'>{title}</Typography>
+                                    {/*{loadingAuthors ? <Skeleton variant='text' height={25}/> : <Typography>{author}</Typography>}*/}
                                     <div className={classes.infoSubitem}>
                                         <Typography>Género:</Typography>
                                         <Typography>{genre}</Typography>
