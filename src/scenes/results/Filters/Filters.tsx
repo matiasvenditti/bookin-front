@@ -107,7 +107,7 @@ const Filters = (props: FiltersProps) => {
     return (
         <div className={classes.filtersContainer}>
             {renderTags()}
-            <Typography className={classes.subtitle} variant='h5'>Ordenar por</Typography>
+            <Typography className={classes.subtitle} variant='h5'>Ordenar libro por</Typography>
             <Select
                 label=''
                 id='sortBy'
@@ -129,7 +129,7 @@ const Filters = (props: FiltersProps) => {
                 errorText={''}
                 column
             />
-            <Typography className={classes.subtitle} variant='h5'>Nacionalidad</Typography>
+            <Typography className={classes.subtitle} variant='h5'>Nacionalidad del Autor</Typography>
             <CountriesSelect
                 value={filters.nationalities}
                 placeholder='Nacionalidad'
