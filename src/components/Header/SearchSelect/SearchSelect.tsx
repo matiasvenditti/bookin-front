@@ -116,9 +116,6 @@ const SearchSelect = (props: SearchSelectProps) => {
                 disabled={inputValue === ''}
                 onClick={() => handleEnter(inputValue)}
             ><SearchIcon/></IconButton>
-            <IconButton onClick={() => handleEnter('')}>
-                <SettingsIcon/>
-            </IconButton>
         </FormControl>
     )
 }
