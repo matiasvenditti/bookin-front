@@ -4,8 +4,14 @@ import { RegisterFormModel } from './Form/RegisterFormModel';
 import { LoginFormModel } from './Form/LoginFormModel';
 import { UpdateAuthor } from './UpdateAuthor';
 import { Book } from './Book';
-import { BookID } from './BookID';
+import { KeyValue } from './KeyValue';
+import { NewReview } from './NewReview';
+import { TagValueParams } from './TagValueParams';
 
+
+export {
+    Book,
+}
 
 export type {
     User,
@@ -13,6 +19,7 @@ export type {
     RegisterFormModel,
     LoginFormModel,
     UpdateAuthor,
-    Book,
-    BookID,
+    KeyValue,
+    NewReview,
+    TagValueParams,
 }

@@ -1,5 +1,3 @@
-import Gender from "./Gender";
-
 export interface User {
     [key: string]: any,
     id: number,

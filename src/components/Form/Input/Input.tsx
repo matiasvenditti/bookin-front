@@ -10,6 +10,8 @@ interface InputProps {
     value: any,
     error: boolean,
     errorText: string,
+    multiline?: boolean,
+    variant?: 'filled',
     required?: boolean,
     autoFocus?: boolean,
     disabled?: boolean,
@@ -49,11 +51,11 @@ export default class Input extends Component<InputProps, InputState> {
     }
 
     render() {
-        const { label, id, type, value, error, errorText, required, disabled, autoFocus } = this.props;
+        const { label, id, type, value, error, errorText, required, disabled, autoFocus, multiline, variant } = this.props;
         return (
             <div className='form-input-container'>
                 <TextField
-                    variant='outlined'
+                    variant={this.props.variant? variant : 'outlined'}
                     color='secondary'
                     fullWidth
                     label={label}
@@ -70,6 +72,7 @@ export default class Input extends Component<InputProps, InputState> {
                     error={error}
                     helperText={errorText}
                     required={required}
+                    multiline={multiline}
                     autoFocus={autoFocus}
                     disabled={disabled}
                     onChange={(e) => this.props.onChange(id, type, e.target.value)}

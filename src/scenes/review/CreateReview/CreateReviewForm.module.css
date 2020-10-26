@@ -1,0 +1,10 @@
+.rating {
+    position: relative;
+    width: 100%;
+    display: block;  
+    margin-bottom: 16px;  
+}
+
+.padding{
+    padding: 8px 16px;
+}

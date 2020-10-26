@@ -1,0 +1,28 @@
+.formContainer {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.leftContainer {
+    max-width: 350px;
+    margin-right: 25px;    
+}
+
+.leftContainer > div {
+    margin-bottom: 20px;    
+}
+
+.rightContainer {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.rightContainer .photo {
+    margin-bottom: 10px;
+}
+
+.createAuthorButtonsContainer button:nth-child(1) {
+    margin-right: 10px;
+}

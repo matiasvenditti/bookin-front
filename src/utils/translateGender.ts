@@ -1,4 +1,5 @@
-import Gender from "../model/Gender";
+import {Gender} from "../model/Gender";
+
 
 const stringToGender = function(gender: string) {
     switch (gender) {
@@ -17,6 +18,7 @@ const genderToString = function(gender: string) {
         default: return 'Anónimo';
     }
 };
+
 
 export {
     stringToGender,

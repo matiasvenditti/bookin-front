@@ -1,14 +1,12 @@
+/* TODO: delete fixed position */
 .main-footer{
     color: whitesmoke;
     background-color: #5d566b;
-    position: fixed;
-    bottom: 0;
-    width: 100%;   
+    width: 100%;
     left: 0px;
- 
 }
 
 div.a {
-  text-align: center;
-    margin: 10px 0;
+    text-align: center;
+    padding: 10px 0;
 }

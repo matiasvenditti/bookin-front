@@ -1,4 +1,4 @@
-export default class photoUtils {
+export default class PhotoUtils {
     static getPhotoFromBytearray = (data: string) => {
         return `data:image/jpeg;base64,${data}`;
     }

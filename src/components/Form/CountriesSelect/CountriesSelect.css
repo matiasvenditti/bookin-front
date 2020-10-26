@@ -1,0 +1,18 @@
+.countries-select-option-container {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.countries-select-option-container img {
+    max-width: 35px;
+    margin-right: 5px;
+}
+
+/* manual fix to position when errorText appears below input */
+.autocomplete-error {
+    top: 11px;
+}
+
+.autocomplete-error > div > div > div > fieldset {
+    border: 1px solid #ef476f;
+}

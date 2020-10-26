@@ -1,13 +1,22 @@
 .radio-group-form-control-container {
     width: 100%;
 }
+
+.radio-group-form-control-container-column {
+    width: 100%;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
 .radio-group-form-control-container legend:first-child {
     padding-top: 10px;
 }
+
 .radio-group-form-control-container legend:last-child {
     padding-bottom: 20px;
 
 }
+
 .radio-group-form-control-container .radio-group-container {
     width: 100%;
     flex-direction: row !important;

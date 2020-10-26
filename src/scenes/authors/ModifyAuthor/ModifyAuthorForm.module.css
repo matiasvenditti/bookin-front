@@ -1,0 +1,45 @@
+.textField {
+    margin-left: auto;
+    margin-right: auto;
+    width: 200px;
+  }
+
+.select{
+  width: 226px !important;
+  margin-right: 15px;
+}
+.date{
+  width: 202px !important;
+}
+.label{
+  margin-left: 14px;
+}
+.button{
+  width: 100px;
+}
+.spacingw{
+  width: 89px;
+}
+.spacing {
+  margin-top: 20px;
+}
+.routeContainer .profileEditFormContainer > form >.profileEditButtonsContainer > button {
+  margin-right: 10px;
+  margin-top: 10px;
+}
+.center {
+    text-align: center;
+}
+
+.modifyAuthorButtonsContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.modifyAuthorButtonsContainer > button:nth-child(1) {
+    margin-right: 10px;
+}
