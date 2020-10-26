@@ -19,6 +19,7 @@ import { Header } from "..";
 import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
 import { Book as BookModel, } from "../../model";
 import { Author as AuthorModel, } from "../../model/Author";
+import { AuthService } from "../../services";
 
 
 interface RouterProps {
@@ -95,8 +96,7 @@ class Router extends React.Component<any, RouterState> {
         const {search} = this.state;
         return (
             <BrowserRouter>
-                <Header 
-                    nowIsLogged={this.state.loginStatus === RequestStatus.SUCCESS} 
+                <Header
                     roles={[UserRoles.RoleAdmin]}
                     logoutCallback={() => this.setState({...this.state, logoutStatus: true })}  // only one to trigger re-render
                     getUserDataErrorCallback={() => this.setState({...this.state, getUserDataError: true})}
@@ -105,6 +105,7 @@ class Router extends React.Component<any, RouterState> {
                     onSearch={(searchInput: string) => (
                             this.setState({...this.state, search: {...this.state.search, searchInput}})
                     )}
+                    logged={AuthService.isLoggedIn()}
                 />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
