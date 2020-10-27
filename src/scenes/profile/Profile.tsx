@@ -128,7 +128,10 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     handleUpdatePhoto = (photo: File) => {
         this.handleUpdate(this.state.data, photo);
     }
-    handleUpdateValues = (values: User) => this.handleUpdate(values, this.state.data.photo);
+    handleUpdateValues = (values: User) => {
+        console.log(values)
+        this.handleUpdate(values, this.state.data.photo);
+    }
 
     handleUpdate = (values: User, photo: File) => {
         this.setState({...this.state, updateStatus: RequestStatus.LOADING});

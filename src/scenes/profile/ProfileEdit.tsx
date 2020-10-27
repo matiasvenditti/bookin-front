@@ -31,6 +31,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 firstName: { value: props.data.firstName, type: 'text', error: false, touched: false },
                 lastName: { value: props.data.lastName, type: 'text', error: false, touched: false },
                 email: { value: props.data.email, type: 'email', error: false, touched: false },
+                password: { value: props.data.password, type: 'password', error: false, touched: false},
                 gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
             },
             formValid: false,
@@ -66,7 +67,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             email: this.state.values.email.value,
-            password: '',
+            password: this.state.values.password.value,
             gender: this.state.values.gender.value,
             photo: null,
         });
@@ -135,20 +136,33 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 ]);
                 case EditVar.EMAIL:
                     //   TODO: Uncomment or change when change-email functionality is ready
-                    // return ([
-                    //     <Input
-                    //         label='Mail'
-                    //         id='email'
-                    //         key='email'
-                    //         type='email'
-                    //         onChange={this.handleInput}
-                    //         value={this.state.values.email.value}
-                    //         error={this.state.values.email.error}
-                    //         errorText={this.state.values.email.error ? 'Mail inválido' : ''}
-                    //         required
-                    //     />
-                    return([
-                        <Typography align='center' variant='h5'>Not implemented yet</Typography>
+                     return ([
+                         <Input
+                             label='Mail'
+                             id='email'
+                             key='email'
+                             type='email'
+                             onChange={this.handleInput}
+                             value={this.state.values.email.value}
+                             error={this.state.values.email.error}
+                             errorText={this.state.values.email.error ? 'Mail inválido' : ''}
+                             required
+                         />
+                    ]);
+                case EditVar.PASSWORD:
+                    // esta deshabilitado en el back, creo
+                     return ([
+                         <Input
+                             label='Password'
+                             id='password'
+                             key='password'
+                             type='password'
+                             onChange={this.handleInput}
+                             value={this.state.values.password.value}
+                             error={this.state.values.password.error}
+                             errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                             required
+                         />
                     ]);
             case EditVar.GENDER:
                 return ([
