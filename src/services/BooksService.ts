@@ -66,6 +66,11 @@ class BooksService {
     static searchBooksSimple = (query: string): Promise<AxiosResponse<Book[]>> => {
         return instance.get<Book[]>(`${baseURL}/books${ParserUtils.arrayToRequestParams([{tag: 'title', value: query}])}`);
     }
+
+    static getRankingByRanking = (genre: string): Promise<AxiosResponse<Book[]>> => {
+        console.log(genre)
+        return instance.get<Book[]>(`${baseURL}/books/ranking/${genre}?size=100`);
+    }
 }
 
 

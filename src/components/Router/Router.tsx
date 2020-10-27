@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import React from "react";
 import PrivateRoute from './PrivateRoute';
-import Home from "../../scenes/home/Home";
+import Home from "../../scenes/home/Home/Home";
 import Register from "../../scenes/session/Register/Register";
 import Login from '../../scenes/session/Login/Login';
 import Profile from '../../scenes/profile/Profile';
@@ -57,7 +57,8 @@ interface RouterState {
         searchInput: string,
         updateStatus: RequestStatus,
         searchRequestError: boolean,
-    }
+    },
+    getBooksRankingByGenreError: boolean,
 }
 
 class Router extends React.Component<any, RouterState> {
@@ -94,7 +95,8 @@ class Router extends React.Component<any, RouterState> {
                 searchInput: '',
                 updateStatus: RequestStatus.NONE,
                 searchRequestError: false,
-            }
+            },
+            getBooksRankingByGenreError: false,
         };
     }
 
@@ -115,7 +117,11 @@ class Router extends React.Component<any, RouterState> {
                     logged={AuthService.isLoggedIn()}
                 />
                 <Switch>
-                    <Route exact path='/'><Home /></Route>
+                    <Route exact path='/'>
+                        <Home
+                            getBooksRankingByGenreErrorCallback={() => this.setState({...this.state, getBooksRankingByGenreError: true})}
+                        />
+                    </Route>
                     <Route path='/register' >
                         <Register registerCallback={(registerStatus: RequestStatus, loginStatus: RequestStatus) =>
                             this.setState({ ...this.state, registerStatus, loginStatus })}
@@ -217,6 +223,7 @@ class Router extends React.Component<any, RouterState> {
             reviewStatus,
             deleteReviewStatus,
             updateReviewStatus,
+            getBooksRankingByGenreError,
             changePasswordStatus,
         } = this.state;
 
@@ -255,6 +262,7 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(deleteReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar la reseña', () => this.setState({...this.state, deleteReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha modificado la reseña exitosamente', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al modificar la reseña', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
+                {this.renderAToast(getBooksRankingByGenreError,                     'error', 'Hubo un error al obtener la lista de libros', () => this.setState({...this.state, getBooksRankingByGenreError: false}))}
                 {this.renderAToast(changePasswordStatus  === RequestStatus.SUCCESS,      'success', 'Se cambió la contraseña exitosamente', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
                 {this.renderAToast(changePasswordStatus  === RequestStatus.ERROR,      'error', 'La contraseña ingresada no coincide con la de este usuario', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
             </div>
