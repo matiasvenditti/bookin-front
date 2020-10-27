@@ -49,6 +49,7 @@ const Filters = (props: FiltersProps) => {
                 });
                 break;
             case 'languages':
+                console.log(filters.languages, value);
                 props.onChangeFilters({
                     ...filters,
                     languages: filters.languages.filter((language) => language !== value)
@@ -65,8 +66,8 @@ const Filters = (props: FiltersProps) => {
         if (filters.text) tags.push({key: 'text', value: props.filters.text});
         tags = tags.concat(
             ...filters.nationalities.map((nationality: string) => ({key: 'nationalities',  value: nationality})),
-            ...filters.bookGenres.map((bookGenre: string) => ({key: 'bookGenres',  value: ConstsUtils.getBookGenreValue(bookGenre)})),
-            ...filters.languages.map((language: string) => ({key: 'languages',  value: ConstsUtils.getLanguageValue(language)})),
+            ...filters.bookGenres.map((bookGenre: string) => ({key: 'bookGenres',  value: bookGenre})),
+            ...filters.languages.map((language: string) => ({key: 'languages',  value: language})),
         );
         if (tags.length === 0) {
             return (
@@ -75,6 +76,14 @@ const Filters = (props: FiltersProps) => {
                 </div>
             );
         } else {
+            const getValueOfKey = (key: string, type: string) => {
+                switch (type) {
+                    case 'nationalities': return ConstsUtils.getCountryName(key);
+                    case 'bookGenres': return ConstsUtils.getBookGenreValue(key);
+                    case 'languages': return ConstsUtils.getLanguageValue(key);
+                    default: return key;
+                }
+            };
             return (
                 <div className={classes.tagsContainer}>
                     {tags.map((tag, i) => {
@@ -83,7 +92,7 @@ const Filters = (props: FiltersProps) => {
                                 <Chip
                                     key={'tags-chip-' + tag.key + '-' + i}
                                     avatar={<Flag code={tag.value} />}
-                                    label={ConstsUtils.getCountryName(tag.value)}
+                                    label={getValueOfKey(tag.value, tag.key)}
                                     onDelete={() => handleClickTag(tag.key, tag.value)}
                                     style={{marginRight: '8px', marginBottom: '8px'}}
                                 />
@@ -92,7 +101,7 @@ const Filters = (props: FiltersProps) => {
                             return (
                                 <Chip
                                     key={'tags-chip-' + tag.key + '-' + i}
-                                    label={tag.value}
+                                    label={getValueOfKey(tag.value, tag.key)}
                                     onDelete={() => handleClickTag(tag.key, tag.value)}
                                     style={{marginRight: '8px', marginBottom: '8px'}}
                                 />
