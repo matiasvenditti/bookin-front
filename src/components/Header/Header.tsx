@@ -1,25 +1,26 @@
 import React from "react";
 import AppBar from '@material-ui/core/AppBar';
-import { fade, Theme, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles } from "@material-ui/core";
+import { fade, Theme, Toolbar, IconButton, Menu, MenuItem, Typography, withStyles, WithStyles } from "@material-ui/core";
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import "./Header.css";
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import { withRouter } from "react-router-dom";
+import { RouteChildrenProps, withRouter } from "react-router-dom";
 import { AuthorsService, AuthService, BooksService, SessionService, UserService } from "../../services";
 import SearchSelect from "./SearchSelect/SearchSelect";
 import { RequestStatus } from "../../model/consts/RequestStatus";
 
 
-interface HeaderProps {
-    nowIsLogged: boolean,
+interface HeaderProps extends RouteChildrenProps, WithStyles {
     roles: string[],
+    onLogin(): void,
     logoutCallback(): void,
     getUserDataErrorCallback(): void,
     searchBooksErrorCallback(): void,
     searchAuthorsErrorCallback(): void,
     redirectToBookAuthorCallback(query: string): void,
     onSearch(value: string): void,
+    logged: boolean,
 }
 
 interface HeaderState {
@@ -35,6 +36,7 @@ interface HeaderState {
     searchAuthorsStatus: RequestStatus,
 }
 
+// TODO: change any props to Header with correct extends (could not make it work)
 class Header extends React.Component<any, HeaderState>{
     constructor(props: any) {
         super(props);
@@ -56,10 +58,8 @@ class Header extends React.Component<any, HeaderState>{
         this.setAnchorEl = this.setAnchorEl.bind(this);
     }
 
-    // on reload the page
-    componentDidMount() {
-        this.setState({...this.state, getUserDataStatus: RequestStatus.LOADING});
-        if (AuthService.isLoggedIn())
+    _getUserData = () => {
+        if (AuthService.isLoggedIn()) {
             UserService.getUserData()
                 .then((response) => {
                     this.setState({ ...this.state, firstName: response.data.firstName, getUserDataStatus: RequestStatus.SUCCESS })
@@ -69,15 +69,18 @@ class Header extends React.Component<any, HeaderState>{
                     this.props.getUserDataErrorCallback();
                     console.log(error);
                 });
+        }
+    };
+
+    componentDidUpdate(prevProps: any) {
+        console.log(`componentDidUpdate, prevProps=${prevProps.logged} -> props=${this.props.logged}`)
+        if (prevProps.logged !== this.props.logged) this._getUserData();
     }
 
-    // on not logged to logged
-    componentDidUpdate(prevProps: any) {
-        if (!prevProps.nowIsLogged && this.props.nowIsLogged && AuthService.isLoggedIn()) {
-            UserService.getUserData()
-                .then((response) => this.setState({ ...this.state, firstName: response.data.firstName }))
-                .catch((error) => console.log(error));
-        }
+    componentDidMount() {
+        console.log('getting user data');
+        this.setState({...this.state, getUserDataStatus: RequestStatus.LOADING});
+        this._getUserData();
     }
 
     handleMenu(event: React.MouseEvent<HTMLElement>) { this.setAnchorEl(event.currentTarget); }
@@ -90,6 +93,7 @@ class Header extends React.Component<any, HeaderState>{
     }
 
     handleLogout = () => {
+        this.setState({...this.state, searchInput: '', firstName: ''});
         SessionService.logout();
         this.props.history.push('/login');
         this.props.logoutCallback();

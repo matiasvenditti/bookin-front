@@ -19,6 +19,7 @@ import { Header } from "..";
 import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
 import { Book as BookModel, } from "../../model";
 import { Author as AuthorModel, } from "../../model/Author";
+import { AuthService } from "../../services";
 
 
 interface RouterProps {
@@ -109,6 +110,7 @@ class Router extends React.Component<any, RouterState> {
                     onSearch={(searchInput: string) => (
                             this.setState({...this.state, search: {...this.state.search, searchInput}})
                     )}
+                    logged={AuthService.isLoggedIn()}
                 />
                 <Switch>
                     <Route exact path='/'><Home /></Route>
