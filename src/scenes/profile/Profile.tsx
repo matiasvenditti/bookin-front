@@ -18,6 +18,7 @@ import ReviewCard from "../../components/Cards/ReviewCard/ReviewCard";
 import {DeleteReviewModal} from "../review/DeleteReviewModal";
 import {RouteComponentProps} from "react-router";
 import {ReviewWithBookDTO} from "../../model/Review";
+import { ChangePasswords } from '../../model/ChangePasswords';
 
 
 interface ProfileProps extends RouteComponentProps {
@@ -129,7 +130,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         this.handleUpdate(this.state.data, photo);
     }
     handleUpdateValues = (values: User) => {
-        console.log(values)
         this.handleUpdate(values, this.state.data.photo);
     }
 
@@ -145,6 +145,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 this.setState({...this.state, updateStatus: RequestStatus.ERROR});
                 this.props.editProfileCallback(RequestStatus.ERROR);
             });
+    }
+    handlePasswordChange = (passwords: ChangePasswords) => {
+        console.log(passwords)
     }
 
     render() {
@@ -196,6 +199,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     data={data}
                     editVariable={editVariable}
                     onSubmit={this.handleUpdateValues}
+                    changePassword={this.handlePasswordChange}
                     onCancel={this.handleCancel}
                 />
             );

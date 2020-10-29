@@ -4,6 +4,7 @@ import {baseURL} from "./EnvironmentService";
 import {instance} from "../utils/Interceptors/Inerceptors";
 import ResponseUpdate from "../model/responses/ResponseUpdate";
 import ResponseDelete from "../model/responses/ResponseDelete";
+import { ChangePasswords } from "../model/ChangePasswords";
 
 
 class UserService {
@@ -37,6 +38,10 @@ class UserService {
     
     static deleteProfile(id: number): Promise<AxiosResponse> {
         return instance.delete<ResponseDelete>(`${baseURL}/users/${id}`);
+    }
+
+    static changePassword(passwords: ChangePasswords): Promise<AxiosResponse> {
+        return instance.post<User>(`${baseURL}/users//changePassword"`, passwords)
     }
 }
 

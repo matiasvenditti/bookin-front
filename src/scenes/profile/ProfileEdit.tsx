@@ -6,6 +6,7 @@ import { Button, Input, RadioGroup } from '../../components/Form';
 import { User } from '../../model';
 import { Typography } from '@material-ui/core';
 import { allGenders } from '../../utils/consts';
+import { ChangePasswords } from '../../model/ChangePasswords';
 
 
 interface ProfileEditProps {
@@ -14,13 +15,16 @@ interface ProfileEditProps {
     data: User,
     editVariable: EditVar,
     onSubmit(values: User): void,
+    changePassword(passwords: ChangePasswords): void, 
     onCancel(): void,
 }
 
 interface ProfileEditState {
     values: UserEditFormModel,
+    oldPassword: string,
     formValid: boolean,
     error: any,
+    counter: number,
 }
 
 class ProfileEdit extends Component<any, ProfileEditState> {
@@ -34,12 +38,16 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 password: { value: props.data.password, type: 'password', error: false, touched: false},
                 gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
             },
+            oldPassword: '',
             formValid: false,
             error: null,
+            counter: 0,
         }
     }
 
     handleInput = (id: keyof UserEditFormModel, type: string, value: any) => {
+        const number: number = this.state.counter+1
+        const pass = this.state.values.password.value;
         const error = !validateInput(type, value);
         const allTouched = () => {
             if (id === 'firstName' || id === 'lastName') {
@@ -51,14 +59,29 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             if (key === id) return value === this.props.data[id];
             else return this.state.values[key].value === this.props.data[key];
         });
-        this.setState({
-            ...this.state,
-            values: {
-                ...this.state.values,
-                [id]: { value, type, error, touched: true },
-            },
-            formValid: !allInitialValue && allTouched && !anyErrors,
-        });
+        if (this.state.counter === 1){
+                    this.setState({
+                ...this.state,
+                values: {
+                    ...this.state.values,
+                    [id]: { value, type, error, touched: true },
+                },
+                oldPassword: pass,
+                formValid: !allInitialValue && allTouched && !anyErrors,
+                counter: number,
+            });
+        }else {
+            this.setState({
+                ...this.state,
+                values: {
+                    ...this.state.values,
+                    [id]: { value, type, error, touched: true },
+                },
+                formValid: !allInitialValue && allTouched && !anyErrors,
+                counter: number,
+            });
+        }
+
     }
 
     handleSubmit = () => {
@@ -73,6 +96,14 @@ class ProfileEdit extends Component<any, ProfileEditState> {
         });
     };
 
+    handlePasswordChange = () => {
+        var passwords: ChangePasswords = {
+            oldPassword: this.state.oldPassword,
+            password: this.state.values.password.value
+        }
+        this.props.changePassword(passwords)
+    }
+
     handleCancel = () => {
         this.props.onCancel()
     }
@@ -82,21 +113,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             <div className='profile-edit-form-container'>
                 <form>
                     {this.renderInputs()}
-                    <div className='profile-edit-buttons-container'>
-                        <Button
-                            color='primary'
-                            variant='contained'
-                            title='Guardar'
-                            disabled={!this.state.formValid}
-                            onClick={this.handleSubmit}
-                        />
-                        <Button
-                            variant='outlined'
-                            title='Cancelar'
-                            disabled={false}
-                            onClick={this.handleCancel}
-                        />
-                    </div>
+                    {this.renderButtons()}
                 </form>
             </div>
         );
@@ -181,6 +198,65 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             default: return (
                 <div>!! form inputs returned default method !!</div>
             )
+        }
+    }
+
+    renderButtons() {
+        switch (this.props.editVariable) {
+            case EditVar.PASSWORD:
+                return ([
+                    <div className='profile-edit-buttons-container'>
+                    <Button
+                        color='primary'
+                        variant='contained'
+                        title='Guardar'
+                        disabled={!this.state.formValid}
+                        onClick={this.handlePasswordChange}
+                    />
+                    <Button
+                        variant='outlined'
+                        title='Cancelar'
+                        disabled={false}
+                        onClick={this.handleCancel}
+                    />
+                </div>
+                ]);
+            case EditVar.EMAIL:
+                return ([
+                    <div className='profile-edit-buttons-container'>
+                    <Button
+                        color='primary'
+                        variant='contained'
+                        title='Guardar'
+                        disabled={!this.state.formValid}
+                        onClick={this.handleSubmit}
+                    />
+                    <Button
+                        variant='outlined'
+                        title='Cancelar'
+                        disabled={false}
+                        onClick={this.handleCancel}
+                    />
+                </div>
+                ]);
+            default: 
+                return ([
+                    <div className='profile-edit-buttons-container'>
+                    <Button
+                        color='primary'
+                        variant='contained'
+                        title='Guardar'
+                        disabled={!this.state.formValid}
+                        onClick={this.handleSubmit}
+                    />
+                    <Button
+                        variant='outlined'
+                        title='Cancelar'
+                        disabled={false}
+                        onClick={this.handleCancel}
+                    />
+                </div>
+                ]);
         }
     }
 }
