@@ -162,7 +162,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                             autoFocus
                         />
                     </div>,
-                    <div className='form-input' key='form-input-lastname    '>
+                    <div className='form-input' key='form-input-lastname'>
                         <Input
                             label='Apellido'
                             id='lastName'
@@ -195,29 +195,33 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                     // esta deshabilitado en el back, creo
                     return ([
                         <div>
-                            <Input
-                                label='Verifica tu contraseña'
-                                id='verification'
-                                key='verification'
-                                type='password'
-                                onChange={this.handleInput}
-                                value={this.state.values.verification.value}
-                                error={this.state.values.verification.error}
-                                errorText={this.state.values.verification.error ? 'La contraseña ingresada no coincide con la anterior' : ''}
-                                required
-                            /> 
-                            <Input
-                                label='Contraseña nueva'
-                                id='password'
-                                key='password'
-                                type='password'
-                                onChange={this.handleInput}
-                                value={this.state.values.password.value}
-                                error={this.state.values.password.error}
-                                errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
-                                required
-                            />
+                            <div className='form-input' key='form-input-oldPassword'>
+                                <Input
+                                    label='Verifica tu contraseña'
+                                    id='verification'
+                                    key='verification'
+                                    type='password'
+                                    onChange={this.handleInput}
+                                    value={this.state.values.verification.value}
+                                    error={this.state.values.verification.error}
+                                    errorText={this.state.values.verification.error ? 'Contraseña invalida' : ''}
+                                    required
+                                /> 
                             </div>
+                            <div className='form-input' key='form-input-newPassword'>
+                                <Input
+                                    label='Contraseña nueva'
+                                    id='password'
+                                    key='password'
+                                    type='password'
+                                    onChange={this.handleInput}
+                                    value={this.state.values.password.value}
+                                    error={this.state.values.password.error}
+                                    errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                                    required
+                                />
+                            </div>
+                        </div>
                     ]);
             case EditVar.GENDER:
                 return ([

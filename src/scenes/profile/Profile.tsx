@@ -153,7 +153,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         console.log(passwords)
         UserService.changePassword(passwords)
             .then(() => {
-                this.setState({...this.state, passwordStatus: RequestStatus.SUCCESS, editProfileMode: true});
+                this.setState({...this.state, passwordStatus: RequestStatus.SUCCESS, editProfileMode: false});
                 this.props.changePasswordCallback(RequestStatus.SUCCESS);
                 this._getUserData();
             })
