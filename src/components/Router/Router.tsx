@@ -35,6 +35,7 @@ interface RouterState {
     loginStatus: RequestStatus,
     loadAvatarError: boolean,
     editProfileStatus: RequestStatus,
+    changePasswordStatus: RequestStatus,
     editAuthorStatus: RequestStatus,
     deleteProfileStatus: RequestStatus,
     createAuthorStatus: RequestStatus,
@@ -71,6 +72,7 @@ class Router extends React.Component<any, RouterState> {
             loginStatus: RequestStatus.NONE,
             loadAvatarError: false,
             editProfileStatus: RequestStatus.NONE,
+            changePasswordStatus: RequestStatus.NONE,
             editAuthorStatus: RequestStatus.NONE,
             deleteProfileStatus: RequestStatus.NONE,
             createAuthorStatus: RequestStatus.NONE,
@@ -127,6 +129,7 @@ class Router extends React.Component<any, RouterState> {
                             deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
                             onLoadErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
                             editProfileCallback={(editProfileStatus: RequestStatus) => this.setState({ ...this.state, editProfileStatus })}
+                            changePasswordCallback={(changePasswordStatus: RequestStatus) => this.setState({ ...this.state, changePasswordStatus})}
                         />
                     </PrivateRoute>
 
@@ -213,7 +216,8 @@ class Router extends React.Component<any, RouterState> {
             getModifyBookDataError,
             reviewStatus,
             deleteReviewStatus,
-            updateReviewStatus
+            updateReviewStatus,
+            changePasswordStatus,
         } = this.state;
 
         return (
@@ -251,6 +255,8 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(deleteReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar la reseña', () => this.setState({...this.state, deleteReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha modificado la reseña exitosamente', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al modificar la reseña', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
+                {this.renderAToast(changePasswordStatus  === RequestStatus.SUCCESS,      'success', 'Se cambió la contraseña exitosamente', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
+                {this.renderAToast(changePasswordStatus  === RequestStatus.ERROR,      'error', 'La contraseña ingresada no coincide con la de este usuario', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
             </div>
         );
     }

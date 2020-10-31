@@ -41,7 +41,7 @@ class UserService {
     }
 
     static changePassword(passwords: ChangePasswords): Promise<AxiosResponse> {
-        return instance.post<User>(`${baseURL}/users//changePassword"`, passwords)
+        return instance.post<User>(`${baseURL}/users/changePassword`, passwords)
     }
 }
 

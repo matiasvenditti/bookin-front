@@ -25,6 +25,7 @@ interface ProfileProps extends RouteComponentProps {
     editProfileCallback(editProfileStatus: RequestStatus): void,
     onLoadErrorCallback(): void,
     deleteProfileCallback(deleteProfileStatus: RequestStatus): void,
+    changePasswordCallback(changePasswordStatus: RequestStatus): void,
 }
 
 interface ProfileState {
@@ -34,6 +35,7 @@ interface ProfileState {
     editVariable: EditVar,
     updateStatus: any,
     deleteStatus: any,
+    passwordStatus: any,
     deleteModalShow: boolean,
     data: User,
     reviews: ReviewWithBookDTO[],
@@ -62,6 +64,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             deleteModalShow: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
+            passwordStatus: RequestStatus.NONE,
             editVariable: EditVar.PASSWORD,
             reviews: [],
             showDelete:false,
@@ -148,6 +151,17 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     }
     handlePasswordChange = (passwords: ChangePasswords) => {
         console.log(passwords)
+        UserService.changePassword(passwords)
+            .then(() => {
+                this.setState({...this.state, passwordStatus: RequestStatus.SUCCESS, editProfileMode: true});
+                this.props.changePasswordCallback(RequestStatus.SUCCESS);
+                this._getUserData();
+            })
+            .catch( e => {
+                console.log(e)
+                this.setState({...this.state, passwordStatus: RequestStatus.ERROR});
+                this.props.changePasswordCallback(RequestStatus.ERROR);
+            })
     }
 
     render() {

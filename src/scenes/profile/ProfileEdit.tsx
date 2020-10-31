@@ -36,9 +36,9 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 firstName: { value: props.data.firstName, type: 'text', error: false, touched: false },
                 lastName: { value: props.data.lastName, type: 'text', error: false, touched: false },
                 email: { value: props.data.email, type: 'email', error: false, touched: false },
-                password: { value: props.data.password, type: 'password', error: false, touched: false},
+                password: { value: '', type: 'password', error: false, touched: false},
                 gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
-                verification: { value: '', type: 'alphanuemric', error: false, touched: false},
+                verification: { value: '', type: 'password', error: false, touched: false},
             },
             oldPassword: '',
             formValid: false,
@@ -100,8 +100,8 @@ class ProfileEdit extends Component<any, ProfileEditState> {
     };
 
     handlePasswordChange = () => {
-        var passwords: ChangePasswords = {
-            oldPassword: this.state.oldPassword,
+        const passwords: ChangePasswords = {
+            oldPassword: this.state.values.verification.value,
             password: this.state.values.password.value
         }
         this.props.changePassword(passwords)
@@ -112,6 +112,8 @@ class ProfileEdit extends Component<any, ProfileEditState> {
     }
 
     verifyPassword = () => {
+        console.log(this.state.values.verification.value)
+        console.log(this.state.values.password)
         const value = this.state.values.verification.value
         const type = this.state.values.verification.type
         const touched = this.state.values.verification.touched
@@ -191,24 +193,10 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                     ]);
                 case EditVar.PASSWORD:
                     // esta deshabilitado en el back, creo
-                    if(this.state.verified){
-                        return ([
-                        <Input
-                             label='Password'
-                             id='password'
-                             key='password'
-                             type='password'
-                             onChange={this.handleInput}
-                             value={this.state.values.password.value}
-                             error={this.state.values.password.error}
-                             errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
-                             required
-                         />
-                        ]);
-                    }else{
-                     return ([
+                    return ([
+                        <div>
                             <Input
-                                label='Verification'
+                                label='Verifica tu contraseña'
                                 id='verification'
                                 key='verification'
                                 type='password'
@@ -216,9 +204,21 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                                 value={this.state.values.verification.value}
                                 error={this.state.values.verification.error}
                                 errorText={this.state.values.verification.error ? 'La contraseña ingresada no coincide con la anterior' : ''}
+                                required
                             /> 
+                            <Input
+                                label='Contraseña nueva'
+                                id='password'
+                                key='password'
+                                type='password'
+                                onChange={this.handleInput}
+                                value={this.state.values.password.value}
+                                error={this.state.values.password.error}
+                                errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                                required
+                            />
+                            </div>
                     ]);
-                }
             case EditVar.GENDER:
                 return ([
                     <RadioGroup
@@ -242,9 +242,8 @@ class ProfileEdit extends Component<any, ProfileEditState> {
     renderButtons() {
         switch (this.props.editVariable) {
             case EditVar.PASSWORD:
-                if (this.state.verified){
-                return ([
-                    <div className='profile-edit-buttons-container'>
+            return ([
+                <div className='profile-edit-buttons-container'>
                     <Button
                         color='primary'
                         variant='contained'
@@ -259,26 +258,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         onClick={this.handleCancel}
                     />
                 </div>
-                ]);
-                } else {
-                    return ([
-                        <div className='profile-edit-buttons-container'>
-                        <Button
-                            color='primary'
-                            variant='contained'
-                            title='Verificar contraseña'
-                            disabled={!this.state.formValid}
-                            onClick={this.verifyPassword}
-                        />
-                        <Button
-                            variant='outlined'
-                            title='Cancelar'
-                            disabled={false}
-                            onClick={this.handleCancel}
-                        />
-                    </div>
-                    ]);
-                }
+            ]);
             case EditVar.EMAIL:
                 return ([
                     <div className='profile-edit-buttons-container'>
