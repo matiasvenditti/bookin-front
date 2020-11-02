@@ -21,10 +21,8 @@ interface ProfileEditProps {
 
 interface ProfileEditState {
     values: UserEditFormModel,
-    oldPassword: string,
     formValid: boolean,
     error: any,
-    counter: number,
     verified: boolean,
 }
 
@@ -40,17 +38,13 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
                 verification: { value: '', type: 'password', error: false, touched: false},
             },
-            oldPassword: '',
             formValid: false,
             error: null,
-            counter: 0,
             verified: false,
         }
     }
 
     handleInput = (id: keyof UserEditFormModel, type: string, value: any) => {
-        const number: number = this.state.counter+1
-        const pass = this.state.values.password.value;
         const error = !validateInput(type, value);
         const allTouched = () => {
             if (id === 'firstName' || id === 'lastName') {
@@ -62,28 +56,14 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             if (key === id) return value === this.props.data[id];
             else return this.state.values[key].value === this.props.data[key];
         });
-        if (this.state.counter === 1){
-                    this.setState({
-                ...this.state,
-                values: {
-                    ...this.state.values,
-                    [id]: { value, type, error, touched: true },
-                },
-                oldPassword: pass,
-                formValid: !allInitialValue && allTouched && !anyErrors,
-                counter: number,
-            });
-        }else {
-            this.setState({
-                ...this.state,
-                values: {
-                    ...this.state.values,
-                    [id]: { value, type, error, touched: true },
-                },
-                formValid: !allInitialValue && allTouched && !anyErrors,
-                counter: number,
-            });
-        }
+        this.setState({
+            ...this.state,
+            values: {
+                ...this.state.values,
+                [id]: { value, type, error, touched: true },
+            },
+            formValid: !allInitialValue && allTouched && !anyErrors,
+        });
 
     }
 
@@ -109,28 +89,6 @@ class ProfileEdit extends Component<any, ProfileEditState> {
 
     handleCancel = () => {
         this.props.onCancel()
-    }
-
-    verifyPassword = () => {
-        console.log(this.state.values.verification.value)
-        console.log(this.state.values.password)
-        const value = this.state.values.verification.value
-        const type = this.state.values.verification.type
-        const touched = this.state.values.verification.touched
-        if(this.state.oldPassword === this.state.values.verification.value){
-            this.setState({
-                ...this.state,
-                verified: true
-            });
-        } else {
-            this.setState({
-                ...this.state,
-                values: {
-                    ...this.state.values,
-                    verification: {value , type , error: true, touched }
-                }
-            });
-        }
     }
 
     render() {

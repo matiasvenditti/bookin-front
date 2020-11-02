@@ -150,7 +150,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             });
     }
     handlePasswordChange = (passwords: ChangePasswords) => {
-        console.log(passwords)
         UserService.changePassword(passwords)
             .then(() => {
                 this.setState({...this.state, passwordStatus: RequestStatus.SUCCESS, editProfileMode: false});
@@ -158,7 +157,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 this._getUserData();
             })
             .catch( e => {
-                console.log(e)
                 this.setState({...this.state, passwordStatus: RequestStatus.ERROR});
                 this.props.changePasswordCallback(RequestStatus.ERROR);
             })
