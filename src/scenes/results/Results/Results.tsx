@@ -99,7 +99,7 @@ const Results = (props: ResultsProps) => {
                     <BookDisplay
                         key={'bookdisplay-skeleton-' + i}
                         book={new Book()}
-                        author={''}
+                        authors={['']}
                         resultsVariant
                     />
                 ))
@@ -115,14 +115,16 @@ const Results = (props: ResultsProps) => {
             return (
                 <div className={classes.resultsBooksContainer}>
                     {sortedBooks.map((book, i) => (
-                        <BookDisplay
-                            key={'bookdisplay-card-' + i}
-                            book={book}
-                            author={booksAuthors[i]}
-                            resultsVariant
-                            loading={loading}
-                            loadingAuthors={booksAuthorsLoadingStatuses[i] === RequestStatus.LOADING}
-                        />
+                        <div className={classes.resultsBooksBookContainer}>
+                            <BookDisplay
+                                key={'bookdisplay-card-' + i}
+                                book={book}
+                                authors={booksAuthors[i]}
+                                resultsVariant
+                                loading={loading}
+                                loadingAuthors={booksAuthorsLoadingStatuses[i] === RequestStatus.LOADING}
+                            />
+                        </div>
                     ))}
                 </div>
             );
