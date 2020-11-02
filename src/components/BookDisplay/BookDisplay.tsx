@@ -12,7 +12,7 @@ import { ConstsUtils, DateUtils } from "../../utils";
 interface BookDisplayProps extends RouteComponentProps {
     book: Book
     crown?: boolean
-    author: string,
+    authors: string[],
     resultsVariant?: boolean,
     loading?: boolean,
     loadingAuthors?: boolean,
@@ -30,7 +30,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
         /*  id title genre language date photo stars */
         if (this.props.resultsVariant) {
             const { id, title, genre, language, date, photo, stars } = this.props.book;
-            const author = this.props.author;
+            const authors = this.props.authors;
             const {loading, loadingAuthors} = this.props;
 
             if (loading) {
@@ -63,29 +63,28 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                 );
             } else {
                 return (
-                    <Card className={classes.resultsVariantCard}>
+                    <Card>
                         <CardActionArea onClick={() => this.props.history.push('/books/' + id)}>
-                            <div className={classes.resultsVariantCardContainer}>
-                                <CardMedia
-                                    className={classes.media}
-                                    image={`data:image/jpeg;base64,${photo}`}
-                                />
-                                <div className={classes.info}>
+                            <div className={classes.altCardContainer}>
+                                <div>
+                                    <CardMedia className={classes.altMediaContainer} image={`data:image/jpeg;base64,${photo}`}/>
+                                </div>
+                                <div className={classes.AltTextsContainer}>
                                     <Typography className={classes.title} variant='h4'>{title}</Typography>
-                                    {/*{loadingAuthors ? <Skeleton variant='text' height={25}/> : <Typography>{author}</Typography>}*/}
-                                    <div className={classes.infoSubitem}>
+                                    {loadingAuthors ? <Skeleton variant='text' height={25}/> : <Typography>{authors}</Typography>}
+                                    <div className={classes.AltInfoSubitem}>
                                         <Typography>Género:</Typography>
                                         <Typography>{genre}</Typography>
                                     </div>
-                                    <div className={classes.infoSubitem}>
+                                    <div className={classes.AltInfoSubitem}>
                                         <Typography>Idioma:</Typography>
                                         <Typography>{ConstsUtils.getLanguageValue(language)}</Typography>
                                     </div>
-                                    <div className={classes.infoSubitem}>
+                                    <div className={classes.AltInfoSubitem}>
                                         <Typography>Fecha de publicación:</Typography>
                                         <Typography>{date ? DateUtils.formatDateTimeYears(date.toString()) : 'no date'}</Typography>
                                     </div>
-                                    <div className={classes.infoSubitem}>
+                                    <div className={classes.AltInfoSubitem}>
                                         <Typography>Rating:</Typography>
                                         <Rating name="read-only" value={stars} precision={0.5} readOnly/>
                                     </div>
@@ -100,24 +99,35 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                 );
             }
         } else {
+            console.log('rendering book', this.props);
             return (
-                <Card className={classes.fullHeight}>                
-                    <div className={classes.flex}>
-                        {stars}
-                        <div className={classes.stars}>
-                            <Rating name="read-only" value={this.props.book.stars} readOnly />
+                <Card>
+                    <CardActionArea onClick={this.handleClick}>           
+                        <div className={classes.cardContainer}>
+                            <div className={classes.starsContainer}>
+                                {stars}
+                                <div className={classes.stars}>
+                                    <Rating name="read-only" value={this.props.book.stars} readOnly />
+                                </div>
+                            </div>
+                            <div className={classes.mediaContainer}>
+                                <CardMedia className={classes.media} image={photo}/>
+                            </div>
+                            <div className={classes.textsContainer}>
+                                <CardContent>
+                                    <Typography className={classes.title} gutterBottom variant="h5">{this.props.book.title}</Typography>
+                                    {this.props.loading ?
+                                        <Skeleton variant='text' height={25} width={50}/>
+                                        :
+                                        <Typography variant="body2" color="textSecondary" component="p">
+                                            {/* TODO add anonymous authors from props (no authors for book) */}
+                                            {this.props.authors.join(',')}
+                                        </Typography>
+                                    }
+                                </CardContent>
+                                {/* <CardMedia src={photo} title={this.props.book.title}/> */}
+                            </div>
                         </div>
-                    </div>
-                    <CardActionArea onClick={this.handleClick}>
-                        <CardMedia className={classes.media} image={photo}/>
-                        <CardContent>
-                            <Typography gutterBottom variant="h5">{this.props.book.title}</Typography>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                {/* TODO add anonymous author from props (no author for book) */}
-                                {this.props.author}
-                            </Typography>
-                        </CardContent>
-                        <CardMedia src={photo} title={this.props.book.title}/>
                     </CardActionArea>
                 </Card>
             )
