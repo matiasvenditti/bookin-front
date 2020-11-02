@@ -56,47 +56,42 @@ const RankingGenre = (props: RankingGenreProps) => {
     const [loading, setLoading] = useState(false);
 
     const _requestBooks = (key: string) => {
-        setSelector(key);
-        setLoading(true);
-        setBooks([]);
+        setSelector(key); setLoading(true); setBooks([]);
         BooksService.getRankingByRanking(key)
             .then((response) => {
                 const bookDataList: BookData[] = response.data.map((book, id) => {
                     const authors: string[] = [];
-                    return ({id, data: book, loadingAuthors: false, authors});
+                    return ({id, data: book, loadingAuthors: true, authors});
                 });
+                setBooks(bookDataList);
+                setLoading(false);
                 _requestBooksAuthors(bookDataList);
             })
             .catch((error) => {
                 setLoading(false);
-                props.getErrorCallback()
+                props.getErrorCallback();
             })
     }
 
     const _requestBooksAuthors = (bookDataList: BookData[]) => {
-        if (books.length === 0) return;
-        setBooks(bookDataList);
-        setLoading(false);
-        books.forEach((bookData) => {
-            let newBooks = books;
-            newBooks[bookData.data.id] = {...newBooks[bookData.data.id], loadingAuthors: true}
-            // console.log('asd', books, bookData.data.id, newBooks)
-            setBooks(newBooks);
+        if (bookDataList.length === 0) return;
+        bookDataList.forEach((bookData) => {
+            let newBooks = bookDataList;
             BooksService.getBookAuthors(bookData.data.id)
                 .then((response) => {
-                    newBooks[bookData.data.id] = {
-                        ...newBooks[bookData.data.id],
+                    newBooks[bookData.id] = {
+                        ...newBooks[bookData.id],
                         loadingAuthors: false,
                         authors: response.data.map((author) => (
                             `${author.firstName} ${author.lastName}`
                         )),
                     }
-                    console.log('books wihtour th author', books, 'nwo', newBooks); 
+                    // console.log('response authors of book', newBooks);
                     setBooks(newBooks);
                 })
                 .catch((error) => {
                     newBooks[bookData.data.id] = {
-                        ...books[bookData.data.id],
+                        ...bookDataList[bookData.data.id],
                         loadingAuthors: false,
                         authors: [`ERROR`],
                     }
@@ -109,6 +104,7 @@ const RankingGenre = (props: RankingGenreProps) => {
     }
 
     const renderList = () => {
+        console.log('render list')
         if (loading) {
             return (
                 <div className={classes.bookContainer}>
@@ -134,7 +130,7 @@ const RankingGenre = (props: RankingGenreProps) => {
                 </div>
             );
         } else {
-            console.log('booksssss');
+            console.log('booksssss', books);
             return (
                 <div className={classes.bookContainer}>
                     {books.map((bookData, i) => (
@@ -151,7 +147,7 @@ const RankingGenre = (props: RankingGenreProps) => {
         }
     };
 
-    console.log(selector, books, loading);
+    // console.log(selector, books, loading);
     return (
         <div className={classes.container}>
             <Typography align='center' variant='h4' className={classes.title}>Elegí tu género favorito</Typography>

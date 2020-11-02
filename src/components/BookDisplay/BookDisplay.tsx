@@ -25,6 +25,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
     }
 
     render() {
+        console.log('render book display', this.props);
         const photo: string = photoUtils.getPhotoFromBytearray(this.props.book.photo)
         const stars = this.props.crown ? <Stars color={"primary"}/>: null;
         /*  id title genre language date photo stars */
@@ -99,7 +100,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                 );
             }
         } else {
-            console.log('rendering book', this.props);
+            // console.log('rendering book', this.props);
             return (
                 <Card>
                     <CardActionArea onClick={this.handleClick}>           
@@ -121,7 +122,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                                         :
                                         <Typography variant="body2" color="textSecondary" component="p">
                                             {/* TODO add anonymous authors from props (no authors for book) */}
-                                            {this.props.authors.join(',')}
+                                            {this.props.authors.join(', ')}
                                         </Typography>
                                     }
                                 </CardContent>
