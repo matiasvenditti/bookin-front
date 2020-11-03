@@ -1,0 +1,20 @@
+.container {
+    padding: 20px;
+    width: 300px;
+}
+
+.inputContainer:nth-child(1) {
+    margin-top: 30px;
+}
+
+.inputContainer {
+    margin-top: 10px;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+}
