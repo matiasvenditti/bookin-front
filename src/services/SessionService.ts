@@ -32,6 +32,18 @@ class SessionService {
             // }, 1500);
         })
     }
+
+    static sendPasswordRecovery = (password: string) => {
+        console.log(`send password recovery request for: ${password}, todo endpoint`);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(() => console.log('yay'));
+            }, 1500);
+            // setTimeout(() => {
+            //     reject(() => console.log('nay'));
+            // }, 1500);
+        })
+    }
 }
 
 

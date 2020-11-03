@@ -20,6 +20,7 @@ import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
 import { Book as BookModel, } from "../../model";
 import { Author as AuthorModel, } from "../../model/Author";
 import { AuthService } from "../../services";
+import RecoverPassword from "../../scenes/session/RecoverPassword/RecoverPassword";
 
 
 interface RouterProps {
@@ -33,6 +34,8 @@ interface RouterState {
     searchAuthorsError: boolean,
     registerStatus: RequestStatus,
     loginStatus: RequestStatus,
+    passwordRecoveryStatus: RequestStatus,
+    sendPasswordRecoveryStatus: RequestStatus,
     loadAvatarError: boolean,
     editProfileStatus: RequestStatus,
     changePasswordStatus: RequestStatus,
@@ -72,6 +75,8 @@ class Router extends React.Component<any, RouterState> {
             searchAuthorsError: false,
             registerStatus: RequestStatus.NONE,
             loginStatus: RequestStatus.NONE,
+            passwordRecoveryStatus: RequestStatus.NONE,
+            sendPasswordRecoveryStatus: RequestStatus.NONE,
             loadAvatarError: false,
             editProfileStatus: RequestStatus.NONE,
             changePasswordStatus: RequestStatus.NONE,
@@ -130,7 +135,15 @@ class Router extends React.Component<any, RouterState> {
                         />
                     </Route>
                     <Route path='/login' >
-                        <Login loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })} />
+                        <Login
+                            loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })}
+                            passwordRecoveryCallback={(passwordRecoveryStatus: RequestStatus) => this.setState({...this.state, passwordRecoveryStatus})}
+                        />
+                    </Route>
+                    <Route path='/recover'>
+                        <RecoverPassword
+                            sendPasswordRecoveryCallback={(sendPasswordRecoveryStatus: RequestStatus) => this.setState({...this.state, sendPasswordRecoveryStatus})}
+                        />
                     </Route>
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
@@ -204,28 +217,36 @@ class Router extends React.Component<any, RouterState> {
 
     renderToasts() {
         const {
-            getUserDataError,
-            searchBooksError,
-            searchAuthorsError,
+            //
+            getUserDataError, searchBooksError, searchAuthorsError,
+            //
             registerStatus,
-            loginStatus,
+            // login
+            loginStatus, passwordRecoveryStatus, sendPasswordRecoveryStatus,
+            // profile
             editProfileStatus,
             deleteProfileStatus,
             loadAvatarError,
+            // author
             createAuthorStatus,
-            createBookStatus,
             updateAuthorStatus,
             getAuthorDataError,
             getModifyAuthorDataError,
             deleteAuthorStatus,
+            // books
+            createBookStatus,
             getBookDataError,
             deleteBookStatus,
             updateBookStatus,
             getModifyBookDataError,
+            // reviews
             reviewStatus,
             deleteReviewStatus,
             updateReviewStatus,
+            // ranking in home
             getBooksRankingByGenreError,
+            getBooksRankingByScoreError,
+            // more password
             changePasswordStatus,
         } = this.state;
 
@@ -236,7 +257,13 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(searchAuthorsError,                               'error', 'Hubo un error al buscar autores, intente más tarde', () => this.setState({...this.state, searchAuthorsError: false}))}
                 {this.renderAToast(registerStatus === RequestStatus.SUCCESS,        'success', 'Te has registrado correctamente!', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
                 {this.renderAToast(registerStatus === RequestStatus.ERROR,          'error', 'Hubo un error al registrarse, intente más tarde', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
+
                 {this.renderAToast(loginStatus === RequestStatus.ERROR,             'error', 'Hubo un error al ingresar, intente más tarde', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
+                {this.renderAToast(passwordRecoveryStatus === RequestStatus.SUCCESS,'success', 'Se ha realizado el pedido de recuperación correctamente, en breve recibirá un correo', () => this.setState({...this.state, passwordRecoveryStatus: RequestStatus.NONE}))}
+                {this.renderAToast(passwordRecoveryStatus === RequestStatus.ERROR,  'error', 'Hubo un error al hacer el pedido de recuperación, intente más tarde', () => this.setState({...this.state, passwordRecoveryStatus: RequestStatus.NONE}))}
+                {this.renderAToast(sendPasswordRecoveryStatus === RequestStatus.SUCCESS,'success', 'Se ha cambiado su contraseña exitosamente', () => this.setState({...this.state, sendPasswordRecoveryStatus: RequestStatus.NONE}))}
+                {this.renderAToast(sendPasswordRecoveryStatus === RequestStatus.ERROR,  'error', 'Hubo un error al cambiar su contraseña, intente más tarde', () => this.setState({...this.state, sendPasswordRecoveryStatus: RequestStatus.NONE}))}
+
                 {this.renderAToast(editProfileStatus === RequestStatus.SUCCESS,     'success', 'Se han actualizado los datos del usuario correctamente', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(editProfileStatus === RequestStatus.ERROR,       'error', 'Hubo un error al actualizar los datos, intente más tarde', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS,   'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
@@ -264,8 +291,6 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(deleteReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar la reseña', () => this.setState({...this.state, deleteReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha modificado la reseña exitosamente', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al modificar la reseña', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
-                {this.renderAToast(changePasswordStatus  === RequestStatus.SUCCESS,      'success', 'Se cambió la contraseña exitosamente', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
-                {this.renderAToast(changePasswordStatus  === RequestStatus.ERROR,      'error', 'La contraseña ingresada no coincide con la de este usuario', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
                 {this.renderAToast(getBooksRankingByGenreError,                     'error', 'Hubo un error al obtener la lista de libros', () => this.setState({...this.state, getBooksRankingByGenreError: false}))}
                 {this.renderAToast(changePasswordStatus  === RequestStatus.SUCCESS,      'success', 'Se cambió la contraseña exitosamente', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
                 {this.renderAToast(changePasswordStatus  === RequestStatus.ERROR,      'error', 'La contraseña ingresada no coincide con la de este usuario', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
