@@ -6,6 +6,7 @@ import RankingGenre from '../RankingGenre/RankingGenre';
 
 interface HomeProps {
     getBooksRankingByGenreErrorCallback(): void,
+    getBooksRankingByScoreErrorCallback(): void,
 }
 
 const Home = (props: HomeProps) => {
@@ -13,7 +14,7 @@ const Home = (props: HomeProps) => {
     return (
         <div className='route-container'>
             <div className={classes.homeContainer}>
-                <RankingMain/>
+                <RankingMain getErrorCallback={props.getBooksRankingByScoreErrorCallback}/>
                 <RankingGenre getErrorCallback={props.getBooksRankingByGenreErrorCallback}/>
             </div>
         </div>
