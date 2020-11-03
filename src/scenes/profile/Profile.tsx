@@ -18,12 +18,14 @@ import ReviewCard from "../../components/Cards/ReviewCard/ReviewCard";
 import {DeleteReviewModal} from "../review/DeleteReviewModal";
 import {RouteComponentProps} from "react-router";
 import {ReviewWithBookDTO} from "../../model/Review";
+import { ChangePasswords } from '../../model/ChangePasswords';
 
 
 interface ProfileProps extends RouteComponentProps {
     editProfileCallback(editProfileStatus: RequestStatus): void,
     onLoadErrorCallback(): void,
     deleteProfileCallback(deleteProfileStatus: RequestStatus): void,
+    changePasswordCallback(changePasswordStatus: RequestStatus): void,
 }
 
 interface ProfileState {
@@ -33,6 +35,7 @@ interface ProfileState {
     editVariable: EditVar,
     updateStatus: any,
     deleteStatus: any,
+    passwordStatus: any,
     deleteModalShow: boolean,
     data: User,
     reviews: ReviewWithBookDTO[],
@@ -61,6 +64,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             deleteModalShow: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
+            passwordStatus: RequestStatus.NONE,
             editVariable: EditVar.PASSWORD,
             reviews: [],
             showDelete:false,
@@ -128,7 +132,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     handleUpdatePhoto = (photo: File) => {
         this.handleUpdate(this.state.data, photo);
     }
-    handleUpdateValues = (values: User) => this.handleUpdate(values, this.state.data.photo);
+    handleUpdateValues = (values: User) => {
+        this.handleUpdate(values, this.state.data.photo);
+    }
 
     handleUpdate = (values: User, photo: File) => {
         this.setState({...this.state, updateStatus: RequestStatus.LOADING});
@@ -142,6 +148,18 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 this.setState({...this.state, updateStatus: RequestStatus.ERROR});
                 this.props.editProfileCallback(RequestStatus.ERROR);
             });
+    }
+    handlePasswordChange = (passwords: ChangePasswords) => {
+        UserService.changePassword(passwords)
+            .then(() => {
+                this.setState({...this.state, passwordStatus: RequestStatus.SUCCESS, editProfileMode: false});
+                this.props.changePasswordCallback(RequestStatus.SUCCESS);
+                this._getUserData();
+            })
+            .catch( e => {
+                this.setState({...this.state, passwordStatus: RequestStatus.ERROR});
+                this.props.changePasswordCallback(RequestStatus.ERROR);
+            })
     }
 
     render() {
@@ -193,6 +211,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     data={data}
                     editVariable={editVariable}
                     onSubmit={this.handleUpdateValues}
+                    changePassword={this.handlePasswordChange}
                     onCancel={this.handleCancel}
                 />
             );

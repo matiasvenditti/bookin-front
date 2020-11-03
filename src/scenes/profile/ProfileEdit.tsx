@@ -6,6 +6,8 @@ import { Button, Input, RadioGroup } from '../../components/Form';
 import { User } from '../../model';
 import { Typography } from '@material-ui/core';
 import { allGenders } from '../../utils/consts';
+import { ChangePasswords } from '../../model/ChangePasswords';
+import { createTrue } from 'typescript';
 
 
 interface ProfileEditProps {
@@ -14,6 +16,7 @@ interface ProfileEditProps {
     data: User,
     editVariable: EditVar,
     onSubmit(values: User): void,
+    changePassword(passwords: ChangePasswords): void, 
     onCancel(): void,
 }
 
@@ -21,6 +24,7 @@ interface ProfileEditState {
     values: UserEditFormModel,
     formValid: boolean,
     error: any,
+    verified: boolean,
 }
 
 class ProfileEdit extends Component<any, ProfileEditState> {
@@ -31,10 +35,15 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 firstName: { value: props.data.firstName, type: 'text', error: false, touched: false },
                 lastName: { value: props.data.lastName, type: 'text', error: false, touched: false },
                 email: { value: props.data.email, type: 'email', error: false, touched: false },
+                password: { value: '', type: 'password', error: false, touched: false},
                 gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
+                verification: { value: '', type: 'password', error: false, touched: false},                
+                verifyPassword: { value: '', type: 'password', error: false, touched: false},
+
             },
             formValid: false,
             error: null,
+            verified: false,
         }
     }
 
@@ -43,7 +52,10 @@ class ProfileEdit extends Component<any, ProfileEditState> {
         const allTouched = () => {
             if (id === 'firstName' || id === 'lastName') {
                 return this.state.values.firstName.touched || this.state.values.lastName.touched
-            } else return true;
+            } else if (id === 'verification' || id === 'password' || id === 'verifyPassword' ) {
+                return this.state.values.verification.touched || this.state.values.password.touched || this.state.values.verifyPassword.touched
+            } 
+            else return true;
         };
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
         const allInitialValue = Object.keys(this.state.values).every(key => {
@@ -58,6 +70,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             },
             formValid: !allInitialValue && allTouched && !anyErrors,
         });
+
     }
 
     handleSubmit = () => {
@@ -66,11 +79,19 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             firstName: this.state.values.firstName.value,
             lastName: this.state.values.lastName.value,
             email: this.state.values.email.value,
-            password: '',
+            password: this.state.values.password.value,
             gender: this.state.values.gender.value,
             photo: null,
         });
     };
+
+    handlePasswordChange = () => {
+        const passwords: ChangePasswords = {
+            oldPassword: this.state.values.verification.value,
+            password: this.state.values.password.value
+        }
+        this.props.changePassword(passwords)
+    }
 
     handleCancel = () => {
         this.props.onCancel()
@@ -81,21 +102,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             <div className='profile-edit-form-container'>
                 <form>
                     {this.renderInputs()}
-                    <div className='profile-edit-buttons-container'>
-                        <Button
-                            color='primary'
-                            variant='contained'
-                            title='Guardar'
-                            disabled={!this.state.formValid}
-                            onClick={this.handleSubmit}
-                        />
-                        <Button
-                            variant='outlined'
-                            title='Cancelar'
-                            disabled={false}
-                            onClick={this.handleCancel}
-                        />
-                    </div>
+                    {this.renderButtons()}
                 </form>
             </div>
         );
@@ -119,7 +126,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                             autoFocus
                         />
                     </div>,
-                    <div className='form-input' key='form-input-lastname    '>
+                    <div className='form-input' key='form-input-lastname'>
                         <Input
                             label='Apellido'
                             id='lastName'
@@ -135,20 +142,62 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 ]);
                 case EditVar.EMAIL:
                     //   TODO: Uncomment or change when change-email functionality is ready
-                    // return ([
-                    //     <Input
-                    //         label='Mail'
-                    //         id='email'
-                    //         key='email'
-                    //         type='email'
-                    //         onChange={this.handleInput}
-                    //         value={this.state.values.email.value}
-                    //         error={this.state.values.email.error}
-                    //         errorText={this.state.values.email.error ? 'Mail inválido' : ''}
-                    //         required
-                    //     />
-                    return([
-                        <Typography align='center' variant='h5'>Not implemented yet</Typography>
+                     return ([
+                         <Input
+                             label='Mail'
+                             id='email'
+                             key='email'
+                             type='email'
+                             onChange={this.handleInput}
+                             value={this.state.values.email.value}
+                             error={this.state.values.email.error}
+                             errorText={this.state.values.email.error ? 'Mail inválido' : ''}
+                             required
+                         />
+                    ]);
+                case EditVar.PASSWORD:
+                    return ([
+                        <div>
+                            <div className='form-input' key='form-input-oldPassword'>
+                                <Input
+                                    label='Verifica tu contraseña'
+                                    id='verification'
+                                    key='verification'
+                                    type='password'
+                                    onChange={this.handleInput}
+                                    value={this.state.values.verification.value}
+                                    error={this.state.values.verification.error}
+                                    errorText={this.state.values.verification.error ? 'Contraseña invalida' : ''}
+                                    required
+                                /> 
+                            </div>
+                            <div className='form-input' key='form-input-newPassword'>
+                                <Input
+                                    label='Ingrese la nueva contraseña'
+                                    id='password'
+                                    key='password'
+                                    type='password'
+                                    onChange={this.handleInput}
+                                    value={this.state.values.password.value}
+                                    error={this.state.values.password.error}
+                                    errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                                    required
+                                />
+                            </div>
+                            <div className='form-input' key='form-input-verifyPassword'>
+                                <Input
+                                    label='Vuelva a introducir la contraseña'
+                                    id='verifyPassword'
+                                    key='verifyPassword'
+                                    type='password'
+                                    onChange={this.handleInput}
+                                    value={this.state.values.verifyPassword.value}
+                                    error={this.state.values.verifyPassword.error}
+                                    errorText={this.state.values.verifyPassword.error ? 'Contraseña inválida' : ''}
+                                    required
+                                />
+                            </div>
+                        </div>
                     ]);
             case EditVar.GENDER:
                 return ([
@@ -167,6 +216,65 @@ class ProfileEdit extends Component<any, ProfileEditState> {
             default: return (
                 <div>!! form inputs returned default method !!</div>
             )
+        }
+    }
+
+    renderButtons() {
+        switch (this.props.editVariable) {
+            case EditVar.PASSWORD:
+            return ([
+                <div className='profile-edit-buttons-container'>
+                    <Button
+                        color='primary'
+                        variant='contained'
+                        title='Guardar'
+                        disabled={!this.state.formValid || !(this.state.values.password.value === this.state.values.verifyPassword.value) || (this.state.values.password.value === '')}
+                        onClick={this.handlePasswordChange}
+                    />
+                    <Button
+                        variant='outlined'
+                        title='Cancelar'
+                        disabled={false}
+                        onClick={this.handleCancel}
+                    />
+                </div>
+            ]);
+            case EditVar.EMAIL:
+                return ([
+                    <div className='profile-edit-buttons-container'>
+                    <Button
+                        color='primary'
+                        variant='contained'
+                        title='Guardar'
+                        disabled={!this.state.formValid}
+                        onClick={this.handleSubmit}
+                    />
+                    <Button
+                        variant='outlined'
+                        title='Cancelar'
+                        disabled={false}
+                        onClick={this.handleCancel}
+                    />
+                </div>
+                ]);
+            default: 
+                return ([
+                    <div className='profile-edit-buttons-container'>
+                    <Button
+                        color='primary'
+                        variant='contained'
+                        title='Guardar'
+                        disabled={!this.state.formValid}
+                        onClick={this.handleSubmit}
+                    />
+                    <Button
+                        variant='outlined'
+                        title='Cancelar'
+                        disabled={false}
+                        onClick={this.handleCancel}
+                    />
+                </div>
+                ]);
         }
     }
 }
