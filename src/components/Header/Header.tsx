@@ -73,12 +73,10 @@ class Header extends React.Component<any, HeaderState>{
     };
 
     componentDidUpdate(prevProps: any) {
-        console.log(`componentDidUpdate, prevProps=${prevProps.logged} -> props=${this.props.logged}`)
         if (prevProps.logged !== this.props.logged) this._getUserData();
     }
 
     componentDidMount() {
-        console.log('getting user data');
         this.setState({...this.state, getUserDataStatus: RequestStatus.LOADING});
         this._getUserData();
     }

@@ -145,7 +145,7 @@ class Book extends React.Component<BookProps, BookState> {
      */
 
     renderBook() {
-        const {data, getBookDataStatus, authors, reviews, currentUser, isAdmin} = this.state;
+        const {data, getBookDataStatus, authors, reviews, currentUser} = this.state;
         if (getBookDataStatus === RequestStatus.LOADING) {
             return (
                 <div>
