@@ -1,6 +1,6 @@
 import { Button, Typography } from '@material-ui/core';
 import React, { useState } from 'react';
-import { Book, KeyValue } from '../../../model';
+import { Book, KeyValue, SearchAuthor } from '../../../model';
 import { allBookGenres } from '../../../utils';
 import classes from './RankingGenre.module.css';
 import { 
@@ -75,28 +75,29 @@ const RankingGenre = (props: RankingGenreProps) => {
 
     const _requestBooksAuthors = (bookDataList: BookData[]) => {
         if (bookDataList.length === 0) return;
-        bookDataList.forEach((bookData) => {
-            let newBooks = bookDataList;
-            BooksService.getBookAuthors(bookData.data.id)
-                .then((response) => {
-                    newBooks[bookData.id] = {
-                        ...newBooks[bookData.id],
-                        loadingAuthors: false,
-                        authors: response.data.map((author) => (
-                            `${author.firstName} ${author.lastName}`
-                        )),
-                    }
-                    // console.log('response authors of book', newBooks);
-                    setBooks(newBooks);
+        const results = Promise.all([
+            ...bookDataList.map((bookData) => (BooksService.getBookAuthors(bookData.data.id)))        
+        ])
+        results
+            .then((responses) => {
+                let newBooks = bookDataList;
+                // [response: {data: [author1, author2, ...]}, response: {...}, ...]
+                responses.forEach((response, index) => {
+                    const authors = response.data.map((author: SearchAuthor) => (`${author.firstName} ${author.lastName}`));
+                    newBooks[index] = {...newBooks[index], loadingAuthors: false, authors}
                 })
-                .catch((error) => {
-                    newBooks[bookData.data.id] = {
-                        ...bookDataList[bookData.data.id],
-                        loadingAuthors: false,
-                        authors: [`ERROR`],
-                    }
+                setBooks([...newBooks]); // without spread, react thinks newBooks = bookDataList 
+                // and doesnt fire re-render
+            })
+            .catch((errors) => {
+                let newBooks = bookDataList;
+                // [response: {data: [author1, author2, ...]}, response: {...}, ...]
+                newBooks.forEach((bookData, index) => {
+                    newBooks[index] = {...newBooks[index], loadingAuthors: false, authors: [errors[index]]}
                 })
-        })
+                setBooks([...newBooks]); // without spread, react thinks newBooks = bookDataList 
+                // and doesnt fire re-render
+            })
     };
 
     const handleClickGenre = (key: string) => {
@@ -104,7 +105,6 @@ const RankingGenre = (props: RankingGenreProps) => {
     }
 
     const renderList = () => {
-        console.log('render list')
         if (loading) {
             return (
                 <div className={classes.bookContainer}>
@@ -117,11 +117,9 @@ const RankingGenre = (props: RankingGenreProps) => {
             );
         }
         if (!selector) {
-            console.log('selector is null');
             return null;
         }
         if (books.length === 0) {
-            console.log('books are 0');
             return (
                 <div className={classes.bookContainer}>
                     <div className={classes.noBooksTextContainer}>
@@ -130,7 +128,6 @@ const RankingGenre = (props: RankingGenreProps) => {
                 </div>
             );
         } else {
-            console.log('booksssss', books);
             return (
                 <div className={classes.bookContainer}>
                     {books.map((bookData, i) => (
@@ -147,19 +144,20 @@ const RankingGenre = (props: RankingGenreProps) => {
         }
     };
 
-    // console.log(selector, books, loading);
     return (
         <div className={classes.container}>
             <Typography align='center' variant='h4' className={classes.title}>Elegí tu género favorito</Typography>
             <div className={classes.buttonsContainer}>
                 {allBookGenres.map((bookGenre: KeyValue) => (
-                    <BigButton
-                        key={bookGenre.key}
-                        title={bookGenre.value}
-                        selected={selector === bookGenre.key}
-                        onClick={() => handleClickGenre(bookGenre.key)}
-                        endIcon={getIconByBookGenre(bookGenre.key)}
-                    />
+                    <div key={`${bookGenre.key}-div`} className={classes.bigButtonContainer}>
+                        <BigButton
+                            id={`${bookGenre.key}-button`}
+                            title={bookGenre.value}
+                            selected={selector === bookGenre.key}
+                            onClick={() => handleClickGenre(bookGenre.key)}
+                            endIcon={getIconByBookGenre(bookGenre.key)}
+                        />
+                    </div>
                 ))}
             </div>
             {renderList()}
@@ -168,24 +166,23 @@ const RankingGenre = (props: RankingGenreProps) => {
 }
 
 const BigButton = (props: {
-    key: string,
+    id: string,
     title: string,
     selected: boolean,
     onClick(): void,
     endIcon: any
 }) => {
-    const {key, title, selected, onClick, endIcon} = props;
+    const {id, title, selected, onClick, endIcon} = props;
 
     return (
-        <div key={key} className={classes.bigButtonContainer}>
-            <Button
-                onClick={onClick}
-                variant='contained' size='large' 
-                color={selected ? 'primary' : 'secondary'}
-                className={classes.bigButton}
-                endIcon={endIcon}
-            >{title}</Button>
-        </div>
+        <Button
+            key={id}
+            onClick={onClick}
+            variant='contained' size='large' 
+            color={selected ? 'primary' : 'secondary'}
+            className={classes.bigButton}
+            endIcon={endIcon}
+        >{title}</Button>
     );
 };
 

@@ -49,7 +49,6 @@ const Filters = (props: FiltersProps) => {
                 });
                 break;
             case 'languages':
-                console.log(filters.languages, value);
                 props.onChangeFilters({
                     ...filters,
                     languages: filters.languages.filter((language) => language !== value)
