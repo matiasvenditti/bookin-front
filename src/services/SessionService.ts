@@ -20,6 +20,18 @@ class SessionService {
     static logout = () => {
         localStorage.clear();
     }
+
+    static passwordRecovery = (email: string) => {
+        console.log(`password recovery request for: ${email}, todo endpoint`);
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve(() => console.log('yay'));
+            }, 1500);
+            // setTimeout(() => {
+            //     reject(() => console.log('nay'));
+            // }, 1500);
+        })
+    }
 }
 
 
