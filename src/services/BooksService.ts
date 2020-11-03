@@ -69,6 +69,10 @@ class BooksService {
     static getRankingByRanking = (genre: string): Promise<AxiosResponse<Book[]>> => {
         return instance.get<Book[]>(`${baseURL}/books/ranking/${genre}?size=100`);
     }
+
+    static getRankingByScore = (): Promise<AxiosResponse<Book[]>> => {
+        return instance.get<Book[]>(`${baseURL}/books/ranking/?size=10`);
+    }
 }
 
 

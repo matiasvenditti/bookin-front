@@ -1,7 +1,42 @@
-.container {
-    margin-bottom: 30px;
-}
-
 .title {
     font-weight: bold !important;
+}
+
+.container {
+    display: flex;
+    flex-flow: column nowrap;
+    width: 90vw;
+    overflow: hidden;
+}
+
+.bookContainer {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 0;
+    height: 500px;
+}
+
+.bookDisplayContainer {
+    margin-right: 15px;
+    height: inherit;
+}
+
+/* no books */
+
+.noBooksTextContainer {
+    display: flex;
+    flex-grow: 1;
+    height: 100%;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.noBooksText {
+    font-weight: bold;
+    color: rgb(100, 100, 100);
 }

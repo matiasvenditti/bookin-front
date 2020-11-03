@@ -100,7 +100,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
             }
         } else {
             return (
-                <Card>
+                <Card className={classes.root}>
                     <CardActionArea onClick={this.handleClick}>           
                         <div className={classes.cardContainer}>
                             <div className={classes.starsContainer}>

@@ -8,9 +8,13 @@
     height: 100%;
 }
 
+.root {
+    display: flex;
+    height: 490px;
+}
+
 .starsContainer {
     display: flex;
-    flex-grow: 1;
     align-self: flex-end;
     padding: 3px;
 }
