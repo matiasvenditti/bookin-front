@@ -7,6 +7,7 @@ import { User } from '../../model';
 import { Typography } from '@material-ui/core';
 import { allGenders } from '../../utils/consts';
 import { ChangePasswords } from '../../model/ChangePasswords';
+import { createTrue } from 'typescript';
 
 
 interface ProfileEditProps {
@@ -36,7 +37,9 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 email: { value: props.data.email, type: 'email', error: false, touched: false },
                 password: { value: '', type: 'password', error: false, touched: false},
                 gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
-                verification: { value: '', type: 'password', error: false, touched: false},
+                verification: { value: '', type: 'password', error: false, touched: false},                
+                verifyPassword: { value: '', type: 'password', error: false, touched: false},
+
             },
             formValid: false,
             error: null,
@@ -49,7 +52,10 @@ class ProfileEdit extends Component<any, ProfileEditState> {
         const allTouched = () => {
             if (id === 'firstName' || id === 'lastName') {
                 return this.state.values.firstName.touched || this.state.values.lastName.touched
-            } else return true;
+            } else if (id === 'verification' || id === 'password' || id === 'verifyPassword' ) {
+                return this.state.values.verification.touched || this.state.values.password.touched || this.state.values.verifyPassword.touched
+            } 
+            else return true;
         };
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
         const allInitialValue = Object.keys(this.state.values).every(key => {
@@ -150,7 +156,6 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                          />
                     ]);
                 case EditVar.PASSWORD:
-                    // esta deshabilitado en el back, creo
                     return ([
                         <div>
                             <div className='form-input' key='form-input-oldPassword'>
@@ -168,7 +173,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                             </div>
                             <div className='form-input' key='form-input-newPassword'>
                                 <Input
-                                    label='Contraseña nueva'
+                                    label='Ingrese la nueva contraseña'
                                     id='password'
                                     key='password'
                                     type='password'
@@ -176,6 +181,19 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                                     value={this.state.values.password.value}
                                     error={this.state.values.password.error}
                                     errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                                    required
+                                />
+                            </div>
+                            <div className='form-input' key='form-input-verifyPassword'>
+                                <Input
+                                    label='Vuelva a introducir la contraseña'
+                                    id='verifyPassword'
+                                    key='verifyPassword'
+                                    type='password'
+                                    onChange={this.handleInput}
+                                    value={this.state.values.verifyPassword.value}
+                                    error={this.state.values.verifyPassword.error}
+                                    errorText={this.state.values.verifyPassword.error ? 'Contraseña inválida' : ''}
                                     required
                                 />
                             </div>
@@ -210,7 +228,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         color='primary'
                         variant='contained'
                         title='Guardar'
-                        disabled={!this.state.formValid}
+                        disabled={!this.state.formValid || !(this.state.values.password.value === this.state.values.verifyPassword.value) || (this.state.values.password.value === '')}
                         onClick={this.handlePasswordChange}
                     />
                     <Button
