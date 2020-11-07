@@ -55,6 +55,7 @@ class Book extends React.Component<BookProps, BookState> {
                 photo: '',
                 language: '',
                 stars: 0,
+                authors: [],
             },
             authors: [],
             reviews: [],

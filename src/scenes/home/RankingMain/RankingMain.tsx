@@ -5,12 +5,13 @@ import classes from './RankingMain.module.css';
 import { BooksService } from '../../../services';
 import BookDisplay from '../../../components/BookDisplay/BookDisplay';
 import { Skeleton } from '@material-ui/lab';
+import { Author } from '../../../model/Author';
 
 type BookData = {
     id: number,
     data: Book,
-    loadingAuthors: boolean,
-    authors: string[],
+    // loadingAuthors: boolean,
+    // authors: string[],
 };
 
 interface RankingMainProps {
@@ -31,40 +32,13 @@ const RankingMain = (props: RankingMainProps) => {
                 });
                 setBooks(bookDataList);
                 setLoading(false);
-                _requestBooksAuthors(bookDataList);
+                // _requestBooksAuthors(bookDataList);
             })
             .catch(() => {
                 setLoading(false);
                 props.getErrorCallback();
             })
     }
-
-    const _requestBooksAuthors = (bookDataList: BookData[]) => {
-        if (bookDataList.length === 0) return;
-        const results = Promise.all([
-            ...bookDataList.map((bookData) => (BooksService.getBookAuthors(bookData.data.id)))
-        ])
-        results
-            .then((responses) => {
-                let newBooks = bookDataList;
-                // [response: {data: [author1, author2, ...]}, response: {...}, ...]
-                responses.forEach((response, index) => {
-                    const authors = response.data.map((author: SearchAuthor) => (`${author.firstName} ${author.lastName}`));
-                    newBooks[index] = {...newBooks[index], loadingAuthors: false, authors}
-                })
-                setBooks([...newBooks]); // without spread, react thinks newBooks = bookDataList
-                // and doesnt fire re-render
-            })
-            .catch((errors) => {
-                let newBooks = bookDataList;
-                // [response: {data: [author1, author2, ...]}, response: {...}, ...]
-                newBooks.forEach((bookData, index) => {
-                    newBooks[index] = {...newBooks[index], loadingAuthors: false, authors: [errors[index]]}
-                })
-                setBooks([...newBooks]); // without spread, react thinks newBooks = bookDataList
-                // and doesnt fire re-render
-            })
-    };
 
     useEffect(() => {
         _requestBooks();
@@ -97,8 +71,7 @@ const RankingMain = (props: RankingMainProps) => {
                         <div key={`div-best-books-display-container-${i}`} className={classes.bookDisplayContainer}>
                             <BookDisplay
                                 book={bookData.data}
-                                loading={bookData.loadingAuthors}
-                                authors={bookData.authors}
+                                authors={bookData.data.authors.map((author: Author) => (`${author.firstName} ${author.lastName}`))}
                             />
                         </div>
                     ))}

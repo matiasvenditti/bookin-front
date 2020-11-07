@@ -44,6 +44,7 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
                 photo: '',
                 language: '',
                 stars: 0,
+                authors: [],
             },
             getBookDataStatus: RequestStatus.NONE,
             updateBookStatus: RequestStatus.NONE
