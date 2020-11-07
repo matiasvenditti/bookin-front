@@ -12,6 +12,7 @@ import {
 import { BooksService } from '../../../services';
 import BookDisplay from '../../../components/BookDisplay/BookDisplay';
 import { Skeleton } from '@material-ui/lab';
+import { Author } from '../../../model/Author';
 
 
 const getIconByBookGenre = (key: string) => {
@@ -65,40 +66,12 @@ const RankingGenre = (props: RankingGenreProps) => {
                 });
                 setBooks(bookDataList);
                 setLoading(false);
-                _requestBooksAuthors(bookDataList);
             })
             .catch((error) => {
                 setLoading(false);
                 props.getErrorCallback();
             })
     }
-
-    const _requestBooksAuthors = (bookDataList: BookData[]) => {
-        if (bookDataList.length === 0) return;
-        const results = Promise.all([
-            ...bookDataList.map((bookData) => (BooksService.getBookAuthors(bookData.data.id)))        
-        ])
-        results
-            .then((responses) => {
-                let newBooks = bookDataList;
-                // [response: {data: [author1, author2, ...]}, response: {...}, ...]
-                responses.forEach((response, index) => {
-                    const authors = response.data.map((author: SearchAuthor) => (`${author.firstName} ${author.lastName}`));
-                    newBooks[index] = {...newBooks[index], loadingAuthors: false, authors}
-                })
-                setBooks([...newBooks]); // without spread, react thinks newBooks = bookDataList 
-                // and doesnt fire re-render
-            })
-            .catch((errors) => {
-                let newBooks = bookDataList;
-                // [response: {data: [author1, author2, ...]}, response: {...}, ...]
-                newBooks.forEach((bookData, index) => {
-                    newBooks[index] = {...newBooks[index], loadingAuthors: false, authors: [errors[index]]}
-                })
-                setBooks([...newBooks]); // without spread, react thinks newBooks = bookDataList 
-                // and doesnt fire re-render
-            })
-    };
 
     const handleClickGenre = (key: string) => {
         _requestBooks(key)
@@ -134,8 +107,7 @@ const RankingGenre = (props: RankingGenreProps) => {
                         <div key={`div-book-display-container-${i}`} className={classes.bookDisplayContainer}>
                             <BookDisplay
                                 book={bookData.data}
-                                loading={bookData.loadingAuthors}
-                                authors={bookData.authors}
+                                authors={bookData.data.authors.map((author: Author) => (`${author.firstName} ${author.lastName}`))}
                             />
                         </div>
                     ))}
