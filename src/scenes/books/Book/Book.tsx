@@ -194,8 +194,6 @@ class Book extends React.Component<BookProps, BookState> {
             />
         )
     }
-
-
 }
 
 export default withRouter(Book);

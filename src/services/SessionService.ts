@@ -4,6 +4,7 @@ import {baseURL} from "./EnvironmentService";
 import { LoginUser } from "../model/LoginUser";
 import ResponseRegister from "../model/responses/ResponseRegister";
 import ResponseLogin from "../model/responses/ResponseLogin";
+import { instance } from "../utils/Interceptors/Inerceptors";
 
 
 class SessionService {
@@ -22,27 +23,15 @@ class SessionService {
     }
 
     static passwordRecovery = (email: string) => {
-        console.log(`password recovery request for: ${email}, todo endpoint`);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(() => console.log('yay'));
-            }, 1500);
-            // setTimeout(() => {
-            //     reject(() => console.log('nay'));
-            // }, 1500);
-        })
+        return instance.post(`${baseURL}/users/resetPassword?email=${email}`);
     }
 
+    static resetPasswordValidateToken = (token: string) => {
+        return instance.get(`${baseURL}/users/validateToken?token=${token}`);        
+    }
+    
     static sendPasswordRecovery = (password: string) => {
-        console.log(`send password recovery request for: ${password}, todo endpoint`);
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                resolve(() => console.log('yay'));
-            }, 1500);
-            // setTimeout(() => {
-            //     reject(() => console.log('nay'));
-            // }, 1500);
-        })
+        return instance.post(`${baseURL}/users/newPassword`, {password});        
     }
 }
 
