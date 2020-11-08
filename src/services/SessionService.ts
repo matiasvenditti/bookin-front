@@ -30,8 +30,8 @@ class SessionService {
         return instance.get(`${baseURL}/users/validateToken?token=${token}`);        
     }
     
-    static sendPasswordRecovery = (password: string) => {
-        return instance.post(`${baseURL}/users/newPassword`, {password});        
+    static sendPasswordRecovery = (passwordId: {id: number, password: string}) => {
+        return instance.post(`${baseURL}/users/newPassword`, passwordId);        
     }
 }
 
