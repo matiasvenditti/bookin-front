@@ -115,9 +115,8 @@ const Results = (props: ResultsProps) => {
             return (
                 <div className={classes.resultsBooksContainer}>
                     {sortedBooks.map((book, i) => (
-                        <div className={classes.resultsBooksBookContainer}>
+                        <div key={'bookdisplay-card-' + i} className={classes.resultsBooksBookContainer}>
                             <BookDisplay
-                                key={'bookdisplay-card-' + i}
                                 book={book}
                                 authors={booksAuthors[i]}
                                 resultsVariant

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Typography } from '@material-ui/core';
-import classes from './Login.module.css';
 import LoginForm from './LoginForm';
 import { LoginUser } from '../../../model/LoginUser';
 import { withRouter } from 'react-router-dom';

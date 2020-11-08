@@ -4,10 +4,8 @@ import { UserEditFormModel } from '../../model/Form/UserEditFormModel';
 import { EditVar } from '../../model/consts/EditVar';
 import { Button, Input, RadioGroup } from '../../components/Form';
 import { User } from '../../model';
-import { Typography } from '@material-ui/core';
 import { allGenders } from '../../utils/consts';
 import { ChangePasswords } from '../../model/ChangePasswords';
-import { createTrue } from 'typescript';
 
 
 interface ProfileEditProps {

@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-    Avatar,
-    Badge,
-    Grid,
-    Typography
-} from "@material-ui/core";
+import { Avatar, Badge, Typography} from "@material-ui/core";
 import { dummyAvatar } from "../../../assets";
 import { DateUtils } from "../../../utils";
 import { Flag } from "../../../components";

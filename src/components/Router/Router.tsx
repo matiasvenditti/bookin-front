@@ -20,7 +20,6 @@ import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
 import { Book as BookModel, } from "../../model";
 import { Author as AuthorModel, } from "../../model/Author";
 import { AuthService } from "../../services";
-import RecoverPassword from "../../scenes/session/RecoverPassword/RecoverPassword";
 
 
 interface RouterProps {
@@ -120,13 +119,7 @@ class Router extends React.Component<any, RouterState> {
                             passwordRecoveryCallback={(passwordRecoveryStatus: RequestStatus) => this.setState({...this.state, passwordRecoveryStatus})}
                         />
                     </Route>
-                    {/*TODO: Uncomment in password recovery*/}
-                    {/*<Route path='/recover'>*/}
-                    {/*    <RecoverPassword*/}
-                    {/*        sendPasswordRecoveryCallback={(sendPasswordRecoveryStatus: RequestStatus) => this.setState({...this.state, sendPasswordRecoveryStatus})}*/}
-                    {/*        recoverPasswordTokenInvalidError={() => this.setState({...this.state, recoverPasswordTokenInvalidError: true})}*/}
-                    {/*    />*/}
-                    {/*</Route>*/}
+                    
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
                             deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
