@@ -167,7 +167,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                                     onChange={this.handleInput}
                                     value={this.state.values.verification.value}
                                     error={this.state.values.verification.error}
-                                    errorText={this.state.values.verification.error ? 'Contraseña invalida' : ''}
+                                    errorText={this.state.values.verification.error ? 'La contraseña debe ser alfanumérica' : ''}
                                     required
                                 /> 
                             </div>
@@ -180,7 +180,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                                     onChange={this.handleInput}
                                     value={this.state.values.password.value}
                                     error={this.state.values.password.error}
-                                    errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                                    errorText={this.state.values.password.error ? 'La contraseña debe ser alfanumérica' : ''}
                                     required
                                 />
                             </div>
@@ -192,8 +192,8 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                                     type='password'
                                     onChange={this.handleInput}
                                     value={this.state.values.verifyPassword.value}
-                                    error={this.state.values.verifyPassword.error}
-                                    errorText={this.state.values.verifyPassword.error ? 'Contraseña inválida' : ''}
+                                    error={(this.state.values.password.value !== this.state.values.verifyPassword.value)}
+                                    errorText={(this.state.values.password.value !== this.state.values.verifyPassword.value) ? 'La contraseña no coincide con la anterior' : ''}
                                     required
                                 />
                             </div>

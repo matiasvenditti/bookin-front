@@ -37,7 +37,9 @@ html, body {
 .form-input {
     width: 100%;
     margin: 8px;
+    display: inline-block;
 }
+
 .typography-bold {
     font-weight: bold !important;
 }
