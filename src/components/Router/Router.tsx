@@ -120,12 +120,13 @@ class Router extends React.Component<any, RouterState> {
                             passwordRecoveryCallback={(passwordRecoveryStatus: RequestStatus) => this.setState({...this.state, passwordRecoveryStatus})}
                         />
                     </Route>
-                    <Route path='/recover'>
-                        <RecoverPassword
-                            sendPasswordRecoveryCallback={(sendPasswordRecoveryStatus: RequestStatus) => this.setState({...this.state, sendPasswordRecoveryStatus})}
-                            recoverPasswordTokenInvalidError={() => this.setState({...this.state, recoverPasswordTokenInvalidError: true})}
-                        />
-                    </Route>
+                    {/*TODO: Uncomment in password recovery*/}
+                    {/*<Route path='/recover'>*/}
+                    {/*    <RecoverPassword*/}
+                    {/*        sendPasswordRecoveryCallback={(sendPasswordRecoveryStatus: RequestStatus) => this.setState({...this.state, sendPasswordRecoveryStatus})}*/}
+                    {/*        recoverPasswordTokenInvalidError={() => this.setState({...this.state, recoverPasswordTokenInvalidError: true})}*/}
+                    {/*    />*/}
+                    {/*</Route>*/}
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
                             deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
