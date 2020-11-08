@@ -126,6 +126,7 @@ class Router extends React.Component<any, RouterState> {
                             recoverPasswordTokenInvalidError={() => this.setState({...this.state, recoverPasswordTokenInvalidError: true})}
                         />
                     </Route>
+                    
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
                             deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}

@@ -1,44 +1,28 @@
 import {Typography } from '@material-ui/core';
 import React, {useEffect, useState} from 'react';
-import { Book, SearchAuthor } from '../../../model';
+import { Book } from '../../../model';
 import classes from './RankingMain.module.css';
 import { BooksService } from '../../../services';
 import BookDisplay from '../../../components/BookDisplay/BookDisplay';
 import { Skeleton } from '@material-ui/lab';
 import { Author } from '../../../model/Author';
 
-type BookData = {
-    id: number,
-    data: Book,
-    // loadingAuthors: boolean,
-    // authors: string[],
-};
 
 interface RankingMainProps {
     getErrorCallback(): void,
 }
 
 const RankingMain = (props: RankingMainProps) => {
-    const [books, setBooks] = useState<BookData[]>([]);
+    const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(false);
 
     const _requestBooks = () => {
         setLoading(true); setBooks([]);
         BooksService.getRankingByScore()
-            .then((response) => {
-                const bookDataList: BookData[] = response.data.map((book, id) => {
-                    const authors: string[] = [];
-                    return ({id, data: book, loadingAuthors: true, authors});
-                });
-                setBooks(bookDataList);
-                setLoading(false);
-                // _requestBooksAuthors(bookDataList);
-            })
-            .catch(() => {
-                setLoading(false);
-                props.getErrorCallback();
-            })
-    }
+            .then((response) => setBooks(response.data))
+            .catch(() => props.getErrorCallback())
+            .finally(() => setLoading(false));
+    };
 
     useEffect(() => {
         _requestBooks();
@@ -67,11 +51,11 @@ const RankingMain = (props: RankingMainProps) => {
         } else {
             return (
                 <div className={classes.bookContainer}>
-                    {books.map((bookData, i) => (
+                    {books.map((dook, i) => (
                         <div key={`div-best-books-display-container-${i}`} className={classes.bookDisplayContainer}>
                             <BookDisplay
-                                book={bookData.data}
-                                authors={bookData.data.authors.map((author: Author) => (`${author.firstName} ${author.lastName}`))}
+                                book={dook}
+                                authors={dook.authors.map((author: Author) => (`${author.firstName} ${author.lastName}`))}
                             />
                         </div>
                     ))}

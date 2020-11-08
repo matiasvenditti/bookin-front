@@ -1,51 +1,14 @@
-import { Button, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import React, { useState } from 'react';
-import { Book, KeyValue, SearchAuthor } from '../../../model';
+import { Book, KeyValue } from '../../../model';
 import { allBookGenres } from '../../../utils';
 import classes from './RankingGenre.module.css';
-import { 
-    action, adventure, autorealization, biography,
-    children, comedy, drama, education, fantasy, fiction,
-    mistery, novel, poetry, police, romance, selfhelp,
-    terror, tragic,
-} from '../../../assets';
 import { BooksService } from '../../../services';
 import BookDisplay from '../../../components/BookDisplay/BookDisplay';
 import { Skeleton } from '@material-ui/lab';
 import { Author } from '../../../model/Author';
+import GenreBigButton from './GenreBigButton';
 
-
-const getIconByBookGenre = (key: string) => {
-    switch (key) {
-        case 'Aventura':            return (<img src={adventure        } alt='adventure        ' height='40px' width='40px'/>);
-        case 'Acción':              return (<img src={action           } alt='action           ' height='40px' width='40px'/>);
-        case 'Auto-ayuda':          return (<img src={selfhelp         } alt='selfhelp         ' height='40px' width='40px'/>);
-        case 'Auto-realización':    return (<img src={autorealization  } alt='autorealization  ' height='40px' width='40px'/>);
-        case 'Biografías':          return (<img src={biography        } alt='biography        ' height='40px' width='40px'/>);
-        case 'Comedia':             return (<img src={comedy           } alt='comedy           ' height='40px' width='40px'/>);
-        case 'Drama':               return (<img src={drama            } alt='drama            ' height='40px' width='40px'/>);
-        case 'Educativos':          return (<img src={education        } alt='education        ' height='40px' width='40px'/>);
-        case 'Fantasia':            return (<img src={fantasy          } alt='fantasy          ' height='40px' width='40px'/>);
-        case 'Ficción':             return (<img src={fiction          } alt='fiction          ' height='40px' width='40px'/>);
-        case 'Infantiles':          return (<img src={children         } alt='children         ' height='40px' width='40px'/>);
-        case 'Misterio':            return (<img src={mistery          } alt='mistery          ' height='40px' width='40px'/>);
-        case 'Novela':              return (<img src={novel            } alt='novel            ' height='40px' width='40px'/>);
-        case 'Poesías':             return (<img src={poetry           } alt='poetry           ' height='40px' width='40px'/>);
-        case 'Policiales':          return (<img src={police           } alt='police           ' height='40px' width='40px'/>);
-        case 'Romance':             return (<img src={romance          } alt='romance          ' height='40px' width='40px'/>);
-        case 'Terror':              return (<img src={terror           } alt='terror           ' height='40px' width='40px'/>);
-        case 'Trágica':             return (<img src={tragic           } alt='tragic           ' height='40px' width='40px'/>);
-        default: return (<img src={action} alt='action' height='40px' width='40px'/>)
-    }
-}
-
-
-type BookData = {
-    id: number,
-    data: Book,
-    loadingAuthors: boolean,
-    authors: string[],
-};
 
 interface RankingGenreProps {
     getErrorCallback(): void,
@@ -53,29 +16,20 @@ interface RankingGenreProps {
 
 const RankingGenre = (props: RankingGenreProps) => {
     const [selector, setSelector] = useState<string | null>(null);
-    const [books, setBooks] = useState<BookData[]>([]);
+    const [books, setBooks] = useState<Book[]>([]);
     const [loading, setLoading] = useState(false);
 
     const _requestBooks = (key: string) => {
         setSelector(key); setLoading(true); setBooks([]);
         BooksService.getRankingByRanking(key)
-            .then((response) => {
-                const bookDataList: BookData[] = response.data.map((book, id) => {
-                    const authors: string[] = [];
-                    return ({id, data: book, loadingAuthors: true, authors});
-                });
-                setBooks(bookDataList);
-                setLoading(false);
-            })
-            .catch((error) => {
-                setLoading(false);
-                props.getErrorCallback();
-            })
-    }
+            .then((response) => setBooks(response.data))
+            .catch(() => props.getErrorCallback())
+            .finally(() => setLoading(false));
+    };
 
     const handleClickGenre = (key: string) => {
-        _requestBooks(key)
-    }
+        _requestBooks(key);
+    };
 
     const renderList = () => {
         if (loading) {
@@ -103,11 +57,11 @@ const RankingGenre = (props: RankingGenreProps) => {
         } else {
             return (
                 <div className={classes.bookContainer}>
-                    {books.map((bookData, i) => (
+                    {books.map((book, i) => (
                         <div key={`div-book-display-container-${i}`} className={classes.bookDisplayContainer}>
                             <BookDisplay
-                                book={bookData.data}
-                                authors={bookData.data.authors.map((author: Author) => (`${author.firstName} ${author.lastName}`))}
+                                book={book}
+                                authors={book.authors.map((author: Author) => (`${author.firstName} ${author.lastName}`))}
                             />
                         </div>
                     ))}
@@ -122,12 +76,12 @@ const RankingGenre = (props: RankingGenreProps) => {
             <div className={classes.buttonsContainer}>
                 {allBookGenres.map((bookGenre: KeyValue) => (
                     <div key={`${bookGenre.key}-div`} className={classes.bigButtonContainer}>
-                        <BigButton
+                        <GenreBigButton
                             id={`${bookGenre.key}-button`}
                             title={bookGenre.value}
                             selected={selector === bookGenre.key}
                             onClick={() => handleClickGenre(bookGenre.key)}
-                            endIcon={getIconByBookGenre(bookGenre.key)}
+                            endIconKey={bookGenre.key}
                         />
                     </div>
                 ))}
@@ -136,27 +90,6 @@ const RankingGenre = (props: RankingGenreProps) => {
         </div>
     )
 }
-
-const BigButton = (props: {
-    id: string,
-    title: string,
-    selected: boolean,
-    onClick(): void,
-    endIcon: any
-}) => {
-    const {id, title, selected, onClick, endIcon} = props;
-
-    return (
-        <Button
-            key={id}
-            onClick={onClick}
-            variant='contained' size='large' 
-            color={selected ? 'primary' : 'secondary'}
-            className={classes.bigButton}
-            endIcon={endIcon}
-        >{title}</Button>
-    );
-};
 
 
 export default RankingGenre;

@@ -4,7 +4,6 @@ import { UserEditFormModel } from '../../model/Form/UserEditFormModel';
 import { EditVar } from '../../model/consts/EditVar';
 import { Button, Input, RadioGroup } from '../../components/Form';
 import { User } from '../../model';
-import { Typography } from '@material-ui/core';
 import { allGenders } from '../../utils/consts';
 import { ChangePasswords } from '../../model/ChangePasswords';
 
@@ -36,7 +35,9 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                 email: { value: props.data.email, type: 'email', error: false, touched: false },
                 password: { value: '', type: 'password', error: false, touched: false},
                 gender: { value: props.data.gender, type: 'radio-group', error: false, touched: false },
-                verification: { value: '', type: 'password', error: false, touched: false},
+                verification: { value: '', type: 'password', error: false, touched: false},                
+                verifyPassword: { value: '', type: 'password', error: false, touched: false},
+
             },
             formValid: false,
             error: null,
@@ -49,7 +50,10 @@ class ProfileEdit extends Component<any, ProfileEditState> {
         const allTouched = () => {
             if (id === 'firstName' || id === 'lastName') {
                 return this.state.values.firstName.touched || this.state.values.lastName.touched
-            } else return true;
+            } else if (id === 'verification' || id === 'password' || id === 'verifyPassword' ) {
+                return this.state.values.verification.touched || this.state.values.password.touched || this.state.values.verifyPassword.touched
+            } 
+            else return true;
         };
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
         const allInitialValue = Object.keys(this.state.values).every(key => {
@@ -150,7 +154,6 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                          />
                     ]);
                 case EditVar.PASSWORD:
-                    // esta deshabilitado en el back, creo
                     return ([
                         <div>
                             <div className='form-input' key='form-input-oldPassword'>
@@ -162,20 +165,33 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                                     onChange={this.handleInput}
                                     value={this.state.values.verification.value}
                                     error={this.state.values.verification.error}
-                                    errorText={this.state.values.verification.error ? 'Contraseña invalida' : ''}
+                                    errorText={this.state.values.verification.error ? 'La contraseña debe ser alfanumérica' : ''}
                                     required
                                 /> 
                             </div>
                             <div className='form-input' key='form-input-newPassword'>
                                 <Input
-                                    label='Contraseña nueva'
+                                    label='Ingrese la nueva contraseña'
                                     id='password'
                                     key='password'
                                     type='password'
                                     onChange={this.handleInput}
                                     value={this.state.values.password.value}
                                     error={this.state.values.password.error}
-                                    errorText={this.state.values.password.error ? 'Contraseña inválida' : ''}
+                                    errorText={this.state.values.password.error ? 'La contraseña debe ser alfanumérica' : ''}
+                                    required
+                                />
+                            </div>
+                            <div className='form-input' key='form-input-verifyPassword'>
+                                <Input
+                                    label='Vuelva a introducir la contraseña'
+                                    id='verifyPassword'
+                                    key='verifyPassword'
+                                    type='password'
+                                    onChange={this.handleInput}
+                                    value={this.state.values.verifyPassword.value}
+                                    error={(this.state.values.password.value !== this.state.values.verifyPassword.value)}
+                                    errorText={(this.state.values.password.value !== this.state.values.verifyPassword.value) ? 'La contraseña no coincide con la anterior' : ''}
                                     required
                                 />
                             </div>
@@ -210,7 +226,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                         color='primary'
                         variant='contained'
                         title='Guardar'
-                        disabled={!this.state.formValid}
+                        disabled={!this.state.formValid || !(this.state.values.password.value === this.state.values.verifyPassword.value) || (this.state.values.password.value === '')}
                         onClick={this.handlePasswordChange}
                     />
                     <Button

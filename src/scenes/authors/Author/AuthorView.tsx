@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-    Avatar,
-    Badge,
-    Grid,
-    Typography
-} from "@material-ui/core";
+import { Avatar, Badge, Typography} from "@material-ui/core";
 import { dummyAvatar } from "../../../assets";
 import { DateUtils } from "../../../utils";
 import { Flag } from "../../../components";
@@ -47,7 +42,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
         const { error } = this.props;
         const books = this.props.books.sort((a, b) => b.stars - a.stars).slice(0, 4);
         const listBooks = books.length > 0 ? books.map((books, i) => (
-            <div>
+            <div className={classes.bookDisplayContainer}>
                 <BookDisplay
                     book={books}
                     crown={i === 0}
@@ -59,9 +54,7 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                 align='center'
                 color='primary'
                 variant='h6'
-            >
-                Este Autor no posee libros
-            </Typography>
+            >{`Este Autor no posee libros`}</Typography>
         </div>;
 
         if (error) {
@@ -101,10 +94,8 @@ export default class AuthorView extends Component<AuthorViewProps, AuthorViewSta
                                 </div>
                             </div>
                     </div>
-                    <div className={classes.marginTop}>
-                        <Grid alignItems='center' container spacing={2} >
-                            {listBooks}
-                        </Grid>
+                    <div className={classes.booksContainer}>
+                        {listBooks}
                     </div>
                 </div>
             )

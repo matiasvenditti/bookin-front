@@ -2,6 +2,7 @@ import { KeyValue } from "../model";
 import { Gender } from "../model/Gender";
 import { FilterBy } from "../model/results";
 
+
 export const allGenders: KeyValue[] = [
     { key: Gender.M, value: 'Hombre' },
     { key: Gender.F, value: 'Mujer' },
