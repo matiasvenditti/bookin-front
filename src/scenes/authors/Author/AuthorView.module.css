@@ -1,5 +1,17 @@
-.marginTop{
+.booksContainer{
     margin-top: 60px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    align-content: flex-start;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 10px 0;
+    height: 500px;
+}
+
+.bookDisplayContainer {
+    margin-right: 15px;
 }
 
 .container {
