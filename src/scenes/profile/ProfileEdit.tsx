@@ -193,7 +193,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                                     onChange={this.handleInput}
                                     value={this.state.values.verifyPassword.value}
                                     error={(this.state.values.password.value !== this.state.values.verifyPassword.value)}
-                                    errorText={this.state.values.verifyPassword.error ? 'La contraseña no coincide con la anterior' : ''}
+                                    errorText={(this.state.values.password.value !== this.state.values.verifyPassword.value) ? 'La contraseña no coincide con la anterior' : ''}
                                     required
                                 />
                             </div>
