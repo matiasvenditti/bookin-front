@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import React from "react";
 import PrivateRoute from './PrivateRoute';
-import Home from "../../scenes/home/Home";
+import Home from "../../scenes/home/Home/Home";
 import Register from "../../scenes/session/Register/Register";
 import Login from '../../scenes/session/Login/Login';
 import Profile from '../../scenes/profile/Profile';
@@ -27,74 +27,61 @@ interface RouterProps {
 }
 
 interface RouterState {
-    logoutStatus: boolean,
-    getUserDataError: boolean,
-    searchBooksError: boolean,
-    searchAuthorsError: boolean,
-    registerStatus: RequestStatus,
-    loginStatus: RequestStatus,
-    loadAvatarError: boolean,
-    editProfileStatus: RequestStatus,
-    changePasswordStatus: RequestStatus,
-    editAuthorStatus: RequestStatus,
+    // header
+    logoutStatus: boolean, getUserDataError: boolean, searchBooksError: boolean, searchAuthorsError: boolean,
+    // session
+    registerStatus: RequestStatus, loginStatus: RequestStatus, passwordRecoveryStatus: RequestStatus,
+    sendPasswordRecoveryStatus: RequestStatus, recoverPasswordTokenInvalidError: boolean,
+    // profile
+    loadAvatarError: boolean, editProfileStatus: RequestStatus, changePasswordStatus: RequestStatus,
     deleteProfileStatus: RequestStatus,
-    createAuthorStatus: RequestStatus,
-    createBookStatus: RequestStatus,
-    updateAuthorStatus: RequestStatus,
-    getAuthorDataError: boolean,
-    getModifyAuthorDataError: boolean,
-    deleteAuthorStatus: RequestStatus,
-    getBookDataError: boolean,
-    deleteBookStatus: RequestStatus,
-    updateBookStatus: RequestStatus,
-    getModifyBookDataError: boolean,
+    // author
+    editAuthorStatus: RequestStatus, createAuthorStatus: RequestStatus, updateAuthorStatus: RequestStatus,
+    getAuthorDataError: boolean, getModifyAuthorDataError: boolean, deleteAuthorStatus: RequestStatus,
+    // book
+    createBookStatus: RequestStatus, getBookDataError: boolean, deleteBookStatus: RequestStatus,
+    updateBookStatus: RequestStatus, getModifyBookDataError: boolean,
     redirectReload: boolean,
-    reviewStatus: RequestStatus,
-    deleteReviewStatus: RequestStatus,
-    updateReviewStatus: RequestStatus,
+    // reviews
+    reviewStatus: RequestStatus, deleteReviewStatus: RequestStatus, updateReviewStatus: RequestStatus,
+    // search
     search: {
-        data: {books: BookModel[], authors: AuthorModel[]}
-        searchInput: string,
-        updateStatus: RequestStatus,
-        searchRequestError: boolean,
-    }
+        data: {books: BookModel[], authors: AuthorModel[]}, searchInput: string,
+        updateStatus:RequestStatus,searchRequestError: boolean,
+    },
+    // home
+    getBooksRankingByGenreError: boolean, getBooksRankingByScoreError: boolean,
 }
 
 class Router extends React.Component<any, RouterState> {
     constructor(props: RouterProps) {
         super(props);
         this.state = {
-            logoutStatus: false,
-            getUserDataError: false,
-            searchBooksError: false,
-            searchAuthorsError: false,
-            registerStatus: RequestStatus.NONE,
-            loginStatus: RequestStatus.NONE,
-            loadAvatarError: false,
-            editProfileStatus: RequestStatus.NONE,
-            changePasswordStatus: RequestStatus.NONE,
-            editAuthorStatus: RequestStatus.NONE,
+            // header
+            logoutStatus: false, getUserDataError: false, searchBooksError: false, searchAuthorsError: false,
+            // session
+            registerStatus: RequestStatus.NONE, loginStatus: RequestStatus.NONE, passwordRecoveryStatus: RequestStatus.NONE,
+            sendPasswordRecoveryStatus: RequestStatus.NONE, recoverPasswordTokenInvalidError: false,
+            // profile
+            loadAvatarError: false, editProfileStatus: RequestStatus.NONE, changePasswordStatus: RequestStatus.NONE,
             deleteProfileStatus: RequestStatus.NONE,
-            createAuthorStatus: RequestStatus.NONE,
-            createBookStatus: RequestStatus.NONE,
-            updateAuthorStatus: RequestStatus.NONE,
-            getAuthorDataError: false,
-            getModifyAuthorDataError: false,
-            deleteAuthorStatus: RequestStatus.NONE,
-            getBookDataError: false,
-            deleteBookStatus: RequestStatus.NONE,
-            updateBookStatus: RequestStatus.NONE,
-            getModifyBookDataError: false,
+            // author
+            editAuthorStatus: RequestStatus.NONE, createAuthorStatus: RequestStatus.NONE, updateAuthorStatus: RequestStatus.NONE,
+            getAuthorDataError: false, getModifyAuthorDataError: false, deleteAuthorStatus: RequestStatus.NONE,
+            //book
+            createBookStatus: RequestStatus.NONE, getBookDataError: false, deleteBookStatus: RequestStatus.NONE,
+            updateBookStatus: RequestStatus.NONE, getModifyBookDataError: false,
+
             redirectReload: false,
-            reviewStatus: RequestStatus.NONE,
-            deleteReviewStatus: RequestStatus.NONE,
-            updateReviewStatus: RequestStatus.NONE,
+            // review
+            reviewStatus: RequestStatus.NONE, deleteReviewStatus: RequestStatus.NONE, updateReviewStatus: RequestStatus.NONE,
+            // search select
             search: {
-                data: {books: [], authors: []},
-                searchInput: '',
-                updateStatus: RequestStatus.NONE,
+                data: {books: [], authors: []}, searchInput: '', updateStatus: RequestStatus.NONE,
                 searchRequestError: false,
-            }
+            },
+            // home
+            getBooksRankingByGenreError: false, getBooksRankingByScoreError: false,
         };
     }
 
@@ -115,15 +102,24 @@ class Router extends React.Component<any, RouterState> {
                     logged={AuthService.isLoggedIn()}
                 />
                 <Switch>
-                    <Route exact path='/'><Home /></Route>
+                    <Route exact path='/'>
+                        <Home
+                            getBooksRankingByGenreErrorCallback={() => this.setState({...this.state, getBooksRankingByGenreError: true})}
+                            getBooksRankingByScoreErrorCallback={() => this.setState({...this.state, getBooksRankingByScoreError: true})}
+                        />
+                    </Route>
                     <Route path='/register' >
                         <Register registerCallback={(registerStatus: RequestStatus, loginStatus: RequestStatus) =>
                             this.setState({ ...this.state, registerStatus, loginStatus })}
                         />
                     </Route>
                     <Route path='/login' >
-                        <Login loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })} />
+                        <Login
+                            loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })}
+                            passwordRecoveryCallback={(passwordRecoveryStatus: RequestStatus) => this.setState({...this.state, passwordRecoveryStatus})}
+                        />
                     </Route>
+                    
                     <PrivateRoute path='/profile' roles={[]} >
                         <Profile
                             deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
@@ -196,43 +192,48 @@ class Router extends React.Component<any, RouterState> {
 
     renderToasts() {
         const {
-            getUserDataError,
-            searchBooksError,
-            searchAuthorsError,
-            registerStatus,
-            loginStatus,
-            editProfileStatus,
-            deleteProfileStatus,
-            loadAvatarError,
-            createAuthorStatus,
-            createBookStatus,
-            updateAuthorStatus,
-            getAuthorDataError,
-            getModifyAuthorDataError,
+            // header
+            getUserDataError, searchBooksError, searchAuthorsError,
+            // login
+            registerStatus, loginStatus, passwordRecoveryStatus, sendPasswordRecoveryStatus,
+            recoverPasswordTokenInvalidError, changePasswordStatus,
+            // profile
+            editProfileStatus, deleteProfileStatus, loadAvatarError,
+            // author
+            createAuthorStatus, updateAuthorStatus, getAuthorDataError, getModifyAuthorDataError,
             deleteAuthorStatus,
-            getBookDataError,
-            deleteBookStatus,
-            updateBookStatus,
-            getModifyBookDataError,
-            reviewStatus,
-            deleteReviewStatus,
-            updateReviewStatus,
-            changePasswordStatus,
+            // books
+            createBookStatus, getBookDataError, deleteBookStatus, updateBookStatus, getModifyBookDataError,
+            // reviews
+            reviewStatus, deleteReviewStatus, updateReviewStatus,
+            // ranking in home
+            getBooksRankingByGenreError, getBooksRankingByScoreError,
         } = this.state;
 
         return (
             <div>
+                {/* header */}
                 {this.renderAToast(getUserDataError,                                 'error', 'Hubo un error al obtener los datos del usuario, intente más tard', () => this.setState({...this.state, getUserDataError: false}))}
                 {this.renderAToast(searchBooksError,                                 'error', 'Hubo un error al buscar libros, intente más tarde', () => this.setState({...this.state, searchBooksError: false}))}
                 {this.renderAToast(searchAuthorsError,                               'error', 'Hubo un error al buscar autores, intente más tarde', () => this.setState({...this.state, searchAuthorsError: false}))}
+                {/* session */}
                 {this.renderAToast(registerStatus === RequestStatus.SUCCESS,        'success', 'Te has registrado correctamente!', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
                 {this.renderAToast(registerStatus === RequestStatus.ERROR,          'error', 'Hubo un error al registrarse, intente más tarde', () => this.setState({...this.state, registerStatus: RequestStatus.NONE}))}
                 {this.renderAToast(loginStatus === RequestStatus.ERROR,             'error', 'Hubo un error al ingresar, intente más tarde', () => this.setState({...this.state, loginStatus: RequestStatus.NONE}))}
+                {this.renderAToast(passwordRecoveryStatus === RequestStatus.SUCCESS,'success', 'Se ha realizado el pedido de recuperación correctamente, en breve recibirá un correo', () => this.setState({...this.state, passwordRecoveryStatus: RequestStatus.NONE}))}
+                {this.renderAToast(passwordRecoveryStatus === RequestStatus.ERROR,  'error', 'Hubo un error al hacer el pedido de recuperación, intente más tarde', () => this.setState({...this.state, passwordRecoveryStatus: RequestStatus.NONE}))}
+                {this.renderAToast(changePasswordStatus  === RequestStatus.SUCCESS,      'success', 'Se cambió la contraseña exitosamente', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
+                {this.renderAToast(changePasswordStatus  === RequestStatus.ERROR,      'error', 'La contraseña ingresada no coincide con la de este usuario', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
+                {this.renderAToast(sendPasswordRecoveryStatus === RequestStatus.SUCCESS,'success', 'Se ha cambiado su contraseña exitosamente', () => this.setState({...this.state, sendPasswordRecoveryStatus: RequestStatus.NONE}))}
+                {this.renderAToast(sendPasswordRecoveryStatus === RequestStatus.ERROR,  'error', 'Hubo un error al cambiar su contraseña, intente más tarde', () => this.setState({...this.state, sendPasswordRecoveryStatus: RequestStatus.NONE}))}
+                {this.renderAToast(recoverPasswordTokenInvalidError, 'error', 'El vínculo de recuperacion es inválido, verifique que sea correcto', () => this.setState({...this.state, recoverPasswordTokenInvalidError: false}))}
+                {/* profile */}
                 {this.renderAToast(editProfileStatus === RequestStatus.SUCCESS,     'success', 'Se han actualizado los datos del usuario correctamente', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(editProfileStatus === RequestStatus.ERROR,       'error', 'Hubo un error al actualizar los datos, intente más tarde', () => this.setState({...this.state, editProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS,   'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteProfileStatus === RequestStatus.ERROR,     'error', 'Hubo un error al eliminar al cuenta, intente más tarde', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(loadAvatarError,                                  'error', 'La imagen pesa mas de 100KB o tiene una resolución mayor a 480x480, seleccione una mas pequeña', () => this.setState({...this.state, loadAvatarError: false}))}
+                {/* author */}
                 {this.renderAToast(createAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha creado el autor exitosamente', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
                 {this.renderAToast(createAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al crear el autor, intente más tarde', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha modificado el autor exitosamente', () => this.setState({...this.state, updateAuthorStatus: RequestStatus.NONE}))}
@@ -241,6 +242,7 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(getModifyAuthorDataError,                         'error', 'Hubo un error al obtener los datos del autor, intente más tarde', () => this.setState({...this.state, getModifyAuthorDataError}))}
                 {this.renderAToast(deleteAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha eliminado el autor exitosamente', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar el autor, intente más tarde', () => this.setState({...this.state, deleteAuthorStatus: RequestStatus.NONE}))}
+                {/* book */}
                 {this.renderAToast(createBookStatus === RequestStatus.SUCCESS,      'success', 'Se ha creado el libro exitosamente', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
                 {this.renderAToast(createBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al crear el libro, intente más tarde', () => this.setState({...this.state, createBookStatus: RequestStatus.NONE}))}
                 {this.renderAToast(getBookDataError,                                 'error', 'Hubo un error al obtener los datos del libro, intente más tarde', () => this.setState({...this.state, getBookDataError: false}))}
@@ -249,14 +251,17 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(updateBookStatus === RequestStatus.SUCCESS,      'success', 'Se actualizaron los datos del libro exitosamente', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateBookStatus === RequestStatus.ERROR,        'error', 'Hubo un error al actualizar los datos del libro, intente más tarde', () => this.setState({...this.state, updateBookStatus: RequestStatus.NONE}))}
                 {this.renderAToast(getModifyBookDataError,                           'error', '', () => this.setState({...this.state, getModifyBookDataError: false}))}
+                {/* review */}
                 {this.renderAToast(reviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha creado la reseña exitosamente', () => this.setState({...this.state, reviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(reviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al crear la reseña', () => this.setState({...this.state, reviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteReviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha eliminado la reseña exitosamente', () => this.setState({...this.state, deleteReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al eliminar la reseña', () => this.setState({...this.state, deleteReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.SUCCESS,      'success', 'Se ha modificado la reseña exitosamente', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
                 {this.renderAToast(updateReviewStatus  === RequestStatus.ERROR,      'error', 'Hubo un error al modificar la reseña', () => this.setState({...this.state, updateReviewStatus: RequestStatus.NONE}))}
-                {this.renderAToast(changePasswordStatus  === RequestStatus.SUCCESS,      'success', 'Se cambió la contraseña exitosamente', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
-                {this.renderAToast(changePasswordStatus  === RequestStatus.ERROR,      'error', 'La contraseña ingresada no coincide con la de este usuario', () => this.setState({...this.state, changePasswordStatus: RequestStatus.NONE}))}
+                {/* home */}
+                {this.renderAToast(getBooksRankingByGenreError,                     'error', 'Hubo un error al obtener la lista de libros', () => this.setState({...this.state, getBooksRankingByGenreError: false}))}
+                {this.renderAToast(getBooksRankingByScoreError,                     'error', 'Hubo un error al obtener la lista de libros', () => this.setState({...this.state, getBooksRankingByScoreError: false}))}
+
             </div>
         );
     }

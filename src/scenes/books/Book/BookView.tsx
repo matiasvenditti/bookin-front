@@ -69,6 +69,7 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                 photo: props.data.photo,
                 stars: props.data.stars,
                 language: props.data.language,
+                authors: props.data.authors,
             },
             currentUser: props.currentUser,
             authors: props.authors,

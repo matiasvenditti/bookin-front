@@ -44,6 +44,7 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
                 photo: '',
                 language: '',
                 stars: 0,
+                authors: [],
             },
             getBookDataStatus: RequestStatus.NONE,
             updateBookStatus: RequestStatus.NONE
@@ -96,8 +97,10 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
         const getBookDataStatus = this.state.getBookDataStatus;
         if (getBookDataStatus === RequestStatus.LOADING) {
             return (
-                <div>
-                    <Typography align='center' variant='subtitle1'> <Loader/> </Typography>
+                <div className='route-container'>
+                    <div className={classes.formContainer}>
+                        <Typography align='center' variant='subtitle1'> <Loader/> </Typography>
+                    </div>
                 </div>
             );
         }

@@ -3,11 +3,13 @@ import { LoginUser } from '../../../model/LoginUser';
 import { LoginFormModel } from '../../../model';
 import { Input, Button } from '../../../components/Form';
 import validateInput from '../../../utils/validateInput';
+import classes from './Login.module.css';
 
 
 interface LoginFormProps {
     loading: boolean,
     onSubmit(values: LoginUser): void,
+    onPasswordRecover(): void,
 }
 
 interface LoginFormState {
@@ -46,12 +48,12 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
             password: this.state.values.password.value,
         });
     }
-
+    
     render() {
         const { loading } = this.props;
         return (
-            <form>
-                <div className='form-input'>
+            <div className={classes.container}>
+                <div className={classes.inputContainer}>
                     <Input
                         label='Mail'
                         id='email'
@@ -64,7 +66,7 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
                         disabled={loading}
                     />
                 </div>
-                <div className="form-input">
+                <div className={classes.inputContainer}>
                     <Input
                         id='password'
                         label='Contraseña'
@@ -77,15 +79,17 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
                         disabled={loading}
                     />
                 </div>
-                <Button
-                    title='Ingresar'
-                    disabled={!this.state.formValid}
-                    loading={loading}
-                    onClick={this.handleSubmit}
-                    variant='contained'
-                    color='primary'
-                />
-            </form>
+                <div className={classes.buttonContainer}>
+                    <Button
+                        title='Ingresar'
+                        disabled={!this.state.formValid}
+                        loading={loading}
+                        onClick={this.handleSubmit}
+                        variant='contained'
+                        color='primary'
+                    />
+                </div>
+            </div>
         )
     }
 }
