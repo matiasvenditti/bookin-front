@@ -120,7 +120,7 @@ class Router extends React.Component<any, RouterState> {
                             passwordRecoveryCallback={(passwordRecoveryStatus: RequestStatus) => this.setState({...this.state, passwordRecoveryStatus})}
                         />
                     </Route>
-                    <Route path='/recover'>
+                    <Route path='/users/resetPassword'>
                         <RecoverPassword
                             sendPasswordRecoveryCallback={(sendPasswordRecoveryStatus: RequestStatus) => this.setState({...this.state, sendPasswordRecoveryStatus})}
                             recoverPasswordTokenInvalidError={() => this.setState({...this.state, recoverPasswordTokenInvalidError: true})}
