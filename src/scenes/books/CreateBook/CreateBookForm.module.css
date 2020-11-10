@@ -6,10 +6,12 @@
 
 .leftContainer {
     margin-right: 50px;
+    max-width: 400px;
 }
 
 .leftContainer > div {
     margin-bottom: 15px;
+    max-width: 400px;
 }
 
 .rightContainer {

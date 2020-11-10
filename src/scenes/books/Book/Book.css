@@ -1,6 +1,7 @@
 .button-container{
     display: inline-block;
     float: right;
+    margin-left: 30px;
 }
 
 .route-container .card-container {

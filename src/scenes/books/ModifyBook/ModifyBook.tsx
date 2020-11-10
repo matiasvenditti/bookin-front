@@ -108,7 +108,7 @@ class ModifyBook extends Component<ModifyBookProps, ModifyBookState> {
         return (
             <div className='route-container'>
                 <div className={classes.formContainer}>
-                    <Typography align='center' variant='h5'>Modificacion de libro</Typography>
+                    <Typography align='center' variant='h4' style={{margin: 20, fontWeight: 'bold'}}>Modificacion de libro</Typography>
                     <ModifyBookForm
                         onSubmit={this.handleSubmit}
                         authors={this.state.authors}
