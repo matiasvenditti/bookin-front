@@ -35,28 +35,32 @@ class BookDisplay extends Component<BookDisplayProps, any> {
 
             if (loading) {
                 return (
-                    <Card className={classes.resultsVariantCard}>
-                        <div className={classes.resultsVariantCardContainer}>
-                            <Skeleton variant='rect' className={classes.media}/>
-                            <div className={classes.info}>
-                                <Skeleton variant='text' height={50} width={75}/>
+                    <Card>
+                        <div className={classes.altCardContainer}>
+                            <div>
+                                <Skeleton variant='rect' className={classes.altMediaContainer}
+                                    width={140} height={220}
+                                />
+                            </div>
+                            <div className={classes.AltTextsContainer}>
+                                <Skeleton variant='text' height={50} width={250}/>
                                 <Skeleton variant='text' height={25} width={50}/>
-                                <div className={classes.infoSubitem}>
+                                <div className={classes.AltInfoSubitem}>
                                     <Skeleton variant='text' height={25} width={50}/>
                                     <Skeleton variant='text' height={25} width={150}/>
                                 </div>
-                                <div className={classes.infoSubitem}>
+                                <div className={classes.AltInfoSubitem}>
                                     <Skeleton variant='text' height={25} width={50}/>
                                     <Skeleton variant='text' height={25} width={250}/>
                                 </div>
-                                <div className={classes.infoSubitem}>
+                                <div className={classes.AltInfoSubitem}>
                                     <Skeleton variant='text' height={25} width={50}/>
                                     <Skeleton variant='text' height={25} width={200}/>
                                 </div>
-                                <div className={classes.infoSubitem}>
+                                {/* <div className={classes.AltInfoSubitem}>
                                     <Skeleton variant='text' height={25} width={50}/>
                                     <Skeleton variant='text' height={150} width={300}/>
-                                </div>
+                                </div> */}
                             </div>    
                         </div>
                     </Card>
@@ -71,7 +75,7 @@ class BookDisplay extends Component<BookDisplayProps, any> {
                                 </div>
                                 <div className={classes.AltTextsContainer}>
                                     <Typography className={classes.title} variant='h4'>{title}</Typography>
-                                    {loadingAuthors ? <Skeleton variant='text' height={25}/> : <Typography>{authors}</Typography>}
+                                    <Typography>{authors.join(', ')}</Typography>
                                     <div className={classes.AltInfoSubitem}>
                                         <Typography>Género:</Typography>
                                         <Typography>{genre}</Typography>

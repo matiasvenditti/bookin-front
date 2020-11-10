@@ -58,7 +58,7 @@
     flex-flow: row nowrap;
 }
 
-.AltInfoSubitem p:first-child {
+.AltInfoSubitem > :first-child {
     font-weight: bold;
     margin-right: 5px;
 }
