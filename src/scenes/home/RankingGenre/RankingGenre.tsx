@@ -44,7 +44,13 @@ const RankingGenre = (props: RankingGenreProps) => {
             );
         }
         if (!selector) {
-            return null;
+            return (
+                <div className={classes.bookContainer}>
+                    <div className={classes.noBooksTextContainer}>
+                        <Typography variant='h4' className={classes.noBooksText}>{`Seleccione un género`}</Typography>
+                    </div>
+                </div>
+            );
         }
         if (books.length === 0) {
             return (
