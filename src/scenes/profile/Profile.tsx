@@ -259,8 +259,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         )
     }
 
-
-
     renderReviews() {
         const {data, reviews} = this.state;
         return (
@@ -273,27 +271,31 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     spacing={3}
                     className='reviews-container'
                 >
-
-                    {reviews.map((rev, j) => {
-                        return (
-                            <Grid item xs sm={6} key={j}>
-                                <div key={'review-view-item-' + j} style={{paddingTop: 20}}>
-                                    <ReviewCard
-                                        id={rev.id}
-                                        stars={rev.stars}
-                                        comment={rev.comment}
-                                        reviewBookId={rev.bookId}
-                                        reviewCreatorUserID={data.id} // Es el creador el del perfil asi que le pasamos el mismo
-                                        currentUser={data}
-                                        isProfile={true}
-                                        reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
-                                        handleDelete={()=> null}
-                                        handleEdit={() => null}
-                                        />
-                                </div>
-                            </Grid>
-                        )
-                    })}
+                    {reviews.length === 0 ?
+                        <div style={{paddingTop: 100}}>
+                            <Typography variant='h5' style={{color: '#888888'}}>{`No tenés reseñas`}</Typography>
+                        </div>
+                        :
+                        reviews.map((rev, j) => {
+                            return (
+                                <Grid item xs sm={6} key={j}>
+                                    <div key={'review-view-item-' + j} style={{paddingTop: 20}}>
+                                        <ReviewCard
+                                            id={rev.id}
+                                            stars={rev.stars}
+                                            comment={rev.comment}
+                                            reviewBookId={rev.bookId}
+                                            reviewCreatorUserID={data.id} // Es el creador el del perfil asi que le pasamos el mismo
+                                            currentUser={data}
+                                            isProfile={true}
+                                            reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
+                                            handleDelete={()=> null}
+                                            handleEdit={() => null}
+                                            />
+                                    </div>
+                                </Grid>
+                            )
+                        })}
                 </Grid>
                 {this.renderReviewDelete()}
             </div>
