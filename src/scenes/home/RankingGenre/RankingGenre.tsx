@@ -92,5 +92,4 @@ const RankingGenre = (props: RankingGenreProps) => {
 }
 
 
-
 export default RankingGenre;

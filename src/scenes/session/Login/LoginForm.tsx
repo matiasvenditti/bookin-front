@@ -88,6 +88,14 @@ export default class LoginForm extends Component<LoginFormProps, LoginFormState>
                         variant='contained'
                         color='primary'
                     />
+                    <Button
+                        title='No sé mi contraseña'
+                        disabled={false}
+                        loading={loading}
+                        onClick={this.props.onPasswordRecover}
+                        variant='text'
+                        color='secondary'
+                    />
                 </div>
             </div>
         )

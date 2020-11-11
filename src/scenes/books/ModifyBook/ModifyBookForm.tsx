@@ -85,9 +85,12 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
             formValid: !anyErrors,
         });
     }
-
+    
     handlePhotoChange = (event: any) => {
+        event.stopPropagation();
+        event.preventDefault();
         const file: File = event.target.files[0];
+        if (file === undefined) return;
         const error: boolean = file.size >= PhotoUtils.MAX_PHOTO_SIZE;
         const photo = this.state.values.photo;
         if (!error) this._readFile(file);
@@ -115,7 +118,6 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
     }
     
     _readFile = (file: File) => {
-        if (file === undefined) return;
         if (file.size > PhotoUtils.MAX_PHOTO_SIZE || !['jpg', 'jpeg', 'png'].some((ext) => `image/${ext}` === file.type)) {
             this.props.onLoadImageError();
         } else {

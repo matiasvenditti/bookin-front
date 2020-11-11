@@ -20,6 +20,7 @@ import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
 import { Book as BookModel, } from "../../model";
 import { Author as AuthorModel, } from "../../model/Author";
 import { AuthService } from "../../services";
+import RecoverPassword from "../../scenes/session/RecoverPassword/RecoverPassword";
 
 
 interface RouterProps {
@@ -30,10 +31,10 @@ interface RouterState {
     // header
     logoutStatus: boolean, getUserDataError: boolean, searchBooksError: boolean, searchAuthorsError: boolean,
     // session
-    registerStatus: RequestStatus, loginStatus: RequestStatus, passwordRecoveryStatus: RequestStatus,
+    registerStatus: RequestStatus, loginStatus: RequestStatus, passwordRecoveryStatus: RequestStatus, 
     sendPasswordRecoveryStatus: RequestStatus, recoverPasswordTokenInvalidError: boolean,
     // profile
-    loadAvatarError: boolean, editProfileStatus: RequestStatus, changePasswordStatus: RequestStatus,
+    loadAvatarError: boolean, editProfileStatus: RequestStatus, changePasswordStatus: RequestStatus, 
     deleteProfileStatus: RequestStatus,
     // author
     editAuthorStatus: RequestStatus, createAuthorStatus: RequestStatus, updateAuthorStatus: RequestStatus,
@@ -46,7 +47,7 @@ interface RouterState {
     reviewStatus: RequestStatus, deleteReviewStatus: RequestStatus, updateReviewStatus: RequestStatus,
     // search
     search: {
-        data: {books: BookModel[], authors: AuthorModel[]}, searchInput: string,
+        data: {books: BookModel[], authors: AuthorModel[]}, searchInput: string, 
         updateStatus:RequestStatus,searchRequestError: boolean,
     },
     // home
@@ -63,7 +64,7 @@ class Router extends React.Component<any, RouterState> {
             registerStatus: RequestStatus.NONE, loginStatus: RequestStatus.NONE, passwordRecoveryStatus: RequestStatus.NONE,
             sendPasswordRecoveryStatus: RequestStatus.NONE, recoverPasswordTokenInvalidError: false,
             // profile
-            loadAvatarError: false, editProfileStatus: RequestStatus.NONE, changePasswordStatus: RequestStatus.NONE,
+            loadAvatarError: false, editProfileStatus: RequestStatus.NONE, changePasswordStatus: RequestStatus.NONE, 
             deleteProfileStatus: RequestStatus.NONE,
             // author
             editAuthorStatus: RequestStatus.NONE, createAuthorStatus: RequestStatus.NONE, updateAuthorStatus: RequestStatus.NONE,
@@ -71,13 +72,13 @@ class Router extends React.Component<any, RouterState> {
             //book
             createBookStatus: RequestStatus.NONE, getBookDataError: false, deleteBookStatus: RequestStatus.NONE,
             updateBookStatus: RequestStatus.NONE, getModifyBookDataError: false,
-
+            
             redirectReload: false,
             // review
             reviewStatus: RequestStatus.NONE, deleteReviewStatus: RequestStatus.NONE, updateReviewStatus: RequestStatus.NONE,
             // search select
             search: {
-                data: {books: [], authors: []}, searchInput: '', updateStatus: RequestStatus.NONE,
+                data: {books: [], authors: []}, searchInput: '', updateStatus: RequestStatus.NONE, 
                 searchRequestError: false,
             },
             // home
@@ -117,6 +118,12 @@ class Router extends React.Component<any, RouterState> {
                         <Login
                             loginCallback={(loginStatus: RequestStatus) => this.setState({ ...this.state, loginStatus })}
                             passwordRecoveryCallback={(passwordRecoveryStatus: RequestStatus) => this.setState({...this.state, passwordRecoveryStatus})}
+                        />
+                    </Route>
+                    <Route path='/users/resetPassword'>
+                        <RecoverPassword
+                            sendPasswordRecoveryCallback={(sendPasswordRecoveryStatus: RequestStatus) => this.setState({...this.state, sendPasswordRecoveryStatus})}
+                            recoverPasswordTokenInvalidError={() => this.setState({...this.state, recoverPasswordTokenInvalidError: true})}
                         />
                     </Route>
                     
@@ -261,7 +268,7 @@ class Router extends React.Component<any, RouterState> {
                 {/* home */}
                 {this.renderAToast(getBooksRankingByGenreError,                     'error', 'Hubo un error al obtener la lista de libros', () => this.setState({...this.state, getBooksRankingByGenreError: false}))}
                 {this.renderAToast(getBooksRankingByScoreError,                     'error', 'Hubo un error al obtener la lista de libros', () => this.setState({...this.state, getBooksRankingByScoreError: false}))}
-
+                
             </div>
         );
     }

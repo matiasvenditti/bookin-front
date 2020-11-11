@@ -17,6 +17,7 @@ const RecoverPassword = (props: RecoverPasswordProps) => {
     const [password, setPassword] = useState({ value: '', type: 'password', error: false, touched: false });
     const [passwordRepeat, setPasswordRepeat] = useState({ value: '', type: 'password', error: false, touched: false });
     const [sendPasswordRecoveryStatus, setSendPasswordRecoveryStatus] = useState(RequestStatus.NONE);
+    const [userId, setUserId] = useState(-1);
 
     useEffect(() => {
         // get token from url and validate token
@@ -24,18 +25,18 @@ const RecoverPassword = (props: RecoverPasswordProps) => {
         const queryString = require('query-string');
         const parsed = queryString.parse(props.location.search);
         SessionService.resetPasswordValidateToken(parsed.token)
-            .then(() => {
-                console.log('validated token');
+            .then((response) => {
+                setUserId(response.data.id);
             })
             .catch((error) => {
                 props.recoverPasswordTokenInvalidError();
-                // props.history.push('/login');
+                props.history.push('/login');
             })
     }, [])
 
     const handleSubmit = (password: string) => {
         setSendPasswordRecoveryStatus(RequestStatus.LOADING);
-        SessionService.sendPasswordRecovery(password)
+        SessionService.sendPasswordRecovery({id: userId, password})
             .then((response: any) => {
                 props.sendPasswordRecoveryCallback(RequestStatus.SUCCESS);
                 props.history.push('/login');
