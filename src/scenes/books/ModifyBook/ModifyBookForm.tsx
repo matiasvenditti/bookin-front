@@ -154,7 +154,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                         <Input
                             label='Titulo'
                             id='title'
-                            type='alphanumeric'
+                            type='title'
                             onChange={this.handleInput}
                             value={this.state.values.title.value}
                             error={this.state.values.title.touched && this.state.values.title.error}
