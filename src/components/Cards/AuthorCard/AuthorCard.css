@@ -3,8 +3,6 @@
     flex-flow: column nowrap;
     align-items: center;
     margin: 20px;
-    min-width: 100px;
-    overflow: visible;
 }
 
 .author-card-container div {
@@ -15,8 +13,6 @@
 
 .author-card-container p {
     font-weight: 400;
-    width: 100%;
-    text-overflow: clip;
 }
 
 .author-card-container p:nth-child(3) {

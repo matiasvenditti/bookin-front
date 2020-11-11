@@ -21,6 +21,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     padding: 20px;
+    margin-left: 20px;
 }
 
 .resultsContainer .resultsAuthorsContainer > div {
