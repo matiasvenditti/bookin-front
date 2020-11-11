@@ -34,13 +34,17 @@ const AuthorCard = (props: AuthorCardProps) => {
         );
     } else {
         return (
-            <Card className='author-card-container' key={props.key + '-' + id}>
-                <CardActionArea onClick={() => props.history.push('/authors/' + id)}>
-                    <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar}/>
-                    <Typography>{firstName}</Typography>
-                    <Typography>{lastName}</Typography>
-                </CardActionArea>
-            </Card>
+            <div style={{minWidth: 100, }}>
+                <Card key={props.key + '-' + id}>
+                    <CardActionArea onClick={() => props.history.push('/authors/' + id)}>
+                        <div className='author-card-container'>
+                            <Avatar src={`data:image/jpeg;base64,${photo}` || dummyAvatar}/>
+                            <Typography>{firstName}</Typography>
+                            <Typography>{lastName}</Typography>
+                        </div>
+                    </CardActionArea>
+                </Card>
+            </div>
         );
     }
 };

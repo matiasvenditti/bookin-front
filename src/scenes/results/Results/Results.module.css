@@ -20,11 +20,11 @@
     align-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
+    padding: 20px;
 }
 
-.authorResults {
-    margin:0  30px;
-    padding: 15px;
+.resultsContainer .resultsAuthorsContainer > div {
+    margin-right: 10px;
 }
 
 .resultsContainer .resultsBooksContainer {

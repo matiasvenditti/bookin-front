@@ -50,7 +50,7 @@ const Results = (props: ResultsProps) => {
         } else {
             const list = loading ? [new Author(), new Author(), new Author()] : data.authors;
             return (
-                <div className={`${classes.resultsAuthorsContainer} ${classes.authorResults}`}>
+                <div className={classes.resultsAuthorsContainer}>
                     {list.map((author, i) => (
                         <AuthorCard
                             key={'results-author-card' + i}
@@ -78,7 +78,8 @@ const Results = (props: ResultsProps) => {
                         <div key={'bookdisplay-card-' + i} className={classes.resultsBooksBookContainer}>
                             <BookDisplay
                                 book={book}
-                                authors={book.authors.map((author) => (`${author.firstName} ${author.lastName}`))}
+                                authors={[]}
+                                // authors={book.authors.map((author) => (`${author.firstName} ${author.lastName}`))}
                                 resultsVariant
                                 loading={loading}
                             />
