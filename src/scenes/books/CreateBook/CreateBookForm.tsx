@@ -54,7 +54,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
             genre: this.state.values.genre.value,
             language: this.state.values.language.value,
             date: this.state.values.release.value,
-            authors: this.state.values.authors.value
+            authors: this.state.values.authors.value.map((author: Author) => author.id)
         }
         this.props.onSubmit(book, this.state.values.photo.value);
     }
@@ -122,6 +122,7 @@ export default class CreateBookForm extends Component<BookFormProps, BookFormSta
     };
 
     render() {
+        console.log('create book form', this.state);
         const image = this.state.bytearray ?
             <img src={this.state.bytearray} width='100' alt='avatar' /> :
             <MenuBookIcon color='secondary' style={{ height: 150, width: 100 }} />
