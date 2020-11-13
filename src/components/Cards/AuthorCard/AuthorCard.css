@@ -2,9 +2,7 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    margin-right: 15px;
-    padding: 15px !important;
-    overflow: visible !important;
+    margin: 20px;
 }
 
 .author-card-container div {

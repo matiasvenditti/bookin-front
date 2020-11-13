@@ -16,8 +16,10 @@
     align-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 10px 0;
+    padding: 20px 0;
     height: 500px;
+    margin-top: 30px;
+    margin-bottom: 50px;
 }
 
 .bookDisplayContainer {

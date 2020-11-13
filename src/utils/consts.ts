@@ -39,7 +39,7 @@ export const allBookGenres: KeyValue[] = [
     {key: 'Comedia', value: 'Comedia'},
     {key: 'Drama', value: 'Drama'},
     {key: 'Educativos', value: 'Educativos'},
-    {key: 'Fantasia', value: 'Fantasia'},
+    {key: 'Fantasía', value: 'Fantasía'},
     {key: 'Ficción', value: 'Ficción'},
     {key: 'Infantiles', value: 'Infantiles'},
     {key: 'Misterio', value: 'Misterio'},

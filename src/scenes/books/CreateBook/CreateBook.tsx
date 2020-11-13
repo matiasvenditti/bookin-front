@@ -58,7 +58,7 @@ class CreateBook extends Component<CreateBookProps, CreateBookState> {
         return (
             <div className='route-container' >
                 <div className='form-container'>
-                    <Typography align='center' variant='h5'>Creá un libro</Typography>
+                    <Typography align='center' variant='h4' style={{margin: 20, fontWeight: 'bold'}}>Creá un libro</Typography>
                     <CreateBookForm 
                         onSubmit={this.handleSubmit}
                         authors={this.state.authors}

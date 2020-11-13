@@ -222,8 +222,8 @@ export default class BookView extends Component<BookViewProps, BookViewState> {
                 <div>
                     <Typography
                         align='left'
-                        variant='h3'
                         className='title'
+                        style={{fontSize: 35, fontWeight: 'bold'}}
                     >{data.title} </Typography>
                     <Grid
                         container

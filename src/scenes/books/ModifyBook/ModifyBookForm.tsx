@@ -55,10 +55,11 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
             genre: this.state.values.genre.value,
             language: this.state.values.language.value,
             date: this.state.values.date.value,
-            authors: this.state.values.authors.value
+            authors: this.state.values.authors.value.map((author: Author) => author.id)
         }
         this.props.onSubmit(book, this.state.values.photo.value);
     }
+
     handleInput = (id: keyof BookFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
@@ -154,7 +155,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                         <Input
                             label='Titulo'
                             id='title'
-                            type='alphanumeric'
+                            type='title'
                             onChange={this.handleInput}
                             value={this.state.values.title.value}
                             error={this.state.values.title.touched && this.state.values.title.error}
