@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import {BrowserRouter, Route, Switch} from "react-router-dom";
 import React from "react";
 import PrivateRoute from './PrivateRoute';
 import Home from "../../scenes/home/Home/Home";
@@ -6,20 +6,20 @@ import Register from "../../scenes/session/Register/Register";
 import Login from '../../scenes/session/Login/Login';
 import Profile from '../../scenes/profile/Profile';
 import Footer from "../Footer/Footer";
-import { Snackbar } from "@material-ui/core";
-import { Alert } from '@material-ui/lab';
-import { RequestStatus } from "../../model/consts/RequestStatus";
+import {Snackbar} from "@material-ui/core";
+import {Alert} from '@material-ui/lab';
+import {RequestStatus} from "../../model/consts/RequestStatus";
 import CreateAuthor from "../../scenes/authors/CreateAuthor/CreateAuthor";
-import { UserRoles } from "../../model/consts/Roles";
+import {UserRoles} from "../../model/consts/Roles";
 import Author from "../../scenes/authors/Author/Author";
 import ModifyAuthor from "../../scenes/authors/ModifyAuthor/ModifyAuthor";
-import { Book, CreateBook } from "../../scenes/books";
+import {Book, CreateBook} from "../../scenes/books";
 import ResultsMenu from "../../scenes/results/ResultsMenu/ResultsMenu";
-import { Header } from "..";
+import {Header} from "..";
 import ModifyBook from "../../scenes/books/ModifyBook/ModifyBook";
-import { Book as BookModel, } from "../../model";
-import { Author as AuthorModel, } from "../../model/Author";
-import { AuthService } from "../../services";
+import {Book as BookModel,} from "../../model";
+import {Author as AuthorModel,} from "../../model/Author";
+import {AuthService} from "../../services";
 import RecoverPassword from "../../scenes/session/RecoverPassword/RecoverPassword";
 
 
@@ -35,7 +35,7 @@ interface RouterState {
     sendPasswordRecoveryStatus: RequestStatus, recoverPasswordTokenInvalidError: boolean,
     // profile
     loadAvatarError: boolean, editProfileStatus: RequestStatus, changePasswordStatus: RequestStatus, 
-    deleteProfileStatus: RequestStatus,
+    deleteProfileStatus: RequestStatus, editEmailStatus: RequestStatus
     // author
     editAuthorStatus: RequestStatus, createAuthorStatus: RequestStatus, updateAuthorStatus: RequestStatus,
     getAuthorDataError: boolean, getModifyAuthorDataError: boolean, deleteAuthorStatus: RequestStatus,
@@ -65,7 +65,7 @@ class Router extends React.Component<any, RouterState> {
             sendPasswordRecoveryStatus: RequestStatus.NONE, recoverPasswordTokenInvalidError: false,
             // profile
             loadAvatarError: false, editProfileStatus: RequestStatus.NONE, changePasswordStatus: RequestStatus.NONE, 
-            deleteProfileStatus: RequestStatus.NONE,
+            deleteProfileStatus: RequestStatus.NONE, editEmailStatus: RequestStatus.NONE,
             // author
             editAuthorStatus: RequestStatus.NONE, createAuthorStatus: RequestStatus.NONE, updateAuthorStatus: RequestStatus.NONE,
             getAuthorDataError: false, getModifyAuthorDataError: false, deleteAuthorStatus: RequestStatus.NONE,
@@ -132,6 +132,7 @@ class Router extends React.Component<any, RouterState> {
                             deleteProfileCallback={(deleteProfileStatus: RequestStatus) => this.setState({ ...this.state, deleteProfileStatus })}
                             onLoadErrorCallback={() => this.setState({ ...this.state, loadAvatarError: true })}
                             editProfileCallback={(editProfileStatus: RequestStatus) => this.setState({ ...this.state, editProfileStatus })}
+                            editEmailCallback={(editEmailStatus: RequestStatus) => this.setState({...this.state, editEmailStatus})}
                             changePasswordCallback={(changePasswordStatus: RequestStatus) => this.setState({ ...this.state, changePasswordStatus})}
                         />
                     </PrivateRoute>
@@ -205,7 +206,7 @@ class Router extends React.Component<any, RouterState> {
             registerStatus, loginStatus, passwordRecoveryStatus, sendPasswordRecoveryStatus,
             recoverPasswordTokenInvalidError, changePasswordStatus,
             // profile
-            editProfileStatus, deleteProfileStatus, loadAvatarError,
+            editProfileStatus, deleteProfileStatus, loadAvatarError, editEmailStatus,
             // author
             createAuthorStatus, updateAuthorStatus, getAuthorDataError, getModifyAuthorDataError,
             deleteAuthorStatus,
@@ -240,6 +241,7 @@ class Router extends React.Component<any, RouterState> {
                 {this.renderAToast(deleteProfileStatus === RequestStatus.SUCCESS,   'success', 'Se ha eliminado la cuenta correctamente', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(deleteProfileStatus === RequestStatus.ERROR,     'error', 'Hubo un error al eliminar al cuenta, intente más tarde', () => this.setState({...this.state, deleteProfileStatus: RequestStatus.NONE}))}
                 {this.renderAToast(loadAvatarError,                                  'error', 'La imagen pesa mas de 100KB o tiene una resolución mayor a 480x480, seleccione una mas pequeña', () => this.setState({...this.state, loadAvatarError: false}))}
+                {this.renderAToast(editEmailStatus === RequestStatus.ERROR,     'error', 'El email seleccionado ya se encuentra en uso', () => this.setState({...this.state, editEmailStatus: RequestStatus.NONE}))}
                 {/* author */}
                 {this.renderAToast(createAuthorStatus === RequestStatus.SUCCESS,    'success', 'Se ha creado el autor exitosamente', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
                 {this.renderAToast(createAuthorStatus === RequestStatus.ERROR,      'error', 'Hubo un error al crear el autor, intente más tarde', () => this.setState({...this.state, createAuthorStatus: RequestStatus.NONE}))}
