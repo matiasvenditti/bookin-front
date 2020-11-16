@@ -1,7 +1,7 @@
 import React from 'react';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
-import {Typography, Tabs, Tab, AppBar, Grid} from '@material-ui/core';
+import {AppBar, Grid, Tab, Tabs, Typography} from '@material-ui/core';
 import './Profile.css'
 import {DeleteUserModal} from './DeleteUserModal';
 import {withRouter} from 'react-router-dom';
@@ -18,13 +18,14 @@ import ReviewCard from "../../components/Cards/ReviewCard/ReviewCard";
 import {DeleteReviewModal} from "../review/DeleteReviewModal";
 import {RouteComponentProps} from "react-router";
 import {ReviewWithBookDTO} from "../../model/Review";
-import { ChangePasswords } from '../../model/ChangePasswords';
+import {ChangePasswords} from '../../model/ChangePasswords';
 
 
 interface ProfileProps extends RouteComponentProps {
     editProfileCallback(editProfileStatus: RequestStatus): void,
     onLoadErrorCallback(): void,
     deleteProfileCallback(deleteProfileStatus: RequestStatus): void,
+    editEmailCallback(editEmailStatus: RequestStatus): void,
     changePasswordCallback(changePasswordStatus: RequestStatus): void,
 }
 
@@ -149,6 +150,19 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 this.props.editProfileCallback(RequestStatus.ERROR);
             });
     }
+
+    handleUpdateEmail = (values: User, photo: File) => {
+        UserService.updateProfile(this.state.data.id, values, photo)
+            .then(() => {
+                this.setState({...this.state, updateStatus: RequestStatus.SUCCESS, editProfileMode: false});
+                this.props.editProfileCallback(RequestStatus.SUCCESS);
+                SessionService.logout();
+            })
+            .catch(() => {
+                this.setState({...this.state, updateStatus: RequestStatus.ERROR});
+                this.props.editEmailCallback(RequestStatus.ERROR);
+            });
+    }
     handlePasswordChange = (passwords: ChangePasswords) => {
         UserService.changePassword(passwords)
             .then(() => {
@@ -211,6 +225,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     data={data}
                     editVariable={editVariable}
                     onSubmit={this.handleUpdateValues}
+                    updateEmail={this.handleUpdateEmail}
                     changePassword={this.handlePasswordChange}
                     onCancel={this.handleCancel}
                 />

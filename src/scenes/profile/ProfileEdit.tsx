@@ -14,7 +14,8 @@ interface ProfileEditProps {
     data: User,
     editVariable: EditVar,
     onSubmit(values: User): void,
-    changePassword(passwords: ChangePasswords): void, 
+    changePassword(passwords: ChangePasswords): void,
+    updateEmail(values: User): void,
     onCancel(): void,
 }
 
@@ -93,6 +94,18 @@ class ProfileEdit extends Component<any, ProfileEditState> {
 
     handleCancel = () => {
         this.props.onCancel()
+    }
+
+    handleUpdateEmail = () => {
+        this.props.updateEmail({
+            id: -1,
+            firstName: this.state.values.firstName.value,
+            lastName: this.state.values.lastName.value,
+            email: this.state.values.email.value,
+            password: this.state.values.password.value,
+            gender: this.state.values.gender.value,
+            photo: null,
+        });
     }
 
     render() {
@@ -247,7 +260,7 @@ class ProfileEdit extends Component<any, ProfileEditState> {
                             variant='contained'
                             title='Guardar'
                             disabled={!this.state.formValid}
-                            onClick={this.handleSubmit}
+                            onClick={this.handleUpdateEmail}
                         />
                         <Button
                             variant='outlined'
