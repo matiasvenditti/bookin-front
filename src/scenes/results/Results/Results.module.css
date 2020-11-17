@@ -20,17 +20,25 @@
     align-content: flex-start;
     overflow-x: auto;
     overflow-y: hidden;
+    padding: 20px;
+    margin-left: 20px;
 }
 
-.authorResults {
-    margin:0  30px;
-    padding: 15px;
+.resultsContainer .resultsAuthorsContainer > div {
+    margin-right: 10px;
 }
 
 .resultsContainer .resultsBooksContainer {
     display: flex;
     flex-flow: column nowrap;
     border-bottom: 1px solid rgba();
+    padding: 20px;
+    margin-bottom: 40px;
+}
+
+.resultsContainer .resultsBooksBookContainer {
+    margin-bottom: 20px;
+
 }
 
 .noResults {

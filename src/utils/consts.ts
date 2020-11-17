@@ -2,6 +2,7 @@ import { KeyValue } from "../model";
 import { Gender } from "../model/Gender";
 import { FilterBy } from "../model/results";
 
+
 export const allGenders: KeyValue[] = [
     { key: Gender.M, value: 'Hombre' },
     { key: Gender.F, value: 'Mujer' },
@@ -32,16 +33,22 @@ export const allLanguages: KeyValue[] = [
 export const allBookGenres: KeyValue[] = [
     {key: 'Aventura', value: 'Aventura'},
     {key: 'Acción', value: 'Acción'},
-    {key: 'Autoayuda', value: 'Autoayuda'},
+    {key: 'Auto-ayuda', value: 'Auto-ayuda'},
+    {key: 'Auto-realización', value: 'Auto-realización'},
     {key: 'Biografías', value: 'Biografías'},
-    {key: 'Ciencia Ficción', value: 'Ciencia Ficción'},
+    {key: 'Comedia', value: 'Comedia'},
+    {key: 'Drama', value: 'Drama'},
     {key: 'Educativos', value: 'Educativos'},
-    {key: 'Fantasia', value: 'Fantasia'},
+    {key: 'Fantasía', value: 'Fantasía'},
+    {key: 'Ficción', value: 'Ficción'},
     {key: 'Infantiles', value: 'Infantiles'},
-    {key: 'Novelas románticas', value: 'Novelas románticas'},
+    {key: 'Misterio', value: 'Misterio'},
+    {key: 'Novela', value: 'Novela'},
     {key: 'Poesías', value: 'Poesías'},
     {key: 'Policiales', value: 'Policiales'},
+    {key: 'Romance', value: 'Romance'},
     {key: 'Terror', value: 'Terror'},
+    {key: 'Trágica', value: 'Trágica'},
 ];
 
 // Note: no reason for inverted key and value

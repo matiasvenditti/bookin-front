@@ -41,6 +41,7 @@ export default class ProfileView extends Component<ProfileViewProps, ProfileView
             { key: 'Nombre', value: this.props.data.firstName + ' ' + this.props.data.lastName, type: EditVar.NAME },
             { key: 'Mail', value: this.props.data.email, type: EditVar.EMAIL },
             { key: 'Género', value: genderToString(this.props.data.gender), type: EditVar.GENDER },
+            { key: '', value: 'Cambiar contraseña', type: EditVar.PASSWORD},
         ])
     };
 
@@ -80,8 +81,6 @@ export default class ProfileView extends Component<ProfileViewProps, ProfileView
                         ]))}
                     </List>
                     <div className='footer-buttons-container'>
-                        {/* TODO: password change feature */}
-                        {/* <Button onClick={this.props.onChangePassword}>Cambiar la contraseña</Button> */}
                         <Button onClick={this.props.onDeleteUser}>Eliminar cuenta</Button>
                     </div>
                 </div>

@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import classes from './SearchSelect.module.css';
 import SearchIcon from '@material-ui/icons/Search';
-import SettingsIcon from '@material-ui/icons/Settings';
 
 
 // TODO: pasar a modelos correctamente

@@ -3,11 +3,10 @@ import { AxiosRequestConfig, AxiosResponse } from "axios";
 import { instance } from "../utils/Interceptors/Inerceptors";
 import { baseURL } from "./EnvironmentService";
 import { Book } from "../model/Book";
-import { Author } from "../model/Author";
 import { UpdateBook } from "../model/UpdateBook";
 import { Filters } from "../model/results/Filters";
 import { ParserUtils } from "../utils";
-import { TagValueParams } from "../model";
+import { SearchAuthor, TagValueParams } from "../model";
 
 
 class BooksService {
@@ -28,8 +27,8 @@ class BooksService {
         return instance.get<Book>(`${baseURL}/books/${id}`);
     }
     
-    static getBookAuthors = (id: number): Promise<AxiosResponse<Author[]>> => {
-        return instance.get<Author[]>(`${baseURL}/books/${id}/authors`);
+    static getBookAuthors = (id: number): Promise<AxiosResponse<SearchAuthor[]>> => {
+        return instance.get<SearchAuthor[]>(`${baseURL}/books/${id}/authors`);
     }
 
     static getBookAuthorsSimple = (id: number): Promise<AxiosResponse<{id: number, firstName: string, lastName: string}[]>> => {
@@ -65,6 +64,14 @@ class BooksService {
     // TODO: back missing simple search
     static searchBooksSimple = (query: string): Promise<AxiosResponse<Book[]>> => {
         return instance.get<Book[]>(`${baseURL}/books${ParserUtils.arrayToRequestParams([{tag: 'title', value: query}])}`);
+    }
+
+    static getRankingByRanking = (genre: string): Promise<AxiosResponse<Book[]>> => {
+        return instance.get<Book[]>(`${baseURL}/books/ranking/${genre}?size=100`);
+    }
+
+    static getRankingByScore = (): Promise<AxiosResponse<Book[]>> => {
+        return instance.get<Book[]>(`${baseURL}/books/ranking/?size=10`);
     }
 }
 

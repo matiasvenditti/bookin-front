@@ -55,10 +55,11 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
             genre: this.state.values.genre.value,
             language: this.state.values.language.value,
             date: this.state.values.date.value,
-            authors: this.state.values.authors.value
+            authors: this.state.values.authors.value.map((author: Author) => author.id)
         }
         this.props.onSubmit(book, this.state.values.photo.value);
     }
+
     handleInput = (id: keyof BookFormModel, type: string, value: any) => {
         const error = !validateInput(type, value);
         const anyErrors = Object.values(this.state.values).some(value => value.type === type ? error : value.error);
@@ -85,9 +86,12 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
             formValid: !anyErrors,
         });
     }
-
+    
     handlePhotoChange = (event: any) => {
+        event.stopPropagation();
+        event.preventDefault();
         const file: File = event.target.files[0];
+        if (file === undefined) return;
         const error: boolean = file.size >= PhotoUtils.MAX_PHOTO_SIZE;
         const photo = this.state.values.photo;
         if (!error) this._readFile(file);
@@ -115,7 +119,6 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
     }
     
     _readFile = (file: File) => {
-        if (file === undefined) return;
         if (file.size > PhotoUtils.MAX_PHOTO_SIZE || !['jpg', 'jpeg', 'png'].some((ext) => `image/${ext}` === file.type)) {
             this.props.onLoadImageError();
         } else {
@@ -152,7 +155,7 @@ export default class ModifyBookForm extends Component<BookFormProps, BookFormSta
                         <Input
                             label='Titulo'
                             id='title'
-                            type='alphanumeric'
+                            type='title'
                             onChange={this.handleInput}
                             value={this.state.values.title.value}
                             error={this.state.values.title.touched && this.state.values.title.error}

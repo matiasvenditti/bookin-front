@@ -1,7 +1,7 @@
 import React from 'react';
 import ProfileView from './ProfileView';
 import ProfileEdit from './ProfileEdit';
-import {Typography, Tabs, Tab, AppBar, Grid} from '@material-ui/core';
+import {AppBar, Grid, Tab, Tabs, Typography} from '@material-ui/core';
 import './Profile.css'
 import {DeleteUserModal} from './DeleteUserModal';
 import {withRouter} from 'react-router-dom';
@@ -18,12 +18,15 @@ import ReviewCard from "../../components/Cards/ReviewCard/ReviewCard";
 import {DeleteReviewModal} from "../review/DeleteReviewModal";
 import {RouteComponentProps} from "react-router";
 import {ReviewWithBookDTO} from "../../model/Review";
+import {ChangePasswords} from '../../model/ChangePasswords';
 
 
 interface ProfileProps extends RouteComponentProps {
     editProfileCallback(editProfileStatus: RequestStatus): void,
     onLoadErrorCallback(): void,
     deleteProfileCallback(deleteProfileStatus: RequestStatus): void,
+    editEmailCallback(editEmailStatus: RequestStatus): void,
+    changePasswordCallback(changePasswordStatus: RequestStatus): void,
 }
 
 interface ProfileState {
@@ -33,6 +36,7 @@ interface ProfileState {
     editVariable: EditVar,
     updateStatus: any,
     deleteStatus: any,
+    passwordStatus: any,
     deleteModalShow: boolean,
     data: User,
     reviews: ReviewWithBookDTO[],
@@ -61,6 +65,7 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
             deleteModalShow: false,
             updateStatus: RequestStatus.NONE,
             deleteStatus: RequestStatus.NONE,
+            passwordStatus: RequestStatus.NONE,
             editVariable: EditVar.PASSWORD,
             reviews: [],
             showDelete:false,
@@ -128,7 +133,9 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
     handleUpdatePhoto = (photo: File) => {
         this.handleUpdate(this.state.data, photo);
     }
-    handleUpdateValues = (values: User) => this.handleUpdate(values, this.state.data.photo);
+    handleUpdateValues = (values: User) => {
+        this.handleUpdate(values, this.state.data.photo);
+    }
 
     handleUpdate = (values: User, photo: File) => {
         this.setState({...this.state, updateStatus: RequestStatus.LOADING});
@@ -142,6 +149,31 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                 this.setState({...this.state, updateStatus: RequestStatus.ERROR});
                 this.props.editProfileCallback(RequestStatus.ERROR);
             });
+    }
+
+    handleUpdateEmail = (values: User, photo: File) => {
+        UserService.updateProfile(this.state.data.id, values, photo)
+            .then(() => {
+                this.setState({...this.state, updateStatus: RequestStatus.SUCCESS, editProfileMode: false});
+                this.props.editProfileCallback(RequestStatus.SUCCESS);
+                SessionService.logout();
+            })
+            .catch(() => {
+                this.setState({...this.state, updateStatus: RequestStatus.ERROR});
+                this.props.editEmailCallback(RequestStatus.ERROR);
+            });
+    }
+    handlePasswordChange = (passwords: ChangePasswords) => {
+        UserService.changePassword(passwords)
+            .then(() => {
+                this.setState({...this.state, passwordStatus: RequestStatus.SUCCESS, editProfileMode: false});
+                this.props.changePasswordCallback(RequestStatus.SUCCESS);
+                this._getUserData();
+            })
+            .catch( e => {
+                this.setState({...this.state, passwordStatus: RequestStatus.ERROR});
+                this.props.changePasswordCallback(RequestStatus.ERROR);
+            })
     }
 
     render() {
@@ -193,6 +225,8 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     data={data}
                     editVariable={editVariable}
                     onSubmit={this.handleUpdateValues}
+                    updateEmail={this.handleUpdateEmail}
+                    changePassword={this.handlePasswordChange}
                     onCancel={this.handleCancel}
                 />
             );
@@ -240,8 +274,6 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
         )
     }
 
-
-
     renderReviews() {
         const {data, reviews} = this.state;
         return (
@@ -254,27 +286,31 @@ class Profile extends React.Component<ProfileProps, ProfileState> {
                     spacing={3}
                     className='reviews-container'
                 >
-
-                    {reviews.map((rev, j) => {
-                        return (
-                            <Grid item xs sm={6} key={j}>
-                                <div key={'review-view-item-' + j} style={{paddingTop: 20}}>
-                                    <ReviewCard
-                                        id={rev.id}
-                                        stars={rev.stars}
-                                        comment={rev.comment}
-                                        reviewBookId={rev.bookId}
-                                        reviewCreatorUserID={data.id} // Es el creador el del perfil asi que le pasamos el mismo
-                                        currentUser={data}
-                                        isProfile={true}
-                                        reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
-                                        handleDelete={()=> null}
-                                        handleEdit={() => null}
-                                        />
-                                </div>
-                            </Grid>
-                        )
-                    })}
+                    {reviews.length === 0 ?
+                        <div style={{paddingTop: 100}}>
+                            <Typography variant='h5' style={{color: '#888888'}}>{`No tenés reseñas`}</Typography>
+                        </div>
+                        :
+                        reviews.map((rev, j) => {
+                            return (
+                                <Grid item xs sm={6} key={j}>
+                                    <div key={'review-view-item-' + j} style={{paddingTop: 20}}>
+                                        <ReviewCard
+                                            id={rev.id}
+                                            stars={rev.stars}
+                                            comment={rev.comment}
+                                            reviewBookId={rev.bookId}
+                                            reviewCreatorUserID={data.id} // Es el creador el del perfil asi que le pasamos el mismo
+                                            currentUser={data}
+                                            isProfile={true}
+                                            reviewDisplayString={rev.bookTitle} // Le pasamos el titulo en vez del nombre
+                                            handleDelete={()=> null}
+                                            handleEdit={() => null}
+                                            />
+                                    </div>
+                                </Grid>
+                            )
+                        })}
                 </Grid>
                 {this.renderReviewDelete()}
             </div>

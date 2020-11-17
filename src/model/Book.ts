@@ -1,3 +1,5 @@
+import { Author } from "./Author";
+
 export class Book {
     id: number;
     title: string;
@@ -6,6 +8,7 @@ export class Book {
     date: Date;
     photo: string;
     stars: number;
+    authors: Author[];
 
     constructor(){
         this.id = 0;
@@ -15,5 +18,6 @@ export class Book {
         this.date = new Date();
         this.photo = '';
         this.stars = 0;
+        this.authors = [];
     }
 }
